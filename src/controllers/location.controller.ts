@@ -17,14 +17,21 @@ export class LocationController{
     @Query('region_code') region_code: string,
     @Query('city_code') city_code: string) {
 
+  let resLocation;
+
     if (city_code) {
-      return { status: "ok", data: await this.cityService.getOneCity(city_code)}
+      resLocation = await this.cityService.getOneCity(city_code)
     } else if (region_code) {
-        return { status: "ok", data: await this.cityService.getAllCity(country_code, region_code) }
+        resLocation = await this.cityService.getAllCity(country_code, region_code)
     } else if(country_code){
-        return { status: "ok", data: await this.regionService.getAllRegion(country_code) }
+        resLocation = await this.regionService.getAllRegion(country_code)
     } else {
-        return { status: "ok", data: await this.countryService.getAll() }
+        resLocation = await this.countryService.getAll()
     }
+    resLocation.forEach(element => {
+      element.code = element.code.trim()
+    });
+    
+    return { status: "ok", data: resLocation }
   }
 }
