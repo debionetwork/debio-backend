@@ -1,13 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'regions' })
-export class Region{
+export class Region {
   @PrimaryGeneratedColumn()
-  code: string
+  code: string;
 
   @Column()
-  country_code: string
+  country_code: string;
 
   @Column()
-  name: string
+  name: string;
 }
