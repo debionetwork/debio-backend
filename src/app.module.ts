@@ -5,9 +5,6 @@ import { City } from './model/city.entity';
 import { Country } from './model/country.entity';
 import { Region } from './model/region.entity';
 import { CityService } from './services/city.service';
-// import { User } from './justLean-users/user.entity';
-// import { UserService } from './justLean-users/user.service';
-// import { UserController } from './justLean-users/user.controller';
 import { CountryService } from './services/country.service';
 import { RegionService } from './services/region.service';
 require('dotenv').config()
@@ -22,7 +19,6 @@ require('dotenv').config()
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
       autoLoadEntities: true,
-      // synchronize: true
     }),
     TypeOrmModule.forFeature([Country, Region, City])
   ],
