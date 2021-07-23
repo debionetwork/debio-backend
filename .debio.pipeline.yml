@@ -1,0 +1,112 @@
+kind: pipeline
+type: docker
+name: debio backend
+
+platform:
+  os: linux
+  arch: amd64
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  - name: whitelist
+    host:
+      path: /etc/docker/daemon.json
+  - name: toolkit
+    host:
+      path: /data/drone_data
+
+steps:
+  - name: merge pull request
+    pull: if-not-exists
+    image: alpine/git
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+    commands:
+      - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
+
+  - name: build - devel
+    pull: if-not-exists
+    image: docker
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+      - name: whitelist
+        path: /etc/docker/daemon.json
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker login -u _json_key --password-stdin https://asia.gcr.io < /data/drone_data/auth.json
+      - /data/drone_data/debio_toolkit -vault -env -secret=debio_development/data/backend_v2
+      - docker build -t asia.gcr.io/degenics/debio_backend_v2_dev:latest .
+      - docker push asia.gcr.io/degenics/debio_backend_v2_dev:latest
+
+  - name: notify deployment
+    image: appleboy/drone-discord
+    pull: if-not-exists
+    settings:
+      webhook_id:
+        from_secret: discord_id
+      webhook_token:
+        from_secret: discord_token
+      message: >
+        {{#success build.status}}
+        ✅ Build #{{build.number}} of `{{repo.name}}` succeeded.
+
+        📝 Commit by {{commit.author}} on
+
+        `{{commit.branch}}`:
+
+        ```
+        {{commit.message}}
+        ```
+
+        🌐 {{ build.link }}
+        {{else}}
+        ❌ Build #{{build.number}} of `{{repo.name}}` failed.
+
+        📝 Commit by {{commit.author}} on
+
+        `{{commit.branch}}`:
+
+        ```
+        {{commit.message}}
+        ```
+        🌐 {{ build.link }}
+        🌐 {{ commit.link }}
+        {{/success}}
+    when:
+      status: [ success, failure ]
+
+---
+kind: secret
+name: devel_host
+get:
+  path: drone_development/faucet
+  name: devel_host
+---
+kind: secret
+name: devel_key
+get:
+  path: drone_development/faucet
+  name: devel_key
+---
+kind: secret
+name: devel_uname
+get:
+  path: drone_development/faucet
+  name: devel_uname
+---
+kind: secret
+name: discord_id
+get:
+  path: drone_common_config/webhook
+  name: discord_id
+---
+kind: secret
+name: discord_token
+get:
+  path: drone_common_config/webhook
+  name: discord_token
