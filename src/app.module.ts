@@ -1,15 +1,14 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LocationController } from './controllers/location.controller';
-import { City } from './model/city.entity';
-import { Country } from './model/country.entity';
-import { Region } from './model/region.entity';
-import { CityService } from './services/city.service';
-import { CountryService } from './services/country.service';
-import { RegionService } from './services/region.service';
-import dotenv from 'dotenv';
+import { LocationController } from './controllers/api/location.controller';
+import { City } from './model/database/city.entity';
+import { Country } from './model/database/country.entity';
+import { Region } from './model/database/region.entity';
+import { CityService } from './services/database/city.service';
+import { CountryService } from './services/database/country.service';
+import { RegionService } from './services/database/region.service';
 
-dotenv.config();
+require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     TypeOrmModule.forRoot({

@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { CityService } from 'src/services/city.service';
-import { CountryService } from 'src/services/country.service';
-import { RegionService } from 'src/services/region.service';
+import { CityService } from 'src/services/database/city.service';
+import { CountryService } from 'src/services/database/country.service';
+import { RegionService } from 'src/services/database/region.service';
 
 @Controller('location')
 export class LocationController {
