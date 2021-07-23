@@ -1,6 +1,11 @@
 kind: pipeline
 type: docker
 name: debio backend v2
+trigger:
+  branch:
+    - development
+  event:
+    - pull_request
 
 platform:
   os: linux
@@ -26,6 +31,9 @@ steps:
         path: /data/drone_data
     commands:
       - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
+    when:
+      branch:
+        - development
 
   - name: build - devel
     pull: if-not-exists
@@ -42,6 +50,9 @@ steps:
       - /data/drone_data/debio_toolkit -vault -env -secret=debio_development/data/backend_v2
       - docker build -t asia.gcr.io/degenics/debio_backend_v2_dev:latest .
       - docker push asia.gcr.io/degenics/debio_backend_v2_dev:latest
+    when:
+      branch:
+        - development
 
   - name: notify deployment
     image: appleboy/drone-discord
@@ -79,6 +90,8 @@ steps:
         {{/success}}
     when:
       status: [ success, failure ]
+      branch:
+        - development
 
 ---
 kind: secret
