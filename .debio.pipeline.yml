@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: debio backend
+name: debio backend v2
 
 platform:
   os: linux
