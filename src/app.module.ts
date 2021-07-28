@@ -6,7 +6,7 @@ import { LocationModule } from './location/location.module';
 import { RatingModule } from './rating/rating.module';
 // import dotenv from 'dotenv';
 
-require('dotenv').config()
+require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
   imports: [

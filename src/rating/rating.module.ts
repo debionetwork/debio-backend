@@ -5,7 +5,7 @@ import { RatingController } from './rating.controller';
 import { RatingService } from './rating.service';
 // import dotenv from 'dotenv';
 
-require('dotenv').config()
+require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
   imports: [

@@ -9,7 +9,7 @@ import { Region } from './models/region.entity';
 import { RegionService } from './region.service';
 // import dotenv from 'dotenv';
 
-require('dotenv').config()
+require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
   imports: [
