@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LabRating } from './rating/models/rating.entity';
-import { LocationEntities } from './location/models';
-import { LocationModule } from './location/location.module';
-import { RatingModule } from './rating/rating.module';
+import { LabRating } from './models/rating.entity';
+import { RatingController } from './rating.controller';
+import { RatingService } from './rating.service';
 // import dotenv from 'dotenv';
 
 require('dotenv').config()
@@ -17,11 +16,11 @@ require('dotenv').config()
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
-      entities: [...LocationEntities, LabRating],
       autoLoadEntities: true,
     }),
-    LocationModule,
-    RatingModule
+    TypeOrmModule.forFeature([LabRating]),
   ],
+  controllers: [RatingController],
+  providers: [RatingService],
 })
-export class AppModule {}
+export class RatingModule {}
