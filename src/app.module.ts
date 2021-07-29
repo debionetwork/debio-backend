@@ -4,6 +4,7 @@ import { LabRating } from './rating/models/rating.entity';
 import { LocationEntities } from './location/models';
 import { LocationModule } from './location/location.module';
 import { RatingModule } from './rating/rating.module';
+import { SubstrateModule } from './substrate/substrate.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -21,7 +22,8 @@ require('dotenv').config(); // eslint-disable-line
       autoLoadEntities: true,
     }),
     LocationModule,
-    RatingModule
+    RatingModule,
+    SubstrateModule,
   ],
 })
 export class AppModule {}
