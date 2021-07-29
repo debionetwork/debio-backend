@@ -8,7 +8,6 @@ export class SubstrateService implements OnModuleInit {
 
   async onModuleInit() {
     Logger.log(' Connecting to substrate chain...');
-    console.log(process.env.SUBSTRATE_URL);
     
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({ 
