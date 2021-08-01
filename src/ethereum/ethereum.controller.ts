@@ -1,9 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { EthereumBlockService } from './ethereum.service';
+import { EscrowService } from '../escrow/escrow.service';
 
-@Controller('location')
+@Controller('ethereum')
 export class EthereumController {
-  constructor(private readonly ethereumBlockService: EthereumBlockService) {}
+  constructor(
+    private readonly ethereumBlockService: EthereumBlockService,
+    private readonly escrowService: EscrowService,
+  ) {}
 
   async onModuleInit() {
     console.log('Init Ethereum Controller');
@@ -14,6 +18,17 @@ export class EthereumController {
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumBlockService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
+    console.log('Ready to listen Transfer event ...');
+
+    contract.provider.on('block', async (blockNum) => {
+      this.ethereumBlockService.setLastBlock(blockNum);
+    });
+
+    contract.on('Transfer', async (from, to, amount, event) => {
+      if (to == process.env.DEBIO_ETH_ADDRESS) {
+        await this.escrowService.handlePaymentToEscrow(from, amount);
+      }
+    });
   }
 
   async syncBlock(lastBlock, currentBlock, contract) {
@@ -41,9 +56,6 @@ export class EthereumController {
         null,
         '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
       );
-
-      const event = await contract.queryFilter(filter, iStart, iEnd);
-      console.log('event: ', event);
 
       // Remember the last block number processed
       await this.ethereumBlockService.setLastBlock(iEnd);
