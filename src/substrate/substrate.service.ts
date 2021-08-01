@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
-import spec from './substrateTypes'
+import spec from './substrateTypes';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -8,12 +8,11 @@ export class SubstrateService implements OnModuleInit {
 
   async onModuleInit() {
     Logger.log(' Connecting to substrate chain...');
-    
-    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
-    this.api = await ApiPromise.create({ 
-      provider: wsProvider,
-      types: spec
-    });
 
+    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
+    this.api = await ApiPromise.create({
+      provider: wsProvider,
+      types: spec,
+    });
   }
 }

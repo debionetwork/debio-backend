@@ -3,7 +3,6 @@ import { CityService } from './city.service';
 import { CountryService } from './country.service';
 import { RegionService } from './region.service';
 
-
 @Controller('location')
 export class LocationController {
   constructor(
@@ -23,7 +22,7 @@ export class LocationController {
     if (city_code) {
       resLocation = await this.cityService.getOneCity(city_code);
       for (const key in resLocation) {
-        resLocation[key] = resLocation[key].trim()
+        resLocation[key] = resLocation[key].trim();
       }
     } else {
       if (region_code) {
@@ -35,14 +34,13 @@ export class LocationController {
         resLocation = await this.regionService.getAllRegion(country_code);
       } else {
         resLocation = await this.countryService.getAll();
-        
       }
-      resLocation.forEach(element => {
+      resLocation.forEach((element) => {
         for (const key in element) {
-          element[key] = element[key].trim()
+          element[key] = element[key].trim();
         }
       });
-    } 
+    }
     return { status: 'ok', data: resLocation };
   }
 }
