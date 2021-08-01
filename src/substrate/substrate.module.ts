@@ -1,5 +1,5 @@
-import { Module } from "@nestjs/common";
-import { SubstrateService } from "./substrate.service";
+import { Module } from '@nestjs/common';
+import { SubstrateService } from './substrate.service';
 
 @Module({
   imports: [],
