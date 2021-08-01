@@ -20,4 +20,10 @@ export class RatingService {
     rating.created = data.created;
     return this.ratingRepository.save(rating)
   }
+
+  getRatingByLabId(lab_id: string) {
+    return this.ratingRepository.find({
+      where: { lab_id }
+    })
+  }
 }

@@ -5,6 +5,7 @@ import { LocationEntities } from './location/models';
 import { LocationModule } from './location/location.module';
 import { RatingModule } from './rating/rating.module';
 import { EthereumModul } from './ethereum/ethereum.module';
+import { SubstrateModule } from './substrate/substrate.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -24,6 +25,7 @@ require('dotenv').config(); // eslint-disable-line
     LocationModule,
     RatingModule,
     EthereumModul,
+    SubstrateModule,
   ],
 })
 export class AppModule {}

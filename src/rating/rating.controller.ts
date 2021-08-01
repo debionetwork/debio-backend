@@ -1,8 +1,8 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { CreateRatingDto } from "./dto/create-rating.dto";
 import { RatingService } from "./rating.service";
 
-@Controller('labRating')
+@Controller('rating')
 export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
 
@@ -13,6 +13,28 @@ export class RatingController {
     return {
       data: await this.ratingService.create(data)
     }
+  }
+
+  @Get(':lab_id')
+  async getLabRating(
+    @Param('lab_id') lab_id: string
+  ) {
+    let labRatings = await this.ratingService.getRatingByLabId(lab_id)
+
+    let responce = {
+      lab_id, 
+      rating: null
+    }
+    
+    if(labRatings.length>0) {
+      let labRatingCount = 0
+      labRatings.forEach(element => {
+        labRatingCount += element.rating
+      });
+      responce.rating = labRatingCount/labRatings.length
+    } 
+
+    return { status: 'ok', data: responce };
   }
 
 }
