@@ -1,5 +1,6 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
+import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
@@ -7,16 +8,21 @@ export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private orderEventHandler: OrderEventHandler;
 
-  async onModuleInit() {
-    Logger.log(' Connecting to substrate chain...');
+  constructor(
+    @Inject(forwardRef(() => EscrowService))
+    private escrowService: EscrowService,
+  ) {
+    this.orderEventHandler = new OrderEventHandler(escrowService);
+  }
 
+  async onModuleInit() {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
       types: spec,
     });
 
-    this.orderEventHandler = new OrderEventHandler();
+    // this.escrowService = new EscrowService(this);
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -28,7 +34,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderPaid(orderId: string) {
-    console.log('TODO: Implement');
+    console.log('[setOrderPaid] orderID: ', orderId);
   }
 
   listenToEvents() {
@@ -48,6 +54,7 @@ export class SubstrateService implements OnModuleInit {
 }
 
 class OrderEventHandler {
+  constructor(private escrowService: EscrowService) {}
   handle(event) {
     switch (event.method) {
       case 'OrderCreated':
@@ -77,11 +84,12 @@ class OrderEventHandler {
   onOrderCreated(event) {
     console.log('OrderCreated! TODO: handle event');
     const order = event.data[0];
-    // substrateApi.escrow.CreatedRequest(order.toJSON());
+    this.escrowService.createOrder(order.toJSON());
   }
 
   onOrderPaid(event) {
     console.log('OrderPaid! TODO: handle event');
+    this.escrowService.orderSuccess(event);
   }
 
   async onOrderSuccess(event) {
@@ -89,7 +97,7 @@ class OrderEventHandler {
     const order = event.data[0];
     const data = order.toJSON();
     console.log('Order = ', order.toJSON());
-    // substrateApi.escrow.OrderSuccess(order.toJSON());
+    this.escrowService.orderSuccess(order.toJSON());
   }
 
   onOrderRefunded(event) {
@@ -99,8 +107,8 @@ class OrderEventHandler {
   onOrderCancelled(event) {
     console.log('OrderCancelled! TODO: handle event');
     const order = event.data[0];
-    console.log('onOrderRefunded = ', order.toJSON());
-    // substrateApi.escrow.CancelOrder(order.toJSON());
+    console.log('onOrderCancelled = ', order.toJSON());
+    this.escrowService.cancelOrder(order.toJSON());
   }
 
   onOrderNotFound(event) {
@@ -111,6 +119,6 @@ class OrderEventHandler {
     console.log('OrderFailed! TODO: handle event');
     const order = event.data[0];
     console.log('onOrderRefunded = ', order.toJSON());
-    // substrateApi.escrow.RefundRequest(order.toJSON());
+    this.escrowService.refundOrder(order.toJSON());
   }
 }
