@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { EthersModule } from 'nestjs-ethers';
-import { EthereumBlockService } from './ethereum.service';
+import { EthereumService } from './ethereum.service';
 import { EthereumController } from './ethereum.controller';
 import { EscrowModule } from '../escrow/escrow.module';
 
@@ -10,9 +10,10 @@ import { EscrowModule } from '../escrow/escrow.module';
       network: 'wss://testnet.theapps.dev/node',
       useDefaultProvider: true,
     }),
-    EscrowModule,
+    forwardRef(() => EscrowModule),
   ],
   controllers: [EthereumController],
-  providers: [EthereumBlockService],
+  providers: [EthereumService],
+  exports: [EthereumService],
 })
-export class EthereumModul {}
+export class EthereumModule {}

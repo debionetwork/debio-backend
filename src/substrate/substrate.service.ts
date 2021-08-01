@@ -1,20 +1,26 @@
-import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  OnModuleInit,
+  Logger,
+} from '@nestjs/common';
+import { Option } from '@polkadot/types';
 import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
-  private newPair: any;
+  private escrowWallet: any;
   private orderEventHandler: OrderEventHandler;
+  private readonly logger: Logger = new Logger(SubstrateService.name);
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
-    escrowService: EscrowService,
-  ) {
-    this.orderEventHandler = new OrderEventHandler(escrowService);
-  }
+    private escrowService: EscrowService,
+  ) {}
 
   async onModuleInit() {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
@@ -24,8 +30,14 @@ export class SubstrateService implements OnModuleInit {
     });
 
     const keyring = new Keyring({ type: 'sr25519' });
-    this.newPair = await keyring.addFromUri(
+    this.escrowWallet = await keyring.addFromUri(
       process.env.ESCROW_SUBSTRATE_MNEMONIC,
+    );
+
+    this.orderEventHandler = new OrderEventHandler(
+      this.escrowService,
+      this.api,
+      this.logger,
     );
   }
 
@@ -52,7 +64,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderPaid(orderId: string) {
-    const wallet = this.newPair;
+    const wallet = this.escrowWallet;
     const response = await this.api.tx.orders
       .setOrderPaid(orderId)
       .signAndSend(wallet, {
@@ -79,7 +91,11 @@ export class SubstrateService implements OnModuleInit {
 }
 
 class OrderEventHandler {
-  constructor(private escrowService: EscrowService) {}
+  constructor(
+    private escrowService: EscrowService,
+    private substrateApi: ApiPromise,
+    private logger: Logger,
+  ) {}
   handle(event) {
     switch (event.method) {
       case 'OrderCreated':
@@ -117,11 +133,39 @@ class OrderEventHandler {
   }
 
   async onOrderSuccess(event) {
-    console.log('OrderSuccess! TODO: Forward token from escrow to seller');
-    const order = event.data[0];
-    const data = order.toJSON();
-    console.log('Order = ', order.toJSON());
-    this.escrowService.orderSuccess(order.toJSON());
+    try {
+      const order = event.data[0].toJSON();
+      const resp =
+        await this.substrateApi.query.userProfile.ethAddressByAccountId(
+          order['seller_id'],
+        );
+      if ((resp as Option<any>).isNone) {
+        return null;
+      }
+      const labEthAddress = (resp as Option<any>).unwrap().toString();
+      const totalPrice = order.prices.reduce(
+        (acc, price) => acc + price.value,
+        0,
+      );
+      const totalAdditionalPrice = order.additional_prices.reduce(
+        (acc, price) => acc + price.value,
+        0,
+      );
+      const amountToForward = totalPrice + totalAdditionalPrice;
+
+      this.logger.log('OrderSuccess Event');
+      this.logger.log('Forwarding payment to lab');
+      this.logger.log(`labEthAddress: ${labEthAddress}`);
+      this.logger.log(`amountToForward: ${amountToForward}`);
+      const tx = await this.escrowService.forwardPaymentToSeller(
+        labEthAddress,
+        amountToForward,
+      );
+      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
+    } catch (err) {
+      console.log(err);
+      this.logger.log(`Forward payment failed | err -> ${err}`);
+    }
   }
 
   onOrderRefunded(event) {
