@@ -5,7 +5,7 @@ import {
   createFile,
   checkIfFileOrDirectoryExists,
 } from '../helper/storage.helper';
-import * as ABI from './utils/ABI.json';
+import ABI from './utils/ABI.json';
 
 @Injectable()
 export class EthereumBlockService {
