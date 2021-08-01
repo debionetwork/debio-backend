@@ -12,19 +12,9 @@ import { RegionService } from './region.service';
 require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.HOST_POSTGRES,
-      port: 5432,
-      username: process.env.USERNAME_POSTGRES,
-      password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_POSTGRES,
-      autoLoadEntities: true,
-    }),
-    TypeOrmModule.forFeature([Country, Region, City]),
-  ],
+  imports: [TypeOrmModule.forFeature([Country, Region, City])],
   controllers: [LocationController],
   providers: [CountryService, RegionService, CityService],
+  exports: [TypeOrmModule, RegionService, CityService],
 })
 export class LocationModule {}
