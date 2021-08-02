@@ -1,16 +1,17 @@
 import { forwardRef, Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
 import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
+  private newPair: any;
   private orderEventHandler: OrderEventHandler;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
-    private escrowService: EscrowService,
+    escrowService: EscrowService,
   ) {
     this.orderEventHandler = new OrderEventHandler(escrowService);
   }
@@ -22,19 +23,43 @@ export class SubstrateService implements OnModuleInit {
       types: spec,
     });
 
-    // this.escrowService = new EscrowService(this);
+    const keyring = new Keyring({ type: 'sr25519' });
+    this.newPair = await keyring.addFromUri(
+      process.env.ESCROW_SUBSTRATE_MNEMONIC,
+    );
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
-    console.log('TODO: Implement');
+    const response = await this.api.query.userProfile.accountIdByEthAddress(
+      ethAddress,
+    );
+
+    console.log(response);
+    return response.toString();
   }
 
   async getLastOrderByCustomer(substrateAddress: string) {
-    console.log('TODO: Implement');
+    const response = await this.api.query.orders.lastOrderByCustomer(
+      substrateAddress,
+    );
+
+    return response.toString();
+  }
+
+  async getOrderDetailByOrderID(orderID: string) {
+    const response = await this.api.query.orders.orders(orderID);
+    return response.toJSON();
   }
 
   async setOrderPaid(orderId: string) {
-    console.log('[setOrderPaid] orderID: ', orderId);
+    const wallet = this.newPair;
+    const response = await this.api.tx.orders
+      .setOrderPaid(orderId)
+      .signAndSend(wallet, {
+        nonce: -1,
+      });
+
+    console.log(response);
   }
 
   listenToEvents() {
@@ -89,7 +114,6 @@ class OrderEventHandler {
 
   onOrderPaid(event) {
     console.log('OrderPaid! TODO: handle event');
-    this.escrowService.orderSuccess(event);
   }
 
   async onOrderSuccess(event) {

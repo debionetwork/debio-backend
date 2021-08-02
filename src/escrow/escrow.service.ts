@@ -1,24 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { formatEther } from 'nestjs-ethers';
 import { SubstrateService } from 'src/substrate/substrate.service';
+import { Utils } from './utils/utils';
 
 @Injectable()
 export class EscrowService {
-  /**
-   *
-   */
-  constructor(private substrateService: SubstrateService) {}
+  private utils: Utils;
+
+  constructor(private substrateService: SubstrateService) {
+    this.utils = new Utils();
+  }
+
   async handlePaymentToEscrow(from, amount) {
     console.log('[handlePaymentToEscrow] from:', from, ' amount:', amount);
-
     try {
-      const price = await formatEther(amount);
-      console.log(price);
-    } catch (error) {
-      console.log(error);
-    }
+      const strAmount = await formatEther(amount);
+      console.log(strAmount);
 
-    this.substrateService.setOrderPaid('123');
+      const substrateAddr =
+        await this.substrateService.getSubstrateAddressByEthAddress(from);
+      const lastOrderID = await this.substrateService.getLastOrderByCustomer(
+        substrateAddr,
+      );
+
+      const orderDetail = await this.substrateService.getOrderDetailByOrderID(
+        lastOrderID,
+      );
+
+      const priceList = this.utils.GetDetailPrice(orderDetail);
+      const totalPrice = priceList[0] + priceList[1];
+
+      if (parseInt(strAmount, 10) != totalPrice) {
+        console.log(
+          '[handlePaymentToEscrow] return cancel.',
+          strAmount,
+          ' : ',
+          totalPrice,
+        );
+        return;
+      }
+
+      await this.substrateService.setOrderPaid(lastOrderID);
+    } catch (error) {
+      console.log('[handlePaymentToEscrow] failed: ', error);
+    }
   }
 
   async createOrder(request) {
