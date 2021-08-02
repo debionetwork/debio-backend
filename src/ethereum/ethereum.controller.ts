@@ -1,11 +1,11 @@
 import { Controller } from '@nestjs/common';
-import { EthereumBlockService } from './ethereum.service';
+import { EthereumService } from './ethereum.service';
 import { EscrowService } from '../escrow/escrow.service';
 
 @Controller('ethereum')
 export class EthereumController {
   constructor(
-    private readonly ethereumBlockService: EthereumBlockService,
+    private readonly ethereumService: EthereumService,
     private readonly escrowService: EscrowService,
   ) {}
 
@@ -14,14 +14,14 @@ export class EthereumController {
   }
 
   async onApplicationBootstrap() {
-    const contract = await this.ethereumBlockService.getContract();
+    const contract = await this.ethereumService.getContract();
     const currentBlock = await contract.provider.getBlockNumber();
-    const lastBlock = await this.ethereumBlockService.getLastBlock();
+    const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
     console.log('Ready to listen Transfer event ...');
 
     contract.provider.on('block', async (blockNum) => {
-      this.ethereumBlockService.setLastBlock(blockNum);
+      this.ethereumService.setLastBlock(blockNum);
     });
 
     contract.on('Transfer', async (from, to, amount, event) => {
@@ -58,7 +58,7 @@ export class EthereumController {
       );
 
       // Remember the last block number processed
-      await this.ethereumBlockService.setLastBlock(iEnd);
+      await this.ethereumService.setLastBlock(iEnd);
 
       iStart = iEnd + 1;
       iEnd = iEnd + chunkSize > endBlock ? endBlock : iEnd + chunkSize;

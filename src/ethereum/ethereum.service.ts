@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EthersContract, SmartContract } from 'nestjs-ethers';
+import {
+  EthersContract,
+  EthersSigner,
+  SmartContract,
+  WalletSigner,
+} from 'nestjs-ethers';
 import {
   getFile,
   createFile,
@@ -8,11 +13,14 @@ import {
 import ABI from './utils/ABI.json';
 
 @Injectable()
-export class EthereumBlockService {
-  constructor(private readonly ethersContract: EthersContract) {}
+export class EthereumService {
+  constructor(
+    private readonly ethersContract: EthersContract,
+    private readonly ethersSigner: EthersSigner,
+  ) {}
 
   async onModuleInit() {
-    console.log('Di EthereumBlockService');
+    console.log('Di EthereumService');
   }
 
   async getLastBlock(): Promise<number> {
@@ -43,5 +51,12 @@ export class EthereumBlockService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async createWallet(privateKey: string): Promise<WalletSigner> {
+    const wallet: WalletSigner = await this.ethersSigner.createWallet(
+      privateKey,
+    );
+    return wallet;
   }
 }
