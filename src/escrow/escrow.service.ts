@@ -55,7 +55,11 @@ export class EscrowService {
 
   async refundOrder(request) {
     console.log('[refundOrder] request: ', request);
-    // this.substrateService.setOrderRefunded(request.id)
+    try {
+      this.substrateService.setOrderRefunded(request.id)
+    } catch (error) {
+      console.log(error);      
+    }
   }
 
   async cancelOrder(request) {
