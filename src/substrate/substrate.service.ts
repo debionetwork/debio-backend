@@ -74,6 +74,14 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
+  async setOrderRefunded(orderId: string) {
+    const wallet = this.escrowWallet;
+    const response = await this.api.tx.orders
+      .setOrderRefunded(orderId)
+
+    console.log(response);
+  }
+
   listenToEvents() {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
@@ -189,4 +197,5 @@ class OrderEventHandler {
     console.log('onOrderRefunded = ', order.toJSON());
     this.escrowService.refundOrder(order.toJSON());
   }
+
 }
