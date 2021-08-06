@@ -67,26 +67,26 @@ steps:
         - development
 
   - name: reload service - devel
-      pull: if-not-exists
-      image: appleboy/drone-ssh
-      volumes:
-        - name: toolkit
-          path: /data/drone_data
-      settings:
-        host:
-          from_secret: devel_host
-        username:
-          from_secret: devel_uname
-        key_path: /data/drone_data/.ssh/id_rsa
-        port: 22
-        script:
-          - docker stop debio_backend_v2_dev || true && docker rm debio_backend_v2_dev || true
-          - docker rmi asia.gcr.io/degenics/debio_backend_v2_dev:latest
-          - docker pull asia.gcr.io/degenics/debio_backend_v2_dev:latest
-          - docker run -d --network=host --name=debio_backend_v2_dev --env=DEBIOENV=development -v /etc/localtime:/etc/localtime:ro --restart=always asia.gcr.io/degenics/debio_backend_v2_dev:latest
-      when:
-        branch:
-          - development
+    pull: if-not-exists
+    image: appleboy/drone-ssh
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+    settings:
+      host:
+        from_secret: devel_host
+      username:
+        from_secret: devel_uname
+      key_path: /data/drone_data/.ssh/id_rsa
+      port: 22
+      script:
+        - docker stop debio_backend_v2_dev || true && docker rm debio_backend_v2_dev || true
+        - docker rmi asia.gcr.io/degenics/debio_backend_v2_dev:latest
+        - docker pull asia.gcr.io/degenics/debio_backend_v2_dev:latest
+        - docker run -d --network=host --name=debio_backend_v2_dev --env=DEBIOENV=development -v /etc/localtime:/etc/localtime:ro --restart=always asia.gcr.io/degenics/debio_backend_v2_dev:latest
+    when:
+      branch:
+        - development
 
   - name: notify deployment
     image: appleboy/drone-discord
