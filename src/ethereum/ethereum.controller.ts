@@ -19,7 +19,7 @@ export class EthereumController {
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
     console.log('Ready to listen Transfer event ...');
-  
+
     contract.provider.on('block', async (blockNum) => {
       this.ethereumService.setLastBlock(blockNum);
     });
@@ -63,5 +63,5 @@ export class EthereumController {
       iStart = iEnd + 1;
       iEnd = iEnd + chunkSize > endBlock ? endBlock : iEnd + chunkSize;
     }
-   }
+  }
 }
