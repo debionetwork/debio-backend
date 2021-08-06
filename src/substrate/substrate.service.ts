@@ -74,6 +74,17 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
+  async setOrderRefunded(orderId: string) {
+    const wallet = this.escrowWallet;
+    const response = await this.api.tx.orders
+      .setOrderRefunded(orderId)
+      .signAndSend(wallet, {
+        nonce: -1,
+      });
+
+    console.log(response);
+  }
+
   listenToEvents() {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
