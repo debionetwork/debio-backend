@@ -200,5 +200,4 @@ class OrderEventHandler {
     console.log('onOrderRefunded = ', order.toJSON());
     this.escrowService.refundOrder(order.toJSON());
   }
-
 }
