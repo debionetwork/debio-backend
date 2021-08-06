@@ -55,16 +55,16 @@ steps:
         - development
 
   - name: merge pull request
-      pull: if-not-exists
-      image: alpine/git
-      volumes:
-        - name: toolkit
-          path: /data/drone_data
-      commands:
-        - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
-      when:
-        branch:
-          - development
+    pull: if-not-exists
+    image: alpine/git
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+    commands:
+      - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
+    when:
+      branch:
+        - development
 
   - name: reload service - devel
       pull: if-not-exists
