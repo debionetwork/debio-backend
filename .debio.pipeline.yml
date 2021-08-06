@@ -61,7 +61,7 @@ steps:
       - name: toolkit
         path: /data/drone_data
     commands:
-      - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
+      - echo "/data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}"
     when:
       branch:
         - development
