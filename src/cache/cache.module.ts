@@ -4,10 +4,12 @@ import { APP_INTERCEPTOR } from "@nestjs/core";
 @Module({
   imports: [CacheModule.register()],
   controllers: [],
-  providers: [{
+  providers: [
+    {
     provide: APP_INTERCEPTOR,
     useClass: CacheInterceptor,
-  }]
+    }
+  ]
 })
 
 export class CachingModule {}
