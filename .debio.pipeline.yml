@@ -46,10 +46,9 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker login -u _json_key --password-stdin https://asia.gcr.io < /data/drone_data/auth.json
       - /data/drone_data/debio_toolkit -vault -env -secret=debio_development/data/backend_v2
-      - docker build -t asia.gcr.io/degenics/debio_backend_v2_dev:latest .
-      - docker push asia.gcr.io/degenics/debio_backend_v2_dev:latest
+      - docker build -t hub.debio.network/debio_backend_v2_dev:latest .
+      - docker push hub.debio.network/debio_backend_v2_dev:latest
     when:
       branch:
         - development
@@ -81,9 +80,9 @@ steps:
       port: 22
       script:
         - docker stop debio_backend_v2_dev || true && docker rm debio_backend_v2_dev || true
-        - docker rmi asia.gcr.io/degenics/debio_backend_v2_dev:latest
-        - docker pull asia.gcr.io/degenics/debio_backend_v2_dev:latest
-        - docker run -d --network=host --name=debio_backend_v2_dev --env=DEBIOENV=development -v /etc/localtime:/etc/localtime:ro --restart=always asia.gcr.io/degenics/debio_backend_v2_dev:latest
+        - docker rmi hub.debio.network/debio_backend_v2_dev:latest
+        - docker pull hub.debio.network/debio_backend_v2_dev:latest
+        - docker run -d --network=host --name=debio_backend_v2_dev --env=DEBIOENV=development -v /etc/localtime:/etc/localtime:ro --restart=always hub.debio.network/debio_backend_v2_dev:latest
     when:
       branch:
         - development
