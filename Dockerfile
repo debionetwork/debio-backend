@@ -14,5 +14,7 @@ RUN npm install
 COPY . .
 ENV DEBIOENV=development
 
+RUN npm run build
+
 EXPOSE 9000
 CMD [ "npm", "run", "start:prod"]
