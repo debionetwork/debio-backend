@@ -7,7 +7,7 @@ import { EscrowModule } from '../escrow/escrow.module';
 @Module({
   imports: [
     EthersModule.forRoot({
-      network: 'wss://testnet.theapps.dev/node',
+      network: process.env.WEB3_RPC,
       useDefaultProvider: true,
     }),
     forwardRef(() => EscrowModule),
