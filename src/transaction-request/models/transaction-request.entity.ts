@@ -2,8 +2,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'transaction_requests'})
 export class TransactionRequest {
-  @PrimaryGeneratedColumn()
-  id: bigint;
+  @PrimaryGeneratedColumn({ type: 'bigint' })
+  id: string;
 
   @Column()
   address: string;
@@ -14,7 +14,7 @@ export class TransactionRequest {
   @Column()
   type: number;
   
-  @Column()
+  @Column({ type: 'bigint'})
   amount: bigint;
   
   @Column()
@@ -26,7 +26,7 @@ export class TransactionRequest {
   @Column()
   ref_number: string
   
-  @Column()
+  @Column({ type: 'bigint'})
   parent_id: bigint;
   
 }
