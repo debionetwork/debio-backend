@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { formatEther, WalletSigner } from 'nestjs-ethers';
 import { EthereumService } from 'src/ethereum/ethereum.service';
 import { SubstrateService } from 'src/substrate/substrate.service';
@@ -8,6 +8,7 @@ import { ethers } from 'ethers';
 @Injectable()
 export class EscrowService {
   private utils: Utils;
+  private readonly logger: Logger = new Logger(SubstrateService.name);
   constructor(
     private substrateService: SubstrateService,
     private ethereumService: EthereumService,
@@ -56,9 +57,32 @@ export class EscrowService {
   async refundOrder(request) {
     console.log('[refundOrder] request: ', request);
     try {
+      const buyerEthAddress =
+        await this.substrateService.getEthAddressByAccountId(
+          request.customer_id,
+        );
+
+      const totalPrice = request.prices.reduce(
+        (acc, price) => acc + price.value,
+        0,
+      );
+
+      this.logger.log('refundOrder Event');
+      this.logger.log('Forwarding payment to customer');
+      this.logger.log(`labEthAddress: ${buyerEthAddress}`);
+      this.logger.log(`amountToForward: ${totalPrice}`);
+      const tx = await this.forwardPaymentToSeller(buyerEthAddress, totalPrice);
+      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
+    } catch (error) {
+      console.log(error);
+      this.logger.log(`Forward payment refund failed | err -> ${error}`);
+    }
+
+    try {
       this.substrateService.setOrderRefunded(request.id);
     } catch (error) {
       console.log(error);
+      this.logger.log(`set order refunded failed | err -> ${error}`);
     }
   }
 

@@ -63,6 +63,22 @@ export class SubstrateService implements OnModuleInit {
     return response.toJSON();
   }
 
+  async getEthAddressByAccountId(accountID) {
+    try {
+      const resp = await this.api.query.userProfile.ethAddressByAccountId(
+        accountID,
+      );
+      if ((resp as Option<any>).isNone) {
+        return null;
+      }
+      const labEthAddress = (resp as Option<any>).unwrap().toString();
+      return labEthAddress;
+    } catch (error) {
+      console.log(error);
+      this.logger.log(`GetETHAddress failed | err -> ${error}`);
+    }
+  }
+
   async setOrderPaid(orderId: string) {
     const wallet = this.escrowWallet;
     const response = await this.api.tx.orders
@@ -83,6 +99,25 @@ export class SubstrateService implements OnModuleInit {
       });
 
     console.log(response);
+  }
+
+  async bindingEthAddress(mnemonic: string, ethAddress: string) {
+    try {
+      const keyring = new Keyring({ type: 'sr25519' });
+      const wallet = await keyring.addFromUri(mnemonic);
+      const response = await this.api.tx.userProfile
+        .setEthAddress(ethAddress)
+        .signAndSend(wallet, {
+          nonce: -1,
+        });
+
+      console.log(response);
+      return 'success';
+    } catch (error) {
+      console.log(error);
+      this.logger.log(`bindingEthAddress failed | err -> ${error}`);
+      return error;
+    }
   }
 
   listenToEvents() {
