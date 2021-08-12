@@ -94,7 +94,7 @@
     "_enum": [
       "Unpaid",
       "Paid",
-      "Success",
+      "Fulfilled",
       "Refunded",
       "Cancelled",
       "Failed"
@@ -120,7 +120,7 @@
   "DnaSampleStatus": {
     "_enum": [
       "Registered",
-      "Success",
+      "Fulfilled",
       "Failed",
       "Prepared",
       "Extracted",

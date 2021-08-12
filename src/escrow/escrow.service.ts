@@ -67,8 +67,8 @@ export class EscrowService {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderSuccess(request) {
-    console.log('[orderSuccess] request: ', request);
+  async orderFulfilled(request) {
+    console.log('[orderFulfilled] request: ', request);
   }
 
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
