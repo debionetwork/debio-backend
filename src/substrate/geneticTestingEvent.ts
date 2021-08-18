@@ -54,8 +54,6 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     console.log('DnaSampleQualityControlled! TODO: handle event');
     try {
       const dataRequest = event.data[0].toJSON();
-      console.log('data input niii====> ', dataRequest.order_id);
-
       const dataOrder = await (
         await this.api.query.orders.orders(dataRequest.order_id)
       ).toJSON();
@@ -79,9 +77,8 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
         parent_id: BigInt(0),
         ref_number: dataRequest.order_id,
         ref_type: 3,
-        type: 3,
+        type: 1,
       };
-      console.log('+++++++', dataInput);
 
       this.qualityControlledService.create(dataInput);
     } catch (error) {
