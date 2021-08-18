@@ -1,4 +1,5 @@
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
+import { KeyringPair } from '@polkadot/keyring/types';
 import {
   forwardRef,
   Inject,
@@ -9,11 +10,13 @@ import {
 import { Option } from '@polkadot/types';
 import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
+import { RegistrationRole } from './substrate.controller';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private escrowWallet: any;
+  private faucetWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
 
@@ -32,6 +35,9 @@ export class SubstrateService implements OnModuleInit {
     const keyring = new Keyring({ type: 'sr25519' });
     this.escrowWallet = await keyring.addFromUri(
       process.env.ESCROW_SUBSTRATE_MNEMONIC,
+    );
+    this.faucetWallet = await keyring.addFromUri(
+      process.env.FAUCET_SUBSTRATE_MNEMONIC,
     );
 
     this.orderEventHandler = new OrderEventHandler(
@@ -83,6 +89,55 @@ export class SubstrateService implements OnModuleInit {
       });
 
     console.log(response);
+  }
+
+  async sendDbioFromFaucet(
+    accountId: string,
+    amount: number | string,
+  ): Promise<any> {
+    const wallet = this.faucetWallet;
+
+    return new Promise(async (resolve) => {
+      const unsub = await this.api.tx.balances
+        .transfer(accountId, amount)
+        .signAndSend(wallet, { nonce: -1 }, (result) => {
+          if (result.status.isInBlock) {
+            this.logger.log(
+              `Transaction included at blockHash ${result.status.asInBlock}`,
+            );
+          } else if (result.status.isFinalized) {
+            this.logger.log(
+              `Transaction finalized at blockHash ${result.status.asFinalized}`,
+            );
+            unsub();
+            resolve(true);
+          }
+        });
+    });
+  }
+
+  async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
+    let hasRole = false;
+    let resp: any;
+    switch (role) {
+      case 'doctor':
+        resp = await this.api.query.doctors.doctors(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+      case 'hospital':
+        resp = await this.api.query.hospitals.hospitals(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+      case 'lab':
+        resp = await this.api.query.labs.labs(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+    }
+
+    return hasRole;
   }
 
   listenToEvents() {
