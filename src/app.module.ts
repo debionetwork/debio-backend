@@ -31,7 +31,7 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     SubstrateModule,
     CachingModule,
-    QualityControlledModule
+    QualityControlledModule,
   ],
 })
 export class AppModule {}

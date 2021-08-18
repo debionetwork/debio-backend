@@ -1,7 +1,7 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { QualityControlledService } from "src/quality-Controlled/quality-controlled.service";
-import { SubstrateService } from "./substrate.service";
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { QualityControlledService } from 'src/quality-Controlled/quality-controlled.service';
+import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
@@ -17,14 +17,13 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     this.api = await ApiPromise.create({
       provider: wsProvider,
       types: spec,
-    });    
+    });
   }
-  
+
   handle(event) {
-  
     switch (event.method) {
       case 'DnaSampleArrived ':
-        this.onDnaSampleArrived (event);
+        this.onDnaSampleArrived(event);
         break;
       case 'DnaSampleQualityControlled':
         this.onDnaSampleQualityControlled(event);
@@ -47,43 +46,44 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     }
   }
 
-  onDnaSampleArrived (event) {
+  onDnaSampleArrived(event) {
     console.log('DnaSampleArrived! TODO: handle event');
   }
 
   async onDnaSampleQualityControlled(event) {
     console.log('DnaSampleQualityControlled! TODO: handle event');
     try {
-      const dataRequest = event.data[0].toJSON()
-      console.log("data input niii====> ", dataRequest.order_id);
-      
-      let dataOrder = await (await this.api.query.orders.orders(dataRequest.order_id)).toJSON()
-      
+      const dataRequest = event.data[0].toJSON();
+      console.log('data input niii====> ', dataRequest.order_id);
+
+      const dataOrder = await (
+        await this.api.query.orders.orders(dataRequest.order_id)
+      ).toJSON();
+
       interface DataInput {
-        address : string
-        amount : bigint
-        create_at : Date
-        currency : string
-        parent_id : bigint
-        ref_number : string
-        ref_type : number
-        type : number
+        address: string;
+        amount: bigint;
+        create_at: Date;
+        currency: string;
+        parent_id: bigint;
+        ref_number: string;
+        ref_type: number;
+        type: number;
       }
 
       const dataInput: DataInput = {
-        address : dataRequest.owner_id,
-        amount : dataOrder['additional_prices'][0].value,
-        create_at : new Date(parseInt(dataRequest.updated_at)),
-        currency : dataOrder['currency'],
-        parent_id : BigInt(1),
-        ref_number : dataRequest.order_id,
-        ref_type : 3,
-        type : 3
-      }
-      console.log("+++++++", dataInput);
-      
-      this.qualityControlledService.create(dataInput)
-      
+        address: dataRequest.owner_id,
+        amount: dataOrder['additional_prices'][0].value,
+        create_at: new Date(parseInt(dataRequest.updated_at)),
+        currency: dataOrder['currency'],
+        parent_id: BigInt(1),
+        ref_number: dataRequest.order_id,
+        ref_type: 3,
+        type: 3,
+      };
+      console.log('+++++++', dataInput);
+
+      this.qualityControlledService.create(dataInput);
     } catch (error) {
       console.log(error);
     }

@@ -5,12 +5,9 @@ import { EscrowModule } from 'src/escrow/escrow.module';
 import { QualityControlledModule } from 'src/quality-Controlled/quality-controlled.module';
 
 @Module({
-  imports: [
-    forwardRef(() => EscrowModule),
-    QualityControlledModule
-  ],
+  imports: [forwardRef(() => EscrowModule), QualityControlledModule],
   controllers: [SubstrateController],
-  providers: [SubstrateService,],
+  providers: [SubstrateService],
   exports: [SubstrateService],
 })
 export class SubstrateModule {}
