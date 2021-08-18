@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'transaction_requests'})
-export class TransactionRequest {
+export class QualityControlled {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: string;
 

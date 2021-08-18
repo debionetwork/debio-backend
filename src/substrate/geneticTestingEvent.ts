@@ -1,121 +1,111 @@
-import { Logger } from "@nestjs/common";
-import { ApiPromise } from "@polkadot/api";
-import { Option } from '@polkadot/types';
-import { EscrowService } from "src/escrow/escrow.service";
+import { Injectable, OnModuleInit } from "@nestjs/common";
+import { ApiPromise, WsProvider } from "@polkadot/api";
+import { QualityControlledService } from "src/quality-Controlled/quality-controlled.service";
+import { SubstrateService } from "./substrate.service";
+import spec from './substrateTypes.json';
 
-export default class GeneticTestingEventHandler {
+@Injectable()
+export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
-    private escrowService: EscrowService,
-    private substrateApi: ApiPromise,
-    private logger: Logger,
+    private readonly qualityControlledService: QualityControlledService,
+    private substrateService: SubstrateService,
+    private api: ApiPromise,
   ) {}
+
+  async onModuleInit() {
+    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
+    this.api = await ApiPromise.create({
+      provider: wsProvider,
+      types: spec,
+    });    
+  }
+  
   handle(event) {
+  
     switch (event.method) {
       case 'DnaSampleArrived ':
         this.onDnaSampleArrived (event);
         break;
-      case 'DnaSampleGenotyped':
-        this.onDnaSampleGenotyped(event);
+      case 'DnaSampleQualityControlled':
+        this.onDnaSampleQualityControlled(event);
         break;
-      case 'OrderSuccess':
-        this.onOrderSuccess(event);
+      case 'DnaSampleGenotypedSequenced':
+        this.onDnaSampleGenotypedSequenced(event);
         break;
-      case 'OrderRefunded':
-        this.onOrderRefunded(event);
+      case 'DnaSampleReviewed':
+        this.onDnaSampleReviewed(event);
         break;
-      case 'OrderCancelled':
-        this.onOrderCancelled(event);
+      case 'DnaSampleComputed':
+        this.onDnaSampleComputed(event);
         break;
-      case 'OrderNotFound':
-        this.onOrderNotFound(event);
+      case 'DnaTestResultSubmitted':
+        this.onDnaTestResultSubmitted(event);
         break;
-      case 'OrderFailed':
-        this.onOrderFailed(event);
+      case 'DnaSampleResultReady':
+        this.onDnaSampleResultReady(event);
         break;
-        case 'DnaSampleSuccess':
-          this.onDnaSampleSuccess(event);
-          break;
     }
-  }
-
-  onOrderCreated(event) {
-    console.log('OrderCreated! TODO: handle event');
-    const order = event.data[0];
-    this.escrowService.createOrder(order.toJSON());
-  }
-
-  onOrderPaid(event) {
-    console.log('OrderPaid! TODO: handle event');
-  }
-
-  async onOrderSuccess(event) {
-    try {
-      const order = event.data[0].toJSON();
-      const resp =
-        await this.substrateApi.query.userProfile.ethAddressByAccountId(
-          order['seller_id'],
-        );
-      if ((resp as Option<any>).isNone) {
-        return null;
-      }
-      const labEthAddress = (resp as Option<any>).unwrap().toString();
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const totalAdditionalPrice = order.additional_prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const amountToForward = totalPrice + totalAdditionalPrice;
-
-      this.logger.log('OrderSuccess Event');
-      this.logger.log('Forwarding payment to lab');
-      this.logger.log(`labEthAddress: ${labEthAddress}`);
-      this.logger.log(`amountToForward: ${amountToForward}`);
-      const tx = await this.escrowService.forwardPaymentToSeller(
-        labEthAddress,
-        amountToForward,
-      );
-      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
-    } catch (err) {
-      console.log(err);
-      this.logger.log(`Forward payment failed | err -> ${err}`);
-    }
-  }
-
-  onOrderRefunded(event) {
-    console.log('OrderRefunded! TODO: handle event');
-  }
-
-  onOrderCancelled(event) {
-    console.log('OrderCancelled! TODO: handle event');
-    const order = event.data[0];
-    console.log('onOrderCancelled = ', order.toJSON());
-    this.escrowService.cancelOrder(order.toJSON());
-  }
-
-  onOrderNotFound(event) {
-    console.log('OrderNotFound TODO: handle event');
-  }
-
-  onOrderFailed(event) {
-    console.log('OrderFailed! TODO: handle event');
-    const order = event.data[0];
-    console.log('onOrderRefunded = ', order.toJSON());
-    this.escrowService.refundOrder(order.toJSON());
-  }
-  onDnaSampleSuccess(event) {
-    console.log('DnaSampleSuccess! TODO: handle event--->',event);
   }
 
   onDnaSampleArrived (event) {
     console.log('DnaSampleArrived! TODO: handle event');
-    const order = event.data[0];
-    this.escrowService.createOrder(order.toJSON());
   }
 
-  onDnaSampleGenotyped(event) {
-    console.log('DnaSampleGenotyped! TODO: handle event');
+  async onDnaSampleQualityControlled(event) {
+    console.log('DnaSampleQualityControlled! TODO: handle event');
+    try {
+      const dataRequest = event.data[0].toJSON()
+      console.log("data input niii====> ", dataRequest.order_id);
+      
+      let dataOrder = await (await this.api.query.orders.orders(dataRequest.order_id)).toJSON()
+      
+      interface DataInput {
+        address : string
+        amount : bigint
+        create_at : Date
+        currency : string
+        parent_id : bigint
+        ref_number : string
+        ref_type : number
+        type : number
+      }
+
+      const dataInput: DataInput = {
+        address : dataRequest.owner_id,
+        amount : dataOrder['additional_prices'][0].value,
+        create_at : new Date(parseInt(dataRequest.updated_at)),
+        currency : dataOrder['currency'],
+        parent_id : BigInt(1),
+        ref_number : dataRequest.order_id,
+        ref_type : 3,
+        type : 3
+      }
+      console.log("+++++++", dataInput);
+      
+      this.qualityControlledService.create(dataInput)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  onDnaSampleGenotypedSequenced(event) {
+    console.log('DnaSampleGenotypedSequenced! TODO: handle event');
+  }
+
+  onDnaSampleReviewed(event) {
+    console.log('DnaSampleReviewed! TODO: handle event');
+  }
+
+  onDnaSampleComputed(event) {
+    console.log('DnaSampleComputed TODO: handle event');
+  }
+
+  onDnaTestResultSubmitted(event) {
+    console.log('DnaTestResultSubmitted! TODO: handle event');
+  }
+
+  onDnaSampleResultReady(event) {
+    console.log('DnaSampleResultReady! TODO: handle event--->');
   }
 }

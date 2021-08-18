@@ -9,17 +9,22 @@ import {
 import { Option } from '@polkadot/types';
 import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
+import GeneticTestingEventHandler from './geneticTestingEvent';
+import { QualityControlledService } from 'src/quality-Controlled/quality-controlled.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private escrowWallet: any;
   private orderEventHandler: OrderEventHandler;
+  private geneticTestingEventHandler: GeneticTestingEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
+  private substrateService: SubstrateService;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
+    private readonly qualityService: QualityControlledService,
   ) {}
 
   async onModuleInit() {
@@ -39,6 +44,13 @@ export class SubstrateService implements OnModuleInit {
       this.api,
       this.logger,
     );
+
+    this.geneticTestingEventHandler = new GeneticTestingEventHandler(
+      this.qualityService,
+      this.substrateService,
+      this.api,
+    );
+    
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -90,8 +102,11 @@ export class SubstrateService implements OnModuleInit {
       events.forEach((record) => {
         const { event } = record;
         if(event.section!=='system'){
+          console.log("=================");
+          
           console.log("event = ", event.section)
-          console.log("method = ", event.method)
+          console.log("method = \n", event.method)
+          console.log("method = \n", event.data[0].toJSON())
 
         }
         switch (
@@ -99,9 +114,25 @@ export class SubstrateService implements OnModuleInit {
         ) {
           case 'orders':
             this.orderEventHandler.handle(event);
+            break;
+          case 'geneticTesting':
+            console.log('masuk genetic testing');
+            
+            this.geneticTestingEventHandler.handle(event);
+            break;
         }
       });
+      
     });
+    // let a;
+    //     this.getOrderDetailByOrderID('0xa3c4b90196208529ec490aa8800910678852c82251a847f66c5181aef15a3cd0')
+    //       .then((output)=>{
+    //         a = output
+
+    //         console.log("ordersssss===", a);
+            
+    //       })
+
   }
 }
 

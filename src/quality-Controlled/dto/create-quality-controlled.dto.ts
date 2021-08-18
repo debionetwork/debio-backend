@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 
-export class CreateTransactionRequestDto {
+export class CreateQualityControlledDto {
   address: string;
   currency: string;
   type: number;
