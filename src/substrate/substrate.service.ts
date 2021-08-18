@@ -10,7 +10,7 @@ import { Option } from '@polkadot/types';
 import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { QualityControlledService } from 'src/quality-Controlled/quality-controlled.service';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -24,7 +24,7 @@ export class SubstrateService implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
-    private readonly qualityService: QualityControlledService,
+    private readonly loggingService: LoggingService,
   ) {}
 
   async onModuleInit() {
@@ -46,7 +46,7 @@ export class SubstrateService implements OnModuleInit {
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
-      this.qualityService,
+      this.loggingService,
       this.substrateService,
       this.api,
     );

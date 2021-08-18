@@ -1,13 +1,13 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { QualityControlledService } from 'src/quality-Controlled/quality-controlled.service';
+import { LoggingService } from 'src/logging/logging.service';
 import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
-    private readonly qualityControlledService: QualityControlledService,
+    private readonly loggingService: LoggingService,
     private substrateService: SubstrateService,
     private api: ApiPromise,
   ) {}
@@ -80,7 +80,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
         type: 1,
       };
 
-      this.qualityControlledService.create(dataInput);
+      this.loggingService.create(dataInput);
     } catch (error) {
       console.log(error);
     }

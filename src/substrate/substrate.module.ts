@@ -2,10 +2,10 @@ import { forwardRef, Module } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 import { SubstrateController } from './substrate.controller';
 import { EscrowModule } from 'src/escrow/escrow.module';
-import { QualityControlledModule } from 'src/quality-Controlled/quality-controlled.module';
+import { LoggingModule } from 'src/logging/logging.module';
 
 @Module({
-  imports: [forwardRef(() => EscrowModule), QualityControlledModule],
+  imports: [forwardRef(() => EscrowModule), LoggingModule],
   controllers: [SubstrateController],
   providers: [SubstrateService],
   exports: [SubstrateService],
