@@ -100,13 +100,6 @@ export class SubstrateService implements OnModuleInit {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
         const { event } = record;
-        if (event.section !== 'system') {
-          console.log('=================');
-
-          console.log('event = ', event.section);
-          console.log('method = \n', event.method);
-          console.log('method = \n', event.data[0].toJSON());
-        }
         switch (
           event.section // event.section == pallet name
         ) {
@@ -121,14 +114,6 @@ export class SubstrateService implements OnModuleInit {
         }
       });
     });
-    // let a;
-    //     this.getOrderDetailByOrderID('0xa3c4b90196208529ec490aa8800910678852c82251a847f66c5181aef15a3cd0')
-    //       .then((output)=>{
-    //         a = output
-
-    //         console.log("ordersssss===", a);
-
-    //       })
   }
 }
 
