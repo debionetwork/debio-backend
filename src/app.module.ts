@@ -9,6 +9,7 @@ import { EscrowModule } from './escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
 import { CachingModule } from './cache/cache.module';
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
+import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -32,7 +33,7 @@ require('dotenv').config(); // eslint-disable-line
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
-      entities: [LabRating],
+      entities: [LabRating, TransactionRequest],
       autoLoadEntities: true,
     }),
     LocationModule,
