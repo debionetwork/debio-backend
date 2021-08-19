@@ -12,7 +12,7 @@ import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { QualityControlledService } from 'src/quality-Controlled/quality-controlled.service';
+import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -27,7 +27,7 @@ export class SubstrateService implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
-    private readonly qualityService: QualityControlledService,
+    private readonly transactionLoggingService: TransactionLoggingService,
   ) {}
 
   async onModuleInit() {
@@ -52,7 +52,7 @@ export class SubstrateService implements OnModuleInit {
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
-      this.qualityService,
+      this.transactionLoggingService,
       this.substrateService,
       this.api,
     );
@@ -155,13 +155,6 @@ export class SubstrateService implements OnModuleInit {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
         const { event } = record;
-        if (event.section !== 'system') {
-          console.log('=================');
-
-          console.log('event = ', event.section);
-          console.log('method = \n', event.method);
-          console.log('method = \n', event.data[0].toJSON());
-        }
         switch (
           event.section // event.section == pallet name
         ) {
@@ -176,14 +169,6 @@ export class SubstrateService implements OnModuleInit {
         }
       });
     });
-    // let a;
-    //     this.getOrderDetailByOrderID('0xa3c4b90196208529ec490aa8800910678852c82251a847f66c5181aef15a3cd0')
-    //       .then((output)=>{
-    //         a = output
-
-    //         console.log("ordersssss===", a);
-
-    //       })
   }
 }
 

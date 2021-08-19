@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateQualityControlledDto } from './dto/create-quality-controlled.dto';
-import { QualityControlled } from './models/quality-controlled.entity';
+import { TransactionRequest } from './models/transaction-request.entity';
 
 interface DataInput {
   address: string;
@@ -16,14 +15,14 @@ interface DataInput {
 }
 
 @Injectable()
-export class QualityControlledService {
+export class TransactionLoggingService {
   constructor(
-    @InjectRepository(QualityControlled)
-    private readonly QualityControlledRepository: Repository<QualityControlled>,
+    @InjectRepository(TransactionRequest)
+    private readonly transactionRequestRepository: Repository<TransactionRequest>,
   ) {}
 
   create(data: DataInput) {
-    const logging = new QualityControlled();
+    const logging = new TransactionRequest();
     logging.address = data.address;
     logging.amount = data.amount;
     logging.create_at = data.create_at;
@@ -32,6 +31,6 @@ export class QualityControlledService {
     logging.ref_number = data.ref_number;
     logging.ref_type = data.ref_type;
     logging.type = data.type;
-    return this.QualityControlledRepository.save(logging);
+    return this.transactionRequestRepository.save(logging);
   }
 }
