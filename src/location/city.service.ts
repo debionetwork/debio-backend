@@ -9,13 +9,13 @@ export class CityService {
     @InjectRepository(City) private readonly cityRepository: Repository<City>,
   ) {}
 
-  getAllCity(country_code: string, region_code: string) {
+  getAllCity(country_code: string, state_code: string) {
     return this.cityRepository.find({
-      where: { country_code, region_code },
+      where: { country_code, state_code },
     });
   }
 
-  getOneCity(city_code: string) {
-    return this.cityRepository.findOneOrFail(city_code);
+  getOneCity(id: number) {
+    return this.cityRepository.findOneOrFail(id);
   }
 }
