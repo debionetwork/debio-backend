@@ -162,8 +162,6 @@ export class SubstrateService implements OnModuleInit {
             this.orderEventHandler.handle(event);
             break;
           case 'geneticTesting':
-            console.log('masuk genetic testing');
-
             this.geneticTestingEventHandler.handle(event);
             break;
         }
