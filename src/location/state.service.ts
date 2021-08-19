@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Region } from './models/region.entity';
+import { State } from './models/state.entity';
 
 @Injectable()
-export class RegionService {
+export class StateService {
   constructor(
-    @InjectRepository(Region)
-    private readonly regionRepository: Repository<Region>,
+    @InjectRepository(State)
+    private readonly stateRepository: Repository<State>,
   ) {}
 
   getAllRegion(country_code: string) {
-    return this.regionRepository.find({
+    return this.stateRepository.find({
       where: { country_code },
     });
   }
