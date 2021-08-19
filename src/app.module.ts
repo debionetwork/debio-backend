@@ -8,7 +8,7 @@ import { EthereumModule } from './ethereum/ethereum.module';
 import { EscrowModule } from './escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
 import { CachingModule } from './cache/cache.module';
-import { LoggingModule } from './logging/logging.module';
+import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -31,7 +31,7 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     SubstrateModule,
     CachingModule,
-    LoggingModule,
+    TransactionLoggingModule,
   ],
 })
 export class AppModule {}

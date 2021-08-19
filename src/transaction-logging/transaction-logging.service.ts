@@ -15,7 +15,7 @@ interface DataInput {
 }
 
 @Injectable()
-export class LoggingService {
+export class TransactionLoggingService {
   constructor(
     @InjectRepository(TransactionRequest)
     private readonly transactionRequestRepository: Repository<TransactionRequest>,
