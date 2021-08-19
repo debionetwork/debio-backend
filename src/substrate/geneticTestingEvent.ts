@@ -1,13 +1,13 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { LoggingService } from 'src/logging/logging.service';
+import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
-    private readonly loggingService: LoggingService,
+    private readonly loggingService: TransactionLoggingService,
     private substrateService: SubstrateService,
     private api: ApiPromise,
   ) {}
@@ -51,7 +51,6 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   }
 
   async onDnaSampleQualityControlled(event) {
-    console.log('DnaSampleQualityControlled! TODO: handle event');
     try {
       const dataRequest = event.data[0].toJSON();
       const dataOrder = await (

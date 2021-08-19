@@ -12,7 +12,7 @@ import { EscrowService } from 'src/escrow/escrow.service';
 import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { LoggingService } from 'src/logging/logging.service';
+import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -27,7 +27,7 @@ export class SubstrateService implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
-    private readonly loggingService: LoggingService,
+    private readonly transactionLoggingService: TransactionLoggingService,
   ) {}
 
   async onModuleInit() {
@@ -52,7 +52,7 @@ export class SubstrateService implements OnModuleInit {
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
-      this.loggingService,
+      this.transactionLoggingService,
       this.substrateService,
       this.api,
     );
