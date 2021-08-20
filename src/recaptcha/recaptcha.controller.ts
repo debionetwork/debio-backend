@@ -6,6 +6,8 @@ import { Response } from 'express';
 export class RecaptchaController {
   @Post()
   async recaptcha(@Body() payload: any, @Res() response: Response) {
+    console.log(process.env.RECAPTCHA_SECRET_KEY);
+    console.log(payload);
     const result = await axios.post(
       'https://www.google.com/recaptcha/api/siteverify' +
         '?secret=' +
