@@ -46,7 +46,6 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker login -u _json_key --password-stdin https://asia.gcr.io < /data/drone_data/auth.json
       - /data/drone_data/debio_toolkit -vault -env -secret=debio_development/data/backend_v2
       - docker build -t hub.debio.network/debio_backend_v2_dev:latest .
       - docker push hub.debio.network/debio_backend_v2_dev:latest
