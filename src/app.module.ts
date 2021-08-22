@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LabRating } from './rating/models/rating.entity';
+import { LabRequest } from './lab-request/models/lab_request.entity'
 import { LocationEntities } from './location/models';
 import { LocationModule } from './location/location.module';
 import { RatingModule } from './rating/rating.module';
@@ -21,7 +22,7 @@ require('dotenv').config(); // eslint-disable-line
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
-      entities: [...LocationEntities, LabRating],
+      entities: [...LocationEntities, LabRating, LabRequest],
       autoLoadEntities: true,
     }),
     LocationModule,
@@ -29,7 +30,7 @@ require('dotenv').config(); // eslint-disable-line
     EthereumModule,
     EscrowModule,
     SubstrateModule,
-    CachingModule
+    // CachingModule
   ],
 })
 export class AppModule {}

@@ -101,17 +101,20 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
-  async bindingEthAddress(mnemonic: string, ethAddress: string) {
+  async bindingEthAddress(account_id: string, ethAddress: string) {
     try {
-      const keyring = new Keyring({ type: 'sr25519' });
-      const wallet = await keyring.addFromUri(mnemonic);
-      const response = await this.api.tx.userProfile
-        .setEthAddress(ethAddress)
-        .signAndSend(wallet, {
-          nonce: -1,
-        });
+      const resp = await this.api.query.userProfile.ethAddressByAccountId(
+        account_id,
+      );
+      if ((resp as Option<any>).isNone) {
+        const response = await this.api.tx.userProfile.EthAddressSet(
+          ethAddress,
+          account_id,
+        );
 
-      console.log(response);
+        console.log(response);
+      }
+
       return 'success';
     } catch (error) {
       console.log(error);

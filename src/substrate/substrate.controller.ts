@@ -2,7 +2,7 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 
 export class MessageDto {
-  mnemonic: string;
+  account_id: string;
   eth_address: string;
 }
 
@@ -21,7 +21,7 @@ export class SubstrateController {
   async createBinding(@Body() message: MessageDto) {
     console.log(message);
     const response = await this.substrateService.bindingEthAddress(
-      message.mnemonic,
+      message.account_id,
       message.eth_address,
     );
     if (response == 'success') {
