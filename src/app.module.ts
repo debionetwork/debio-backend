@@ -30,7 +30,7 @@ require('dotenv').config(); // eslint-disable-line
     EthereumModule,
     EscrowModule,
     SubstrateModule,
-    // CachingModule
+    CachingModule,
   ],
 })
 export class AppModule {}
