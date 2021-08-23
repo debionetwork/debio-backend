@@ -1,10 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, CACHE_MANAGER, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { Cache } from 'cache-manager';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
 
 @Controller('rating')
 export class RatingController {
-  constructor(private readonly ratingService: RatingService) {}
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly ratingService: RatingService
+    ) {}
 
   @Post()
   async create(@Body() data: CreateRatingDto) {
@@ -16,11 +20,22 @@ export class RatingController {
   }
 
   @Get(':lab_id')
-  async getLabRating(@Param('lab_id') lab_id: string) {
-    const labRatings = await this.ratingService.getRatingByLabId(lab_id);
+  async getLabRating(@Param('lab_id') labor_id: string) {
+    let cachingData = []
+    let valueCache = this.cacheManager.get('ratings')
+
+    if(valueCache){
+      cachingData= cachingData.concat(valueCache)
+      let isCacheReady = cachingData.find( ({ lab_id }) => lab_id === labor_id)
+      
+      if(isCacheReady){
+        return { status: 'fromCache', data: isCacheReady }
+      }
+    }
+    const labRatings = await this.ratingService.getRatingByLabId(labor_id);
 
     const responce = {
-      lab_id,
+      lab_id: labor_id,
       rating: null,
     };
 
@@ -31,7 +46,8 @@ export class RatingController {
       });
       responce.rating = labRatingCount / labRatings.length;
     }
-
+    cachingData.push(responce)
+    await this.cacheManager.set('rating', cachingData, {ttl: 1800})
     return { status: 'ok', data: responce };
   }
 }
