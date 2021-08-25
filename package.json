@@ -22,9 +22,8 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.14.0",
-    "@nestjs/common": "^8.0.0",
-    "@nestjs-query/query-typeorm": "^0.28.1",
     "@nestjs/common": "^8.0.6",
+    "@nestjs-query/query-typeorm": "^0.28.1",
     "@nestjs/core": "^8.0.0",
     "@nestjs/elasticsearch": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
