@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LabRating } from './models/rating.entity';
 import { RatingController } from './rating.controller';
@@ -8,8 +8,7 @@ import { RatingService } from './rating.service';
 require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
-  imports: [TypeOrmModule.forFeature([LabRating])],
-  exports: [TypeOrmModule],
+  imports: [CacheModule.register(), TypeOrmModule.forFeature([LabRating])],
   controllers: [RatingController],
   providers: [RatingService],
 })

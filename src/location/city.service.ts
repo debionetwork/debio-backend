@@ -1,21 +1,25 @@
+import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { City } from 'src/location/models/city.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class CityService {
+export class CityService extends TypeOrmQueryService<City> {
   constructor(
-    @InjectRepository(City) private readonly cityRepository: Repository<City>,
-  ) {}
+    @InjectRepository(City, 'dbLocation')
+    private readonly cityRepository: Repository<City>,
+  ) {
+    super(cityRepository)
+  }
 
-  getAllCity(country_code: string, region_code: string) {
+  getAllCity(country_code: string, state_code: string) {
     return this.cityRepository.find({
-      where: { country_code, region_code },
+      where: { country_code, state_code },
     });
   }
 
-  getOneCity(city_code: string) {
-    return this.cityRepository.findOneOrFail(city_code);
+  getOneCity(id: number) {
+    return this.cityRepository.findOneOrFail(id);
   }
 }
