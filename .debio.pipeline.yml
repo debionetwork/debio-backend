@@ -4,6 +4,8 @@ name: debio backend v2
 trigger:
   branch:
     - development
+    - staging
+    - master
   event:
     - pull_request
 
@@ -33,6 +35,8 @@ steps:
       - /data/drone_data/debio_toolkit -approval -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
     when:
       branch:
+        - master
+        - staging
         - development
 
   - name: build - devel
@@ -53,6 +57,42 @@ steps:
       branch:
         - development
 
+  - name: build - staging
+    pull: if-not-exists
+    image: docker
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+      - name: whitelist
+        path: /etc/docker/daemon.json
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - /data/drone_data/debio_toolkit -vault -env -secret=debio_staging/data/backend_v2
+      - docker build -t hub.debio.network/debio_backend_v2_staging:latest .
+      - docker push hub.debio.network/debio_backend_v2_staging:latest
+    when:
+      branch:
+        - staging
+
+  - name: build - demo
+    pull: if-not-exists
+    image: docker
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+      - name: whitelist
+        path: /etc/docker/daemon.json
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - /data/drone_data/debio_toolkit -vault -env -secret=debio_production/data/backend_v2
+      - docker build -t hub.debio.network/debio_backend_v2_demo:latest .
+      - docker push hub.debio.network/debio_backend_v2_demo:latest
+    when:
+      branch:
+        - master
+
   - name: merge pull request
     pull: if-not-exists
     image: alpine/git
@@ -63,6 +103,8 @@ steps:
       - /data/drone_data/debio_toolkit -merge -repo=debionetwork/debio-backend -id=${DRONE_PULL_REQUEST}
     when:
       branch:
+        - master
+        - staging
         - development
 
   - name: reload service - devel
@@ -86,6 +128,51 @@ steps:
     when:
       branch:
         - development
+
+  - name: reload service - staging
+    pull: if-not-exists
+    image: appleboy/drone-ssh
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+    settings:
+      host:
+        from_secret: stg_host
+      username:
+        from_secret: stg_uname
+      key_path: /data/drone_data/.ssh/id_rsa
+      port: 22
+      script:
+        - docker stop debio_backend_v2_staging || true && docker rm debio_backend_v2_staging || true
+        - docker rmi hub.debio.network/debio_backend_v2_staging:latest
+        - docker pull hub.debio.network/debio_backend_v2_staging:latest
+        - docker run -d --network=host --name=debio_backend_v2_staging --env=DEBIOENV=staging -v /etc/localtime:/etc/localtime:ro --restart=always hub.debio.network/debio_backend_v2_staging:latest
+    when:
+      branch:
+        - staging
+
+
+  - name: reload service - demo
+    pull: if-not-exists
+    image: appleboy/drone-ssh
+    volumes:
+      - name: toolkit
+        path: /data/drone_data
+    settings:
+      host:
+        from_secret: stg_host
+      username:
+        from_secret: stg_uname
+      key_path: /data/drone_data/.ssh/id_rsa
+      port: 22
+      script:
+        - docker stop debio_backend_v2_demo || true && docker rm debio_backend_v2_demo || true
+        - docker rmi hub.debio.network/debio_backend_v2_demo:latest
+        - docker pull hub.debio.network/debio_backend_v2_demo:latest
+        - docker run -d --network=host --name=debio_backend_v2_demo --env=DEBIOENV=production -v /etc/localtime:/etc/localtime:ro --restart=always hub.debio.network/debio_backend_v2_demo:latest
+    when:
+      branch:
+        - master
 
   - name: notify deployment
     image: appleboy/drone-discord
@@ -124,26 +211,47 @@ steps:
     when:
       status: [ success, failure ]
       branch:
+        - master
+        - staging
         - development
+
 
 ---
 kind: secret
 name: devel_host
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_host
 ---
 kind: secret
 name: devel_key
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_key
 ---
 kind: secret
 name: devel_uname
 get:
-  path: drone_development/faucet
+  path: drone_development/deploy_target
   name: devel_uname
+---
+kind: secret
+name: stg_host
+get:
+  path: drone_staging/deploy_target
+  name: stg_host
+---
+kind: secret
+name: stg_key
+get:
+  path: drone_staging/deploy_target
+  name: stg_key
+---
+kind: secret
+name: stg_uname
+get:
+  path: drone_staging/deploy_target
+  name: stg_uname
 ---
 kind: secret
 name: discord_id

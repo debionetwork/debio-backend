@@ -10,6 +10,7 @@ import { SubstrateModule } from './substrate/substrate.module';
 import { CachingModule } from './cache/cache.module';
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
+import { RecaptchaModule } from './recaptcha/recaptcha.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -44,6 +45,7 @@ require('dotenv').config(); // eslint-disable-line
     SubstrateModule,
     CachingModule,
     TransactionLoggingModule,
+    RecaptchaModule,
   ],
 })
 export class AppModule {}
