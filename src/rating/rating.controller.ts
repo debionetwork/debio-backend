@@ -33,7 +33,7 @@ export class RatingController {
       }
     }
     const labRatings = await this.ratingService.getRatingByLabId(labor_id);
-    const response = {
+    const responsWe = {
       lab_id: labor_id,
       rating: null,
     };
@@ -43,10 +43,10 @@ export class RatingController {
       labRatings.forEach((element) => {
         labRatingCount += element.rating;
       });
-      response.rating = labRatingCount / labRatings.length;
+      responsWe.rating = labRatingCount / labRatings.length;
     }
-    cachingData.push(response)    
+    cachingData.push(responsWe)    
     await this.cacheManager.set('ratings', cachingData, {ttl: 1800})    
-    return { status: 'ok', data: response };
+    return { status: 'ok', data: responsWe };
   }
 }
