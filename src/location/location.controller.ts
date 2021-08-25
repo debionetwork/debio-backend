@@ -1,44 +1,42 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { CityService } from './city.service';
 import { CountryService } from './country.service';
-import { RegionService } from './region.service';
+import { StateService } from './state.service';
 
 @Controller('location')
 export class LocationController {
   constructor(
     private readonly countryService: CountryService,
-    private readonly regionService: RegionService,
+    private readonly stateService: StateService,
     private readonly cityService: CityService,
   ) {}
 
   @Get()
   async getLocation(
     @Query('country_code') country_code: string,
-    @Query('region_code') region_code: string,
-    @Query('city_code') city_code: string,
+    @Query('state_code') state_code: string,
+    @Query('city_id') city_id: number,
   ) {
     let resLocation;
 
-    if (city_code) {
-      resLocation = await this.cityService.getOneCity(city_code);
-      for (const key in resLocation) {
-        resLocation[key] = resLocation[key].trim();
-      }
+    if (city_id) {
+      resLocation = await this.cityService.getOneCity(city_id);
+        resLocation['name'] = resLocation['name'].trim();
     } else {
-      if (region_code) {
+      if (state_code) {
         resLocation = await this.cityService.getAllCity(
           country_code,
-          region_code,
+          state_code,
         );
       } else if (country_code) {
-        resLocation = await this.regionService.getAllRegion(country_code);
+        resLocation = await this.stateService.getAllRegion(country_code);
       } else {
         resLocation = await this.countryService.getAll();
+        console.log("masuk-->", resLocation);
+        
       }
       resLocation.forEach((element) => {
-        for (const key in element) {
-          element[key] = element[key].trim();
-        }
+          element['name'] = element['name'].trim();
       });
     }
     return { status: 'ok', data: resLocation };

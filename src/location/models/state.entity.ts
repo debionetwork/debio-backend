@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'cities' })
-export class City {
+@Entity({ name: 'states' })
+export class State {
   @PrimaryGeneratedColumn()
   id: number;
   
@@ -9,16 +9,13 @@ export class City {
   name: string;
 
   @Column()
-  state_id: number;
-
-  @Column()
-  state_code: string;
-
-  @Column()
   country_id: number;
 
   @Column()
   country_code: string;
+
+  @Column()
+  state_code: string;
 
   @Column({
     type: "double precision"

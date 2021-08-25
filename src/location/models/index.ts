@@ -1,5 +1,5 @@
 import { City } from './city.entity';
 import { Country } from './country.entity';
-import { Region } from './region.entity';
+import { State } from './state.entity';
 
-export const LocationEntities = [City, Country, Region];
+export const LocationEntities = [City, Country, State];
