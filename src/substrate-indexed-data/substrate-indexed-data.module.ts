@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceController } from './services/service.controller';
 import { ServiceService } from './services/service.service';
+import { LabController } from './labs/lab.controller';
+import { LabService } from './labs/lab.service';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { ServiceService } from './services/service.service';
     }),
   ],
   exports: [ElasticsearchModule],
-  controllers: [ServiceController],
-  providers: [ServiceService],
+  controllers: [ServiceController, LabController],
+  providers: [ServiceService, LabService],
 })
 export class SubstrateIndexedDataModule {}
