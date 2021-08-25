@@ -13,7 +13,10 @@ describe('Rating Controller', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RatingController],
       providers: [RatingService],
-    }).overrideProvider(RatingService).useValue(mockRatingService).compile();
+    })
+      .overrideProvider(RatingService)
+      .useValue(mockRatingService)
+      .compile();
 
     ratingController = module.get<RatingController>(RatingController)
   });
@@ -21,4 +24,6 @@ describe('Rating Controller', () => {
   it('should be defined', () => {
     expect(ratingController).toBeDefined();
   })
+
+  it('should be ')
 })
