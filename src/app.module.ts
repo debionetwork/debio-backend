@@ -9,6 +9,7 @@ import { EscrowModule } from './escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
 import { CachingModule } from './cache/cache.module';
 import { SubstrateIndexedDataModule } from './substrate-indexed-data/substrate-indexed-data.module';
+import { RecaptchaModule } from './recaptcha/recaptcha.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -32,6 +33,7 @@ require('dotenv').config(); // eslint-disable-line
     SubstrateModule,
     CachingModule,
     SubstrateIndexedDataModule,
+    RecaptchaModule,
   ],
 })
 export class AppModule {}

@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { formatEther, WalletSigner } from 'nestjs-ethers';
-import { EthereumService } from 'src/ethereum/ethereum.service';
-import { SubstrateService } from 'src/substrate/substrate.service';
+import { EthereumService } from '../ethereum/ethereum.service';
+import { SubstrateService } from '../substrate/substrate.service';
 import { Utils } from './utils/utils';
 import { ethers } from 'ethers';
+import ABI from '../ethereum/utils/ABI.json';
 
 @Injectable()
 export class EscrowService {
@@ -66,8 +67,8 @@ export class EscrowService {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderSuccess(request) {
-    console.log('[orderSuccess] request: ', request);
+  async orderFulfilled(request) {
+    console.log('[orderFulfilled] request: ', request);
   }
 
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
@@ -92,5 +93,38 @@ export class EscrowService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  /**
+   * Get refund gas estimation:
+   * Refund is done by calling the transferFrom function of ERC20 token
+   * The transfer is done from escrow's address to the customer address
+   * @param customerAddress : customer address
+   * @param amount : amount of erc20 being transferred to customer
+   * @returns string
+   */
+  async getRefundGasEstimationFee(
+    customerAddress: string,
+    amount: number | string,
+  ): Promise<string> {
+    const escrowAddress = process.env.DEBIO_ETH_ADDRESS;
+    const erc20Address = process.env.CONTRACT_ADDRESS;
+    const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
+
+    const iface = new ethers.utils.Interface(ABI);
+    const encoded = iface.encodeFunctionData('transferFrom', [
+      escrowAddress,
+      customerAddress,
+      tokenAmount,
+    ]);
+
+    const gasEstimation: string =
+      await this.ethereumService.getGasEstimationFee(
+        escrowAddress,
+        erc20Address,
+        encoded,
+      );
+
+    return gasEstimation;
   }
 }
