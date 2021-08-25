@@ -74,6 +74,17 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
+  async setOrderRefunded(orderId: string) {
+    const wallet = this.escrowWallet;
+    const response = await this.api.tx.orders
+      .setOrderRefunded(orderId)
+      .signAndSend(wallet, {
+        nonce: -1,
+      });
+
+    console.log(response);
+  }
+
   listenToEvents() {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
@@ -104,8 +115,8 @@ class OrderEventHandler {
       case 'OrderPaid':
         this.onOrderPaid(event);
         break;
-      case 'OrderSuccess':
-        this.onOrderSuccess(event);
+      case 'OrderFulfilled':
+        this.onOrderFulfilled(event);
         break;
       case 'OrderRefunded':
         this.onOrderRefunded(event);
@@ -132,7 +143,7 @@ class OrderEventHandler {
     console.log('OrderPaid! TODO: handle event');
   }
 
-  async onOrderSuccess(event) {
+  async onOrderFulfilled(event) {
     try {
       const order = event.data[0].toJSON();
       const resp =
@@ -153,7 +164,7 @@ class OrderEventHandler {
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      this.logger.log('OrderSuccess Event');
+      this.logger.log('OrderFulfilled Event');
       this.logger.log('Forwarding payment to lab');
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
