@@ -31,6 +31,9 @@ export class EscrowService {
         lastOrderID,
       );
 
+      // get sellerid (lab id)
+      const sellerID = orderDetail['seller_id'];
+
       const priceList = this.utils.GetDetailPrice(orderDetail);
       const totalPrice = priceList[0] + priceList[1];
 
@@ -42,6 +45,17 @@ export class EscrowService {
           totalPrice,
         );
         return;
+      }
+
+      // get balance of sellerId (lab)
+      const balance = await this.substrateService.getBalanceAccount(sellerID);
+
+      if(balance.free.isZero()) {
+        // send 1 DBIO to lab
+        await this.substrateService.sendDbioFromFaucet(
+          sellerID, 
+          '1000000000000000000'
+        );
       }
 
       await this.substrateService.setOrderPaid(lastOrderID);
