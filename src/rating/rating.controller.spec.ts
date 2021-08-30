@@ -1,4 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { LabRating } from "./models/rating.entity";
 import { RatingController } from "./rating.controller"
 import { RatingService } from "./rating.service";
 
@@ -12,7 +14,13 @@ describe('Rating Controller', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RatingController],
-      providers: [RatingService],
+      providers: [
+        RatingService,
+        {
+          provide: getRepositoryToken(LabRating),
+          useValue: {}
+        }
+      ],
     })
       .overrideProvider(RatingService)
       .useValue(mockRatingService)
