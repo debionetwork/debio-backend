@@ -12,6 +12,7 @@ import { SubstrateIndexedDataModule } from './substrate-indexed-data/substrate-i
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
+import { MailModule } from './mail/mail.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -45,9 +46,10 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     SubstrateModule,
     CachingModule,
-    SubstrateIndexedDataModule,
+    // SubstrateIndexedDataModule,
     TransactionLoggingModule,
     RecaptchaModule,
+    MailModule
   ],
 })
 export class AppModule {}
