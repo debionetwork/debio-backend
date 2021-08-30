@@ -21,9 +21,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs-query/query-typeorm": "^0.28.1",
+    "@elastic/elasticsearch": "^7.14.0",
     "@nestjs/common": "^8.0.6",
+    "@nestjs-query/query-typeorm": "^0.28.1",
     "@nestjs/core": "^8.0.0",
+    "@nestjs/elasticsearch": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/typeorm": "^8.0.2",
     "@polkadot/api": "^5.2.1",

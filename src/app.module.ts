@@ -8,6 +8,7 @@ import { EthereumModule } from './ethereum/ethereum.module';
 import { EscrowModule } from './escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
 import { CachingModule } from './cache/cache.module';
+import { SubstrateIndexedDataModule } from './substrate-indexed-data/substrate-indexed-data.module';
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
@@ -44,6 +45,7 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     SubstrateModule,
     CachingModule,
+    SubstrateIndexedDataModule,
     TransactionLoggingModule,
     RecaptchaModule,
   ],
