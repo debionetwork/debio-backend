@@ -5,27 +5,51 @@ import { Injectable } from '@nestjs/common';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(user: string, token: string) {
-    const url = `${token}`;
+  async sendEmailNotification(
+    sendTo: string,
+    service_name: string,
+    public_address: string,
+    country: string,
+    state: string,
+    city: string,
+    amount: number,
+    currency: string
+    ) {
 
     await this.mailerService.sendMail({
-      to: 'jackyrahman443@gmail.com',
+      to: sendTo,
       // from: '"Support Team" <support@example.com>', // override default from
       subject: '[Notification] New Service Request ',
-      template: './confirmation', // `.hbs` extension is appended automatically
+      template: './notification', // `.hbs` extension is appended automatically
       context: { // ✏️ filling curly brackets with content
-        service_name: user
+        service_name,
+        public_address,
+        country,
+        state,
+        city,
+        amount,
+        currency
       },
     });
   }
-  async onApplicationBootstrap(){
-    console.log("test send mail");
-    try {
-      await this.sendUserConfirmation('Service Request', 'tes')
+  //=======testing and how to use this function===========
+  // async onApplicationBootstrap(){
+  //   console.log("test send mail");
+  //   try {
+  //     await this.sendEmailNotification(
+  //       'jackyrahman443@gmail.com',
+  //       'Service Request',
+  //       '0x93943',
+  //       'Indonesia',
+  //       'Dki jakarta',
+  //       'jakarta barat',
+  //       300,
+  //       'DAI'
+  //       )
       
-    } catch (error) {
-      console.log(error);
+  //   } catch (error) {
+  //     console.log(error);
       
-    }
-  }
+  //   }
+  // }
 }

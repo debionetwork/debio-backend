@@ -3,7 +3,6 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailService } from './mail.service';
-
 @Module({
   imports: [
     MailerModule.forRoot({
@@ -13,8 +12,8 @@ import { MailService } from './mail.service';
         host: 'smtp.gmail.com',
         secure: false,
         auth: {
-          user: 'jackyrahman14@gmail.com',
-          pass: 'Jr258465',
+          user: process.env.EMAIL,
+          pass: process.env.PASS_EMAIL,
         },
       },
       defaults: {
