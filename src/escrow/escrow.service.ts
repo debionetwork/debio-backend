@@ -50,7 +50,11 @@ export class EscrowService {
       // get balance of sellerId (lab)
       const balance = await this.substrateService.getBalanceAccount(sellerID);
 
-      if(balance.free.isZero()) {
+      // show balance of lab
+      console.log('balance of lab : ', balance);
+
+      // if balance is less than 0.5
+      if(balance < 0.5) {
         // send 1 DBIO to lab
         await this.substrateService.sendDbioFromFaucet(
           sellerID, 
