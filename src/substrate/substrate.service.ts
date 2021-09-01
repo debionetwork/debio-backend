@@ -19,6 +19,7 @@ export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
   private escrowWallet: any;
   private faucetWallet: KeyringPair;
+  private sudoWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
@@ -44,6 +45,9 @@ export class SubstrateService implements OnModuleInit {
     this.faucetWallet = await keyring.addFromUri(
       process.env.FAUCET_SUBSTRATE_MNEMONIC,
     );
+    this.sudoWallet = await keyring.addFromUri(
+      process.env.SUDO_SUBSTRATE_MNEMONIC,
+    );
 
     this.orderEventHandler = new OrderEventHandler(
       this.escrowService,
@@ -63,7 +67,6 @@ export class SubstrateService implements OnModuleInit {
       ethAddress,
     );
 
-    console.log(response);
     return response.toString();
   }
 
@@ -176,6 +179,36 @@ export class SubstrateService implements OnModuleInit {
             break;
         }
       });
+    });
+  }
+
+  async bindEthAddressToSubstrateAddress(
+    ethAddress: string,
+    substrateAddress: string,
+  ) {
+    const wallet = this.sudoWallet;
+
+    return new Promise(async (resolve) => {
+      const unsub = await this.api.tx.sudo
+        .sudo(
+          this.api.tx.userProfile.sudoSetEthAddress(
+            substrateAddress,
+            ethAddress,
+          ),
+        )
+        .signAndSend(this.sudoWallet, { nonce: -1 }, (result) => {
+          if (result.status.isInBlock) {
+            this.logger.log(
+              `Transaction included at blockHash ${result.status.asInBlock}`,
+            );
+          } else if (result.status.isFinalized) {
+            this.logger.log(
+              `Transaction finalized at blockHash ${result.status.asFinalized}`,
+            );
+            unsub();
+            resolve(true);
+          }
+        });
     });
   }
 }
