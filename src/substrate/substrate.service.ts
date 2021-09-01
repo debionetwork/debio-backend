@@ -83,7 +83,11 @@ export class SubstrateService implements OnModuleInit {
   // get balance of account
   async getBalanceAccount(accountId: string) {
     const { data: balance } = await this.api.query.system.account(accountId);
-    return balance;
+
+    const chainDecimal = this.api.registry.chainDecimals;
+    const decimalBalance = Number(balance.free.toBigInt()) / Math.pow(10, chainDecimal[0]);
+    
+    return decimalBalance;
   }
 
   async setOrderPaid(orderId: string) {
