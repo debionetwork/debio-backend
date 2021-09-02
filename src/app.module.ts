@@ -46,7 +46,7 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     SubstrateModule,
     CachingModule,
-    // SubstrateIndexedDataModule,
+    SubstrateIndexedDataModule,
     TransactionLoggingModule,
     RecaptchaModule,
     MailModule
