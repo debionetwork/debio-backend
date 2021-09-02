@@ -11,6 +11,8 @@ import {
   checkIfFileOrDirectoryExists,
 } from '../helper/storage.helper';
 import ABI from './utils/ABI.json';
+import escrowContract from './utils/Escrow.json';
+import serviceRequestContract from './utils/ServiceRequest.json';
 import axios from 'axios';
 import { ethers } from 'ethers';
 
@@ -53,6 +55,22 @@ export class EthereumService {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getEscrowContract(): SmartContract {
+    const contract: SmartContract = this.ethersContract.create(
+      process.env.ESCROW_CONTRACT_ADDRESS,
+      escrowContract.abi,
+    );
+    return contract;
+  }
+
+  getServiceRequestContract(): SmartContract {
+    const contract: SmartContract = this.ethersContract.create(
+      process.env.SERVICE_REQUEST_CONTRACT_ADDRESS,
+      serviceRequestContract.abi,
+    );
+    return contract;
   }
 
   async createWallet(privateKey: string): Promise<WalletSigner> {

@@ -15,6 +15,10 @@ export class EthereumController {
 
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
+    const escrowContract = this.ethereumService.getEscrowContract();
+    const serviceRequestContract =
+      this.ethereumService.getServiceRequestContract();
+
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
@@ -28,6 +32,27 @@ export class EthereumController {
       if (to == process.env.DEBIO_ETH_ADDRESS) {
         await this.escrowService.handlePaymentToEscrow(from, amount);
       }
+    });
+
+    /**
+     * Ada 4 events
+     * OrderPaidPartial(Order order);
+     * OrderPaid(Order order);
+     * OrderRefunded(Order order);
+     * OrderFulfilled(Order order);
+     *
+     * - Jika Order Paid, Set Order Paid di Substrate
+     *
+     * Note:
+     * - dna sample fulfill datengnya dari substrate
+     * - Order 
+     */
+    escrowContract.on('', async () => {
+      // TODO:
+    });
+
+    serviceRequestContract.on('', async () => {
+      // TODO:
     });
   }
 
