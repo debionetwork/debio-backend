@@ -1,4 +1,5 @@
 import { Body, CACHE_MANAGER, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
@@ -11,6 +12,7 @@ export class RatingController {
     ) {}
 
   @Post()
+  @ApiBody({ type: CreateRatingDto})
   async create(@Body() data: CreateRatingDto) {
 
     await this.cacheManager.del('ratings')
