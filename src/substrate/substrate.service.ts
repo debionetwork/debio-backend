@@ -255,36 +255,11 @@ class OrderEventHandler {
     console.log('OrderPaid! TODO: handle event');
   }
 
-  async onOrderFulfilled(event) {
+   onOrderFulfilled(event) {
     try {
       const order = event.data[0].toJSON();
-      const resp =
-        await this.substrateApi.query.userProfile.ethAddressByAccountId(
-          order['seller_id'],
-        );
-      if ((resp as Option<any>).isNone) {
-        return null;
-      }
-      const labEthAddress = (resp as Option<any>).unwrap().toString();
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const totalAdditionalPrice = order.additional_prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const amountToForward = totalPrice + totalAdditionalPrice;
 
-      this.logger.log('OrderFulfilled Event');
-      this.logger.log('Forwarding payment to lab');
-      this.logger.log(`labEthAddress: ${labEthAddress}`);
-      this.logger.log(`amountToForward: ${amountToForward}`);
-      const tx = await this.escrowService.forwardPaymentToSeller(
-        labEthAddress,
-        amountToForward,
-      );
-      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
+      this.escrowService.orderFulfilled(order['id'])
     } catch (err) {
       console.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);

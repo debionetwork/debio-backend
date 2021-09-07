@@ -102,6 +102,24 @@ export class EscrowService {
 
   async orderFulfilled(request) {
     console.log('[orderFulfilled] request: ', request);
+    try {
+      console.log('1');
+      
+      const tokenContract = await this.ethereumService.getEscrowContract();
+      console.log('2');
+      const wallet: WalletSigner = await this.ethereumService.createWallet(
+        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      );
+      console.log('3');
+      const tokenContractWithSigner = tokenContract.connect(wallet);
+      console.log('4');
+      const tx = await tokenContractWithSigner.fulfillOrder(
+        request.id
+      );
+      console.log('fullfilled order customer_id :', request.customer_id ,' ->', tx);
+    } catch (error) {
+      
+    }
   }
 
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
