@@ -15,7 +15,7 @@ export class EthereumController {
 
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
-    const escrowContract = this.ethereumService.getEscrowContract();
+    const escrowContract = await this.ethereumService.getEscrowContract();
     const serviceRequestContract =
       this.ethereumService.getServiceRequestContract();
 
@@ -47,13 +47,13 @@ export class EthereumController {
      * - dna sample fulfill datengnya dari substrate
      * - Order 
      */
-    escrowContract.on('', async () => {
-      // TODO:
-    });
+    // escrowContract.on('', async () => {
+    //   // TODO:
+    // });
 
-    serviceRequestContract.on('', async () => {
-      // TODO:
-    });
+    // serviceRequestContract.on('', async () => {
+    //   // TODO:
+    // });
   }
 
   async syncBlock(lastBlock, currentBlock, contract) {

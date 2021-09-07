@@ -75,7 +75,22 @@ export class EscrowService {
   async refundOrder(request) {
     console.log('[refundOrder] request: ', request);
     try {
-      this.substrateService.setOrderRefunded(request.id);
+      console.log('1');
+      
+      const tokenContract = await this.ethereumService.getEscrowContract();
+      console.log('2');
+      const wallet: WalletSigner = await this.ethereumService.createWallet(
+        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      );
+      console.log('3');
+      const tokenContractWithSigner = tokenContract.connect(wallet);
+      console.log('4');
+      const tx = await tokenContractWithSigner.refundOrder(
+        request.id
+      );
+      console.log('TODO: currency Refunded to ', request.customer_id ,' :', tx);
+
+      await this.substrateService.setOrderRefunded(request.id);
     } catch (error) {
       console.log(error);
     }
