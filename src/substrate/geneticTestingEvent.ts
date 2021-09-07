@@ -22,8 +22,11 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
 
   handle(event) {
     switch (event.method) {
-      case 'DnaSampleArrived ':
+      case 'DnaSampleArrived':
         this.onDnaSampleArrived(event);
+        break;
+      case 'DnaSampleRejected':
+        this.onDnaSampleRejected(event);
         break;
       case 'DnaSampleQualityControlled':
         this.onDnaSampleQualityControlled(event);
@@ -48,6 +51,10 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
 
   onDnaSampleArrived(event) {
     console.log('DnaSampleArrived! TODO: handle event');
+  }
+
+  async onDnaSampleRejected(event) {
+    console.log('DnaSampleRejected! TODO: handle event');
   }
 
   async onDnaSampleQualityControlled(event) {
