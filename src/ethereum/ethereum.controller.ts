@@ -47,9 +47,11 @@ export class EthereumController {
      * - dna sample fulfill datengnya dari substrate
      * - Order 
      */
-    // escrowContract.on('', async () => {
-    //   // TODO:
-    // });
+    escrowContract.on('OrderPaid', async (order) => {
+      // TODO:
+      console.log('got event order => ', order);
+      this.escrowService.setOrderPaidWithSubstrate(order.orderId)  
+    });
 
     // serviceRequestContract.on('', async () => {
     //   // TODO:

@@ -90,7 +90,7 @@ export class EscrowService {
       );
       console.log('TODO: currency Refunded to ', request.customer_id ,' :', tx);
 
-      await this.substrateService.setOrderRefunded(request.id);
+      // await this.substrateService.setOrderRefunded(request.id);
     } catch (error) {
       console.log(error);
     }
@@ -119,6 +119,14 @@ export class EscrowService {
       console.log('fullfilled order customer_id :', request.customer_id ,' ->', tx);
     } catch (error) {
       
+    }
+  }
+
+  async setOrderPaidWithSubstrate(orderID: string) {
+    try {
+      await this.substrateService.setOrderPaid(orderID)
+    } catch (error) {
+      console.log(error);
     }
   }
 
