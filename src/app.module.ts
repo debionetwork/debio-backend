@@ -37,7 +37,7 @@ require('dotenv').config(); // eslint-disable-line
       port: 5432,
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_CITY,
+      database: process.env.DB_LOCATIONS,
       entities: [...LocationEntities],
       autoLoadEntities: true,
     }),

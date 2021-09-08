@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceRequestController } from './service-request/service-request.controller';
 import { ServiceRequestService } from './service-request/service-request.service';
+import { LocationModule } from '../location/location.module';
 
 @Module({
   imports: [
+    forwardRef(() => LocationModule),
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,
