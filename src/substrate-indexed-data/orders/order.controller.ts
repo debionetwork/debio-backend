@@ -5,16 +5,16 @@ import { OrderService } from './order.service';
 export class OrderController {
     constructor(readonly orderService: OrderService) {}
 
-    // host/{customer_id}/{product_name}/{status}/{lab_name}
+    // host/{customer_id}?query=&page=&size=
+    @Get(':customer_id')
     async getOrderByProductNameStatusLabName(
         @Param() params,
+        @Query('query') query,
         @Query('page') page,
         @Query('size') size): Promise<any> {
         const orders = await this.orderService.getByProductNameStatusLabName(
             params.customer_id,
-            params.product_name,
-            params.status,
-            params.lab_name,
+            query ? query : '',
             page,
             size,
         );
