@@ -7,9 +7,7 @@ export class OrderService {
 
     async getByProductNameStatusLabName(
         customer_id: string,
-        product_name: string,
-        status: string,
-        lab_name: string,
+        query: string,
         page: number,
         size: number,
     ) {
@@ -18,12 +16,25 @@ export class OrderService {
           body: {
             query: {
               bool: {
-                must: [
-                  { match: { 'service_info.name': product_name } },
-                  { match: { 'status': status } },
-                  { match: { 'lab_info.name': lab_name } },
+                filter: [
+                  {
+                    bool: {
+                      should: [
+                        { wildcard : { 'service_info.name': `*${query}*` } },
+                        { wildcard : { 'status': `*${query}*` } },
+                        { wildcard : { 'lab_info.name': `*${query}*` } },
+                      ]
+                    }
+                  },
+                  {
+                    bool: {
+                      must: [
+                        { match: { 'customer_id': customer_id }}
+                      ]
+                    }
+                  }
                 ],
-              },
+              }
             },
           },
           from: 0,
