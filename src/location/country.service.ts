@@ -11,10 +11,16 @@ export class CountryService extends TypeOrmQueryService<Country> {
     @InjectRepository(Country, 'dbLocation')
     private readonly countryRepository: Repository<Country>,
   ) {
-    super(countryRepository)
+    super(countryRepository);
   }
 
   getAll() {
     return this.countryRepository.find();
+  }
+
+  async getByIso2Code(iso2: string) {
+    return this.countryRepository.findOne({
+      where: { iso2 },
+    });
   }
 }

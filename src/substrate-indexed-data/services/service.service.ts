@@ -6,8 +6,6 @@ export class ServiceService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCity(country: string, city: string) {
-    console.log(country);
-    console.log(city);
     const services = await this.elasticsearchService.search({
       index: 'services',
       body: {

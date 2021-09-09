@@ -13,6 +13,7 @@ import { EthereumIndexedDataModule } from './ethereum-indexed-data/ethereum-inde
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
+import { MailModule } from './mail/mail.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -36,7 +37,7 @@ require('dotenv').config(); // eslint-disable-line
       port: 5432,
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_CITY,
+      database: process.env.DB_LOCATIONS,
       entities: [...LocationEntities],
       autoLoadEntities: true,
     }),
@@ -50,6 +51,7 @@ require('dotenv').config(); // eslint-disable-line
     EthereumIndexedDataModule,
     TransactionLoggingModule,
     RecaptchaModule,
+    MailModule
   ],
 })
 export class AppModule {}
