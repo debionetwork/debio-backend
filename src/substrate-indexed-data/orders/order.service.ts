@@ -7,35 +7,37 @@ export class OrderService {
 
     async getByProductNameStatusLabName(
         customer_id: string,
-        query: string,
+        keyword: string,
         page: number,
         size: number,
     ) {
+        const query = {
+          bool: {
+            filter: [
+              {
+                bool: {
+                  should: [
+                    { wildcard : { 'service_info.name': `*${keyword}*` } },
+                    { wildcard : { 'status': `*${keyword}*` } },
+                    { wildcard : { 'lab_info.name': `*${keyword}*` } },
+                  ]
+                }
+              },
+              {
+                bool: {
+                  must: [
+                    { match: { 'customer_id': customer_id }}
+                  ]
+                }
+              }
+            ],
+          }
+        };
+
         const searchObj = {
           index: 'orders',
           body: {
-            query: {
-              bool: {
-                filter: [
-                  {
-                    bool: {
-                      should: [
-                        { wildcard : { 'service_info.name': `*${query}*` } },
-                        { wildcard : { 'status': `*${query}*` } },
-                        { wildcard : { 'lab_info.name': `*${query}*` } },
-                      ]
-                    }
-                  },
-                  {
-                    bool: {
-                      must: [
-                        { match: { 'customer_id': customer_id }}
-                      ]
-                    }
-                  }
-                ],
-              }
-            },
+            query: query,
           },
           from: 0,
           size: 10,
@@ -48,8 +50,22 @@ export class OrderService {
           searchObj.from = from;
           searchObj.size = _size;
         }
+
+        const total_orders = await this.elasticsearchService.count({
+          index: 'orders',
+          body: {
+            query: query
+          }
+        })
     
-        const labs = await this.elasticsearchService.search(searchObj);
-        return labs;
+        const orders = await this.elasticsearchService.search(searchObj);
+
+        return {
+          info: {
+            page: page,
+            count: total_orders.body.count,
+          },
+          data: orders
+        };
     }
 }
