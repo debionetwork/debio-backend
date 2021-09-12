@@ -72,25 +72,30 @@ export class EscrowService {
     console.log('[createOrder] request: ', request);
   }
 
-  async refundOrder(request) {
-    console.log('[refundOrder] request: ', request);
+  async refundOrder(order) {
+    console.log('[refundOrder] request: ', order);
     try {
-      console.log('1');
-      
-      const tokenContract = await this.ethereumService.getEscrowContract();
-      console.log('2');
-      const wallet: WalletSigner = await this.ethereumService.createWallet(
+      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const wallet = await new ethers.Wallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
-      );
-      console.log('3');
+        provider
+      )
+      const balance = await provider.getBalance(wallet.address);
+      console.log('balance', balance.toString());
+      // this.ethereumService.createWallet(
+      //   process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      // );
+      //console.log('3',JSON.stringify(wallet, null, 2));
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      console.log('4');
-      const tx = await tokenContractWithSigner.refundOrder(
-        request.id
-      );
-      console.log('TODO: currency Refunded to ', request.customer_id ,' :', tx);
-
-      // await this.substrateService.setOrderRefunded(request.id);
+      try {
+        const tx = await tokenContractWithSigner.refundOrder(
+          order.id,
+          // { gasPrice: '2000000000', gasLimit: '1000000000'},
+        );
+      } catch (err) {
+        console.log('err', err);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -103,18 +108,16 @@ export class EscrowService {
   async orderFulfilled(request) {
     console.log('[orderFulfilled] request: ', request);
     try {
-      console.log('1');
       
-      const tokenContract = await this.ethereumService.getEscrowContract();
-      console.log('2');
+      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
-      console.log('3');
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      console.log('4');
       const tx = await tokenContractWithSigner.fulfillOrder(
-        request.id
+        request.id,
+        provider
       );
       console.log('fullfilled order customer_id :', request.customer_id ,' ->', tx);
     } catch (error) {
