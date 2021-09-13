@@ -21,7 +21,7 @@ export class LocationController {
 
     if (city_id) {
       resLocation = await this.cityService.getOneCity(city_id);
-        resLocation['name'] = resLocation['name'].trim();
+      resLocation['name'] = resLocation['name'].trim();
     } else {
       if (state_code) {
         resLocation = await this.cityService.getAllCity(
@@ -32,11 +32,10 @@ export class LocationController {
         resLocation = await this.stateService.getAllRegion(country_code);
       } else {
         resLocation = await this.countryService.getAll();
-        console.log("masuk-->", resLocation);
-        
+        console.log('masuk-->', resLocation);
       }
       resLocation.forEach((element) => {
-          element['name'] = element['name'].trim();
+        element['name'] = element['name'].trim();
       });
     }
     return { status: 'ok', data: resLocation };
