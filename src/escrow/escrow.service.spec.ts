@@ -3,15 +3,15 @@ import { EscrowService } from "./escrow.service";
 
 class EscrowServiceMock {
     handlePaymentToEscrow(from, amount): void {
-        
+        return;
     }
 
-    createOrder(request) {
-        
+    createOrder(request): void {
+        return;
     }
 
     refundOrder(request): any {
-
+        return;
     }
     
     cancelOrder(request) {
@@ -22,8 +22,8 @@ class EscrowServiceMock {
         return "";
     }
 
-    forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
-
+    forwardPaymentToSeller(sellerAddress: string, amount: number | string): void {
+        return;
     }
 
     getRefundGasEstimationFee(customerAddress: string, amount: number | string): string {
