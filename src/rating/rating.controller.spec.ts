@@ -5,6 +5,8 @@ import { LabRating } from "./models/rating.entity";
 import { RatingController } from "./rating.controller"
 import { RatingService } from "./rating.service";
 import { Cache } from "cache-manager";
+import { async } from "rxjs";
+import { id } from "@ethersproject/hash";
 
 describe('Rating Controller', () => {
   let cacheManager: Cache;
@@ -16,7 +18,7 @@ describe('Rating Controller', () => {
         id: Date.now(),
         ...ratingDto
       }
-    })
+    }),
   }
 
   beforeEach(async () => {
@@ -43,7 +45,7 @@ describe('Rating Controller', () => {
     expect(ratingController).toBeDefined();
   })
 
-  it('should be post rating success', () => {
+  it('should be post rating success', async () => {
     const ratingDto = {
       lab_id: '0x833j4j',
       service_id: '0xs89393',
@@ -52,16 +54,11 @@ describe('Rating Controller', () => {
       rating: 4,
       created: new Date()
     }
-    expect(ratingController.create(ratingDto)).toEqual({
+    const postRating = await ratingController.create(ratingDto)
+    expect(postRating).toHaveProperty('data', {
       id: expect.any(Number),
-      lab_id: ratingDto.lab_id,
-      service_id: ratingDto.service_id,
-      order_id: ratingDto.order_id,
-      rating_by: ratingDto.rating_by,
-      rating: ratingDto.rating,
-      created: ratingDto.created
+      ...ratingDto
     })
-
     expect(mockRatingService.create).toHaveBeenCalledWith(ratingDto)
   })
 })
