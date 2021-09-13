@@ -10,7 +10,7 @@ export class StateService extends TypeOrmQueryService<State> {
     @InjectRepository(State, 'dbLocation')
     private readonly stateRepository: Repository<State>,
   ) {
-    super(stateRepository)
+    super(stateRepository);
   }
 
   getAllRegion(country_code: string) {

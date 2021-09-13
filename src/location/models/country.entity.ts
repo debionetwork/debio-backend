@@ -21,12 +21,12 @@ export class Country {
   iso2: string;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   latitude: number;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   longitude: number;
 

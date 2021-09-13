@@ -54,11 +54,11 @@ export class EscrowService {
       console.log('balance of lab : ', balance);
 
       // if balance is less than 0.5
-      if(balance < 0.5) {
+      if (balance < 0.5) {
         // send 1 DBIO to lab
         await this.substrateService.sendDbioFromFaucet(
-          sellerID, 
-          '1000000000000000000'
+          sellerID,
+          '1000000000000000000',
         );
       }
 
