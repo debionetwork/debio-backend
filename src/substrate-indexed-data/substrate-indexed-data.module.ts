@@ -4,6 +4,8 @@ import { ServiceController } from './services/service.controller';
 import { ServiceService } from './services/service.service';
 import { LabController } from './labs/lab.controller';
 import { LabService } from './labs/lab.service';
+import { OrderController } from './orders/order.controller';
+import { OrderService } from './orders/order.service';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { LabService } from './labs/lab.service';
     }),
   ],
   exports: [ElasticsearchModule],
-  controllers: [ServiceController, LabController],
-  providers: [ServiceService, LabService],
+  controllers: [ServiceController, LabController, OrderController],
+  providers: [ServiceService, LabService, OrderService],
 })
 export class SubstrateIndexedDataModule {}
