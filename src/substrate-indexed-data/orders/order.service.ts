@@ -17,8 +17,9 @@ export class OrderService {
           {
             bool: {
               should: [
-                { wildcard: { 'service_info.name': `*${keyword}*` } },
                 { wildcard: { status: `*${keyword}*` } },
+                { wildcard: { dna_sample_tracking_id: `*${keyword}*` } },
+                { wildcard: { 'service_info.name': `*${keyword}*` } },
                 { wildcard: { 'lab_info.name': `*${keyword}*` } },
               ],
             },
@@ -41,7 +42,7 @@ export class OrderService {
       size: 10,
     };
 
-    if (page) {
+    if (page && size) {
       const _size = size ? size : 10;
       const from = size * page - _size;
 
@@ -63,7 +64,7 @@ export class OrderService {
         page: page,
         count: total_orders.body.count,
       },
-      data: orders,
+      data: orders.body.hits,
     };
   }
 }
