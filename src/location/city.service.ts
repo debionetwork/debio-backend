@@ -10,7 +10,11 @@ export class CityService extends TypeOrmQueryService<City> {
     @InjectRepository(City, 'dbLocation')
     private readonly cityRepository: Repository<City>,
   ) {
+<<<<<<< HEAD
     super(cityRepository)
+=======
+    super(cityRepository);
+>>>>>>> 21b18fa13c70567207df7fab20e8cc8e384143ec
   }
 
   getAllCity(country_code: string, state_code: string) {
