@@ -31,9 +31,9 @@ describe("EthereumController", () => {
                     Transfer: () => null
                 }
             })),
-            createWallet: jest.fn(() => {}),
+            createWallet: jest.fn(),
             getGasEstimationFee: jest.fn(() => ""),
-            convertCurrency: jest.fn(() => {}),
+            convertCurrency: jest.fn(),
         })
     };
 
