@@ -1,39 +1,39 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRatingDto {
   @ApiProperty({
     type: String,
-    description: 'lab_id'
+    description: 'lab_id',
   })
   lab_id: string;
 
   @ApiProperty({
     type: String,
-    description: 'service_id'
+    description: 'service_id',
   })
   service_id: string;
 
   @ApiProperty({
     type: String,
-    description: 'order_id'
+    description: 'order_id',
   })
   order_id: string;
 
   @ApiProperty({
     type: String,
-    description: 'rating_by'
+    description: 'rating_by',
   })
   rating_by: string;
 
   @ApiProperty({
     type: Number,
-    description: 'rating'
+    description: 'rating',
   })
   rating: number;
 
   @ApiProperty({
     type: Date,
-    description: 'created'
+    description: 'created',
   })
   created: Date;
 }
