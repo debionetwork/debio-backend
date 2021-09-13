@@ -8,11 +8,11 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
-import { EscrowService } from 'src/escrow/escrow.service';
+import { EscrowService } from '../escrow/escrow.service';
 import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
+import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
