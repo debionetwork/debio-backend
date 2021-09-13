@@ -12,17 +12,9 @@ import { StateService } from './state.service';
 require('dotenv').config(); // eslint-disable-line
 // dotenv.config();
 @Module({
-<<<<<<< HEAD
-  imports: [
-    TypeOrmModule.forFeature([Country, State, City], 'dbLocation')],
-  controllers: [LocationController],
-  providers: [CountryService, StateService, CityService],
-  exports: [TypeOrmModule,CountryService, StateService, CityService],
-=======
   imports: [TypeOrmModule.forFeature([Country, State, City], 'dbLocation')],
   controllers: [LocationController],
   providers: [CountryService, StateService, CityService],
   exports: [TypeOrmModule, CountryService, StateService, CityService],
->>>>>>> 21b18fa13c70567207df7fab20e8cc8e384143ec
 })
 export class LocationModule {}

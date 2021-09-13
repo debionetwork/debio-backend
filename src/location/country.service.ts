@@ -11,11 +11,7 @@ export class CountryService extends TypeOrmQueryService<Country> {
     @InjectRepository(Country, 'dbLocation')
     private readonly countryRepository: Repository<Country>,
   ) {
-<<<<<<< HEAD
-    super(countryRepository)
-=======
     super(countryRepository);
->>>>>>> 21b18fa13c70567207df7fab20e8cc8e384143ec
   }
 
   getAll() {
