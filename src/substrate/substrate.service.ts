@@ -88,8 +88,9 @@ export class SubstrateService implements OnModuleInit {
     const { data: balance } = await this.api.query.system.account(accountId);
 
     const chainDecimal = this.api.registry.chainDecimals;
-    const decimalBalance = Number(balance.free.toBigInt()) / Math.pow(10, chainDecimal[0]);
-    
+    const decimalBalance =
+      Number(balance.free.toBigInt()) / Math.pow(10, chainDecimal[0]);
+
     return decimalBalance;
   }
 

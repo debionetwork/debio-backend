@@ -13,22 +13,22 @@ export class MailService {
     state: string,
     city: string,
     amount: number,
-    currency: string
-    ) {
-
+    currency: string,
+  ) {
     await this.mailerService.sendMail({
       to: sendTo,
       // from: '"Support Team" <support@example.com>', // override default from
       subject: '[Notification] New Service Request ',
       template: './notification', // `.hbs` extension is appended automatically
-      context: { // ✏️ filling curly brackets with content
+      context: {
+        // ✏️ filling curly brackets with content
         service_name,
         public_address,
         country,
         state,
         city,
         amount,
-        currency
+        currency,
       },
     });
   }
@@ -46,10 +46,10 @@ export class MailService {
   //       300,
   //       'DAI'
   //       )
-      
+
   //   } catch (error) {
   //     console.log(error);
-      
+
   //   }
   // }
 }
