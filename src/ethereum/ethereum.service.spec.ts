@@ -6,8 +6,8 @@ class EtheretumServiceMock {
         return 5484746;
     }
 
-    setLastBlock(blockNumber: number) {
-        
+    setLastBlock(blockNumber: number): void {
+        return
     }
 
     getContract(): any {
