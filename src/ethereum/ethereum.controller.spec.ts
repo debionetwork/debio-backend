@@ -11,7 +11,7 @@ describe("EthereumController", () => {
     const escrowServiceProvider = {
         provide: EscrowService,
         useFactory: () => ({
-            handlePaymentToEscrow: jest.fn(() => {}),
+            handlePaymentToEscrow: jest.fn(),
             createOrder: jest.fn(),
             refundOrder: jest.fn(),
             cancelOrder: jest.fn(),
@@ -30,13 +30,13 @@ describe("EthereumController", () => {
                 provider: {
                     getBlockNumber: () => 5484751,
                     on: () => null,
-                    emit: jest.fn(() => {}),
+                    emit: jest.fn(),
                 },
                 on: () => null,
                 filters: {
                     Transfer: () => null
                 },
-                emit: jest.fn(() => {}),
+                emit: jest.fn(),
             })),
             createWallet: jest.fn(),
             getGasEstimationFee: jest.fn(() => ""),
