@@ -6,15 +6,20 @@ import { EthereumService } from "./ethereum.service";
 describe("EthereumController", () => {
     let ethereumController: EthereumController;
     let ethereumService: EthereumService;
-
-    const mockEscrowService = {
-
-    }
+    let escrowService: EscrowService;
 
     const escrowServiceProvider = {
         provide: EscrowService,
-        useValue: mockEscrowService
-    }
+        useFactory: () => ({
+            handlePaymentToEscrow: jest.fn(() => {}),
+            createOrder: jest.fn(),
+            refundOrder: jest.fn(),
+            cancelOrder: jest.fn(),
+            orderFulfilled: jest.fn(),
+            forwardPaymentToSeller: jest.fn(),
+            getRefundGasEstimationFee: jest.fn(() => ""),
+        })
+    };
 
     const ethereumServiceProvider = {
         provide: EthereumService,
@@ -25,11 +30,13 @@ describe("EthereumController", () => {
                 provider: {
                     getBlockNumber: () => 5484751,
                     on: () => null,
+                    emit: jest.fn(() => {}),
                 },
                 on: () => null,
                 filters: {
                     Transfer: () => null
-                }
+                },
+                emit: jest.fn(() => {}),
             })),
             createWallet: jest.fn(),
             getGasEstimationFee: jest.fn(() => ""),
@@ -40,31 +47,49 @@ describe("EthereumController", () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [EthereumController],
-            providers: [escrowServiceProvider, EthereumService, ethereumServiceProvider]
+            providers: [EscrowService, escrowServiceProvider, EthereumService, ethereumServiceProvider]
         }).compile();
 
         ethereumController  = module.get<EthereumController>(EthereumController);
         ethereumService = module.get<EthereumService>(EthereumService);
+        escrowService = module.get<EscrowService>(EscrowService);
     });
 
-    describe("EthereumController", () => {
-        it("EthereumController must defined", () => {
-            expect(ethereumController).toBeDefined();
-        });
+    it("EthereumController must defined", () => {
+        expect(ethereumController).toBeDefined();
+    });
+    
+    it("EthereumService must defined", () => {
+        expect(ethereumService).toBeDefined();
+    });
+    
+    it("EscrowService must defined", () => {
+        expect(escrowService).toBeDefined();
+    });
 
+    describe("EthereumController when method OnApplicationBootstrap called", () => {
 
-        it("getContract called", async () => {
+        it("getContract is called when onApplicationBootstrap called", async () => {
             await ethereumController.onApplicationBootstrap();
 
             expect(ethereumService.getContract).toBeCalled();
-        })
+        });
 
-        it("getLastBlock called", async () => {
+        it("getLastBlock is called when onApplicationBootstrap called", async () => {
+            await ethereumController.onApplicationBootstrap();
             expect(ethereumService.getLastBlock).toBeCalled();
-        })
+        });
 
-        it("setLastBlock called", async () => {
+        it("setLastBlock is called when onApplicationBootstrap called", async () => {
+            await ethereumController.onApplicationBootstrap();
             expect(ethereumService.setLastBlock).toBeCalled();
-        })
+        });
+
+        it("ethereumService.setLastBlock is called when contract provider event block is listen", async () => {
+            await ethereumController.onApplicationBootstrap();
+            const contract = await ethereumService.getContract();
+            contract.provider.emit('block');
+            expect(ethereumService.setLastBlock).toBeCalled();
+        });
     });
 });
