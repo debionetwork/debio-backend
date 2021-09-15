@@ -51,7 +51,7 @@ require('dotenv').config(); // eslint-disable-line
     EthereumIndexedDataModule,
     TransactionLoggingModule,
     RecaptchaModule,
-    MailModule
+    MailModule,
   ],
 })
 export class AppModule {}

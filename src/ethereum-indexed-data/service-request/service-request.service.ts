@@ -39,16 +39,56 @@ export class ServiceRequestService {
         requestByCountryDict[request.country] = {
           totalRequests: 0,
           totalValue: 0,
+          services: {},
         };
       }
-      requestByCountryDict[request.country].totalRequests += 1;
-      const currValue = ethers.BigNumber.from(
-        requestByCountryDict[request.country].totalValue,
-      );
+
       const value = ethers.BigNumber.from(
         ethers.utils.formatEther(request.staking_amount).split('.')[0],
       );
-      requestByCountryDict[request.country].totalValue = currValue.add(value);
+
+      requestByCountryDict[request.country].totalRequests += 1;
+      const currValueByCountry = ethers.BigNumber.from(
+        requestByCountryDict[request.country].totalValue,
+      );
+      requestByCountryDict[request.country].totalValue =
+        currValueByCountry.add(value);
+
+      if (
+        !requestByCountryDict[request.country]['services'][
+          request.service_category
+        ]
+      ) {
+        requestByCountryDict[request.country]['services'][
+          request.service_category
+        ] = {
+          name: request.service_category,
+          totalRequests: 0,
+          totalValue: {
+            dai: 0,
+            usd: 0,
+          },
+        };
+      }
+      requestByCountryDict[request.country]['services'][
+        request.service_category
+      ].totalRequests += 1;
+      const currValueByCountryServiceCategoryDai = ethers.BigNumber.from(
+        requestByCountryDict[request.country]['services'][
+          request.service_category
+        ].totalValue.dai,
+      );
+      const currValueByCountryServiceCategoryUsd = ethers.BigNumber.from(
+        requestByCountryDict[request.country]['services'][
+          request.service_category
+        ].totalValue.usd,
+      );
+      requestByCountryDict[request.country]['services'][
+        request.service_category
+      ].totalValue.dai = currValueByCountryServiceCategoryDai.add(value);
+      requestByCountryDict[request.country]['services'][
+        request.service_category
+      ].totalValue.usd = currValueByCountryServiceCategoryUsd.add(value);
     }
 
     // Restructure data into array
@@ -59,14 +99,23 @@ export class ServiceRequestService {
         continue;
       }
       const { name } = countryObj;
-      const { totalRequests } = requestByCountryDict[countryCode];
+      const { totalRequests, services } = requestByCountryDict[countryCode];
       let { totalValue } = requestByCountryDict[countryCode];
       totalValue = totalValue.toString();
+
+      const servicesArr = Object.values(services).map((s: any) => ({
+        ...s,
+        totalValue: {
+          dai: s.totalValue.dai.toString(),
+          usd: s.totalValue.usd.toString(),
+        },
+      }));
 
       const requestByCountry = {
         country: name,
         totalRequests,
         totalValue,
+        services: servicesArr,
       };
 
       requestByCountryList.push(requestByCountry);

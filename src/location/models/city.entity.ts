@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class City {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   name: string;
 
@@ -21,12 +21,12 @@ export class City {
   country_code: string;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   latitude: number;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   longitude: number;
 }

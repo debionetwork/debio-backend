@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class State {
   @PrimaryGeneratedColumn()
   id: number;
-  
+
   @Column()
   name: string;
 
@@ -18,12 +18,12 @@ export class State {
   state_code: string;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   latitude: number;
 
   @Column({
-    type: "double precision"
+    type: 'double precision',
   })
   longitude: number;
 }
