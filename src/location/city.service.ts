@@ -1,7 +1,7 @@
 import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { City } from 'src/location/models/city.entity';
+import { City } from './models/city.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
