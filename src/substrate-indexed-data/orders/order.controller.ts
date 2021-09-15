@@ -9,17 +9,17 @@ export class OrderController {
   @Get(':customer_id')
   async getOrderByProductNameStatusLabName(
     @Param() params,
-    @Query('keyword') keyword,
+    @Query('keyword') keyword: string,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
     const orders = await this.orderService.getByProductNameStatusLabName(
       params.customer_id,
-      keyword ? keyword : '',
+      keyword ? keyword.toLowerCase() : '',
       page,
       size,
     );
-
+    
     return orders;
   }
 }
