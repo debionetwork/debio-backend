@@ -52,10 +52,6 @@ export class EthereumController {
       // TODO:
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
-
-    // serviceRequestContract.on('', async () => {
-    //   // TODO:
-    // });
   }
 
   async syncBlock(lastBlock, currentBlock, contract) {

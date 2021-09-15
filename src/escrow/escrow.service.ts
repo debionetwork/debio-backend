@@ -83,15 +83,10 @@ export class EscrowService {
       )
       const balance = await provider.getBalance(wallet.address);
       console.log('balance', balance.toString());
-      // this.ethereumService.createWallet(
-      //   process.env.DEBIO_ESCROW_PRIVATE_KEY,
-      // );
-      //console.log('3',JSON.stringify(wallet, null, 2));
       const tokenContractWithSigner = tokenContract.connect(wallet);
       try {
         const tx = await tokenContractWithSigner.refundOrder(
           order.id,
-          // { gasPrice: '2000000000', gasLimit: '1000000000'},
         );
       } catch (err) {
         console.log('err', err);
