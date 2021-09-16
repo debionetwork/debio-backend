@@ -7,4 +7,7 @@ export class EmrCategory {
 
   @Column()
   category: string;
+
+  @Column()
+  created_at: Date;
 }

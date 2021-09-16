@@ -37,7 +37,8 @@ describe('EMR Category (e2e)', () => {
         expect(response.body).toEqual(
           expect.arrayContaining([{
             id: expect.any(Number),
-            category: expect.any(String)
+            category: expect.any(String),
+            created_at: expect.any(String)
           }])
         )
       })
