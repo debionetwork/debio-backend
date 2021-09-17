@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
+import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
 
