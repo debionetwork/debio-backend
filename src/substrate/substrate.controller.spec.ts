@@ -33,14 +33,14 @@ describe("Substrate Controller", () => {
       onModuleInit: jest.fn(),
       getSubstrateAddressByEthAddress: jest.fn((ethAddress: string,) => "0x38449f6e6b3f409565b88bcdd41061009e4bc349"),
       getLastOrderByCustomer: jest.fn((substrateAddress: string) => ""),
-      getOrderDetailByOrderID: jest.fn((orderID: string) => {}),
+      getOrderDetailByOrderID: jest.fn((orderID: string) => ({})),
       getBalanceAccount: jest.fn((accountId: string) => 0),
       setOrderPaid: jest.fn((orderId: string) => null),
       setOrderRefunded: jest.fn((orderId: string) => null),
       sendDbioFromFaucet: jest.fn((accountId: string, amount: number | string,) => null),
       hasRole: jest.fn((accountId: string, role: RegistrationRole) => true),
       listenToEvents: jest.fn(),
-      bindEthAddressToSubstrateAddress: jest.fn((ethAddress: string, substrateAddress: string,) => {}),
+      bindEthAddressToSubstrateAddress: jest.fn((ethAddress: string, substrateAddress: string,) => ({})),
 
     })
   };
