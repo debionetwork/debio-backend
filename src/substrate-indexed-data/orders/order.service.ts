@@ -11,25 +11,29 @@ export class OrderService {
     page: number,
     size: number,
   ) {
+    const filter_array = [];
+    filter_array.push({
+      bool: {
+        must: [{ match: { customer_id: customer_id } }],
+      },
+    });
+
+    if (keyword && keyword.trim() !== "") {
+      filter_array.push({
+        bool: {
+          should: [
+            { match_phrase_prefix: { status: { query: keyword } } },
+            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
+            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
+            { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
+          ],
+        },
+      });
+    }
+    
     const query = {
       bool: {
-        filter: [
-          {
-            bool: {
-              should: [
-                { wildcard: { status: `*${keyword}*` } },
-                { wildcard: { dna_sample_tracking_id: `*${keyword}*` } },
-                { wildcard: { 'service_info.name': `*${keyword}*` } },
-                { wildcard: { 'lab_info.name': `*${keyword}*` } },
-              ],
-            },
-          },
-          {
-            bool: {
-              must: [{ match: { customer_id: customer_id } }],
-            },
-          },
-        ],
+        filter: filter_array,
       },
     };
 
@@ -64,7 +68,7 @@ export class OrderService {
         page: page,
         count: total_orders.body.count,
       },
-      data: orders.body.hits,
+      data: orders.body.hits.hits,
     };
   }
 }
