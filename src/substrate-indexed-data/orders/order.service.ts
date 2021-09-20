@@ -12,9 +12,12 @@ export class OrderService {
     size: number,
   ) {
     const filter_array = [];
+
     filter_array.push({
       bool: {
-        must: [{ match: { customer_id: customer_id } }],
+        must: [
+          { match: { customer_id: customer_id } }
+        ],
       },
     });
 
