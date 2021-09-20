@@ -52,39 +52,7 @@ describe('Service Request Controller (e2e)', () => {
               }
             }])
           }])
-          // status : 'ok',
-          // data : expect.arrayContaining([{
-          //   id : expect.any(Number),
-          //   country_code : expect.any(String),
-          //   country_id : expect.any(Number),
-          //   latitude : expect.any(Number),
-          //   longitude : expect.any(Number),
-          //   name : expect.any(String),
-          //   state_code : expect.any(String),
-          // }])
         )
       })
   });
-
-  // it('/location get all state in selected country', () => {
-  //   request(app.getHttpServer())
-  //     .get('/location')
-  //     .query({ country_code : 'ID'})
-  //     .expect(200)
-  //     .then((response) => {
-  //       expect(response.body).toEqual({
-  //         status : 'ok',
-  //         data : expect.arrayContaining([{
-  //           id : expect.any(Number),
-  //           country_code : expect.any(String),
-  //           country_id : expect.any(Number),
-  //           latitude : expect.any(Number),
-  //           longitude : expect.any(Number),
-  //           name : expect.any(String),
-  //           state_code : expect.any(String),
-  //         }])
-  //       })
-  //     })
-  // });
-
 });
