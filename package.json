@@ -22,6 +22,7 @@
     "test:e2e:watch": "jest --config ./test/jest-e2e.json --watch"
   },
   "dependencies": {
+    "@aginix/nestjs-gcloud-storage": "^1.2.0",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs-query/query-typeorm": "^0.28.1",
