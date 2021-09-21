@@ -46,12 +46,12 @@ export class OrderService {
         query: query,
       },
       from: 0,
-      size: 10,
+      size: 10000,
     };
 
-    if (page && size) {
+    if (page) {
       const _size = size ? size : 10;
-      const from = size * page - _size;
+      const from = (page - 1) * _size;
 
       searchObj.from = from;
       searchObj.size = _size;

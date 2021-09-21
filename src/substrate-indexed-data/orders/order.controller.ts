@@ -16,8 +16,8 @@ export class OrderController {
     const orders = await this.orderService.getByProductNameStatusLabName(
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
-      page ? page : 1,
-      size ? size : 10,
+      page,
+      size,
     );
     
     return orders;
