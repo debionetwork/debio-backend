@@ -91,11 +91,7 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "@polkadot/api(.*)$": "<rootDir>/substrate/substrate.service.ts"
-<<<<<<< HEAD
     },
     "setupFiles": ["dotenv/config"]
-=======
-    }
->>>>>>> 9cba6a5f1d3b0f708f5a99aaaf234832a945f3fe
   }
 }
