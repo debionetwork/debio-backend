@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { EmrModule } from '../src/emr/emr.module';
+import { EmrModule } from '../src/category/emr/emr.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmrCategory } from '../src/emr/models/emr.entity';
+import { EmrCategory } from '../src/category/emr/models/emr.entity';
 
 describe('EMR Category (e2e)', () => {
   let app: INestApplication;
