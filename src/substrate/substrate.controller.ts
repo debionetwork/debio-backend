@@ -9,7 +9,7 @@ export class GetDbioOnRegisterDto {
   role: RegistrationRole;
 }
 
-class WalletBindingDTO {
+export class WalletBindingDTO {
   accountId: string;
   ethAddress: string;
 }
