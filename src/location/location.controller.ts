@@ -36,7 +36,6 @@ export class LocationController {
         resLocation = await this.stateService.getAllRegion(country_code);
       } else {
         resLocation = await this.countryService.getAll();
-        console.log('masuk-->', resLocation);
       }
       resLocation.forEach((element) => {
         element['name'] = element['name'].trim();
