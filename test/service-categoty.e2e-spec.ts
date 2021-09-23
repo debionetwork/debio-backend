@@ -1,17 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ServiceCategory } from "../src/category/service/models/service-category.service";
 import request from 'supertest';
-import { EmrModule } from '../src/category/emr/emr.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmrCategory } from '../src/category/emr/models/emr.entity';
+import { ServiceCategoryModule } from "../src/category/service/service-category.module";
 
-describe('EMR Category (e2e)', () => {
+describe('Service Category (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        EmrModule,
+        ServiceCategoryModule,
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: process.env.HOST_POSTGRES,
@@ -19,7 +19,7 @@ describe('EMR Category (e2e)', () => {
           username: process.env.USERNAME_POSTGRES,
           password: process.env.PASSWORD_POSTGRES,
           database: process.env.DB_POSTGRES,
-          entities: [EmrCategory],
+          entities: [ServiceCategory],
           autoLoadEntities: true,
         }),
       ],
@@ -29,15 +29,17 @@ describe('EMR Category (e2e)', () => {
     await app.init();
   });
 
-  it('/emr-category get all category from emr (GET)', () => {
+  it('/service-category get all category from service (GET)', () => {
     request(app.getHttpServer())
-      .get('/emr-category')
+      .get('/service-category')
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
           expect.arrayContaining([{
             id: expect.any(Number),
-            category: expect.any(String),
+            service_categories: expect.any(String),
+            name: expect.any(String),
+            ticker: expect.any(String),
             created_at: expect.any(String)
           }])
         )
