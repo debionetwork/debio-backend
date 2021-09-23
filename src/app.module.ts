@@ -14,7 +14,8 @@ import { TransactionLoggingModule } from './transaction-logging/transaction-logg
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
 import { MailModule } from './mail/mail.module';
-import { EmrModule } from './emr/emr.module';
+import { EmrModule } from './category/emr/emr.module';
+import { ServiceCategoryModule } from './category/service/service-category.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -45,6 +46,7 @@ require('dotenv').config(); // eslint-disable-line
     LocationModule,
     RatingModule,
     EmrModule,
+    ServiceCategoryModule,
     EthereumModule,
     EscrowModule,
     SubstrateModule,
