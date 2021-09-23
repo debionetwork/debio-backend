@@ -6,7 +6,13 @@ export class ServiceCategory {
   id: number;
 
   @Column()
-  category: string;
+  service_categories: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  ticker: string;
 
   @Column()
   created_at: Date;
