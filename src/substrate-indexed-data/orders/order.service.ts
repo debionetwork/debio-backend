@@ -44,6 +44,14 @@ export class OrderService {
       index: 'orders',
       body: {
         query: query,
+        sort: [
+          {
+            "created_at.keyword": {
+              unmapped_type: "keyword",
+              order: "desc"
+            }
+          }
+        ]
       },
       from: 0,
       size: 10000,
