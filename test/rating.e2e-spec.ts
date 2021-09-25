@@ -4,21 +4,32 @@ import request from 'supertest';
 import { RatingModule } from '../src/rating/rating.module';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { LabRating } from '../src/rating/models/rating.entity';
-import { response } from 'express';
+import { RatingService } from '../src/rating/rating.service';
 
 describe('Rating Controller (e2e)', () => {
   let app: INestApplication;
 
-  const mockRatings = [
-    {
-      lab_id: '1',
-      service_id: '0xs89393',
-      order_id: '0xj3mj4',
-      rating_by: 'Jordan',
-      rating: 4,
-      created: new Date()
-    }
-  ]
+  const mockRatings = {
+    lab_id: '1',
+    service_id: '0xs89393',
+    order_id: '0xj3mj4',
+    rating_by: 'Jordan',
+    rating: 4,
+    created: new Date()
+  }
+
+  const RatingServiceProvider = {
+    provide: RatingService,
+    useFactory: () => ({
+      create: jest.fn(),
+      getRatingByLabId: jest.fn(),
+    }),
+  }
+
+  const RatingRepository = {
+    create: jest.fn().mockResolvedValue(mockRatings),
+    save: jest.fn().mockReturnValue(Promise.resolve())
+  }
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -34,6 +45,14 @@ describe('Rating Controller (e2e)', () => {
           entities: [LabRating],
           autoLoadEntities: true,
         }),
+      ],
+      providers: [
+        RatingService,
+        RatingServiceProvider,
+        {
+          provide: getRepositoryToken(LabRating),
+          useValue: RatingRepository,
+        },
       ],
     })  
     .compile();
@@ -76,5 +95,19 @@ describe('Rating Controller (e2e)', () => {
           }
         })
       })
+  });
+
+  it('/rating (POST) return status 200', () => {
+    request(app.getHttpServer())
+    .post('/rating')
+    .send(mockRatings)
+    .expect(201);
+  });
+
+  it('/rating (POST) return status 500 Internal Server Error', () => {
+    request(app.getHttpServer())
+    .post('/rating')
+    .send(null)
+    .expect(500);
   });
 });
