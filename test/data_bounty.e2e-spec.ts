@@ -1,17 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { EmrModule } from '../src/category/emr/emr.module';
+import { BountyModule } from '../src/bounty/bounty.module';
+import { DataBounty } from '../src/bounty/models/bounty.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmrCategory } from '../src/category/emr/models/emr.entity';
 
-describe('EMR Category (e2e)', () => {
+describe('Bounty Controller (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
-        EmrModule,
+        BountyModule,
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: process.env.HOST_POSTGRES,
@@ -19,28 +19,28 @@ describe('EMR Category (e2e)', () => {
           username: process.env.USERNAME_POSTGRES,
           password: process.env.PASSWORD_POSTGRES,
           database: process.env.DB_POSTGRES,
-          entities: [EmrCategory],
+          entities: [DataBounty],
           autoLoadEntities: true,
         }),
       ],
-    }).compile();
+    })  
+    .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
-  it('/emr-category get all category from emr (GET)', () => {
-    request(app.getHttpServer())
-      .get('/emr-category')
-      .expect(200)
-      .then((response) => {
-        expect(response.body).toEqual(
-          expect.arrayContaining([{
-            id: expect.any(Number),
-            category: expect.any(String),
-            created_at: expect.any(String)
-          }])
-        )
-      })
+  it('/bounty (POST) create data bounty to database', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/bounty')
+			.send({
+				bounty_ocean: "hello world"
+			});
+
+		expect(response.statusCode).toEqual(201);
+
+		expect(response.body).toEqual({
+			data: expect.any(Object),
+		});
   });
 });
