@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 
 @Controller('orders')
@@ -7,6 +8,10 @@ export class OrderController {
 
   // host/{customer_id}?query=&page=&size=
   @Get(':customer_id')
+  @ApiParam({ name: 'customer_id'})
+  @ApiQuery({ name: 'keyword'})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
   async getOrderByProductNameStatusLabName(
     @Param() params,
     @Query('keyword') keyword: string,
