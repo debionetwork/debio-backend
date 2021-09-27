@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ethers } from 'ethers';
+import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
 
 interface RequestsByCountry {
@@ -15,6 +16,8 @@ export class ServiceRequestService {
     @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
     private readonly elasticsearchService: ElasticsearchService,
+    @Inject(forwardRef(() => EthereumService))
+    private ethereumService: EthereumService,
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
@@ -27,7 +30,8 @@ export class ServiceRequestService {
         hits: { hits },
       },
     } = serviceRequests;
-
+    const oneDaiEqualToUsd = await this.ethereumService.convertCurrency('DAI', 'USD', 1)
+    
     // Accumulate totalRequests and totalValue by country
     const requestByCountryDict = {};
     for (const req of hits) {
@@ -54,44 +58,39 @@ export class ServiceRequestService {
       requestByCountryDict[request.country].totalValue =
         currValueByCountry.add(value);
 
-      if (
-        !requestByCountryDict[request.country]['services'][
-          request.service_category
-        ]
-      ) {
-        requestByCountryDict[request.country]['services'][
-          request.service_category
-        ] = {
-          name: request.service_category,
-          totalRequests: 0,
-          totalValue: {
-            dai: 0,
-            usd: 0,
-          },
-        };
-      }
+        if (
+          !requestByCountryDict[request.country]['services'][
+            request.city+'-'+request.service_category
+          ]
+          ) {
+            requestByCountryDict[request.country]['services'][
+              request.city+'-'+request.service_category
+            ] = {
+              name: request.service_category,
+              city: request.city,
+              totalRequests: 0,
+              totalValue: {
+                dai: 0,
+                usd: 0,
+              },
+            };
+          }
+
       requestByCountryDict[request.country]['services'][
-        request.service_category
+        request.city+'-'+request.service_category
       ].totalRequests += 1;
       const currValueByCountryServiceCategoryDai = ethers.BigNumber.from(
         requestByCountryDict[request.country]['services'][
-          request.service_category
+          request.city+'-'+request.service_category
         ].totalValue.dai,
       );
-      const currValueByCountryServiceCategoryUsd = ethers.BigNumber.from(
-        requestByCountryDict[request.country]['services'][
-          request.service_category
-        ].totalValue.usd,
-      );
       requestByCountryDict[request.country]['services'][
-        request.service_category
+        request.city+'-'+request.service_category
       ].totalValue.dai = currValueByCountryServiceCategoryDai.add(value);
-      requestByCountryDict[request.country]['services'][
-        request.service_category
-      ].totalValue.usd = currValueByCountryServiceCategoryUsd.add(value);
     }
 
     // Restructure data into array
+    
     const requestByCountryList: Array<RequestsByCountry> = [];
     for (const countryCode in requestByCountryDict) {
       const countryObj = await this.countryService.getByIso2Code(countryCode);
@@ -107,7 +106,7 @@ export class ServiceRequestService {
         ...s,
         totalValue: {
           dai: s.totalValue.dai.toString(),
-          usd: s.totalValue.usd.toString(),
+          usd: (Number(s.totalValue.dai.toString()) * oneDaiEqualToUsd.price).toString(),
         },
       }));
 
