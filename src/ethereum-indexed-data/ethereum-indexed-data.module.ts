@@ -3,10 +3,12 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceRequestController } from './service-request/service-request.controller';
 import { ServiceRequestService } from './service-request/service-request.service';
 import { LocationModule } from '../location/location.module';
+import { EthereumModule } from '../ethereum/ethereum.module';
 
 @Module({
   imports: [
     forwardRef(() => LocationModule),
+    forwardRef(() => EthereumModule),
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,
