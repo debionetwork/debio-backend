@@ -2,10 +2,10 @@ import { INestApplication } from "@nestjs/common";
 import request from 'supertest';
 import { ElasticsearchModule } from "@nestjs/elasticsearch";
 import { Test, TestingModule } from "@nestjs/testing";
-import { LabController } from "../src/substrate-indexed-data/labs/lab.controller";
-import { LabService } from "../src/substrate-indexed-data/labs/lab.service";
+import { ServiceService } from "../src/substrate-indexed-data/services/service.service";
+import { ServiceController } from "../src/substrate-indexed-data/services/service.controller";
 
-describe('subtrate indexed data lab controller (e2e)', () => {
+describe('subtrate indexed data Services controller (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -17,8 +17,8 @@ describe('subtrate indexed data lab controller (e2e)', () => {
           }),
         }),
       ],
-      controllers: [LabController],
-      providers: [LabService],
+      controllers: [ServiceController],
+      providers: [ServiceService],
     })  
     .compile();
 
@@ -26,11 +26,9 @@ describe('subtrate indexed data lab controller (e2e)', () => {
     await app.init();
   });
 
-  it('/labs/:country/:city/:category elastic search', () => {
+  it('/services/:country/:city/ elastic search', () => {
     request(app.getHttpServer())
-      .get('/labs/ID/ID-JK/Whole-Genome Sequencing')
-      .query({ page : 1})
-      .query({ size : 20})
+      .get('/services/ID/ID-JK')
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
@@ -44,11 +42,9 @@ describe('subtrate indexed data lab controller (e2e)', () => {
       })
   });
 
-  it('/labs/ without params', () => {
+  it('/services/ without params', () => {
     request(app.getHttpServer())
-      .get('/labs')
-      .query({ page : 1})
-      .query({ size : 20})
+      .get('/services')
       .expect(404)
       .then((response) => {
         expect(response.body).toHaveProperty('error')
