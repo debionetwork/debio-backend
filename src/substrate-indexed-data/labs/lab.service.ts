@@ -20,7 +20,7 @@ export class LabService {
             must: [
               { match: { 'services.country': country } },
               { match: { 'services.city': city } },
-              { match: { 'services.info.name': category } },
+              { match: { 'services.info.category': category } },
             ],
           },
         },
