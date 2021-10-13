@@ -18,9 +18,9 @@ export class LabService {
         query: {
           bool: {
             must: [
-              { match: { 'info.country': country } },
-              { match: { 'info.city': city } },
-              { match: { 'services.info.category': category } },
+              { match: { 'services.country': country } },
+              { match: { 'services.city': city } },
+              { match: { 'services.info.name': category } },
             ],
           },
         },
