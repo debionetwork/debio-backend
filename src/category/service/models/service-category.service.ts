@@ -16,4 +16,7 @@ export class ServiceCategory {
 
   @Column()
   created_at: Date;
+
+  @Column()
+  service_type: string;
 }
