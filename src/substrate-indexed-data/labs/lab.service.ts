@@ -12,15 +12,16 @@ export class LabService {
     page: number,
     size: number,
   ) {
+    
     const searchObj = {
       index: 'labs',
       body: {
         query: {
           bool: {
             must: [
-              { match: { 'services.country': country } },
-              { match: { 'services.city': city } },
-              { match: { 'services.info.category': category } },
+              { match_phrase_prefix: { 'services.country': { query: country } } },
+              { match_phrase_prefix: { 'services.city': { query: city } } },
+              { match_phrase_prefix: { 'services.info.category': { query: category } } },
             ],
           },
         },
