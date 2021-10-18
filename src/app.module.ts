@@ -15,6 +15,10 @@ import { TransactionRequest } from './transaction-logging/models/transaction-req
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
 import { MailModule } from './mail/mail.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
+import { BountyModule } from './bounty/bounty.module';
+import { DataBounty } from './bounty/models/bounty.entity';
+import { EmrModule } from './category/emr/emr.module';
+import { ServiceCategoryModule } from './category/service/service-category.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -28,7 +32,7 @@ require('dotenv').config(); // eslint-disable-line
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
-      entities: [LabRating, TransactionRequest],
+      entities: [LabRating, DataBounty, TransactionRequest],
       autoLoadEntities: true,
     }),
     TypeOrmModule.forRoot({
@@ -45,6 +49,8 @@ require('dotenv').config(); // eslint-disable-line
     CloudStorageModule,
     LocationModule,
     RatingModule,
+    EmrModule,
+    ServiceCategoryModule,
     EthereumModule,
     EscrowModule,
     SubstrateModule,
@@ -54,6 +60,7 @@ require('dotenv').config(); // eslint-disable-line
     TransactionLoggingModule,
     RecaptchaModule,
     MailModule,
+    BountyModule,
   ],
 })
 export class AppModule {}

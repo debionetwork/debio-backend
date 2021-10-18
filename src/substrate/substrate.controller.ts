@@ -1,16 +1,23 @@
 import { Body, Controller, Post, Res, Headers } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
+import { ApiProperty } from '@nestjs/swagger';
 
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
 export class GetDbioOnRegisterDto {
+  @ApiProperty({ type: String})
   accountId: string;
+
+  @ApiProperty({ description: 'RegistrationRole'})
   role: RegistrationRole;
 }
 
-class WalletBindingDTO {
+export class WalletBindingDTO {
+  @ApiProperty({ type: String})
   accountId: string;
+
+  @ApiProperty({ type: String})
   ethAddress: string;
 }
 
