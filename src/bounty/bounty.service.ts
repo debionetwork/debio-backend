@@ -33,7 +33,7 @@ export class BountyService {
 
   create(data: CreateBountyDto) {
     const data_bounty = new DataBounty();
-		data_bounty.hash_bounty_ocean = ethers.utils.sha256(ethers.utils.toUtf8Bytes(data.bounty_ocean));
+    data_bounty.hash_bounty_ocean = ethers.utils.sha256(ethers.utils.toUtf8Bytes(data.bounty_ocean));
     return this.dataBountyRepository.save(data_bounty);
   }
 
