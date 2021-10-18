@@ -12,8 +12,11 @@ export class BountyController {
 	@Post()
 	@ApiBody({ type: CreateBountyDto })
 	async create(@Body() data: CreateBountyDto) {
+		const result_data_bounty = await this.bountyService.create(data);
+		await this.bountyService.submitStaking(result_data_bounty.hash_bounty_ocean);
+		
 		return {
-			data: await this.bountyService.create(data)
+			data: result_data_bounty
 		}
 	}
 }
