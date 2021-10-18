@@ -9,14 +9,14 @@ export class BountyController {
 		private readonly bountyService: BountyService
 	) {}
 
-	@Post()
+	@Post('/create-data-bounty')
 	@ApiBody({ type: CreateBountyDto })
 	async create(@Body() data: CreateBountyDto) {
-		const result_data_bounty = await this.bountyService.create(data);
-		await this.bountyService.submitStaking(result_data_bounty.hash_bounty_ocean);
-		
+		const resultDataBounty = await this.bountyService.create(data);
+		await this.bountyService.submitStaking(resultDataBounty.hash_bounty_ocean);
+
 		return {
-			data: result_data_bounty
+			data: resultDataBounty
 		}
 	}
 }
