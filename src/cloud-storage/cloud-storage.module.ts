@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { CloudStorageController } from './cloud-storage.controller';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -11,5 +12,6 @@ require('dotenv').config(); // eslint-disable-line
       predefinedAcl: 'private'
     })
   ],
+  controllers: [CloudStorageController],
 })
 export class CloudStorageModule {}
