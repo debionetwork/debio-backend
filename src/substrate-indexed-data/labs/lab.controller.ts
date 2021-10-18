@@ -7,8 +7,9 @@ export class LabController {
   constructor(readonly labService: LabService) {}
 
   // host/{country}/{city}/{category}?page=1&size=20
-  @Get(':country/:city/:category')
+  @Get(':country/:region/:city/:category')
   @ApiParam({ name: 'country'})
+  @ApiParam({ name: 'region'})
   @ApiParam({ name: 'city'})
   @ApiParam({ name: 'category'})
   @ApiQuery({ name: 'page', required: false})
@@ -20,6 +21,7 @@ export class LabController {
   ): Promise<any> {
     const services = await this.labService.getByCountryCityCategory(
       params.country,
+      params.region,
       params.city,
       params.category,
       page,
