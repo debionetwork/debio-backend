@@ -14,6 +14,7 @@ import { TransactionLoggingModule } from './transaction-logging/transaction-logg
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
 import { MailModule } from './mail/mail.module';
+import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { BountyModule } from './bounty/bounty.module';
 import { DataBounty } from './bounty/models/bounty.entity';
 import { EmrModule } from './category/emr/emr.module';
@@ -45,6 +46,7 @@ require('dotenv').config(); // eslint-disable-line
       entities: [...LocationEntities],
       autoLoadEntities: true,
     }),
+    CloudStorageModule,
     LocationModule,
     RatingModule,
     EmrModule,
