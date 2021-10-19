@@ -24,9 +24,10 @@ export class CloudStorageController {
     const URL_VALID_DURATION = 100000;
     var file = this.cloudStorageService.bucket.file(filename);
     var [url] = await file.getSignedUrl({
+      version: 'v4',
       action: 'write',
       expires: Date.now() + URL_VALID_DURATION,
-      contentType: "text/vcard",
+      contentType: "application/x-www-form-urlencoded",
     });
 
     return {
