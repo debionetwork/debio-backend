@@ -25,7 +25,7 @@ export class RatingService {
     return this.ratingRepository.save(rating);
   }
 
-  async getAllByServiceId(service_id){
+  async getAllByServiceId(){
     const cacheAllRating = await this.cacheManager.get('getAllRating')
     let ratings = null
 

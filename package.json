@@ -93,6 +93,8 @@
     "moduleNameMapper": {
       "@polkadot/api(.*)$": "<rootDir>/substrate/substrate.service.ts"
     },
-    "setupFiles": ["dotenv/config"]
+    "setupFiles": [
+      "dotenv/config"
+    ]
   }
 }
