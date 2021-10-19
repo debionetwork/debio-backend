@@ -43,12 +43,11 @@ export class RatingController {
     };
   }
 
-  @Get('service/:service_id')
-  @ApiParam({ name: 'service_id' })
-  async getAllService(@Param('service_id') service_id: string) {
+  @Get('service')
+  async getAllService() {
     try {
       return{
-        data: await this.ratingService.getAllByServiceId(service_id)
+        data: await this.ratingService.getAllByServiceId()
       }
     } catch (error) {
       return {
