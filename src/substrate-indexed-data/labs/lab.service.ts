@@ -40,11 +40,18 @@ export class LabService {
       searchObj.from = from;
       searchObj.size = _size;
     }
+    const result = []
     const labs = await this.elasticsearchService.search(searchObj);
     labs.body.hits.hits.forEach(lab => {
-      lab._source.services = lab._source.services.filter( ({info}) => info['category'] === category)       
+      lab._source.services = lab._source.services.filter( ({info}) => info['category'] === category)
+      lab._source.services.forEach(labService => {
+        labService.lab_detail = lab._source.info
+        labService.certifications = lab._source.certifications
+        labService.lab_id = lab._source.account_id
+        result.push(labService)
+      });      
     });
     
-    return { result : labs.body.hits };
+    return { result };
   }
 }
