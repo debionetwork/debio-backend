@@ -20,7 +20,9 @@ export class OrderService {
         }
       })
 
-      return order.body.hits.hits[0]._source;
+      const hits_order = order.body.hits.hits;
+
+      return hits_order.length > 0 ? hits_order[0]._source : null;
   }
 
   async getOrderList(

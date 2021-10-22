@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Req } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, Query, Req } from '@nestjs/common';
 import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 
@@ -12,6 +12,10 @@ export class OrderController {
     @Param('hash_id') hashId: string,
   ) {
     const order = await this.orderService.getOrderByHashId(hashId);
+
+    if (!order) {
+      throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
+    }
 
     return order;
   }
