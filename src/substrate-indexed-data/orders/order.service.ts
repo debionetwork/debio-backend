@@ -5,7 +5,25 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 export class OrderService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async getByProductNameStatusLabName(
+  async getOrderByHashId(
+    hash_id: string) {
+      const order = await this.elasticsearchService.search({
+        index: 'orders',
+        body: {
+          query: {
+            match: {
+              _id: {
+                query: hash_id
+              }
+            }
+          }
+        }
+      })
+
+      return order.body.hits.hits[0]._source;
+  }
+
+  async getOrderList(
     customer_id: string,
     keyword: string,
     page: number,

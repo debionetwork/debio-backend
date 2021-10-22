@@ -5,6 +5,16 @@ import { OrderService } from './order.service';
 @Controller('orders')
 export class OrderController {
   constructor(readonly orderService: OrderService) {}
+  
+  // host/{hash_id}
+  @Get(':hash_id')
+  async getOrderById(
+    @Param('hash_id') hashId: string,
+  ) {
+    const order = await this.orderService.getOrderByHashId(hashId);
+
+    return order;
+  }
 
   // host/{customer_id}?query=&page=&size=
   @Get(':customer_id')
@@ -17,8 +27,8 @@ export class OrderController {
     @Query('keyword') keyword: string,
     @Query('page') page,
     @Query('size') size,
-  ): Promise<any> {
-    const orders = await this.orderService.getByProductNameStatusLabName(
+  ) {
+    const orders = await this.orderService.getOrderList(
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
       page,
