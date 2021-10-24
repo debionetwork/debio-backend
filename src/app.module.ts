@@ -19,6 +19,7 @@ import { DataBounty } from './bounty/models/bounty.entity';
 import { EmrModule } from './category/emr/emr.module';
 import { ServiceCategoryModule } from './category/service/service-category.module';
 import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
+import { RewardModule } from './reward/reward.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -49,6 +50,7 @@ require('dotenv').config(); // eslint-disable-line
     CloudStorageModule,
     DbioBalanceModule,
     LocationModule,
+    RewardModule,
     RatingModule,
     EmrModule,
     ServiceCategoryModule,
