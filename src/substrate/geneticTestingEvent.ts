@@ -64,8 +64,8 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
         currency: string;
         parent_id: bigint;
         ref_number: string;
-        ref_type: number;
-        type: number;
+        transaction_status: number;
+        transaction_type: number;
       }
 
       const dataInput: DataInput = {
@@ -75,8 +75,8 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
         currency: dataOrder['currency'],
         parent_id: BigInt(0),
         ref_number: dataRequest.order_id,
-        ref_type: 3,
-        type: 1,
+        transaction_status: 3,
+        transaction_type: 1,
       };
 
       this.loggingService.create(dataInput);

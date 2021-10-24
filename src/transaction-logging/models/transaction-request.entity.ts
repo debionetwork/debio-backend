@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'transaction_requests' })
+@Entity({ name: 'transaction_logs' })
 export class TransactionRequest {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: string;
@@ -12,13 +12,13 @@ export class TransactionRequest {
   currency: string;
 
   @Column()
-  type: number;
+  transaction_type: number;
 
   @Column({ type: 'bigint' })
   amount: bigint;
 
   @Column()
-  ref_type: number;
+  transaction_status: number;
 
   @Column()
   create_at: Date;
