@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { info } from 'console';
 
 @Injectable()
 export class LabService {
@@ -7,20 +8,23 @@ export class LabService {
 
   async getByCountryCityCategory(
     country: string,
+    region: string,
     city: string,
     category: string,
     page: number,
     size: number,
   ) {
+    
     const searchObj = {
       index: 'labs',
       body: {
         query: {
           bool: {
             must: [
-              { match: { 'info.country': country } },
-              { match: { 'info.city': city } },
-              { match: { 'services.info.category': category } },
+              { match_phrase_prefix: { 'services.country': { query: country } } },
+              { match_phrase_prefix: { 'services.region': { query: region } } },
+              { match_phrase_prefix: { 'services.city': { query: city } } },
+              { match_phrase_prefix: { 'services.info.category': { query: category } } },
             ],
           },
         },
@@ -36,8 +40,18 @@ export class LabService {
       searchObj.from = from;
       searchObj.size = _size;
     }
-
+    const result = []
     const labs = await this.elasticsearchService.search(searchObj);
-    return labs;
+    labs.body.hits.hits.forEach(lab => {
+      lab._source.services = lab._source.services.filter( ({info}) => info['category'] === category)
+      lab._source.services.forEach(labService => {
+        labService.lab_detail = lab._source.info
+        labService.certifications = lab._source.certifications
+        labService.lab_id = lab._source.account_id
+        result.push(labService)
+      });      
+    });
+    
+    return { result };
   }
 }
