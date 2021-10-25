@@ -7,4 +7,16 @@ export class DataBounty {
 
   @Column()
   hash_bounty_ocean: string;
+
+  @Column()
+  service_name: string;
+
+  @Column()
+  lab_name: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  reward: string;
 }
