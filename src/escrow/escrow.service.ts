@@ -5,6 +5,7 @@ import { SubstrateService } from '../substrate/substrate.service';
 import { Utils } from './utils/utils';
 import { ethers } from 'ethers';
 import ABI from '../ethereum/utils/ABI.json';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class EscrowService {
@@ -12,6 +13,7 @@ export class EscrowService {
   constructor(
     private substrateService: SubstrateService,
     private ethereumService: EthereumService,
+		private readonly elasticsearchService: ElasticsearchService,
   ) {
     this.utils = new Utils();
   }
@@ -61,6 +63,29 @@ export class EscrowService {
           '1000000000000000000',
         );
       }
+
+			const now = new Date();
+
+			await this.elasticsearchService.index({
+				index: 'payment-history',
+				refresh: 'wait_for',
+				id: lastOrderID,
+				body: {
+					id: lastOrderID,
+					sended_amount: strAmount,
+					service_id: orderDetail['service_id'],
+					customer_box_public_key: orderDetail['customer_box_public_key'],
+					seller_id: orderDetail['seller_id'],
+					dna_sample_tracking_id: orderDetail['dna_sample_tracking_id'],
+					currency: orderDetail['currency'],
+					prices: orderDetail['prices'],
+					additional_prices: orderDetail['additional_prices'],
+					status: orderDetail['status'],
+					created_at: orderDetail['created_at'],
+					updated_at: orderDetail['updated_at'],
+					payment_date: `${now.getUTCDate()}-${now.getUTCMonth() + 1}-${now.getUTCFullYear()}`,
+				}
+			});
 
       await this.substrateService.setOrderPaid(lastOrderID);
     } catch (error) {
