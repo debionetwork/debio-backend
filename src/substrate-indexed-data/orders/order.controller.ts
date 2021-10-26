@@ -20,8 +20,8 @@ export class OrderController {
     return order;
   }
 
-  // host/{customer_id}?query=&page=&size=
-  @Get(':customer_id')
+  // host/list/{customer_id}?query=&page=&size=
+  @Get('/list/:customer_id')
   @ApiParam({ name: 'customer_id'})
   @ApiQuery({ name: 'keyword'})
   @ApiQuery({ name: 'page', required: false})
