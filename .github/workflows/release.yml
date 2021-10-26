@@ -1,0 +1,156 @@
+name: Release automation
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+concurrency:
+  group: release-automation
+
+jobs:
+  compute-build-info:
+    runs-on: ubuntu-latest
+
+    outputs:
+      latest_tag: ${{ steps.build-info.outputs.latest_tag }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Compute build info
+        id: build-info
+        shell: bash
+        run: |
+          version=${GITHUB_REF#refs/*/}
+          echo $version
+          echo "::set-output name=latest_tag::$version"
+
+  build-and-publish-docker-image:
+    runs-on: ubuntu-latest
+
+    needs: compute-build-info
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Vault Secrets
+        uses: hashicorp/vault-action@v2.4.0
+        with:
+          url: ${{ secrets.VAULTURL }}
+          token: ${{ secrets.VAULTTOKEN }}
+          caCertificate: ${{ secrets.VAULTCA }}
+          secrets: |
+              debio_development/data/backend_v2 bucket_name;
+              debio_development/data/backend_v2 coinmarketcap_api_key;
+              debio_development/data/backend_v2 contract_address;
+              debio_development/data/backend_v2 db_city;
+              debio_development/data/backend_v2 db_locations;
+              debio_development/data/backend_v2 db_pass;
+              debio_development/data/backend_v2 db_postgres;
+              debio_development/data/backend_v2 db_username;
+              debio_development/data/backend_v2 debio_api_key;
+              debio_development/data/backend_v2 debio_escrow_private_key;
+              debio_development/data/backend_v2 debio_eth_address;
+              debio_development/data/backend_v2 elasticsearch_node;
+              debio_development/data/backend_v2 elasticsearch_password;
+              debio_development/data/backend_v2 elasticsearch_username;
+              debio_development/data/backend_v2 escrow_contract_address;
+              debio_development/data/backend_v2 escrow_substrate_mnemonic;
+              debio_development/data/backend_v2 faucet_substrate_mnemonic;
+              debio_development/data/backend_v2 host_postgres;
+              debio_development/data/backend_v2 password_postgres;
+              debio_development/data/backend_v2 port;
+              debio_development/data/backend_v2 recaptcha_secret_key;
+              debio_development/data/backend_v2 service_request_contract_address;
+              debio_development/data/backend_v2 storage_base_uri;
+              debio_development/data/backend_v2 substrate_url;
+              debio_development/data/backend_v2 sudo_substrate_mnemonic;
+              debio_development/data/backend_v2 username_postgres;
+              debio_development/data/backend_v2 web3_rpc;
+
+      - name: Create .env & gcp sa
+        shell: bash
+        run: |
+          tee -a .env <<EOF
+          BUCKET_NAME=$BUCKET_NAME
+          COINMARKETCAP_API_KEY=$COINMARKETCAP_API_KEY
+          CONTRACT_ADDRESS=$CONTRACT_ADDRESS
+          DB_CITY=$DB_CITY
+          DB_LOCATIONS=$DB_LOCATIONS
+          DB_PASS=$DB_PASS
+          DB_POSTGRES=$DB_POSTGRES
+          DB_USERNAME=$DB_USERNAME
+          DEBIO_API_KEY=$DEBIO_API_KEY
+          DEBIO_ESCROW_PRIVATE_KEY=$DEBIO_ESCROW_PRIVATE_KEY
+          DEBIO_ETH_ADDRESS=$DEBIO_ETH_ADDRESS
+          ELASTICSEARCH_NODE=$ELASTICSEARCH_NODE
+          ELASTICSEARCH_PASSWORD=$ELASTICSEARCH_PASSWORD
+          ELASTICSEARCH_USERNAME=$ELASTICSEARCH_USERNAME
+          ESCROW_CONTRACT_ADDRESS=$ESCROW_CONTRACT_ADDRESS
+          ESCROW_SUBSTRATE_MNEMONIC=$ESCROW_SUBSTRATE_MNEMONIC
+          FAUCET_SUBSTRATE_MNEMONIC=$FAUCET_SUBSTRATE_MNEMONIC
+          HOST_POSTGRES=$HOST_POSTGRES
+          PASSWORD_POSTGRES=$PASSWORD_POSTGRES
+          PORT=$PORT
+          RECAPTCHA_SECRET_KEY=$RECAPTCHA_SECRET_KEY
+          SERVICE_REQUEST_CONTRACT_ADDRESS=$SERVICE_REQUEST_CONTRACT_ADDRESS
+          STORAGE_BASE_URI=$STORAGE_BASE_URI
+          SUBSTRATE_URL=$SUBSTRATE_URL
+          SUDO_SUBSTRATE_MNEMONIC=$SUDO_SUBSTRATE_MNEMONIC
+          USERNAME_POSTGRES=$USERNAME_POSTGRES
+          WEB3_RPC=$WEB3_RPC
+          EOF
+
+          tee -a gcp_sa.json <<EOF
+          ${{ secrets.GCP_SA }}
+          EOF
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-release
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      # - name: Login to DockerHub
+      #   uses: docker/login-action@v1
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          # file: .maintain/docker/Dockerfile
+          tags: |
+            hub.debio.network/debio_backend_v2:${{ needs.compute-build-info.outputs.latest_tag }}
+            hub.debio.network/debio_backend_v2:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
