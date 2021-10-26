@@ -11,6 +11,7 @@ export class LabService {
     region: string,
     city: string,
     category: string,
+    service_flow: boolean,
     page: number,
     size: number,
   ) {
