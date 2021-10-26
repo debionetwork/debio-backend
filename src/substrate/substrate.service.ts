@@ -222,6 +222,23 @@ export class SubstrateService implements OnModuleInit {
       });
     console.log(response);
   }
+
+  async sendReward(
+    acountId: string,
+    amount: number | string
+    ) {
+    const wallet = this.escrowWallet;
+    const response = await this.api.tx.rewards
+      .rewardFunds(
+        acountId,
+        amount
+      )
+      .signAndSend(wallet, {
+        nonce: -1,
+      });
+
+    console.log(response);
+  }
 }
 
 class OrderEventHandler {

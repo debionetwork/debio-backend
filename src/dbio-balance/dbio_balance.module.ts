@@ -7,6 +7,7 @@ import { DbioBalance } from "./models/dbio_balance.entity";
 @Module({
   imports: [TypeOrmModule.forFeature([DbioBalance])],
   controllers: [DbioBalanceController],
-  providers: [DbioBalanceService]
+  providers: [DbioBalanceService],
+  exports: [DbioBalanceService]
 })
 export class DbioBalanceModule {}
