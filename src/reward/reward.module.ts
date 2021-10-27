@@ -7,7 +7,11 @@ import { RewardController } from "./reward.controller";
 import { RewardService } from "./reward.service";
 
 @Module({
-  imports: [forwardRef(() => SubstrateModule), TypeOrmModule.forFeature([Reward]), DbioBalanceModule],
+  imports: [
+    forwardRef(() => SubstrateModule),
+    DbioBalanceModule,
+    TypeOrmModule.forFeature([Reward])
+  ],
   controllers: [RewardController],
   providers: [RewardService],
   exports: [TypeOrmModule, RewardService]

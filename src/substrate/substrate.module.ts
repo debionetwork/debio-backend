@@ -10,8 +10,8 @@ import { DbioBalanceModule } from 'src/dbio-balance/dbio_balance.module';
   imports: [
     forwardRef(() => EscrowModule),
     forwardRef(() => RewardModule),
-    TransactionLoggingModule,
-    DbioBalanceModule
+    DbioBalanceModule,
+    TransactionLoggingModule
   ],
   controllers: [SubstrateController],
   providers: [SubstrateService],

@@ -3,7 +3,6 @@ import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
 import { ApiProperty } from '@nestjs/swagger';
 import { RewardService } from 'src/reward/reward.service';
-import { RewardDto } from 'src/reward/dto/reward.dto';
 
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
@@ -73,10 +72,18 @@ export class SubstrateController {
     if (debioApiKey != process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
+    interface DataInput {
+      address: string;
+      ref_number: string;
+      reward_amount: number;
+      reward_type: string;
+      currency: string;
+      create_at: Date;
+    }
 
     const { ethAddress, accountId } = payload;
 
-    const dataInput : RewardDto = {
+    const dataInput : DataInput = {
       address: accountId,
       ref_number: '-',
       reward_amount: 0.01,
