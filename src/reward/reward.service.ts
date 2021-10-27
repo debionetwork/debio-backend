@@ -35,7 +35,7 @@ export class RewardService {
     acountId: string,
     amount: number | string
     ) {
-        return await this.substrateService.sendReward(
+        await this.substrateService.sendReward(
           acountId,
           amount
         )

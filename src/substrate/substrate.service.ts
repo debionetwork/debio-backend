@@ -227,7 +227,11 @@ export class SubstrateService implements OnModuleInit {
     acountId: string,
     amount: number | string
     ) {
+      console.log('masuk sendReward');
+      
     const wallet = this.escrowWallet;
+    console.log('1');
+    
     const response = await this.api.tx.rewards
       .rewardFunds(
         acountId,
@@ -236,6 +240,7 @@ export class SubstrateService implements OnModuleInit {
       .signAndSend(wallet, {
         nonce: -1,
       });
+      console.log('2');
 
     console.log(response);
   }

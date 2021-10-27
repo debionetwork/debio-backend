@@ -11,7 +11,7 @@ export class RewardController {
     private readonly dbioBalanceService : DbioBalanceService
   ) {}
 
-  @Get()
+  @Post()
   @ApiQuery({ name: 'reward_type', enum: [
     'Registered User',
     'Lab Verified',
@@ -48,14 +48,18 @@ export class RewardController {
     }
 
     try {
-      console.log('masuk');
+      console.log('masuk', reward_amount, acount_id);
 
       await this.rewardService.sendReward(acount_id, reward_amount)
       console.log('done');
       
-      return response.status(200).send(`send ${reward_amount} DBIO to ${acount_id}`)
+      
+      return {
+        statusCode: 201,
+        message : `send ${reward_amount} DBIO to ${acount_id}`
+      }
     } catch (error) {
-      return error
+      return response.status(500).send(error)
     }
 
   }
