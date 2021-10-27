@@ -98,10 +98,6 @@ export class SubstrateController {
 
     // If user has not bound wallet before, send them 1 DBIO
     if (substrateAddress == '') {
-      // await this.substrateService.sendDbioFromFaucet(
-      //   accountId,
-      //   '1000000000000000000',
-      // );
       await this.rewardService.sendReward('0.01', accountId)
       await this.rewardService.insert(dataInput)
 
