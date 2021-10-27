@@ -4,9 +4,15 @@ import { SubstrateController } from './substrate.controller';
 import { EscrowModule } from '../escrow/escrow.module';
 import { TransactionLoggingModule } from '../transaction-logging/transaction-logging.module';
 import { RewardModule } from 'src/reward/reward.module';
+import { DbioBalanceModule } from 'src/dbio-balance/dbio_balance.module';
 
 @Module({
-  imports: [forwardRef(() => EscrowModule),forwardRef(() => RewardModule), TransactionLoggingModule],
+  imports: [
+    forwardRef(() => EscrowModule),
+    forwardRef(() => RewardModule),
+    TransactionLoggingModule,
+    DbioBalanceModule
+  ],
   controllers: [SubstrateController],
   providers: [SubstrateService],
   exports: [SubstrateService],

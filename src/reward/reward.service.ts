@@ -3,17 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { DbioBalanceService } from "src/dbio-balance/dbio_balance.service";
 import { SubstrateService } from "src/substrate/substrate.service";
 import { Repository } from "typeorm";
+import { RewardDto } from "./dto/reward.dto";
 import { Reward } from "./models/reward.entity";
-
-interface DataInput {
-  address: string;
-  ref_number: string;
-  reward_amount: bigint;
-  reward_type: string;
-  currency: string;
-  create_at: Date;
-}
-
 @Injectable()
 export class RewardService {
   constructor(
@@ -23,7 +14,7 @@ export class RewardService {
     private dbioBalanceService: DbioBalanceService
   ) {}
 
-  insert(data : DataInput) {
+  insert(data : RewardDto) {
     try {
       return this.rewardRepository.save(data)
     } catch (error) {

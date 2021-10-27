@@ -3,6 +3,7 @@ import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
 import { ApiProperty } from '@nestjs/swagger';
 import { RewardService } from 'src/reward/reward.service';
+import { RewardDto } from 'src/reward/dto/reward.dto';
 
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
@@ -72,21 +73,13 @@ export class SubstrateController {
     if (debioApiKey != process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
-    interface DataInput {
-      address: string;
-      ref_number: string;
-      reward_amount: bigint;
-      reward_type: string;
-      currency: string;
-      create_at: Date;
-    }
 
     const { ethAddress, accountId } = payload;
 
-    const dataInput : DataInput = {
+    const dataInput : RewardDto = {
       address: accountId,
       ref_number: '-',
-      reward_amount: BigInt(0.01),
+      reward_amount: 0.01,
       reward_type: 'Register User',
       currency: 'DBIO',
       create_at: new Date()
@@ -98,7 +91,7 @@ export class SubstrateController {
 
     // If user has not bound wallet before, send them 1 DBIO
     if (substrateAddress == '') {
-      await this.rewardService.sendReward('0.01', accountId)
+      await this.rewardService.sendReward(accountId, 0.01)
       await this.rewardService.insert(dataInput)
 
       gotRewardWording = ` And Got Reward 0.01 DBIO`

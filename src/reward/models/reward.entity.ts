@@ -11,8 +11,8 @@ export class Reward {
   @Column()
   ref_number: string;
 
-  @Column({ type: 'bigint' })
-  reward_amount: bigint;
+  @Column()
+  reward_amount: number;
 
   @Column()
   reward_type: string;

@@ -13,6 +13,9 @@ import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
+import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
+import { RewardService } from 'src/reward/reward.service';
+import { RewardDto } from 'src/reward/dto/reward.dto';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -24,6 +27,8 @@ export class SubstrateService implements OnModuleInit {
   private geneticTestingEventHandler: GeneticTestingEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
+  private dbioBalanceService: DbioBalanceService;
+  private rewardService: RewardService;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
@@ -53,6 +58,9 @@ export class SubstrateService implements OnModuleInit {
       this.escrowService,
       this.api,
       this.logger,
+      this.substrateService,
+      this.dbioBalanceService,
+      this.rewardService
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
@@ -226,12 +234,8 @@ export class SubstrateService implements OnModuleInit {
   async sendReward(
     acountId: string,
     amount: number | string
-    ) {
-      console.log('masuk sendReward');
-      
-    const wallet = this.escrowWallet;
-    console.log('1');
-    
+    ) {      
+    const wallet = this.escrowWallet;    
     const response = await this.api.tx.rewards
       .rewardFunds(
         acountId,
@@ -240,7 +244,6 @@ export class SubstrateService implements OnModuleInit {
       .signAndSend(wallet, {
         nonce: -1,
       });
-      console.log('2');
 
     console.log(response);
   }
@@ -251,6 +254,9 @@ class OrderEventHandler {
     private escrowService: EscrowService,
     private substrateApi: ApiPromise,
     private logger: Logger,
+    private substrateService: SubstrateService,
+    private dbioBalanceService: DbioBalanceService,
+    private rewardService: RewardService
   ) {}
   handle(event) {
     switch (event.method) {
@@ -299,6 +305,12 @@ class OrderEventHandler {
         return null;
       }
       const labEthAddress = (resp as Option<any>).unwrap().toString();
+      const orderByOrderId = await (
+        await this.substrateApi.tx.orders.orders(order.order_id)
+        ).toJSON()
+      const serviceByOrderId = await (
+        await this.substrateApi.tx.services.services(order.order_id)
+        ).toJSON()
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + price.value,
         0,
@@ -308,6 +320,37 @@ class OrderEventHandler {
         0,
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
+
+      if(orderByOrderId['order_flow']===true && serviceByOrderId['service_flow']===true){
+        const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
+        const servicePrice = order['price'][0].value * debioToDai
+        // send reward to customer
+        await this.substrateService.sendReward(order.customer_id, servicePrice)
+
+        // Write Logging Reward Customer Staking Request Service
+        const dataCustomerLoggingInput: RewardDto = {
+          address: order.customer_id,
+          ref_number: order.id,
+          reward_amount: servicePrice,
+          reward_type: 'Customer Staking Request Service',
+          currency: 'DBIO',
+          create_at: new Date()
+        }
+        await this.rewardService.insert(dataCustomerLoggingInput)
+
+        // send reward to lab
+        await this.substrateService.sendReward(order.customer_id, (servicePrice/10))
+
+        // Write Logging Reward Lab
+          const dataLabLoggingInput: RewardDto = {
+          address: order.customer_id,
+          ref_number: order.id,
+          reward_amount: (servicePrice/10),
+          reward_type: 'Lab Provide Request Service',
+          currency: 'DBIO',
+          create_at: new Date()
+        }
+      }
 
       this.logger.log('OrderFulfilled Event');
       this.logger.log('Forwarding payment to lab');

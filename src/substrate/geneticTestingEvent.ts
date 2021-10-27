@@ -72,7 +72,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
         address: dataRequest.owner_id,
         amount: dataOrder['additional_prices'][0].value,
         create_at: new Date(parseInt(dataRequest.updated_at)),
-        currency: dataOrder['currency'],
+        currency: dataOrder['currency'].toUpperCase(),
         parent_id: BigInt(0),
         ref_number: dataRequest.order_id,
         transaction_status: 3,
