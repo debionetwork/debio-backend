@@ -9,30 +9,8 @@ concurrency:
   group: publish-draft-release-candidate
 
 jobs:
-  compute-build-info:
-    runs-on: self-hosted
-
-    outputs:
-      latest_tag: ${{ steps.build-info.outputs.latest_tag }}
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Compute build info
-        id: build-info
-        shell: bash
-        run: |
-          version=${GITHUB_REF#refs/*/}
-          echo $version
-          echo "::set-output name=latest_tag::$version"
-
   publish-draft-release:
-    runs-on: self-hosted
-
-    needs: compute-build-info
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
