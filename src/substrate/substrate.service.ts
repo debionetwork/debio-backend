@@ -15,6 +15,7 @@ import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
+import { RewardDto } from 'src/reward/dto/reward.dto';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -326,16 +327,8 @@ class OrderEventHandler {
         // send reward to customer
         await this.substrateService.sendReward(order.customer_id, servicePrice)
 
-        interface DataInput {
-          address: string;
-          ref_number: string;
-          reward_amount: number;
-          reward_type: string;
-          currency: string;
-          create_at: Date;
-        }
         // Write Logging Reward Customer Staking Request Service
-        const dataCustomerLoggingInput: DataInput = {
+        const dataCustomerLoggingInput: RewardDto = {
           address: order.customer_id,
           ref_number: order.id,
           reward_amount: servicePrice,
@@ -349,7 +342,7 @@ class OrderEventHandler {
         await this.substrateService.sendReward(order.customer_id, (servicePrice/10))
 
         // Write Logging Reward Lab
-          const dataLabLoggingInput: DataInput = {
+          const dataLabLoggingInput: RewardDto = {
           address: order.customer_id,
           ref_number: order.id,
           reward_amount: (servicePrice/10),

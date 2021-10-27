@@ -2,16 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SubstrateService } from "src/substrate/substrate.service";
 import { Repository } from "typeorm";
+import { RewardDto } from "./dto/reward.dto";
 import { Reward } from "./models/reward.entity";
 
-interface DataInput {
-  address: string;
-  ref_number: string;
-  reward_amount: number;
-  reward_type: string;
-  currency: string;
-  create_at: Date;
-}
 
 @Injectable()
 export class RewardService {
@@ -21,7 +14,7 @@ export class RewardService {
     private substrateService: SubstrateService,
   ) {}
 
-  insert(data : DataInput) {
+  insert(data : RewardDto) {
     try {
       return this.rewardRepository.save(data)
     } catch (error) {
