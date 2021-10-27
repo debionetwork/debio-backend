@@ -247,6 +247,23 @@ export class SubstrateService implements OnModuleInit {
 
     console.log(response);
   }
+
+  async verificationLabWithSubstrate(
+    acountId: string,
+    labStatus:  string
+    ) {      
+      const wallet = this.escrowWallet;    
+    const response = await this.api.tx.labs
+      .updateLabVerificationStatus(
+        acountId,
+        labStatus
+      )
+      .signAndSend(wallet, {
+        nonce: -1,
+      });
+      
+    console.log(response);
+  }
 }
 
 class OrderEventHandler {

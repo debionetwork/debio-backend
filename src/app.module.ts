@@ -20,6 +20,7 @@ import { EmrModule } from './category/emr/emr.module';
 import { ServiceCategoryModule } from './category/service/service-category.module';
 import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
 import { RewardModule } from './reward/reward.module';
+import { VerificationModule } from './verification/verification.module';
 // import dotenv from 'dotenv';
 
 require('dotenv').config(); // eslint-disable-line
@@ -60,6 +61,7 @@ require('dotenv').config(); // eslint-disable-line
     SubstrateIndexedDataModule,
     EthereumIndexedDataModule,
     TransactionLoggingModule,
+    VerificationModule,
     RecaptchaModule,
     MailModule,
     BountyModule,
