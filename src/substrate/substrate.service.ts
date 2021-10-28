@@ -213,10 +213,10 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
-  async submitStaking(hash: String) {
+  async submitStaking(hash: String, orderId: String) {
     const wallet = this.escrowWallet;
     const response = await this.api.tx.geneticTesting
-      .submitDataStakingDetails(hash)
+      .submitDataBountyDetails(hash, orderId)
       .signAndSend(wallet, {
         nonce: -1,
       });
