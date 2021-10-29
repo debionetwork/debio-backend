@@ -21,5 +21,5 @@ export class Reward {
   currency: string;
 
   @Column()
-  create_at: Date;
+  created_at: Date;
 }

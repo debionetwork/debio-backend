@@ -35,5 +35,5 @@ export class RewardDto {
     type: Date,
     description: 'create_at'
   })
-  create_at: Date;
+  created_at: Date;
 }

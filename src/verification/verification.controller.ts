@@ -1,7 +1,7 @@
 import { Controller, Headers, Post, Query, Res } from "@nestjs/common";
 import { ApiQuery } from "@nestjs/swagger";
 import { Response } from "express";
-import { VerificationService } from "./verifivcation.service";
+import { VerificationService } from "./verification.service";
 
 @Controller('lab-verification')
 export class VerificationController {

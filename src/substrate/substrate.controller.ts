@@ -37,33 +37,6 @@ export class SubstrateController {
     this.substrateService.listenToEvents();
   }
 
-  @Post('/get-dbio-pre-register')
-  async getDbioPreRegister(
-    @Body() payload: GetDbioOnRegisterDto,
-    @Res() response: Response,
-  ) {
-    const { accountId, role } = payload;
-    if (!accountId) {
-      return response.status(400).send('accountId is required');
-    }
-    if (['lab', 'doctor', 'hospital'].includes(role) == false) {
-      return response.status(400).send('role not found');
-    }
-    try {
-      const hasRole = await this.substrateService.hasRole(accountId, role);
-      if (hasRole) {
-        return response.status(208).send('User has already registered');
-      }
-      await this.substrateService.sendDbioFromFaucet(
-        accountId,
-        '1000000000000000000',
-      );
-      return response.status(200).send(`1 DBIO sent to ${accountId}`);
-    } catch (err) {
-      return response.status(500);
-    }
-  }
-
   @Post('/wallet-binding')
   async walletBinding(
     @Body() payload: WalletBindingDTO,
@@ -79,9 +52,9 @@ export class SubstrateController {
       address: accountId,
       ref_number: '-',
       reward_amount: 0.01,
-      reward_type: 'Register User',
+      reward_type: 'Registered User',
       currency: 'DBIO',
-      create_at: new Date()
+      created_at: new Date()
     }
     let gotRewardWording = ''
     

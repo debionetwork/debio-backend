@@ -30,7 +30,7 @@ export class VerificationService {
       reward_amount: 2,
       reward_type: 'Lab Verified',
       currency: 'DBIO',
-      create_at: new Date()
+      created_at: new Date()
     }
     await this.rewardService.insert(dataInput)
   }

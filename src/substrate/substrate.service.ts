@@ -349,9 +349,9 @@ class OrderEventHandler {
           address: order.customer_id,
           ref_number: order.id,
           reward_amount: servicePrice,
-          reward_type: 'Customer Staking Request Service',
+          reward_type: 'Customer Stake Request Service',
           currency: 'DBIO',
-          create_at: new Date()
+          created_at: new Date()
         }
         await this.rewardService.insert(dataCustomerLoggingInput)
 
@@ -363,9 +363,9 @@ class OrderEventHandler {
           address: order.customer_id,
           ref_number: order.id,
           reward_amount: (servicePrice/10),
-          reward_type: 'Lab Provide Request Service',
+          reward_type: 'Lab Provide Requested Service',
           currency: 'DBIO',
-          create_at: new Date()
+          created_at: new Date()
         }
         await this.rewardService.insert(dataLabLoggingInput)
       }
