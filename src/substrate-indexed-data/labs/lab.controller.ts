@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Query, Req } from '@nestjs/common';
-import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { LabService } from './lab.service';
 
 @Controller('labs')
@@ -7,23 +7,29 @@ export class LabController {
   constructor(readonly labService: LabService) {}
 
   // host/{country}/{city}/{category}?page=1&size=20
-  @Get(':country/:region/:city/:category')
-  @ApiParam({ name: 'country'})
-  @ApiParam({ name: 'region'})
-  @ApiParam({ name: 'city'})
-  @ApiParam({ name: 'category'})
+  @Get()
+  @ApiQuery({ name: 'country'})
+  @ApiQuery({ name: 'region'})
+  @ApiQuery({ name: 'city'})
+  @ApiQuery({ name: 'category'})
+  @ApiQuery({ name: 'service_flow'})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
   async findByCountryCityCategory(
-    @Param() params,
+    @Query('country') country,
+    @Query('region') region,
+    @Query('city') city,
+    @Query('category') category,
+    @Query('service_flow') service_flow: boolean,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
     const services = await this.labService.getByCountryCityCategory(
-      params.country,
-      params.region,
-      params.city,
-      params.category,
+      country,
+      region,
+      city,
+      category,
+      service_flow,
       page,
       size,
     );

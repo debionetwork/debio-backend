@@ -7,14 +7,16 @@ async function bootstrap() {
   
   app.enableCors();
 
-  const config = new DocumentBuilder()
-    .setTitle('Debio API')
-    .setDescription('the Debio API Documentation')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  if(process.env.SWAGGER_ENABLE==='true'){
+    const config = new DocumentBuilder()
+      .setTitle('Debio API')
+      .setDescription('the Debio API Documentation')
+      .setVersion('1.0')
+      .build();
+  
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
 
   await app.listen(process.env.PORT);
 }
