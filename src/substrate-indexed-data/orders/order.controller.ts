@@ -23,7 +23,7 @@ export class OrderController {
   // host/list/{customer_id}?query=&page=&size=
   @Get('/list/:customer_id')
   @ApiParam({ name: 'customer_id'})
-  @ApiQuery({ name: 'keyword'})
+  @ApiQuery({ name: 'keyword', required: false})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
   async getOrderByProductNameStatusLabName(
