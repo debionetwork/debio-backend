@@ -16,7 +16,7 @@ export class BountyController {
 	async create(@Body() data: CreateBountyDto) {
 		const resultDataBounty = await this.bountyService.create(data);
 		
-		await this.substrateService.submitStaking(resultDataBounty.hash_bounty_ocean);
+		await this.substrateService.submitStaking(resultDataBounty.hash_bounty_ocean, data.order_id);
 
 		return {
 			data: resultDataBounty

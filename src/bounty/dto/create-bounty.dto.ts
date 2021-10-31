@@ -9,25 +9,7 @@ export class CreateBountyDto {
 
   @ApiProperty({
     type: String,
-    description: 'service_name',
+    description: 'order_id',
   })
-  service_name: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'lab_name',
-  })
-  lab_name: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'description',
-  })
-  description: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'reward',
-  })
-  reward: string;
+  order_id: string;
 }
