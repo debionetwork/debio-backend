@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class DataStakingDto {
   @ApiProperty({
     type: String,
-    description: 'download_url',
+    description: 'filename',
   })
-  download_url: string;
+  filename: string;
 }

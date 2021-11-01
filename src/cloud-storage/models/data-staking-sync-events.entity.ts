@@ -9,7 +9,7 @@ export class DataStakingSyncEvents {
   data_hash: string;
 
   @Column()
-  download_url: string;
+  filename: string;
 
   @Column()
   created_at: Date;
