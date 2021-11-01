@@ -7,7 +7,7 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
@@ -19,16 +19,45 @@ export class RatingController {
     private readonly ratingService: RatingService,
   ) {}
 
+  @Get('order/:order_id')
+  @ApiParam({ name: 'order_id'})
+  async getByCustomer(@Param('order_id') order_id: string) {
+    return {
+      data: await this.ratingService.getRatingByOrderId(order_id)
+    }
+  }
+
   @Post()
   @ApiBody({ type: CreateRatingDto })
   async create(@Body() data: CreateRatingDto) {
+    const isRatedByOrderId = await this.ratingService.getRatingByOrderId(data.order_id)
+    if(isRatedByOrderId){
+      return {
+        message : "You've Rated Before"
+      }
+    }
+    await this.cacheManager.del('getAllRating');
     await this.cacheManager.del('ratings');
     return {
-      data: await this.ratingService.create(data),
+      data: await this.ratingService.insert(data),
     };
   }
 
-  @Get(':lab_id')
+  @Get('service')
+  async getAllService() {
+    try {
+      return{
+        data: await this.ratingService.getAllByServiceId()
+      }
+    } catch (error) {
+      return {
+        error
+      }
+    }
+  }
+
+  @Get('lab/:lab_id')
+  @ApiParam({ name: 'lab_id'})
   async getLabRating(@Param('lab_id') labor_id: string) {
     let cachingData = [];
     const valueCache = await this.cacheManager.get('ratings');

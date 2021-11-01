@@ -4,6 +4,7 @@ import request from 'supertest';
 import { BountyModule } from '../src/bounty/bounty.module';
 import { DataBounty } from '../src/bounty/models/bounty.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 
 describe('Bounty Controller (e2e)', () => {
   let app: INestApplication;
@@ -12,6 +13,11 @@ describe('Bounty Controller (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         BountyModule,
+				ElasticsearchModule.registerAsync({
+					useFactory: async () => ({
+						node: process.env.ELASTICSEARCH_NODE,
+					}),
+				}),
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: process.env.HOST_POSTGRES,

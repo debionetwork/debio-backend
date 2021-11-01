@@ -10,8 +10,8 @@ interface DataInput {
   currency: string;
   parent_id: bigint;
   ref_number: string;
-  ref_type: number;
-  type: number;
+  transaction_status: number;
+  transaction_type: number;
 }
 
 @Injectable()
@@ -29,8 +29,8 @@ export class TransactionLoggingService {
     logging.currency = data.currency;
     logging.parent_id = data.parent_id;
     logging.ref_number = data.ref_number;
-    logging.ref_type = data.ref_type;
-    logging.type = data.type;
+    logging.transaction_type = data.transaction_type;
+    logging.transaction_status = data.transaction_status;
     return this.transactionRequestRepository.save(logging);
   }
 }

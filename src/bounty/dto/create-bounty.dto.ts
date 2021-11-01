@@ -6,4 +6,10 @@ export class CreateBountyDto {
     description: 'bounty_ocean',
   })
   bounty_ocean: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'order_id',
+  })
+  order_id: string;
 }
