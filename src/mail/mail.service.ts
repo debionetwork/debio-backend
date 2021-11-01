@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendEmailNotification(
+  async sendEmailCustomerStakingRequestService(
     sendTo: string,
     service_name: string,
     public_address: string,
@@ -18,8 +18,8 @@ export class MailService {
     await this.mailerService.sendMail({
       to: sendTo,
       // from: '"Support Team" <support@example.com>', // override default from
-      subject: '[Notification] New Service Request ',
-      template: './notification', // `.hbs` extension is appended automatically
+      subject: `New Service Request - [${service_name}] - [${city}, ${state}, ${country}]` ,
+      template: './customer-staking-request-service', // `.hbs` extension is appended automatically
       context: {
         // ✏️ filling curly brackets with content
         service_name,
@@ -32,11 +32,11 @@ export class MailService {
       },
     });
   }
-  //=======testing and how to use this function===========
+  // =======testing and how to use this function===========
   // async onApplicationBootstrap(){
   //   console.log("test send mail");
   //   try {
-  //     await this.sendEmailNotification(
+  //     await this.sendEmailCustomerStakingRequestService(
   //       'jackyrahman443@gmail.com',
   //       'Service Request',
   //       '0x93943',
