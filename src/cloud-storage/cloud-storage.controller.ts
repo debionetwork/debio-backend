@@ -36,13 +36,28 @@ export class CloudStorageController {
 
   @Get('signed_url')
   async GetSignedUrl(
-    @Query('filename') filename: string
+    @Query('filename') filename: string,
+    @Query('action') action: string
   ) {
     const URL_VALID_DURATION = 100000;
     var file = this.cloudStorageService.bucket.file(filename);
+
+    if(action == 'write'){
+      var [url] = await file.getSignedUrl({
+        version: 'v4',
+        action: 'write',
+        expires: Date.now() + URL_VALID_DURATION,
+        contentType: "application/x-www-form-urlencoded",
+      });
+
+      return {
+        signedUrl: url
+      };
+    }
+
     var [url] = await file.getSignedUrl({
       version: 'v4',
-      action: 'write',
+      action: 'read',
       expires: Date.now() + URL_VALID_DURATION,
       contentType: "application/x-www-form-urlencoded",
     });
@@ -50,5 +65,6 @@ export class CloudStorageController {
     return {
       signedUrl: url
     };
+
   }
 }
