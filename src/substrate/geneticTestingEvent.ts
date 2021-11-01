@@ -123,7 +123,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
       address: dataOrder['customer_id'],
       ref_number: dataOrder['id'],
       reward_amount: rewardPrice,
-      reward_type: 'Customer Stake Request Service',
+      reward_type: 'Customer Data Bounty',
       currency: 'DBIO',
       created_at: new Date()
     }
