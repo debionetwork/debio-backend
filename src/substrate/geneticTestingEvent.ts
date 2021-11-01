@@ -1,5 +1,8 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { RewardDto } from '../reward/dto/reward.dto';
+import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
+import { RewardService } from '../reward/reward.service';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
@@ -8,6 +11,8 @@ import spec from './substrateTypes.json';
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
     private readonly loggingService: TransactionLoggingService,
+    private readonly rewardService: RewardService,
+    private dbioBalanceService: DbioBalanceService,
     private substrateService: SubstrateService,
     private api: ApiPromise,
   ) {}
@@ -22,32 +27,39 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
 
   handle(event) {
     switch (event.method) {
+      case 'DnaSampleRegistered':
+        this.onDnaSampleRegistered(event);
+        break;
       case 'DnaSampleArrived ':
         this.onDnaSampleArrived(event);
+        break;
+      case 'DnaSampleRejected':
+        this.onDnaSampleRejected(event);
         break;
       case 'DnaSampleQualityControlled':
         this.onDnaSampleQualityControlled(event);
         break;
-      case 'DnaSampleGenotypedSequenced':
-        this.onDnaSampleGenotypedSequenced(event);
-        break;
-      case 'DnaSampleReviewed':
-        this.onDnaSampleReviewed(event);
-        break;
-      case 'DnaSampleComputed':
-        this.onDnaSampleComputed(event);
+      case 'DnaSampleResultReady':
+        this.onDnaSampleResultReady(event);
         break;
       case 'DnaTestResultSubmitted':
         this.onDnaTestResultSubmitted(event);
         break;
-      case 'DnaSampleResultReady':
-        this.onDnaSampleResultReady(event);
+      case 'DataStaked':
+        this.onDataStaked(event);
         break;
     }
   }
-
+  onDnaSampleRegistered(event) {
+    console.log('DnaSampleRegistered!');
+  }
+  
   onDnaSampleArrived(event) {
-    console.log('DnaSampleArrived! TODO: handle event');
+    console.log('DnaSampleArrived!');
+  }
+  
+  onDnaSampleRejected(event) {
+    console.log('DnaSampleRejected!');
   }
 
   async onDnaSampleQualityControlled(event) {
@@ -84,24 +96,37 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
       console.log(error);
     }
   }
-
-  onDnaSampleGenotypedSequenced(event) {
-    console.log('DnaSampleGenotypedSequenced! TODO: handle event');
-  }
-
-  onDnaSampleReviewed(event) {
-    console.log('DnaSampleReviewed! TODO: handle event');
-  }
-
-  onDnaSampleComputed(event) {
-    console.log('DnaSampleComputed TODO: handle event');
+  
+  onDnaSampleResultReady(event) {
+    console.log('DnaSampleResultReady');
   }
 
   onDnaTestResultSubmitted(event) {
-    console.log('DnaTestResultSubmitted! TODO: handle event');
+    console.log('DnaTestResultSubmitted');
   }
 
-  onDnaSampleResultReady(event) {
-    console.log('DnaSampleResultReady! TODO: handle event--->');
+  async onDataStaked(event) {
+    console.log('DataStaked');
+    const dataStaked = event.data[0].toJSON();
+    const dataOrder = await (
+      await this.api.query.orders.orders(dataStaked.order_id)
+    ).toJSON();
+
+    const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
+    const rewardPrice = dataOrder['price'][0].value * debioToDai
+
+    //send reward
+    await this.substrateService.sendReward(dataOrder['customer_id'], rewardPrice)
+    
+     // Write Logging Reward Customer Staking Request Service
+     const dataCustomerLoggingInput: RewardDto = {
+      address: dataOrder['customer_id'],
+      ref_number: dataOrder['id'],
+      reward_amount: rewardPrice,
+      reward_type: 'Customer Stake Request Service',
+      currency: 'DBIO',
+      created_at: new Date()
+    }
+    await this.rewardService.insert(dataCustomerLoggingInput)
   }
 }

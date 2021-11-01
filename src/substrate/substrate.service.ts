@@ -65,6 +65,8 @@ export class SubstrateService implements OnModuleInit {
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
       this.transactionLoggingService,
+      this.rewardService,
+      this.dbioBalanceService,
       this.substrateService,
       this.api,
     );
