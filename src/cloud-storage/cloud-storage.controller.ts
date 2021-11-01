@@ -25,10 +25,9 @@ export class CloudStorageController {
 	@Post('create_sync_event')
 	@ApiBody({ type: DataStakingDto })
 	async CreateSyncEvent(@Body() dto: DataStakingDto) {
-    //TODO: Add download_url validation
     //TODO: Discuss return data
     const dataStakingSyncEvents = new DataStakingSyncEvents();
-    dataStakingSyncEvents.download_url = dto.download_url;
+    dataStakingSyncEvents.filename = dto.filename;
     dataStakingSyncEvents.created_at = new Date();
     dataStakingSyncEvents.event_processed = false;
     return this.dataStakingSyncEventsRepository.save(dataStakingSyncEvents);
