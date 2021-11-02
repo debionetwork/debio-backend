@@ -39,10 +39,10 @@ export class CloudStorageController {
     @Query('action') action: string
   ) {
     const URL_VALID_DURATION = 100000;
-    var file = this.cloudStorageService.bucket.file(filename);
+    const file = this.cloudStorageService.bucket.file(filename);
 
     if(action == 'write'){
-      var [url] = await file.getSignedUrl({
+      const [url] = await file.getSignedUrl({
         version: 'v4',
         action: 'write',
         expires: Date.now() + URL_VALID_DURATION,
@@ -54,7 +54,7 @@ export class CloudStorageController {
       };
     }
 
-    var [url] = await file.getSignedUrl({
+    const [url] = await file.getSignedUrl({
       version: 'v4',
       action: 'read',
       expires: Date.now() + URL_VALID_DURATION,
