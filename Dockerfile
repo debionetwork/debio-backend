@@ -12,9 +12,9 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-ENV DEBIOENV=development
+ENV DEBIOENV=development HOST=0.0.0.0 PORT=3000
 
 RUN npm run build
 
-EXPOSE 9000
+EXPOSE ${PORT}
 CMD [ "npm", "run", "start:prod"]
