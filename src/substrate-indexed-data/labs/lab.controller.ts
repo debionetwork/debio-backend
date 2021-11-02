@@ -14,8 +14,8 @@ export class LabController {
   @ApiQuery({ name: 'category'})
   @ApiQuery({ name: 'service_flow', enum:[
     'RequestTest',
-    'ProvideRequestService'
-  ]})
+    'StakingRequestService'
+   ]})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
   async findByCountryCityCategory(
