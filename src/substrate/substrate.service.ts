@@ -254,7 +254,7 @@ export class SubstrateService implements OnModuleInit {
     acountId: string,
     labStatus:  string
     ) {      
-      const wallet = this.escrowWallet;    
+      const wallet = this.sudoWallet;    
     const response = await this.api.tx.labs
       .updateLabVerificationStatus(
         acountId,
