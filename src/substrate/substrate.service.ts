@@ -340,7 +340,7 @@ class OrderEventHandler {
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      if(orderByOrderId['order_flow']===true && serviceByOrderId['service_flow']===true){
+      if(orderByOrderId['order_flow']==='StakingRequestService' && serviceByOrderId['service_flow']==='StakingRequestService'){
         const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
         const servicePrice = order['price'][0].value * debioToDai
         // send reward to customer
