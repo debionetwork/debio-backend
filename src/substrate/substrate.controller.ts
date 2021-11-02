@@ -58,7 +58,7 @@ export class SubstrateController {
     }
     let gotRewardWording = ''
     
-    const substrateAddress =
+    let substrateAddress =
       await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
 
     // If user has not bound wallet before, send them 1 DBIO
@@ -66,12 +66,19 @@ export class SubstrateController {
       await this.substrateService.sendReward(accountId, 0.01)
       await this.rewardService.insert(dataInput)
       gotRewardWording = ` And Got Reward 0.01 DBIO`
+
+      await this.substrateService.bindEthAddressToSubstrateAddress(
+        ethAddress,
+        accountId,
+        );
+      
+      substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+    } else {
+      await this.substrateService.bindEthAddressToSubstrateAddress(
+        ethAddress,
+        accountId,
+        );
     }
-    
-    await this.substrateService.bindEthAddressToSubstrateAddress(
-      ethAddress,
-      accountId,
-      );
 
     return response
       .status(200)
