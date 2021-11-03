@@ -65,6 +65,8 @@ export class SubstrateService implements OnModuleInit {
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
       this.transactionLoggingService,
+      this.rewardService,
+      this.dbioBalanceService,
       this.substrateService,
       this.api,
     );
@@ -252,7 +254,7 @@ export class SubstrateService implements OnModuleInit {
     acountId: string,
     labStatus:  string
     ) {      
-      const wallet = this.escrowWallet;    
+      const wallet = this.sudoWallet;    
     const response = await this.api.tx.labs
       .updateLabVerificationStatus(
         acountId,
@@ -338,7 +340,7 @@ class OrderEventHandler {
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
 
-      if(orderByOrderId['order_flow']===true && serviceByOrderId['service_flow']===true){
+      if(orderByOrderId['order_flow']==='StakingRequestService' && serviceByOrderId['service_flow']==='StakingRequestService'){
         const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
         const servicePrice = order['price'][0].value * debioToDai
         // send reward to customer

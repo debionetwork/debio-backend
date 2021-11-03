@@ -1,7 +1,7 @@
 import { forwardRef ,Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { DbioBalanceModule } from "src/dbio-balance/dbio_balance.module";
-import { SubstrateModule } from "src/substrate/substrate.module";
+import { DbioBalanceModule } from "../dbio-balance/dbio_balance.module";
+import { SubstrateModule } from "../substrate/substrate.module";
 import { Reward } from "./models/reward.entity";
 import { RewardService } from "./reward.service";
 
