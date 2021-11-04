@@ -3,7 +3,7 @@ name: Main automation
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+-beta[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+-beta*'
 
 concurrency:
   group: main-automation
@@ -126,12 +126,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
-          # file: .maintain/docker/Dockerfile
+          file: .maintain/docker/Dockerfile
           tags: |
             hub.debio.network/debio_backend_v2:${{ needs.compute-build-info.outputs.latest_tag }}
             hub.debio.network/debio_backend_v2:latest-beta
@@ -148,3 +154,107 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: [compute-build-info, build-and-publish-docker-image]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.PREPROD_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.PREPROD_GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Get secrets
+        id: secrets
+        uses: google-github-actions/get-secretmanager-secrets@main
+        with:
+          secrets: |-
+            CONTRACT_ADDRESS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/CONTRACT_ADDRESS
+            HOST_POSTGRES:${{ secrets.PREPROD_GCP_PROJECT_ID }}/HOST_POSTGRES
+            USERNAME_POSTGRES:${{ secrets.PREPROD_GCP_PROJECT_ID }}/USERNAME_POSTGRES
+            PASSWORD_POSTGRES:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASSWORD_POSTGRES
+            DB_POSTGRES:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DB_POSTGRES
+            DB_LOCATIONS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DB_LOCATIONS
+            ELASTICSEARCH_NODE:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
+            SUBSTRATE_URL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SUBSTRATE_URL
+            ESCROW_SUBSTRATE_MNEMONIC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ESCROW_SUBSTRATE_MNEMONIC
+            FAUCET_SUBSTRATE_MNEMONIC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/FAUCET_SUBSTRATE_MNEMONIC
+            SUDO_SUBSTRATE_MNEMONIC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SUDO_SUBSTRATE_MNEMONIC
+            WEB3_RPC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC
+            WEB3_RPC_HTTPS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
+            DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
+            DEBIO_ETH_ADDRESS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_ETH_ADDRESS
+            COINMARKETCAP_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
+            RECAPTCHA_SECRET_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
+            DEBIO_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_API_KEY
+            BUCKET_NAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/BUCKET_NAME
+            STORAGE_BASE_URI:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAIL
+            PASS_EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASS_EMAIL
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            STARTUP_PROB_PATH:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STARTUP_PROB_PATH
+            LIVENESS_PROB_PATH:${{ secrets.PREPROD_GCP_PROJECT_ID }}/LIVENESS_PROB_PATH
+            READINESS_PROB_PATH:${{ secrets.PREPROD_GCP_PROJECT_ID }}/READINESS_PROB_PATH
+            SSH_HOST:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_HOST
+            SSH_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_USERNAME
+            SSH_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_KEY
+            SSH_PORT:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_PORT
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ steps.secrets.outputs.SSH_HOST }}
+          username: ${{ steps.secrets.outputs.SSH_USERNAME }}
+          key: ${{ steps.secrets.outputs.SSH_KEY }}
+          port: ${{ steps.secrets.outputs.SSH_PORT }}
+          script: |
+            helm repo add debio https://charts.debio.network
+            helm repo update
+            helm upgrade debio-backend debio/debio-backend \
+              --install \
+              --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
+              --set-string config.postgres.hostPostgres=${{ steps.secrets.outputs.HOST_POSTGRES }} \
+              --set-string config.postgres.usernamePostgres=${{ steps.secrets.outputs.USERNAME_POSTGRES }} \
+              --set-string config.postgres.passwordPostgres=${{ steps.secrets.outputs.PASSWORD_POSTGRES }} \
+              --set-string config.postgres.dbPostgres=${{ steps.secrets.outputs.DB_POSTGRES }} \
+              --set-string config.postgres.dbLocation=${{ steps.secrets.outputs.DB_LOCATIONS }} \
+              --set-string config.elastic.elasticsearchNode=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
+              --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
+              --set-string config.escrowMnemonic="${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }}" \
+              --set-string config.faucetMnemonic="${{ steps.secrets.outputs.FAUCET_SUBSTRATE_MNEMONIC }}" \
+              --set-string config.sudoMnemonic="${{ steps.secrets.outputs.SUDO_SUBSTRATE_MNEMONIC }}" \
+              --set-string config.web3RPCHttp=${{ steps.secrets.outputs.WEB3_RPC }} \
+              --set-string config.web3RPCHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
+              --set-string config.debioEscrowPrivateKey=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }} \
+              --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
+              --set-string config.coinMarketcapApiKey=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }} \
+              --set-string config.recaptchaSecretKey=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }} \
+              --set-string config.debioApiKey=${{ steps.secrets.outputs.DEBIO_API_KEY }} \
+              --set-string config.bucketName=${{ steps.secrets.outputs.BUCKET_NAME }} \
+              --set-string config.storageBaseURL=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
+              --set-string config.email.passEmail=${{ steps.secrets.outputs.PASS_EMAIL }} \
+              --set-string config.gcs.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.STARTUP_PROB_PATH }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.LIVENESS_PROB_PATH }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.READINESS_PROB_PATH }} \
+              --set ingress.enabled=true \
+              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="10" \
+              --set-string ingress.hosts[0].host=api.testnet.debio.network \
+              --set-string ingress.hosts[0].paths[0].path=/ \
+              --set-string ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+              --set-string ingress.tls[0].secretName=debio-backend-tls \
+              --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
+              --set autoscaling.enabled=true
+            kubectl rollout status deployment/debio-backend
