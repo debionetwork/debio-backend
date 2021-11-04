@@ -15,6 +15,8 @@ import { TransactionLoggingService } from '../transaction-logging/transaction-lo
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
+import { LabEventHandler } from './labEvent';
+import { MailerManager } from 'src/common/mailer/mailer.manager';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -24,6 +26,7 @@ export class SubstrateService implements OnModuleInit {
   private sudoWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
+  private labEventHandler: LabEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
   private dbioBalanceService: DbioBalanceService;
@@ -32,6 +35,7 @@ export class SubstrateService implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
+    private mailerManager: MailerManager,
     private readonly transactionLoggingService: TransactionLoggingService,
   ) {}
 
@@ -39,7 +43,6 @@ export class SubstrateService implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: spec,
     });
 
     const keyring = new Keyring({ type: 'sr25519' });
@@ -68,6 +71,11 @@ export class SubstrateService implements OnModuleInit {
       this.dbioBalanceService,
       this.substrateService,
       this.api,
+    );
+
+    this.labEventHandler = new LabEventHandler(
+      this.api,
+      this.mailerManager
     );
   }
 
@@ -181,6 +189,9 @@ export class SubstrateService implements OnModuleInit {
         switch (
           event.section // event.section == pallet name
         ) {
+          case 'labs':
+            this.labEventHandler.handle(event);
+            break;
           case 'orders':
             this.orderEventHandler.handle(event);
             break;
