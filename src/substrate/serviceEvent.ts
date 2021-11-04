@@ -78,10 +78,8 @@ export class ServiceEventHandler {
 
   async _onServiceCreated(event) {
     const service: Service = event.data[0].toHuman();
-    console.log(service);
     const lab: Lab = await queryLabById(this.api, service.owner_id);
     if (lab.verification_status === "Unverified" && lab.services.length === 1) { // Send email for unverified accounts only (until further notice)
-      console.log("in");
       const labRegister: LabRegister = await this._labToLabRegister(lab);
       this.mailerManager.sendLabRegistrationEmail(
         process.env.EMAILS.split(','),
