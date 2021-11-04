@@ -4,10 +4,11 @@ import { LabRegisterCertification } from "src/common/mailer/models/lab-register.
 import { LabRegister } from "src/common/mailer/models/lab-register.model/lab-register.model";
 import { LabRegisterService } from "src/common/mailer/models/lab-register.model/service";
 import { Lab } from "src/common/polkadot-provider/models/labs";
-import { queryCertificationsByMultipleIds } from "src/common/polkadot-provider/query/labs";
+import { Service } from "src/common/polkadot-provider/models/services";
+import { queryCertificationsByMultipleIds, queryLabById } from "src/common/polkadot-provider/query/labs";
 import { queryServicesByMultipleIds } from "src/common/polkadot-provider/query/services";
 
-export class LabEventHandler {
+export class ServiceEventHandler {
   constructor(
     private api: ApiPromise,
     private mailerManager: MailerManager
@@ -15,8 +16,8 @@ export class LabEventHandler {
   
   handle(event) {
     switch (event.method) {
-      case 'LabRegistered':
-        this._onLabRegistered(event);
+      case 'ServiceCreated':
+        this._onServiceCreated(event);
         break;
     }
   }
@@ -75,12 +76,17 @@ export class LabEventHandler {
     return labRegister;
   }
 
-  async _onLabRegistered(event) {
-    const lab: Lab = event.data[0].toHuman();
-    const labRegister: LabRegister = await this._labToLabRegister(lab);
-    this.mailerManager.sendLabRegistrationEmail(
-      process.env.EMAILS.split(','),
-      labRegister
-    );
+  async _onServiceCreated(event) {
+    const service: Service = event.data[0].toHuman();
+    console.log(service);
+    const lab: Lab = await queryLabById(this.api, service.owner_id);
+    if (lab.verification_status === "Unverified" && lab.services.length === 1) { // Send email for unverified accounts only (until further notice)
+      console.log("in");
+      const labRegister: LabRegister = await this._labToLabRegister(lab);
+      this.mailerManager.sendLabRegistrationEmail(
+        process.env.EMAILS.split(','),
+        labRegister
+      );
+    }
   }
 }

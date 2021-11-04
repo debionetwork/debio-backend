@@ -15,7 +15,7 @@ import { TransactionLoggingService } from '../transaction-logging/transaction-lo
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
-import { LabEventHandler } from './labEvent';
+import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from 'src/common/mailer/mailer.manager';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class SubstrateService implements OnModuleInit {
   private sudoWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
-  private labEventHandler: LabEventHandler;
+  private serviceEventHandler: ServiceEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
   private dbioBalanceService: DbioBalanceService;
@@ -73,7 +73,7 @@ export class SubstrateService implements OnModuleInit {
       this.api,
     );
 
-    this.labEventHandler = new LabEventHandler(
+    this.serviceEventHandler = new ServiceEventHandler(
       this.api,
       this.mailerManager
     );
@@ -97,7 +97,7 @@ export class SubstrateService implements OnModuleInit {
 
   async getOrderDetailByOrderID(orderID: string) {
     const response = await this.api.query.orders.orders(orderID);
-    return response.toJSON();
+    return response.toHuman();
   }
 
   // get balance of account
@@ -189,8 +189,8 @@ export class SubstrateService implements OnModuleInit {
         switch (
           event.section // event.section == pallet name
         ) {
-          case 'labs':
-            this.labEventHandler.handle(event);
+          case 'services':
+            this.serviceEventHandler.handle(event);
             break;
           case 'orders':
             this.orderEventHandler.handle(event);
