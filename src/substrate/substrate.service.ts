@@ -16,6 +16,7 @@ import { TransactionLoggingService } from '../transaction-logging/transaction-lo
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { RewardDto } from 'src/reward/dto/reward.dto';
+import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -60,7 +61,8 @@ export class SubstrateService implements OnModuleInit {
       this.logger,
       this.substrateService,
       this.dbioBalanceService,
-      this.rewardService
+      this.rewardService,
+      this.transactionLoggingService
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
@@ -275,7 +277,8 @@ class OrderEventHandler {
     private logger: Logger,
     private substrateService: SubstrateService,
     private dbioBalanceService: DbioBalanceService,
-    private rewardService: RewardService
+    private rewardService: RewardService,
+    private loggingService: TransactionLoggingService
   ) {}
   handle(event) {
     switch (event.method) {
@@ -303,14 +306,54 @@ class OrderEventHandler {
     }
   }
 
-  onOrderCreated(event) {
-    console.log('OrderCreated! TODO: handle event');
+  async onOrderCreated(event) {
+    console.log('OrderCreated!');
     const order = event.data[0];
     this.escrowService.createOrder(order.toJSON());
+
+    //insert logging to DB
+    const orderLogging : TransactionLoggingDto = {
+      address: order.owner_id,
+      amount: (order.additional_prices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.created_at)),
+      currency: order.currency.toUpperCase(),
+      parent_id: BigInt(0),
+      ref_number: order.order_id,
+      transaction_status: 1,
+      transaction_type: 1,
+    }
+
+    try {
+      await this.loggingService.create(orderLogging)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  onOrderPaid(event) {
-    console.log('OrderPaid! TODO: handle event');
+  async onOrderPaid(event) {
+    console.log('OrderPaid!');
+    const order = event.data[0];
+    this.escrowService.createOrder(order.toJSON());
+
+    const orderHistory = await this.loggingService.getLoggingByOrderId(order.order_id)
+
+    //insert logging to DB
+    const orderLogging : TransactionLoggingDto = {
+      address: order.owner_id,
+      amount: (order.additional_prices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updated_at)),
+      currency: order.currency.toUpperCase(),
+      parent_id: BigInt(orderHistory.ref_number),
+      ref_number: order.order_id,
+      transaction_status: 2,
+      transaction_type: 1,
+    }
+
+    try {
+      await this.loggingService.create(orderLogging)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async onOrderFulfilled(event) {
