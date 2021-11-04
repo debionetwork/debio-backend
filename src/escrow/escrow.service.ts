@@ -97,10 +97,25 @@ export class EscrowService {
     console.log('[createOrder] request: ', request);
   }
 
-  async refundOrder(request) {
-    console.log('[refundOrder] request: ', request);
-    try {
-      this.substrateService.setOrderRefunded(request.id);
+  async refundOrder(order) {
+    console.log('[refundOrder] order: ', order);
+   try {
+      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const wallet = await new ethers.Wallet(
+        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        provider
+      )
+      const balance = await provider.getBalance(wallet.address);
+      console.log('balance', balance.toString());
+      const tokenContractWithSigner = tokenContract.connect(wallet);
+      try {
+        const tx = await tokenContractWithSigner.refundOrder(
+          order.id,
+        );
+      } catch (err) {
+        console.log('err', err);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -110,10 +125,34 @@ export class EscrowService {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderFulfilled(request) {
-    console.log('[orderFulfilled] request: ', request);
+  async orderFulfilled(order) {
+    console.log('[orderFulfilled] order: ', order);
+    try {
+      
+      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const wallet: WalletSigner = await this.ethereumService.createWallet(
+        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      );
+      const tokenContractWithSigner = tokenContract.connect(wallet);
+      const tx = await tokenContractWithSigner.fulfillOrder(
+        order.id,
+        provider
+      );
+      console.log('fullfilled order customer_id :', order.customer_id ,' ->', tx);
+    } catch (error) {
+      
+    }
   }
-
+  
+  async setOrderPaidWithSubstrate(orderID: string) {
+    try {
+      await this.substrateService.setOrderPaid(orderID)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
