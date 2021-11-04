@@ -32,6 +32,37 @@ export class MailService {
       },
     });
   }
+  
+  async sendEmailLabRegister(
+    logo: string,
+    email: string,
+    phone_number: string | number,
+    lab_name: string,
+    country: string,
+    state: string,
+    city: string,
+    address: string,
+    certificates: Array<any>,
+    services: Array<any>
+  ){
+    await this.mailerService.sendMail({
+      to: 'jackyrahman443@gmail.com',
+      subject: `New Lab Register – [${lab_name}] - [${city}, ${state}, ${country}]`,
+      template: './lab-register', // `.hbs` extension is appended automatically,
+      context: {
+        logo,
+        email,
+        phone_number,
+        lab_name,
+        country,
+        state,
+        city,
+        address,
+        certificates,
+        services
+      }
+    })
+  }
   // =======testing and how to use this function===========
   // async onApplicationBootstrap(){
   //   console.log("test send mail");
@@ -46,10 +77,10 @@ export class MailService {
   //       300,
   //       'DAI'
   //       )
-
+  
   //   } catch (error) {
   //     console.log(error);
-
+  
   //   }
   // }
 }

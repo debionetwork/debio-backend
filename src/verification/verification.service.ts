@@ -12,16 +12,19 @@ export class VerificationService {
   
   async vericationLab(
     acountId: string,
+    verification_status: string
   ) {
 
     // Update Status Lab to Verified
     await this.subtrateService.verificationLabWithSubstrate(
       acountId,
-      'Verified'
+      verification_status
     )
 
     //Send Reward 2 DBIO
-    await this.subtrateService.sendReward(acountId, 2)
+    if(verification_status === 'Verified'){
+      await this.subtrateService.sendReward(acountId, 2)
+    }
     
     //Write to Reward Logging
     const dataInput: RewardDto = {

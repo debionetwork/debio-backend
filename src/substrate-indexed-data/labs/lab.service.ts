@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { info } from 'console';
 
 @Injectable()
 export class LabService {
@@ -26,6 +25,7 @@ export class LabService {
               { match_phrase_prefix: { 'services.region': { query: region } } },
               { match_phrase_prefix: { 'services.city': { query: city } } },
               { match_phrase_prefix: { 'services.info.category': { query: category } } },
+              { match_phrase_prefix: { 'services.service_flow': { query: service_flow } } },
             ],
           },
         },
@@ -44,10 +44,13 @@ export class LabService {
     const result = []
     const labs = await this.elasticsearchService.search(searchObj);
     labs.body.hits.hits.forEach(lab => {
-      lab._source.services = lab._source.services.filter( ({info}) => info['category'] === category)
+      lab._source.services = lab._source.services.filter( (serviceFilter) => (serviceFilter.info['category'] === category && serviceFilter.service_flow === service_flow))
       lab._source.services.forEach(labService => {
         labService.lab_detail = lab._source.info
         labService.certifications = lab._source.certifications
+        labService.verification_status = lab._source.verification_status
+        labService.blockMetaData = lab._source.blockMetaData
+        labService.service_flow = lab._source.services.service_flow
         labService.lab_id = lab._source.account_id
         result.push(labService)
       });      

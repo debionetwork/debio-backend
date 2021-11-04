@@ -11,18 +11,20 @@
 <p> </p>
 <p>Certification.</p>
 {{#each certificate}}
+{{#with person}}
 <p>{{@index}}. Title: {{title}}</p>
 <p>&ensp&nbsp Issuer: {{issuer}}</p>
 <p>&ensp&nbsp Month: {{month}}</p>
 <p>&ensp&nbsp Year: {{year}}</p>
 <p>&ensp&nbsp Description: {{description}}</p>
 <p>&ensp&nbsp Supporting Document: {{supporting_document}}</p>
+{{/with}}
 {{else}}
 <p>No Certificate</p>
 {{/each}}
 <p></p>
 <p>Services.</p>
-{{#each certificate}}
+{{#each services}}
 <p>{{@index}}. Service Category: {{category}}</p>
 <p>&ensp&nbsp Service Name: {{name}}</p>
 <p>&ensp&nbsp Price: {{price}}</p>
