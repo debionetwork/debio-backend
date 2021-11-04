@@ -30,10 +30,4 @@ export class CreateRatingDto {
     description: 'rating',
   })
   rating: number;
-
-  @ApiProperty({
-    type: Date,
-    description: 'created',
-  })
-  created: Date;
 }
