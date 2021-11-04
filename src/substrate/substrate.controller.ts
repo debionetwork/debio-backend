@@ -67,12 +67,19 @@ export class SubstrateController {
       await this.substrateService.sendReward(accountId, rewardAmount)
       await this.rewardService.insert(dataInput)
       gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`
+
+      await this.substrateService.bindEthAddressToSubstrateAddress(
+        ethAddress,
+        accountId,
+        );
+      
+      substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+    } else {
+      await this.substrateService.bindEthAddressToSubstrateAddress(
+        ethAddress,
+        accountId,
+        );
     }
-    
-    await this.substrateService.bindEthAddressToSubstrateAddress(
-      ethAddress,
-      accountId,
-      );
 
     return response
       .status(200)
