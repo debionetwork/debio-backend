@@ -2,12 +2,10 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { join } from 'path';
-import { MailService } from './mail.service';
+import { MailerManager } from './mailer.manager';
 @Module({
   imports: [
     MailerModule.forRoot({
-      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
-      // or
       transport: {
         host: 'smtp.gmail.com',
         secure: false,
@@ -15,9 +13,6 @@ import { MailService } from './mail.service';
           user: process.env.EMAIL,
           pass: process.env.PASS_EMAIL,
         },
-      },
-      defaults: {
-        from: '[Notification] New Service Request',
       },
       template: {
         dir: join(__dirname, 'templates'),
@@ -28,7 +23,7 @@ import { MailService } from './mail.service';
       },
     }),
   ],
-  providers: [MailService],
-  exports: [MailService], // 👈 export for DI
+  providers: [MailerManager],
+  exports: [MailModule, MailerManager],
 })
 export class MailModule {}
