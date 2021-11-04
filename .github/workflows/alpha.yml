@@ -221,6 +221,7 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
               --set-string config.postgres.hostPostgres=${{ steps.secrets.outputs.HOST_POSTGRES }} \
               --set-string config.postgres.usernamePostgres=${{ steps.secrets.outputs.USERNAME_POSTGRES }} \

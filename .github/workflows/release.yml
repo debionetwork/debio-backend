@@ -139,8 +139,8 @@ jobs:
           push: true
           file: .maintain/docker/Dockerfile
           tags: |
-            hub.debio.network/debio_backend_v2:${{ needs.compute-build-info.outputs.latest_tag }}
-            hub.debio.network/debio_backend_v2:latest
+            ${{ github.repository }}:${{ needs.compute-build-info.outputs.latest_tag }}
+            ${{ github.repository }}:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
@@ -221,6 +221,7 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.new_tag }} \
               --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
               --set-string config.postgres.hostPostgres=${{ steps.secrets.outputs.HOST_POSTGRES }} \
               --set-string config.postgres.usernamePostgres=${{ steps.secrets.outputs.USERNAME_POSTGRES }} \
