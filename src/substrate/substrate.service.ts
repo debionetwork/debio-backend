@@ -269,7 +269,6 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 }
-
 class OrderEventHandler {
   constructor(
     private escrowService: EscrowService,
@@ -308,17 +307,17 @@ class OrderEventHandler {
 
   async onOrderCreated(event) {
     console.log('OrderCreated!');
-    const order = event.data[0];
-    this.escrowService.createOrder(order.toJSON());
+    const order = event.data[0].toJSON();
 
+    console.log(order);
     //insert logging to DB
     const orderLogging : TransactionLoggingDto = {
-      address: order.owner_id,
+      address: order.customer_id,
       amount: (order.additional_prices[0].value + order.prices[0].value),
       created_at: new Date(parseInt(order.created_at)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(0),
-      ref_number: order.order_id,
+      ref_number: order.id,
       transaction_status: 1,
       transaction_type: 1,
     }
@@ -332,19 +331,17 @@ class OrderEventHandler {
 
   async onOrderPaid(event) {
     console.log('OrderPaid!');
-    const order = event.data[0];
-    this.escrowService.createOrder(order.toJSON());
-
-    const orderHistory = await this.loggingService.getLoggingByOrderId(order.order_id)
+    const order = event.data[0].toJSON();
+    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
 
     //insert logging to DB
     const orderLogging : TransactionLoggingDto = {
-      address: order.owner_id,
+      address: order.customer_id,
       amount: (order.additional_prices[0].value + order.prices[0].value),
       created_at: new Date(parseInt(order.updated_at)),
       currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.ref_number),
-      ref_number: order.order_id,
+      parent_id: BigInt(orderHistory.id),
+      ref_number: order.id,
       transaction_status: 2,
       transaction_type: 1,
     }
@@ -357,8 +354,26 @@ class OrderEventHandler {
   }
 
   async onOrderFulfilled(event) {
+    console.log('Order Fulfilled!');
+    const order = event.data[0].toJSON();
+    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
+
+    //Logging data input
+    const orderLogging : TransactionLoggingDto = {
+      address: order.customer_id,
+      amount: (order.additional_prices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updated_at)),
+      currency: order.currency.toUpperCase(),
+      parent_id: BigInt(orderHistory.id),
+      ref_number: order.id,
+      transaction_status: 3,
+      transaction_type: 1,
+    }
+
     try {
-      const order = event.data[0].toJSON();
+      //logging transaction 
+      await this.loggingService.create(orderLogging)
+
       const resp =
         await this.substrateApi.query.userProfile.ethAddressByAccountId(
           order['seller_id'],
@@ -368,10 +383,10 @@ class OrderEventHandler {
       }
       const labEthAddress = (resp as Option<any>).unwrap().toString();
       const orderByOrderId = await (
-        await this.substrateApi.tx.orders.orders(order.order_id)
+        await this.substrateApi.query.orders.orders(order.id)
         ).toJSON()
       const serviceByOrderId = await (
-        await this.substrateApi.tx.services.services(order.order_id)
+        await this.substrateApi.query.services.services(order.id)
         ).toJSON()
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + price.value,
@@ -430,24 +445,62 @@ class OrderEventHandler {
     }
   }
 
-  onOrderRefunded(event) {
-    console.log('OrderRefunded! TODO: handle event');
+  async onOrderRefunded(event) {
+    console.log('OrderRefunded!');
+
+    const order = event.data[0].toJSON();
+    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
+
+    //insert logging to DB
+    const orderLogging : TransactionLoggingDto = {
+      address: order.customer_id,
+      amount: order.prices[0].value,
+      created_at: new Date(parseInt(order.updated_at)),
+      currency: order.currency.toUpperCase(),
+      parent_id: BigInt(orderHistory.id),
+      ref_number: order.id,
+      transaction_status: 4,
+      transaction_type: 1,
+    }
+
+    try {
+      await this.loggingService.create(orderLogging)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  onOrderCancelled(event) {
-    console.log('OrderCancelled! TODO: handle event');
-    const order = event.data[0];
-    console.log('onOrderCancelled = ', order.toJSON());
-    this.escrowService.cancelOrder(order.toJSON());
+  async onOrderCancelled(event) {
+    console.log('OrderCancelled');
+    const order = event.data[0].toJSON();
+    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
+    //Logging data Input
+    const orderLogging : TransactionLoggingDto = {
+      address: order.customer_id,
+      amount: (order.additional_prices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updated_at)),
+      currency: order.currency.toUpperCase(),
+      parent_id: BigInt(orderHistory.id),
+      ref_number: order.id,
+      transaction_status: 5,
+      transaction_type: 1,
+    }
+    await this.escrowService.cancelOrder(order);
+
+    try {
+      await this.loggingService.create(orderLogging)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   onOrderNotFound(event) {
-    console.log('OrderNotFound TODO: handle event');
+    console.log('OrderNotFound!');
   }
 
   onOrderFailed(event) {
-    console.log('OrderFailed! TODO: handle event');
-    const order = event.data[0];
+    console.log('OrderFailed!');
+    const order = event.data[0].toJSON();
     console.log('onOrderRefunded = ', order.toJSON());
     this.escrowService.refundOrder(order.toJSON());
   }

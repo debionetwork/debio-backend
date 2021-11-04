@@ -26,6 +26,9 @@ export class TransactionLoggingService {
   }
 
   getLoggingByOrderId(ref_number: string) {
-    return this.transactionRequestRepository.findOne({where : { ref_number }})
+    return this.transactionRequestRepository.findOne({where : {
+      ref_number,
+      parent_id: 0
+    }})
   }
 }

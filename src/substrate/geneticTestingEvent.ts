@@ -6,7 +6,6 @@ import { RewardService } from '../reward/reward.service';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
 import spec from './substrateTypes.json';
-import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
@@ -64,27 +63,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   }
 
   async onDnaSampleQualityControlled(event) {
-    try {
-      const dataRequest = event.data[0].toJSON();
-      const dataOrder = await (
-        await this.api.query.orders.orders(dataRequest.order_id)
-      ).toJSON();
-
-      const dataInput: TransactionLoggingDto = {
-        address: dataRequest.owner_id,
-        amount: dataOrder['additional_prices'][0].value,
-        created_at: new Date(parseInt(dataRequest.updated_at)),
-        currency: dataOrder['currency'].toUpperCase(),
-        parent_id: BigInt(0),
-        ref_number: dataRequest.order_id,
-        transaction_status: 3,
-        transaction_type: 1,
-      };
-
-      this.loggingService.create(dataInput);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log('DnaSampleQualityControlled!');
   }
   
   onDnaSampleResultReady(event) {
