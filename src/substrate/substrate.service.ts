@@ -9,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
 import { EscrowService } from '../escrow/escrow.service';
-import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
-import { RewardDto } from 'src/reward/dto/reward.dto';
-import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
+import { OrderEventHandler } from './orderEvent';
+import { ServiceEventHandler } from './serviceEvent';
+import { MailerManager } from 'src/common/mailer/mailer.manager';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -26,6 +26,7 @@ export class SubstrateService implements OnModuleInit {
   private sudoWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
+  private serviceEventHandler: ServiceEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
   private dbioBalanceService: DbioBalanceService;
@@ -34,6 +35,7 @@ export class SubstrateService implements OnModuleInit {
   constructor(
     @Inject(forwardRef(() => EscrowService))
     private escrowService: EscrowService,
+    private mailerManager: MailerManager,
     private readonly transactionLoggingService: TransactionLoggingService,
   ) {}
 
@@ -41,7 +43,6 @@ export class SubstrateService implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: spec,
     });
 
     const keyring = new Keyring({ type: 'sr25519' });
@@ -72,6 +73,11 @@ export class SubstrateService implements OnModuleInit {
       this.substrateService,
       this.api,
     );
+
+    this.serviceEventHandler = new ServiceEventHandler(
+      this.api,
+      this.mailerManager
+    );
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -92,7 +98,7 @@ export class SubstrateService implements OnModuleInit {
 
   async getOrderDetailByOrderID(orderID: string) {
     const response = await this.api.query.orders.orders(orderID);
-    return response.toJSON();
+    return response.toHuman();
   }
 
   // get balance of account
@@ -184,6 +190,9 @@ export class SubstrateService implements OnModuleInit {
         switch (
           event.section // event.section == pallet name
         ) {
+          case 'services':
+            this.serviceEventHandler.handle(event);
+            break;
           case 'orders':
             this.orderEventHandler.handle(event);
             break;
@@ -267,241 +276,5 @@ export class SubstrateService implements OnModuleInit {
       });
       
     console.log(response);
-  }
-}
-class OrderEventHandler {
-  constructor(
-    private escrowService: EscrowService,
-    private substrateApi: ApiPromise,
-    private logger: Logger,
-    private substrateService: SubstrateService,
-    private dbioBalanceService: DbioBalanceService,
-    private rewardService: RewardService,
-    private loggingService: TransactionLoggingService
-  ) {}
-  handle(event) {
-    switch (event.method) {
-      case 'OrderCreated':
-        this.onOrderCreated(event);
-        break;
-      case 'OrderPaid':
-        this.onOrderPaid(event);
-        break;
-      case 'OrderFulfilled':
-        this.onOrderFulfilled(event);
-        break;
-      case 'OrderRefunded':
-        this.onOrderRefunded(event);
-        break;
-      case 'OrderCancelled':
-        this.onOrderCancelled(event);
-        break;
-      case 'OrderNotFound':
-        this.onOrderNotFound(event);
-        break;
-      case 'OrderFailed':
-        this.onOrderFailed(event);
-        break;
-    }
-  }
-
-  async onOrderCreated(event) {
-    console.log('OrderCreated!');
-    const order = event.data[0].toJSON();
-
-    console.log(order);
-    //insert logging to DB
-    const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.created_at)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(0),
-      ref_number: order.id,
-      transaction_status: 1,
-      transaction_type: 1,
-    }
-
-    try {
-      await this.loggingService.create(orderLogging)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async onOrderPaid(event) {
-    console.log('OrderPaid!');
-    const order = event.data[0].toJSON();
-    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
-
-    //insert logging to DB
-    const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 2,
-      transaction_type: 1,
-    }
-
-    try {
-      await this.loggingService.create(orderLogging)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async onOrderFulfilled(event) {
-    console.log('Order Fulfilled!');
-    const order = event.data[0].toJSON();
-    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
-
-    //Logging data input
-    const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 3,
-      transaction_type: 1,
-    }
-
-    try {
-      //logging transaction 
-      await this.loggingService.create(orderLogging)
-
-      const resp =
-        await this.substrateApi.query.userProfile.ethAddressByAccountId(
-          order['seller_id'],
-        );
-      if ((resp as Option<any>).isNone) {
-        return null;
-      }
-      const labEthAddress = (resp as Option<any>).unwrap().toString();
-      const orderByOrderId = await (
-        await this.substrateApi.query.orders.orders(order.id)
-        ).toJSON()
-      const serviceByOrderId = await (
-        await this.substrateApi.query.services.services(order.id)
-        ).toJSON()
-      const totalPrice = order.prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const totalAdditionalPrice = order.additional_prices.reduce(
-        (acc, price) => acc + price.value,
-        0,
-      );
-      const amountToForward = totalPrice + totalAdditionalPrice;
-
-      if(orderByOrderId['order_flow']==='StakingRequestService' && serviceByOrderId['service_flow']==='StakingRequestService'){
-        const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
-        const servicePrice = order['price'][0].value * debioToDai
-        // send reward to customer
-        await this.substrateService.sendReward(order.customer_id, servicePrice)
-
-        // Write Logging Reward Customer Staking Request Service
-        const dataCustomerLoggingInput: RewardDto = {
-          address: order.customer_id,
-          ref_number: order.id,
-          reward_amount: servicePrice,
-          reward_type: 'Customer Stake Request Service',
-          currency: 'DBIO',
-          created_at: new Date()
-        }
-        await this.rewardService.insert(dataCustomerLoggingInput)
-
-        // send reward to lab
-        await this.substrateService.sendReward(order.customer_id, (servicePrice/10))
-
-        // Write Logging Reward Lab
-          const dataLabLoggingInput: RewardDto = {
-          address: order.customer_id,
-          ref_number: order.id,
-          reward_amount: (servicePrice/10),
-          reward_type: 'Lab Provide Requested Service',
-          currency: 'DBIO',
-          created_at: new Date()
-        }
-        await this.rewardService.insert(dataLabLoggingInput)
-      }
-
-      this.logger.log('OrderFulfilled Event');
-      this.logger.log('Forwarding payment to lab');
-      this.logger.log(`labEthAddress: ${labEthAddress}`);
-      this.logger.log(`amountToForward: ${amountToForward}`);
-      const tx = await this.escrowService.forwardPaymentToSeller(
-        labEthAddress,
-        amountToForward,
-      );
-      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
-    } catch (err) {
-      console.log(err);
-      this.logger.log(`Forward payment failed | err -> ${err}`);
-    }
-  }
-
-  async onOrderRefunded(event) {
-    console.log('OrderRefunded!');
-
-    const order = event.data[0].toJSON();
-    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
-
-    //insert logging to DB
-    const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: order.prices[0].value,
-      created_at: new Date(parseInt(order.updated_at)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 4,
-      transaction_type: 1,
-    }
-
-    try {
-      await this.loggingService.create(orderLogging)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async onOrderCancelled(event) {
-    console.log('OrderCancelled');
-    const order = event.data[0].toJSON();
-    const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
-    //Logging data Input
-    const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 5,
-      transaction_type: 1,
-    }
-    await this.escrowService.cancelOrder(order);
-
-    try {
-      await this.loggingService.create(orderLogging)
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  onOrderNotFound(event) {
-    console.log('OrderNotFound!');
-  }
-
-  onOrderFailed(event) {
-    console.log('OrderFailed!');
-    const order = event.data[0].toJSON();
-    console.log('onOrderRefunded = ', order.toJSON());
-    this.escrowService.refundOrder(order.toJSON());
   }
 }

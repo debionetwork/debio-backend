@@ -5,7 +5,6 @@ import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
-import spec from './substrateTypes.json';
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
@@ -21,7 +20,6 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: spec,
     });
   }
 

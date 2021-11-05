@@ -5,13 +5,15 @@ import { EscrowModule } from '../escrow/escrow.module';
 import { TransactionLoggingModule } from '../transaction-logging/transaction-logging.module';
 import { RewardModule } from 'src/reward/reward.module';
 import { DbioBalanceModule } from 'src/dbio-balance/dbio_balance.module';
+import { MailModule } from 'src/common/mailer/mailer.module';
 
 @Module({
   imports: [
     forwardRef(() => EscrowModule),
     forwardRef(() => RewardModule),
     DbioBalanceModule,
-    TransactionLoggingModule
+    TransactionLoggingModule,
+    MailModule
   ],
   controllers: [SubstrateController],
   providers: [SubstrateService],

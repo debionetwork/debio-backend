@@ -47,11 +47,12 @@ export class SubstrateController {
       return response.status(401).send('debio-api-key header is required');
     }
     const { ethAddress, accountId } = payload;
+    const rewardAmount = 1
 
     const dataInput : RewardDto = {
       address: accountId,
       ref_number: '-',
-      reward_amount: 0.01,
+      reward_amount: rewardAmount,
       reward_type: 'Registered User',
       currency: 'DBIO',
       created_at: new Date()
@@ -63,9 +64,9 @@ export class SubstrateController {
 
     // If user has not bound wallet before, send them 1 DBIO
     if (substrateAddress == '') {
-      await this.substrateService.sendReward(accountId, 0.01)
+      await this.substrateService.sendReward(accountId, rewardAmount)
       await this.rewardService.insert(dataInput)
-      gotRewardWording = ` And Got Reward 0.01 DBIO`
+      gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`
 
       await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
