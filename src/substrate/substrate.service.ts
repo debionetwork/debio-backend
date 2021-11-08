@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
 import { EscrowService } from '../escrow/escrow.service';
+import spec from './substrateTypes.json';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
@@ -43,6 +44,7 @@ export class SubstrateService implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
+      types: spec
     });
 
     const keyring = new Keyring({ type: 'sr25519' });
@@ -124,7 +126,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderRefunded(orderId: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.sudoWallet;
     const response = await this.api.tx.orders
       .setOrderRefunded(orderId)
       .signAndSend(wallet, {
