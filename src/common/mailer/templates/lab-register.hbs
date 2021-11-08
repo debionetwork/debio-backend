@@ -1,24 +1,22 @@
 <p>You have been assigned to provide verification for the following new lab register - {{lab_name}}. Here are the details:</p>
 <p> </p>
-<p>Logo: {{logo}}</p>
+<p>Logo: {{profile_image}}</p>
 <p>Email: {{email}}</p>
 <p>Phone No.: {{phone_number}}</p>
 <p>Lab Name: {{lab_name}}</p>
 <p>Country: {{country}}</p>
-<p>State/Province: {{state}}</p>
+<p>State: {{state}}</p>
 <p>City: {{city}}</p>
 <p>Address: {{address}}</p>
 <p> </p>
 <p>Certification.</p>
-{{#each certificate}}
-{{#with person}}
+{{#each certifications}}
 <p>{{@index}}. Title: {{title}}</p>
 <p>&ensp&nbsp Issuer: {{issuer}}</p>
 <p>&ensp&nbsp Month: {{month}}</p>
 <p>&ensp&nbsp Year: {{year}}</p>
 <p>&ensp&nbsp Description: {{description}}</p>
 <p>&ensp&nbsp Supporting Document: {{supporting_document}}</p>
-{{/with}}
 {{else}}
 <p>No Certificate</p>
 {{/each}}
