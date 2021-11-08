@@ -41,4 +41,26 @@ export class OrderController {
     
     return orders;
   }
+
+  // host/bounty_list/{customer_id}?query=&page=&size=
+  @Get('/bounty_list/:customer_id')
+  @ApiParam({ name: 'customer_id'})
+  @ApiQuery({ name: 'keyword', required: false})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
+  async getBountyByProductNameStatusLabName(
+    @Param() params,
+    @Query('keyword') keyword: string,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const orders = await this.orderService.getBountyList(
+      params.customer_id,
+      keyword ? keyword.toLowerCase() : '',
+      page,
+      size,
+    );
+    
+    return orders;
+  }
 }
