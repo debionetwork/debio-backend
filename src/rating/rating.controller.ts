@@ -6,9 +6,11 @@ import {
   Inject,
   Param,
   Post,
+  Res,
 } from '@nestjs/common';
 import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
+import { Response } from 'express';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
 
@@ -44,15 +46,13 @@ export class RatingController {
   }
 
   @Get('service')
-  async getAllService() {
+  async getAllService(
+    @Res() response: Response
+    ) {
     try {
-      return{
-        data: await this.ratingService.getAllByServiceId()
-      }
+      response.status(200).send(await this.ratingService.getAllByServiceId())
     } catch (error) {
-      return {
-        error
-      }
+      response.status(500).send(error)
     }
   }
 

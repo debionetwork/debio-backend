@@ -19,7 +19,6 @@ export class EthereumController {
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
-    console.log('Ready to listen Transfer event ...');
 
     contract.provider.on('block', async (blockNum) => {
       this.ethereumService.setLastBlock(blockNum);

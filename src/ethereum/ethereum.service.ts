@@ -12,6 +12,8 @@ import {
 } from '../helper/storage.helper';
 import ABI from './utils/ABI.json';
 import axios from 'axios';
+import escrowContract from './utils/Escrow.json';
+import serviceRequestContract from './utils/ServiceRequest.json';
 import { ethers } from 'ethers';
 
 @Injectable()
