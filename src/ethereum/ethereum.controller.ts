@@ -29,8 +29,12 @@ export class EthereumController {
         await this.escrowService.handlePaymentToEscrow(from, amount);
       }
     });
+    console.log('Ready to listen OrderPaid event ...');
   }
 
+
+
+  
   async syncBlock(lastBlock, currentBlock, contract) {
     console.log('Syncing block from ' + lastBlock + ' to ' + currentBlock);
     const MIN_STARTING_BLOCK = 5484745;

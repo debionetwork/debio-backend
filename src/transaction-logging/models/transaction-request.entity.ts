@@ -21,7 +21,7 @@ export class TransactionRequest {
   transaction_status: number;
 
   @Column()
-  create_at: Date;
+  created_at: Date;
 
   @Column()
   ref_number: string;
