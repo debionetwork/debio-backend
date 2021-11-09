@@ -243,7 +243,7 @@ export class OrderEventHandler {
   onOrderFailed(event) {
     console.log('OrderFailed!');
     const order = event.data[0].toJSON();
-    console.log('onOrderRefunded = ', order.toJSON());
-    this.escrowService.refundOrder(order.toJSON());
+    console.log('onOrderRefunded = ', order.id);
+    this.escrowService.refundOrder(order.id);
   }
 }

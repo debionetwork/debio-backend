@@ -15,8 +15,7 @@ export class EthereumController {
 
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
-    const escrowNewContract = await this.ethereumService.getEscrowSmartContract();
-    const escrowContract = await this.ethereumService.getEscrowContract();
+    const escrowContract = await this.ethereumService.getEscrowSmartContract();
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
@@ -32,38 +31,11 @@ export class EthereumController {
       }
     });
 
-        /**
-     * Ada 4 events
-     * OrderPaidPartial(Order order);
-     * OrderPaid(Order order);
-     * OrderRefunded(Order order);
-     * OrderFulfilled(Order order);
-     *
-     * - Jika Order Paid, Set Order Paid di Substrate
-     *
-     * Note:
-     * - dna sample fulfill datengnya dari substrate
-     * - Order
-     */
-    console.log('Ready to listen OrderPaid event ...');
-    escrowContract.on('OrderPaid', async (order) => {
-      console.log('masuk');
-      
-      // TODO:
-    //  await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
+    escrowContract.on('OrderPaid', async (order) => {    
+      await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
-
-    escrowNewContract.on('OrderPaid', async (order) => {
-    console.log('masuk2');
-    
-    // TODO:
-    //  await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
-  });
   }
 
-
-
-  
   async syncBlock(lastBlock, currentBlock, contract) {
     console.log('Syncing block from ' + lastBlock + ' to ' + currentBlock);
     const MIN_STARTING_BLOCK = 5484745;
