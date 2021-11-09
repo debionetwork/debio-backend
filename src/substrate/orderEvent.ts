@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { TransactionLoggingService } from "src/transaction-logging/transaction-logging.service";
 import { TransactionLoggingDto } from "src/transaction-logging/dto/transaction-logging.dto";
+import { async } from "rxjs";
 
 export class OrderEventHandler {
   constructor(
@@ -240,10 +241,11 @@ export class OrderEventHandler {
     console.log('OrderNotFound!');
   }
 
-  onOrderFailed(event) {
+  async onOrderFailed(event) {
     console.log('OrderFailed!');
     const order = event.data[0].toJSON();
-    console.log('onOrderRefunded = ', order.id);
-    this.escrowService.refundOrder(order.id);
+    
+    await this.escrowService.refundOrder(order.id);
+    await this.substrateService.setOrderRefunded(order.id);
   }
 }

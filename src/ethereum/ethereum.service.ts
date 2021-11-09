@@ -11,8 +11,7 @@ import {
   checkIfFileOrDirectoryExists,
 } from '../helper/storage.helper';
 import ABI from './utils/ABI.json';
-import axios from 'axios';import escrowContract from './utils/Escrow.json';
-import serviceRequestContract from './utils/ServiceRequest.json';
+import axios from 'axios';
 import { ethers } from 'ethers';
 
 @Injectable()
@@ -77,7 +76,6 @@ export class EthereumService {
     );
     return contract;
   }
-
 
   async createWallet(privateKey: string): Promise<WalletSigner> {
     const wallet: WalletSigner = await this.ethersSigner.createWallet(

@@ -126,7 +126,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderRefunded(orderId: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.sudoWallet;
     const response = await this.api.tx.orders
       .setOrderRefunded(orderId)
       .signAndSend(wallet, {
