@@ -56,6 +56,11 @@ export class RatingController {
     }
   }
 
+  @Get('service/:service_id')
+  async getByServiceId() {
+  
+  }
+
   @Get('lab/:lab_id')
   @ApiParam({ name: 'lab_id'})
   async getLabRating(@Param('lab_id') labor_id: string) {

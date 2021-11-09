@@ -35,11 +35,11 @@ export class RatingService {
       ratings = await this.ratingRepository.find()
       await this.cacheManager.set('getAllRating', ratings, { ttl: 3600 });
     }
-    let result = {}
+    let tempRating = {}
 
     ratings.forEach(data => {
-      if(!result[`${data.lab_id}`]){
-          result[`${data.lab_id}`] = {
+      if(!tempRating[`${data.lab_id}`]){
+          tempRating[`${data.lab_id}`] = {
           lab_id: data.lab_id,
           count_rating_lab: 0,
           sum_rating_lab: 0,
@@ -48,8 +48,8 @@ export class RatingService {
         }
       }
 
-      if(!result[`${data.lab_id}`]['services'][data.service_id]){
-        result[`${data.lab_id}`]['services'][data.service_id] = {
+      if(!tempRating[`${data.lab_id}`]['services'][data.service_id]){
+        tempRating[`${data.lab_id}`]['services'][data.service_id] = {
           service_id: data.service_id,
           sum_rating_service: 0,
           count_rating_service: 0,
@@ -57,22 +57,31 @@ export class RatingService {
         }
       }
 
-      result[`${data.lab_id}`].count_rating_lab += 1      
-      result[`${data.lab_id}`].sum_rating_lab += data.rating      
-      result[`${data.lab_id}`].rating_lab = result[`${data.lab_id}`].sum_rating_lab / result[`${data.lab_id}`].count_rating_lab
+      tempRating[`${data.lab_id}`].count_rating_lab += 1      
+      tempRating[`${data.lab_id}`].sum_rating_lab += data.rating      
+      tempRating[`${data.lab_id}`].rating_lab = tempRating[`${data.lab_id}`].sum_rating_lab / tempRating[`${data.lab_id}`].count_rating_lab
 
-      result[`${data.lab_id}`]['services'][
+      tempRating[`${data.lab_id}`]['services'][
         data.service_id].count_rating_service += 1
         
-      result[`${data.lab_id}`]['services'][
+      tempRating[`${data.lab_id}`]['services'][
         data.service_id].sum_rating_service += data.rating
 
-        result[`${data.lab_id}`]['services'][
-          data.service_id].rating_service = result[`${data.lab_id}`]['services'][
-            data.service_id].sum_rating_service / result[`${data.lab_id}`]['services'][
+        tempRating[`${data.lab_id}`]['services'][
+          data.service_id].rating_service = tempRating[`${data.lab_id}`]['services'][
+            data.service_id].sum_rating_service / tempRating[`${data.lab_id}`]['services'][
               data.service_id].count_rating_service      
     });
-
+    const result = []
+    for (const key in tempRating) {
+      const temp = []
+      for (const servicesRating in tempRating[key]['services']) {
+        temp.push(tempRating[key]['services'][servicesRating])
+      }
+      tempRating[key]['services'] = temp
+      result.push(tempRating[key])
+    }
+    
     return result
   }
 
