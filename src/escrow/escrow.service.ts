@@ -97,23 +97,18 @@ export class EscrowService {
     console.log('[createOrder] request: ', request);
   }
 
-  async refundOrder(request) {
-    console.log('[refundOrder] request: ', request);
-    try {
-      this.substrateService.setOrderRefunded(request.id);
-    } catch (error) {
-      console.log(error);
-    }
+  async refundOrder(order) {
+    console.log('[refundOrder] order: ', order);
   }
 
   async cancelOrder(request) {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderFulfilled(request) {
-    console.log('[orderFulfilled] request: ', request);
+  async orderFulfilled(order) {
+    console.log('[orderFulfilled] order: ', order);
   }
-
+  
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);

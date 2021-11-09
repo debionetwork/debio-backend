@@ -12,7 +12,6 @@ import { EthereumIndexedDataModule } from './ethereum-indexed-data/ethereum-inde
 import { TransactionLoggingModule } from './transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
-import { MailModule } from './mail/mail.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { BountyModule } from './bounty/bounty.module';
 import { DataBounty } from './bounty/models/bounty.entity';
@@ -63,7 +62,6 @@ require('dotenv').config(); // eslint-disable-line
     TransactionLoggingModule,
     VerificationModule,
     RecaptchaModule,
-    MailModule,
     BountyModule,
   ],
 })

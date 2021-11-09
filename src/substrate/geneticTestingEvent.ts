@@ -5,7 +5,6 @@ import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
-import spec from './substrateTypes.json';
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
@@ -21,7 +20,6 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
     this.api = await ApiPromise.create({
       provider: wsProvider,
-      types: spec,
     });
   }
 
@@ -63,38 +61,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   }
 
   async onDnaSampleQualityControlled(event) {
-    try {
-      const dataRequest = event.data[0].toJSON();
-      const dataOrder = await (
-        await this.api.query.orders.orders(dataRequest.order_id)
-      ).toJSON();
-
-      interface DataInput {
-        address: string;
-        amount: bigint;
-        create_at: Date;
-        currency: string;
-        parent_id: bigint;
-        ref_number: string;
-        transaction_status: number;
-        transaction_type: number;
-      }
-
-      const dataInput: DataInput = {
-        address: dataRequest.owner_id,
-        amount: dataOrder['additional_prices'][0].value,
-        create_at: new Date(parseInt(dataRequest.updated_at)),
-        currency: dataOrder['currency'].toUpperCase(),
-        parent_id: BigInt(0),
-        ref_number: dataRequest.order_id,
-        transaction_status: 3,
-        transaction_type: 1,
-      };
-
-      this.loggingService.create(dataInput);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log('DnaSampleQualityControlled!');
   }
   
   onDnaSampleResultReady(event) {
