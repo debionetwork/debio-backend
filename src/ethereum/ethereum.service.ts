@@ -55,6 +55,28 @@ export class EthereumService {
     }
   }
 
+  async getEscrowSmartContract(): Promise<any> {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const contract = new ethers.Contract(
+        process.env.ESCROW_CONTRACT_ADDRESS,
+        escrowContract.abi,
+        provider
+      )
+      return contract;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getServiceRequestContract(): SmartContract {
+    const contract: SmartContract = this.ethersContract.create(
+      process.env.SERVICE_REQUEST_CONTRACT_ADDRESS,
+      serviceRequestContract.abi,
+    );
+    return contract;
+  }
+
   async createWallet(privateKey: string): Promise<WalletSigner> {
     const wallet: WalletSigner = await this.ethersSigner.createWallet(
       privateKey,

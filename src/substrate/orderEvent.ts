@@ -244,8 +244,8 @@ export class OrderEventHandler {
   async onOrderFailed(event) {
     console.log('OrderFailed!');
     const order = event.data[0].toJSON();
-    console.log(order.id);
     
+    await this.escrowService.refundOrder(order.id);
     await this.substrateService.setOrderRefunded(order.id);
   }
 }
