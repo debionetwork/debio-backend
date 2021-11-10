@@ -208,7 +208,6 @@ export class SubstrateService implements OnModuleInit {
     ethAddress: string,
     substrateAddress: string,
   ) {
-    const wallet = this.sudoWallet;
 
     return new Promise(async (resolve) => {
       const unsub = await this.api.tx.sudo

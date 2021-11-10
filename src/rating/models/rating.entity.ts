@@ -21,5 +21,8 @@ export class LabRating {
   rating: number;
 
   @Column()
+  review: string;
+
+  @Column()
   created: Date;
 }

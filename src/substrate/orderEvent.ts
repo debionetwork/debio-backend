@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { TransactionLoggingService } from "src/transaction-logging/transaction-logging.service";
 import { TransactionLoggingDto } from "src/transaction-logging/dto/transaction-logging.dto";
-import { async } from "rxjs";
 
 export class OrderEventHandler {
   constructor(

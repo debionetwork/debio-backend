@@ -13,7 +13,7 @@ export class RatingService {
     private readonly ratingRepository: Repository<LabRating>,
   ) {}
 
-  insert(data: CreateRatingDto) {
+  async insert(data: CreateRatingDto) {
     const rating = new LabRating();
     rating.lab_id = data.lab_id;
     rating.service_id = data.service_id;
@@ -22,7 +22,9 @@ export class RatingService {
     rating.rating = data.rating;
     rating.created = new Date;
 
-    return this.ratingRepository.save(rating);
+    await this.cacheManager.del('getAllRating')
+    await this.cacheManager.del(data.service_id)
+    return await this.ratingRepository.save(rating);
   }
 
   async getAllByServiceId(){
@@ -91,10 +93,33 @@ export class RatingService {
     });
   }
 
-  getRatingByServiceId(service_id: string) {
-    return this.ratingRepository.find({
-      where: { service_id },
+  async getRatingByServiceId(service_id: string) {
+    let ratings = null
+    const cacheRatingByServiceId = await this.cacheManager.get(service_id)
+
+    if(cacheRatingByServiceId){
+      ratings = cacheRatingByServiceId
+    } else {
+      ratings = await this.ratingRepository.find({
+        where: { service_id },
+      });
+      await this.cacheManager.set(service_id, ratings, { ttl: 3600 })
+    }
+
+    let result = {
+      service_id,
+      sum_rating_service: 0,
+      count_rating_service: 0,
+    }
+
+    ratings.forEach(data => {
+      result.sum_rating_service += data.rating
+      result.count_rating_service += 1
     });
+
+    result['rating_service'] = result.sum_rating_service / result.count_rating_service
+    
+    return result
   }
 
   getRatingByOrderId(order_id: string) {

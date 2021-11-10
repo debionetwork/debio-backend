@@ -30,4 +30,10 @@ export class CreateRatingDto {
     description: 'rating',
   })
   rating: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'review',
+  })
+  review: string;
 }
