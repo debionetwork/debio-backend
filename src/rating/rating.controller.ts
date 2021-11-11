@@ -43,6 +43,7 @@ export class RatingController {
     }
     await this.cacheManager.del('getAllRating');
     await this.cacheManager.del('ratings');
+    await this.cacheManager.del(data.service_id);
     try {
       response.status(201).send(await this.ratingService.insert(data))
     } catch (error) {
@@ -72,7 +73,10 @@ export class RatingController {
 
   @Get('lab/:lab_id')
   @ApiParam({ name: 'lab_id'})
-  async getLabRating(@Param('lab_id') labor_id: string) {
+  async getLabRating(
+    @Param('lab_id') labor_id: string,
+    @Res() response: Response
+    ) {
     let cachingData = [];
     const valueCache = await this.cacheManager.get('ratings');
 
@@ -83,13 +87,15 @@ export class RatingController {
       );
 
       if (isCacheReady) {
-        return { status: 'ok', data: isCacheReady };
+        response.status(200).send(isCacheReady)
       }
     }
     const labRatings = await this.ratingService.getRatingByLabId(labor_id);
-    const response = {
+    const result = {
       lab_id: labor_id,
       rating: null,
+      sum: null,
+      count: labRatings.length
     };
 
     if (labRatings.length > 0) {
@@ -97,10 +103,12 @@ export class RatingController {
       labRatings.forEach((element) => {
         labRatingCount += element.rating;
       });
-      response.rating = labRatingCount / labRatings.length;
+      result.rating = labRatingCount / labRatings.length;
+      result.sum = labRatingCount
+
     }
-    cachingData.push(response);
+    cachingData.push(result);
     await this.cacheManager.set('ratings', cachingData, { ttl: 1800 });
-    return { status: 'ok', data: response };
+    response.status(200).send(result)
   }
 }
