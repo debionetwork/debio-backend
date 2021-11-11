@@ -34,7 +34,7 @@ export class EscrowService {
       );
 
       // get sellerid (lab id)
-      const sellerID = orderDetail['seller_id'];
+      const sellerID = orderDetail['sellerId'];
 
       const priceList = this.utils.GetDetailPrice(orderDetail);
       const totalPrice = priceList[0] + priceList[1];
@@ -72,18 +72,18 @@ export class EscrowService {
 				id: lastOrderID,
 				body: {
 					id: lastOrderID,
-					sended_amount: strAmount,
-					service_id: orderDetail['service_id'],
-					customer_box_public_key: orderDetail['customer_box_public_key'],
-					seller_id: orderDetail['seller_id'],
-					dna_sample_tracking_id: orderDetail['dna_sample_tracking_id'],
+					sendedAmount: strAmount,
+					serviceId: orderDetail['serviceId'],
+					customerBoxPublicKey: orderDetail['customerBoxPublicKey'],
+					sellerId: orderDetail['sellerId'],
+					dnaSampleTrackingId: orderDetail['dnaSampleTrackingId'],
 					currency: orderDetail['currency'],
 					prices: orderDetail['prices'],
-					additional_prices: orderDetail['additional_prices'],
+					additionalPrices: orderDetail['additionalPrices'],
 					status: orderDetail['status'],
-					created_at: orderDetail['created_at'],
-					updated_at: orderDetail['updated_at'],
-					payment_date: `${now.getUTCDate()}-${now.getUTCMonth() + 1}-${now.getUTCFullYear()}`,
+					createdAt: orderDetail['createdAt'],
+					updatedAt: orderDetail['updatedAt'],
+					paymentDate: `${now.getUTCDate()}-${now.getUTCMonth() + 1}-${now.getUTCFullYear()}`,
 				}
 			});
 
@@ -139,7 +139,7 @@ export class EscrowService {
         order.id,
         provider
       );
-      console.log('fullfilled order customer_id :', order.customer_id ,' ->', tx);
+      console.log('fullfilled order customerId :', order.customerId ,' ->', tx);
     } catch (error) {
       
     }

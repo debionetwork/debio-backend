@@ -48,7 +48,7 @@ export class ServiceRequestService {
       }
 
       const value = ethers.BigNumber.from(
-        ethers.utils.formatEther(request.staking_amount).split('.')[0],
+        ethers.utils.formatEther(request.stakingAmount).split('.')[0],
       );
 
       requestByCountryDict[request.country].totalRequests += 1;
@@ -60,13 +60,13 @@ export class ServiceRequestService {
 
         if (
           !requestByCountryDict[request.country]['services'][
-            request.city+'-'+request.service_category
+            request.city+'-'+request.serviceCategory
           ]
           ) {
             requestByCountryDict[request.country]['services'][
-              request.city+'-'+request.service_category
+              request.city+'-'+request.serviceCategory
             ] = {
-              name: request.service_category,
+              name: request.serviceCategory,
               city: request.city,
               totalRequests: 0,
               totalValue: {
@@ -77,15 +77,15 @@ export class ServiceRequestService {
           }
 
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.service_category
+        request.city+'-'+request.serviceCategory
       ].totalRequests += 1;
       const currValueByCountryServiceCategoryDai = ethers.BigNumber.from(
         requestByCountryDict[request.country]['services'][
-          request.city+'-'+request.service_category
+          request.city+'-'+request.serviceCategory
         ].totalValue.dai,
       );
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.service_category
+        request.city+'-'+request.serviceCategory
       ].totalValue.dai = currValueByCountryServiceCategoryDai.add(value);
     }
 
