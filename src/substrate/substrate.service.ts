@@ -245,13 +245,14 @@ export class SubstrateService implements OnModuleInit {
 
   async sendReward(
     acountId: string,
-    amount: number | string
+    amount: number
     ) {      
     const wallet = this.escrowWallet;    
+    const dbioUnit = 1000000000000000000
     const response = await this.api.tx.rewards
       .rewardFunds(
         acountId,
-        amount
+        (amount * dbioUnit).toString()
       )
       .signAndSend(wallet, {
         nonce: -1,
