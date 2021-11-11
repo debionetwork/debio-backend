@@ -6,10 +6,10 @@ import { OrderService } from './order.service';
 export class OrderController {
   constructor(readonly orderService: OrderService) {}
   
-  // host/{hash_id}
-  @Get(':hash_id')
+  // host/{hashId}
+  @Get(':hashId')
   async getOrderById(
-    @Param('hash_id') hashId: string,
+    @Param('hashId') hashId: string,
   ) {
     const order = await this.orderService.getOrderByHashId(hashId);
 
@@ -20,9 +20,9 @@ export class OrderController {
     return order;
   }
 
-  // host/list/{customer_id}?query=&page=&size=
-  @Get('/list/:customer_id')
-  @ApiParam({ name: 'customer_id'})
+  // host/list/{customerId}?query=&page=&size=
+  @Get('/list/:customerId')
+  @ApiParam({ name: 'customerId'})
   @ApiQuery({ name: 'keyword', required: false})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
@@ -33,7 +33,7 @@ export class OrderController {
     @Query('size') size,
   ) {
     const orders = await this.orderService.getOrderList(
-      params.customer_id,
+      params.customerId,
       keyword ? keyword.toLowerCase() : '',
       page,
       size,
@@ -42,9 +42,9 @@ export class OrderController {
     return orders;
   }
 
-  // host/bounty_list/{customer_id}?query=&page=&size=
-  @Get('/bounty_list/:customer_id')
-  @ApiParam({ name: 'customer_id'})
+  // host/bounty_list/{customerId}?query=&page=&size=
+  @Get('/bounty_list/:customerId')
+  @ApiParam({ name: 'customerId'})
   @ApiQuery({ name: 'keyword', required: false})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
@@ -55,7 +55,7 @@ export class OrderController {
     @Query('size') size,
   ) {
     const orders = await this.orderService.getBountyList(
-      params.customer_id,
+      params.customerId,
       keyword ? keyword.toLowerCase() : '',
       page,
       size,

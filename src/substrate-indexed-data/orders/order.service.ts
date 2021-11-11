@@ -6,49 +6,49 @@ export class OrderService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getOrderByHashId(
-    hash_id: string) {
+    hashId: string) {
       const order = await this.elasticsearchService.search({
         index: 'orders',
         body: {
           query: {
             match: {
               _id: {
-                query: hash_id
+                query: hashId
               }
             }
           }
         }
       })
 
-      const hits_order = order.body.hits.hits;
+      const hitsOrder = order.body.hits.hits;
 
-      return hits_order.length > 0 ? hits_order[0]._source : null;
+      return hitsOrder.length > 0 ? hitsOrder[0]._source : null;
   }
 
   async getOrderList(
-    customer_id: string,
+    customerId: string,
     keyword: string,
     page: number,
     size: number,
   ) {
-    const filter_array = [];
+    const filterArray = [];
 
-    filter_array.push({
+    filterArray.push({
       bool: {
         must: [
-          { match: { customer_id: customer_id } }
+          { match: { customerId: customerId } }
         ],
       },
     });
 
     if (keyword && keyword.trim() !== "") {
-      filter_array.push({
+      filterArray.push({
         bool: {
           should: [
             { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
-            { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
+            { match_phrase_prefix: { dnaSampleTrackingId: { query: keyword } } },
+            { match_phrase_prefix: { 'serviceInfo.name': { query: keyword } } },
+            { match_phrase_prefix: { 'labInfo.name': { query: keyword } } },
           ],
         },
       });
@@ -56,7 +56,7 @@ export class OrderService {
     
     const query = {
       bool: {
-        filter: filter_array,
+        filter: filterArray,
       },
     };
 
@@ -66,8 +66,8 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
+            "createdAt.keyword": {
+              unmappedType: "keyword",
               order: "desc"
             }
           }
@@ -85,7 +85,7 @@ export class OrderService {
       searchObj.size = _size;
     }
 
-    const total_orders = await this.elasticsearchService.count({
+    const totalOrders = await this.elasticsearchService.count({
       index: 'orders',
       body: {
         query: query,
@@ -97,37 +97,37 @@ export class OrderService {
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count: totalOrders.body.count,
       },
       data: orders.body.hits.hits,
     };
   }
 
   async getBountyList(
-    customer_id: string,
+    customerId: string,
     keyword: string,
     page: number,
     size: number,
   ) {
-    const filter_array = [];
+    const filterArray = [];
 
-    filter_array.push({
+    filterArray.push({
       bool: {
         must: [
-          { match: { customer_id: customer_id } },
+          { match: { customerId: customerId } },
           { match: { bounty: true } }
         ],
       },
     });
 
     if (keyword && keyword.trim() !== "") {
-      filter_array.push({
+      filterArray.push({
         bool: {
           should: [
             { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
-            { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
+            { match_phrase_prefix: { dnaSampleTrackingId: { query: keyword } } },
+            { match_phrase_prefix: { 'serviceInfo.name': { query: keyword } } },
+            { match_phrase_prefix: { 'labInfo.name': { query: keyword } } },
           ],
         },
       });
@@ -135,7 +135,7 @@ export class OrderService {
     
     const query = {
       bool: {
-        filter: filter_array,
+        filter: filterArray,
       },
     };
 
@@ -145,8 +145,8 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
+            "createdAt.keyword": {
+              unmappedType: "keyword",
               order: "desc"
             }
           }
@@ -164,7 +164,7 @@ export class OrderService {
       searchObj.size = _size;
     }
 
-    const total_orders = await this.elasticsearchService.count({
+    const totalOrders = await this.elasticsearchService.count({
       index: 'orders',
       body: {
         query: query,
@@ -176,7 +176,7 @@ export class OrderService {
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count: totalOrders.body.count,
       },
       data: orders.body.hits.hits,
     };

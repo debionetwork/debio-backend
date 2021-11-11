@@ -87,7 +87,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     
      // Write Logging Reward Customer Staking Request Service
      const dataCustomerLoggingInput: RewardDto = {
-      address: dataOrder['customer_id'],
+      address: dataOrder['customerId'],
       ref_number: dataOrder['id'],
       reward_amount: rewardPrice,
       reward_type: 'Customer Add Data as Bounty',

@@ -23,7 +23,7 @@ export class LabController {
     @Query('region') region,
     @Query('city') city,
     @Query('category') category,
-    @Query('service_flow') service_flow: boolean,
+    @Query('serviceFlow') serviceFlow: boolean,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
@@ -32,7 +32,7 @@ export class LabController {
       region,
       city,
       category,
-      service_flow,
+      serviceFlow,
       page,
       size,
     );

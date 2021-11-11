@@ -54,9 +54,9 @@ export class OrderEventHandler {
     console.log(order);
     //insert logging to DB
     const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.created_at)),
+      address: order.customerId,
+      amount: (order.additionalPrices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.createdAt)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(0),
       ref_number: order.id,
@@ -78,9 +78,9 @@ export class OrderEventHandler {
 
     //insert logging to DB
     const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
+      address: order.customerId,
+      amount: (order.additionalPrices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updatedAt)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(orderHistory.id),
       ref_number: order.id,
@@ -102,9 +102,9 @@ export class OrderEventHandler {
 
     //Logging data input
     const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
+      address: order.customerId,
+      amount: (order.additionalPrices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updatedAt)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(orderHistory.id),
       ref_number: order.id,
@@ -134,7 +134,7 @@ export class OrderEventHandler {
         (acc, price) => acc + price.value,
         0,
       );
-      const totalAdditionalPrice = order.additional_prices.reduce(
+      const totalAdditionalPrice = order.additionalPrices.reduce(
         (acc, price) => acc + price.value,
         0,
       );
@@ -144,11 +144,11 @@ export class OrderEventHandler {
         const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
         const servicePrice = order['price'][0].value * debioToDai
         // send reward to customer
-        await this.substrateService.sendReward(order.customer_id, servicePrice)
+        await this.substrateService.sendReward(order.customerId, servicePrice)
 
         // Write Logging Reward Customer Staking Request Service
         const dataCustomerLoggingInput: RewardDto = {
-          address: order.customer_id,
+          address: order.customerId,
           ref_number: order.id,
           reward_amount: servicePrice,
           reward_type: 'Customer Stake Request Service',
@@ -158,11 +158,11 @@ export class OrderEventHandler {
         await this.rewardService.insert(dataCustomerLoggingInput)
 
         // send reward to lab
-        await this.substrateService.sendReward(order.customer_id, (servicePrice/10))
+        await this.substrateService.sendReward(order.customerId, (servicePrice/10))
 
         // Write Logging Reward Lab
           const dataLabLoggingInput: RewardDto = {
-          address: order.customer_id,
+          address: order.customerId,
           ref_number: order.id,
           reward_amount: (servicePrice/10),
           reward_type: 'Lab Provide Requested Service',
@@ -195,9 +195,9 @@ export class OrderEventHandler {
 
     //insert logging to DB
     const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
+      address: order.customerId,
       amount: order.prices[0].value,
-      created_at: new Date(parseInt(order.updated_at)),
+      created_at: new Date(parseInt(order.updatedAt)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(orderHistory.id),
       ref_number: order.id,
@@ -218,9 +218,9 @@ export class OrderEventHandler {
     const orderHistory = await this.loggingService.getLoggingByOrderId(order.id)
     //Logging data Input
     const orderLogging : TransactionLoggingDto = {
-      address: order.customer_id,
-      amount: (order.additional_prices[0].value + order.prices[0].value),
-      created_at: new Date(parseInt(order.updated_at)),
+      address: order.customerId,
+      amount: (order.additionalPrices[0].value + order.prices[0].value),
+      created_at: new Date(parseInt(order.updatedAt)),
       currency: order.currency.toUpperCase(),
       parent_id: BigInt(orderHistory.id),
       ref_number: order.id,
