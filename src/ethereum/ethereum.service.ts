@@ -71,14 +71,6 @@ export class EthereumService {
     }
   }
 
-  getNewEscrowSmartContract(): SmartContract {
-    const contract: SmartContract = this.ethersContract.create(
-      process.env.ESCROW_CONTRACT_ADDRESS,
-      escrowContract.abi,
-    );
-    return contract;
-  }
-
   getServiceRequestContract(): SmartContract {
     const contract: SmartContract = this.ethersContract.create(
       process.env.SERVICE_REQUEST_CONTRACT_ADDRESS,

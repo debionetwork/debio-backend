@@ -16,7 +16,6 @@ export class EthereumController {
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
     const escrowContract = await this.ethereumService.getEscrowSmartContract();
-    const escrowContract2 = await this.ethereumService.getNewEscrowSmartContract();
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
@@ -31,16 +30,8 @@ export class EthereumController {
       }
     });
 
-    escrowContract.on('OrderPaid', async (order) => { 
-      console.log('masuk');
-      
-      // await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
-    });
-
-    escrowContract2.on('OrderPaid', async (order) => { 
-      console.log('masuk2');
-      
-      // await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
+    escrowContract.on('OrderPaid', async (order) => {    
+      await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
   }
 
