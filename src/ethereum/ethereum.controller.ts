@@ -15,10 +15,10 @@ export class EthereumController {
 
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
+    const escrowContract = await this.ethereumService.getEscrowSmartContract();
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
-    console.log('Ready to listen Transfer event ...');
 
     contract.provider.on('block', async (blockNum) => {
       this.ethereumService.setLastBlock(blockNum);
@@ -29,12 +29,12 @@ export class EthereumController {
         await this.escrowService.handlePaymentToEscrow(from, amount);
       }
     });
-    console.log('Ready to listen OrderPaid event ...');
+
+    escrowContract.on('OrderPaid', async (order) => {    
+      await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
+    });
   }
 
-
-
-  
   async syncBlock(lastBlock, currentBlock, contract) {
     console.log('Syncing block from ' + lastBlock + ' to ' + currentBlock);
     const MIN_STARTING_BLOCK = 5484745;

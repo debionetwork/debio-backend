@@ -6,9 +6,11 @@ import {
   Inject,
   Param,
   Post,
+  Res,
 } from '@nestjs/common';
 import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
+import { Response } from 'express';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
 
@@ -29,7 +31,10 @@ export class RatingController {
 
   @Post()
   @ApiBody({ type: CreateRatingDto })
-  async create(@Body() data: CreateRatingDto) {
+  async create(
+    @Body() data: CreateRatingDto,
+    @Res() response: Response
+    ) {
     const isRatedByOrderId = await this.ratingService.getRatingByOrderId(data.order_id)
     if(isRatedByOrderId){
       return {
@@ -38,22 +43,31 @@ export class RatingController {
     }
     await this.cacheManager.del('getAllRating');
     await this.cacheManager.del('ratings');
-    return {
-      data: await this.ratingService.insert(data),
-    };
+    try {
+      response.status(201).send(await this.ratingService.insert(data))
+    } catch (error) {
+      response.status(500).send(error)
+    }
   }
 
   @Get('service')
-  async getAllService() {
+  async getAllService(
+    @Res() response: Response
+    ) {
     try {
-      return{
-        data: await this.ratingService.getAllByServiceId()
-      }
+      response.status(200).send(await this.ratingService.getAllByServiceId())
     } catch (error) {
-      return {
-        error
-      }
+      response.status(500).send(error)
     }
+  }
+
+  @Get('service/:service_id')
+  @ApiParam({ name: 'service_id'})
+  async getByServiceId(
+    @Param('service_id') service_id: string,
+    @Res() response: Response
+    ) {
+    response.status(200).send(await this.ratingService.getRatingByServiceId(service_id))
   }
 
   @Get('lab/:lab_id')
