@@ -1,19 +1,25 @@
-name: lint
+name: Pull request automation
 
 on:
   pull_request:
-    branches: [development]
+    branches:
+      - main
+
+concurrency:
+  group: test-code-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x]
-
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
