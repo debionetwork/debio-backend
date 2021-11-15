@@ -17,6 +17,7 @@ import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from 'src/common/mailer/mailer.manager';
+import { ServiceRequestEventHandler } from './serviceRequestEvent';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -25,6 +26,7 @@ export class SubstrateService implements OnModuleInit {
   private sudoWallet: KeyringPair;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
+  private serviceRequestEventHandler: ServiceRequestEventHandler;
   private serviceEventHandler: ServiceEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
@@ -73,6 +75,10 @@ export class SubstrateService implements OnModuleInit {
     this.serviceEventHandler = new ServiceEventHandler(
       this.api,
       this.mailerManager,
+    );
+
+    this.serviceRequestEventHandler = new ServiceRequestEventHandler(
+      this.api,
     );
   }
 
@@ -169,6 +175,9 @@ export class SubstrateService implements OnModuleInit {
             break;
           case 'geneticTesting':
             this.geneticTestingEventHandler.handle(event);
+            break;
+          case 'serviceRequest':
+            this.serviceRequestEventHandler.handle(event);
             break;
         }
       });
