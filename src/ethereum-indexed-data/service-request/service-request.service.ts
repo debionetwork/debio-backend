@@ -39,7 +39,7 @@ export class ServiceRequestService {
         _source: { request },
       } = req;
 
-      if (!requestByCountryDict[request.country]) {
+      if (!requestByCountryDict[request.country] && request.status === 'Open') {
         requestByCountryDict[request.country] = {
           totalRequests: 0,
           totalValue: 0,
@@ -48,7 +48,7 @@ export class ServiceRequestService {
       }
 
       const value = ethers.BigNumber.from(
-        ethers.utils.formatEther(request.stakingAmount).split('.')[0],
+        ethers.utils.formatEther(request.staking_amount).split('.')[0],
       );
 
       requestByCountryDict[request.country].totalRequests += 1;
@@ -60,13 +60,13 @@ export class ServiceRequestService {
 
         if (
           !requestByCountryDict[request.country]['services'][
-            request.city+'-'+request.serviceCategory
-          ]
+            request.city+'-'+request.service_category
+          ] && request.status === 'Open'
           ) {
             requestByCountryDict[request.country]['services'][
-              request.city+'-'+request.serviceCategory
+              request.city+'-'+request.service_category
             ] = {
-              name: request.serviceCategory,
+              name: request.service_category,
               city: request.city,
               totalRequests: 0,
               totalValue: {
@@ -77,15 +77,15 @@ export class ServiceRequestService {
           }
 
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.serviceCategory
+        request.city+'-'+request.service_category
       ].totalRequests += 1;
       const currValueByCountryServiceCategoryDai = ethers.BigNumber.from(
         requestByCountryDict[request.country]['services'][
-          request.city+'-'+request.serviceCategory
+          request.city+'-'+request.service_category
         ].totalValue.dai,
       );
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.serviceCategory
+        request.city+'-'+request.service_category
       ].totalValue.dai = currValueByCountryServiceCategoryDai.add(value);
     }
 
@@ -119,7 +119,43 @@ export class ServiceRequestService {
 
       requestByCountryList.push(requestByCountry);
     }
-
     return requestByCountryList;
+  }
+
+  async getByCustomerId(
+    customerId: string,
+    page: number,
+    size: number
+    ) {
+    const searchObj = {
+      index: 'create-service-request',
+      body: {
+        query: {
+          bool: {
+            must: [
+              { match_phrase_prefix: { 'request.requester_address': { query: customerId } } },
+            ],
+          },
+        },
+      },
+      from: 0,
+      size: 10,
+    };
+
+    if (page || size) {
+      const _size = size ? size : 10;
+      const from = size * page - _size;
+
+      searchObj.from = from;
+      searchObj.size = _size;
+    }
+
+    const result = []
+    const requestServiceByCustomers = await this.elasticsearchService.search(searchObj)
+
+    requestServiceByCustomers.body.hits.hits.forEach(requestService => {
+      result.push(requestService._source)
+    });
+    return result
   }
 }
