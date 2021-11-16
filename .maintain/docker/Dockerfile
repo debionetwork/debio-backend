@@ -19,9 +19,8 @@ LABEL social.debio.image.authors="debio.dev@blocksphere.id"
 RUN useradd -m -u 1001 -U -s /bin/sh -d /home/debio debio
 WORKDIR /app
 # Copy from builder stage
-COPY --from=builder --chown=debio /app/dist ./dist
-COPY --from=builder --chown=debio /app/node_modules ./node_modules
-COPY --from=builder --chown=debio /app/package.json ./package.json
+COPY --from=builder --chown=debio /app .
+
 # Set to a non-root built-in user
 USER debio
 # Set environment variable
