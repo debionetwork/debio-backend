@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ethers } from 'ethers';
+import { StateService } from 'src/location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
 
@@ -15,6 +16,8 @@ export class ServiceRequestService {
   constructor(
     @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
+    @Inject(forwardRef(() => StateService))
+    private stateService: StateService,
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
@@ -47,27 +50,25 @@ export class ServiceRequestService {
         };
       }
 
-      const value = ethers.BigNumber.from(
-        ethers.utils.formatEther(request.staking_amount).split('.')[0],
-      );
-
+      const value = Number(request.staking_amount) / 10**18;
       requestByCountryDict[request.country].totalRequests += 1;
-      const currValueByCountry = ethers.BigNumber.from(
+      const currValueByCountry = Number(
         requestByCountryDict[request.country].totalValue,
       );
       requestByCountryDict[request.country].totalValue =
-        currValueByCountry.add(value);
+        currValueByCountry+value;
 
         if (
           !requestByCountryDict[request.country]['services'][
-            request.city+'-'+request.service_category
+            request.region+'-'+request.service_category
           ] && request.status === 'Open'
           ) {
             requestByCountryDict[request.country]['services'][
-              request.city+'-'+request.service_category
+              request.region+'-'+request.service_category
             ] = {
-              name: request.service_category,
-              city: request.city,
+              category: request.service_category,
+              regionCode: request.region,
+              regionName: null,
               totalRequests: 0,
               totalValue: {
                 dai: 0,
@@ -77,16 +78,17 @@ export class ServiceRequestService {
           }
 
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.service_category
+        request.region+'-'+request.service_category
       ].totalRequests += 1;
-      const currValueByCountryServiceCategoryDai = ethers.BigNumber.from(
+      const currValueByCountryServiceCategoryDai = Number(
         requestByCountryDict[request.country]['services'][
-          request.city+'-'+request.service_category
+          request.region+'-'+request.service_category
         ].totalValue.dai,
       );
+      
       requestByCountryDict[request.country]['services'][
-        request.city+'-'+request.service_category
-      ].totalValue.dai = currValueByCountryServiceCategoryDai.add(value);
+        request.region+'-'+request.service_category
+      ].totalValue.dai = currValueByCountryServiceCategoryDai + value;
     }
 
     // Restructure data into array
@@ -97,20 +99,28 @@ export class ServiceRequestService {
       if (!countryObj) {
         continue;
       }
+      for (const region in requestByCountryDict[countryCode].services) {
+        const regionName = await this.stateService.getState(
+          countryCode,
+          requestByCountryDict[countryCode].services[region].regionCode
+          ) || {name: '-'}
+          requestByCountryDict[countryCode].services[region].regionName = regionName.name
+        }
       const { name } = countryObj;
       const { totalRequests, services } = requestByCountryDict[countryCode];
       let { totalValue } = requestByCountryDict[countryCode];
-      totalValue = totalValue.toString();
+      totalValue = totalValue;
 
       const servicesArr = Object.values(services).map((s: any) => ({
         ...s,
         totalValue: {
-          dai: s.totalValue.dai.toString(),
-          usd: (Number(s.totalValue.dai.toString()) * oneDaiEqualToUsd.price).toString(),
+          dai: s.totalValue.dai,
+          usd: (s.totalValue.dai * oneDaiEqualToUsd.price),
         },
       }));
 
       const requestByCountry = {
+        countryId: countryCode,
         country: name,
         totalRequests,
         totalValue,
@@ -134,6 +144,48 @@ export class ServiceRequestService {
           bool: {
             must: [
               { match_phrase_prefix: { 'request.requester_address': { query: customerId } } },
+            ],
+          },
+        },
+      },
+      from: 0,
+      size: 10,
+    };
+
+    if (page || size) {
+      const _size = size ? size : 10;
+      const from = size * page - _size;
+
+      searchObj.from = from;
+      searchObj.size = _size;
+    }
+
+    const result = []
+    const requestServiceByCustomers = await this.elasticsearchService.search(searchObj)
+
+    requestServiceByCustomers.body.hits.hits.forEach(requestService => {
+      result.push(requestService._source)
+    });
+    return result
+  }
+
+    async provideRequestService(
+    country: string,
+    region: string,
+    category: string,
+    page: number,
+    size: number
+    ) {
+    const searchObj = {
+      index: 'create-service-request',
+      body: {
+        query: {
+          bool: {
+            must: [
+              { match_phrase_prefix: { 'request.country': { query: country } } },
+              { match_phrase_prefix: { 'request.region': { query: region } } },
+              { match_phrase_prefix: { 'request.service_category': { query: category } } },
+              { match_phrase_prefix: { 'request.status': { query: "Open" } } },
             ],
           },
         },
