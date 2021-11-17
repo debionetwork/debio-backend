@@ -31,21 +31,21 @@ export class ServiceRequestController {
   }
 
   @Get('/provideRequestService')
-  @ApiQuery({ name: 'country'})
-  @ApiQuery({ name: 'region'})
+  @ApiQuery({ name: 'countryCode'})
+  @ApiQuery({ name: 'regionCode'})
   @ApiQuery({ name: 'category'})
   @ApiQuery({ name: 'page', required: false})
   @ApiQuery({ name: 'size', required: false})
   async getCustomerProvidedService(
-    @Query('country') country,
-    @Query('region') region,
+    @Query('countryCode') countryCode,
+    @Query('regionCode') regionCode,
     @Query('category') category,
     @Query('page') page,
     @Query('size') size,
   ) {
     const requestServiceByCustomer = await this.serviceRequestService.provideRequestService(
-      country,
-      region,
+      countryCode,
+      regionCode,
       category,
       page,
       size
