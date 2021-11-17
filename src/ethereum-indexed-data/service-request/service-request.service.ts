@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { ethers } from 'ethers';
+import { StateService } from 'src/location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
 
@@ -15,6 +16,8 @@ export class ServiceRequestService {
   constructor(
     @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
+    @Inject(forwardRef(() => StateService))
+    private stateService: StateService,
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
@@ -64,7 +67,8 @@ export class ServiceRequestService {
               request.region+'-'+request.service_category
             ] = {
               category: request.service_category,
-              region: request.region,
+              regionCode: request.region,
+              regionName: null,
               totalRequests: 0,
               totalValue: {
                 dai: 0,
@@ -95,6 +99,13 @@ export class ServiceRequestService {
       if (!countryObj) {
         continue;
       }
+      for (const region in requestByCountryDict[countryCode].services) {
+        const regionName = await this.stateService.getState(
+          countryCode,
+          requestByCountryDict[countryCode].services[region].regionCode
+          ) || {name: '-'}
+          requestByCountryDict[countryCode].services[region].regionName = regionName.name
+        }
       const { name } = countryObj;
       const { totalRequests, services } = requestByCountryDict[countryCode];
       let { totalValue } = requestByCountryDict[countryCode];
