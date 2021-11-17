@@ -9,7 +9,6 @@ import { SubstrateService } from './substrate.service';
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
-    private readonly loggingService: TransactionLoggingService,
     private readonly rewardService: RewardService,
     private dbioBalanceService: DbioBalanceService,
     private substrateService: SubstrateService,
