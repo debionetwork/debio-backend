@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { ServiceRequestService } from './service-request.service';
 
 @Controller('service-requests')
@@ -24,6 +24,29 @@ export class ServiceRequestController {
   ) {
     const requestServiceByCustomer = await this.serviceRequestService.getByCustomerId(
       customerId,
+      page,
+      size
+    )
+    return requestServiceByCustomer;
+  }
+
+  @Get('/provideRequestService')
+  @ApiQuery({ name: 'country'})
+  @ApiQuery({ name: 'region'})
+  @ApiQuery({ name: 'category'})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
+  async getCustomerProvidedService(
+    @Query('country') country,
+    @Query('region') region,
+    @Query('category') category,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const requestServiceByCustomer = await this.serviceRequestService.provideRequestService(
+      country,
+      region,
+      category,
       page,
       size
     )
