@@ -183,28 +183,35 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
-            CONTRACT_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/CONTRACT_ADDRESS
-            HOST_POSTGRES:${{ secrets.STG_GCP_PROJECT_ID }}/HOST_POSTGRES
-            USERNAME_POSTGRES:${{ secrets.STG_GCP_PROJECT_ID }}/USERNAME_POSTGRES
-            PASSWORD_POSTGRES:${{ secrets.STG_GCP_PROJECT_ID }}/PASSWORD_POSTGRES
-            DB_POSTGRES:${{ secrets.STG_GCP_PROJECT_ID }}/DB_POSTGRES
-            DB_LOCATIONS:${{ secrets.STG_GCP_PROJECT_ID }}/DB_LOCATIONS
-            ELASTICSEARCH_NODE:${{ secrets.STG_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
+            SWAGGER_ENABLE:${{ secrets.STG_GCP_PROJECT_ID }}/SWAGGER_ENABLE
+            PORT:${{ secrets.STG_GCP_PROJECT_ID }}/PORT
+            POSTGRES_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_HOST
+            POSTGRES_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_USERNAME
+            POSTGRES_PASSWORD:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_PASSWORD
+            POSTGRES_DB:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_CITY:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
+            POSTGRES_DB_LOCATIONS:${{ secrets.STG_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
             SUBSTRATE_URL:${{ secrets.STG_GCP_PROJECT_ID }}/SUBSTRATE_URL
+            DEBIO_ETH_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/DEBIO_ETH_ADDRESS
             ESCROW_SUBSTRATE_MNEMONIC:${{ secrets.STG_GCP_PROJECT_ID }}/ESCROW_SUBSTRATE_MNEMONIC
             FAUCET_SUBSTRATE_MNEMONIC:${{ secrets.STG_GCP_PROJECT_ID }}/FAUCET_SUBSTRATE_MNEMONIC
             SUDO_SUBSTRATE_MNEMONIC:${{ secrets.STG_GCP_PROJECT_ID }}/SUDO_SUBSTRATE_MNEMONIC
             WEB3_RPC:${{ secrets.STG_GCP_PROJECT_ID }}/WEB3_RPC
             WEB3_RPC_HTTPS:${{ secrets.STG_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            DEBIO_ETH_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/DEBIO_ETH_ADDRESS
+            CONTRACT_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/CONTRACT_ADDRESS
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
+            SERVICE_REQUEST_CONTRACT_ADDRESS:${{ secrets.STG_GCP_PROJECT_ID }}/SERVICE_REQUEST_CONTRACT_ADDRESS
             COINMARKETCAP_API_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
             RECAPTCHA_SECRET_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
             DEBIO_API_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/DEBIO_API_KEY
-            BUCKET_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/BUCKET_NAME
-            STORAGE_BASE_URI:${{ secrets.STG_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            ELASTICSEARCH_NODE:${{ secrets.STG_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
+            ELASTICSEARCH_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            ELASTICSEARCH_PASSWORD:${{ secrets.STG_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             EMAIL:${{ secrets.STG_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.STG_GCP_PROJECT_ID }}/PASS_EMAIL
+            BUCKET_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/BUCKET_NAME
+            STORAGE_BASE_URI:${{ secrets.STG_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.STG_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             SSH_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -225,28 +232,35 @@ jobs:
             helm upgrade debio-backend debio/debio-backend \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
-              --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
-              --set-string config.postgres.hostPostgres=${{ steps.secrets.outputs.HOST_POSTGRES }} \
-              --set-string config.postgres.usernamePostgres=${{ steps.secrets.outputs.USERNAME_POSTGRES }} \
-              --set-string config.postgres.passwordPostgres=${{ steps.secrets.outputs.PASSWORD_POSTGRES }} \
-              --set-string config.postgres.dbPostgres=${{ steps.secrets.outputs.DB_POSTGRES }} \
-              --set-string config.postgres.dbLocation=${{ steps.secrets.outputs.DB_LOCATIONS }} \
-              --set-string config.elastic.elasticsearchNode=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
+              --set config.swagger.enable=false \
+              --set-string config.port=${{ steps.secrets.outputs.PORT }} \
+              --set-string config.postgres.host=${{ steps.secrets.outputs.POSTGRES_HOST }} \
+              --set-string config.postgres.username=${{ steps.secrets.outputs.POSTGRES_USERNAME }} \
+              --set-string config.postgres.password=${{ steps.secrets.outputs.POSTGRES_PASSWORD }} \
+              --set-string config.postgres.dbname=${{ steps.secrets.outputs.POSTGRES_DB }} \
+              --set-string config.postgrGOOGLE_APPLICATION_CREDENTIALSes.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
+              --set-string config.postgres.dbLocation=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.escrowMnemonic="${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }}" \
-              --set-string config.faucetMnemonic="${{ steps.secrets.outputs.FAUCET_SUBSTRATE_MNEMONIC }}" \
-              --set-string config.sudoMnemonic="${{ steps.secrets.outputs.SUDO_SUBSTRATE_MNEMONIC }}" \
-              --set-string config.web3RPCHttp=${{ steps.secrets.outputs.WEB3_RPC }} \
+              --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
+              --set-string config.escrowSubstrateMnemonic=${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }} \
+              --set-string config.faucetSubstrateMnemonic=${{ steps.secrets.outputs.FAUCET_SUBSTRATE_MNEMONIC }} \
+              --set-string config.sudoSubstrateMnemonic=${{ steps.secrets.outputs.SUDO_SUBSTRATE_MNEMONIC }} \
+              --set-string config.web3RPC=${{ steps.secrets.outputs.WEB3_RPC }} \
               --set-string config.web3RPCHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string config.debioEscrowPrivateKey=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }} \
-              --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
-              --set-string config.coinMarketcapApiKey=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }} \
+              --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
+              --set-string config.escrowContractAddress=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }} \
+              --set-string config.serviceRequestContractAddress=${{ steps.secrets.outputs.SERVICE_REQUEST_CONTRACT_ADDRESS }} \
+              --set-string config.coinmarketcapApiKey=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }} \
               --set-string config.recaptchaSecretKey=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }} \
               --set-string config.debioApiKey=${{ steps.secrets.outputs.DEBIO_API_KEY }} \
-              --set-string config.bucketName=${{ steps.secrets.outputs.BUCKET_NAME }} \
-              --set-string config.storageBaseURL=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
+              --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
+              --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
-              --set-string config.email.passEmail=${{ steps.secrets.outputs.PASS_EMAIL }} \
+              --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
+              --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
+              --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.gcs.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
