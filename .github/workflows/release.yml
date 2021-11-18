@@ -79,10 +79,6 @@ jobs:
             BUCKET_NAME:${{ secrets.PROD_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.PROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
-            SSH_HOST:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_HOST
-            SSH_USERNAME:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_USERNAME
-            SSH_KEY:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_KEY
-            SSH_PORT:${{ secrets.PROD_GCP_PROJECT_ID }}/SSH_PORT
       - name: Create .env & gcp sa
         shell: bash
         run: |
@@ -259,7 +255,7 @@ jobs:
               --set-string config.postgres.username=${{ steps.secrets.outputs.POSTGRES_USERNAME }} \
               --set-string config.postgres.password=${{ steps.secrets.outputs.POSTGRES_PASSWORD }} \
               --set-string config.postgres.dbname=${{ steps.secrets.outputs.POSTGRES_DB }} \
-              --set-string config.postgrGOOGLE_APPLICATION_CREDENTIALSes.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
+              --set-string config.postgres.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
               --set-string config.postgres.dbLocation=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
@@ -375,7 +371,7 @@ jobs:
               --set-string config.postgres.username=${{ steps.secrets.outputs.POSTGRES_USERNAME }} \
               --set-string config.postgres.password=${{ steps.secrets.outputs.POSTGRES_PASSWORD }} \
               --set-string config.postgres.dbname=${{ steps.secrets.outputs.POSTGRES_DB }} \
-              --set-string config.postgrGOOGLE_APPLICATION_CREDENTIALSes.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
+              --set-string config.postgres.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
               --set-string config.postgres.dbLocation=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
               --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
