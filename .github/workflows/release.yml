@@ -85,12 +85,12 @@ jobs:
           tee -a .env <<EOF
           SWAGGER_ENABLE=${{ steps.secrets.outputs.SWAGGER_ENABLE }}
           PORT=${{ steps.secrets.outputs.PORT }}
-          POSTGRES_HOST=${{ steps.secrets.outputs.POSTGRES_HOST }}
-          POSTGRES_USERNAME=${{ steps.secrets.outputs.POSTGRES_USERNAME }}
-          POSTGRES_PASSWORD=${{ steps.secrets.outputs.POSTGRES_PASSWORD }}
-          POSTGRES_DB=${{ steps.secrets.outputs.POSTGRES_DB }}
-          POSTGRES_DB_CITY=${{ steps.secrets.outputs.POSTGRES_DB_CITY }}
-          POSTGRES_DB_LOCATIONS=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }}
+          HOST_POSTGRES=${{ steps.secrets.outputs.POSTGRES_HOST }}
+          USERNAME_POSTGRES=${{ steps.secrets.outputs.POSTGRES_USERNAME }}
+          PASSWORD_POSTGRES=${{ steps.secrets.outputs.POSTGRES_PASSWORD }}
+          DB_POSTGRES=${{ steps.secrets.outputs.POSTGRES_DB }}
+          DB_CITY=${{ steps.secrets.outputs.POSTGRES_DB_CITY }}
+          DB_LOCATIONS=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }}
           SUBSTRATE_URL=${{ steps.secrets.outputs.SUBSTRATE_URL }}
           DEBIO_ETH_ADDRESS=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }}
           ESCROW_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }}
