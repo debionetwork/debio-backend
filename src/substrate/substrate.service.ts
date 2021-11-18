@@ -248,7 +248,7 @@ export class SubstrateService implements OnModuleInit {
     amount: number
     ) {      
     const wallet = this.escrowWallet;    
-    const dbioUnit = 1000000000000000000
+    const dbioUnit = 10**18
     const response = await this.api.tx.rewards
       .rewardFunds(
         acountId,
