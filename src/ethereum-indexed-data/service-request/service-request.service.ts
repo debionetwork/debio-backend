@@ -60,15 +60,15 @@ export class ServiceRequestService {
 
         if (
           !requestByCountryDict[request.country]['services'][
-            request.region+'-'+request.service_category
+            request.region+'-'+request.city+'-'+request.service_category
           ] && request.status === 'Open'
           ) {
             requestByCountryDict[request.country]['services'][
-              request.region+'-'+request.service_category
+              request.region+'-'+request.city+'-'+request.service_category
             ] = {
               category: request.service_category,
               regionCode: request.region,
-              regionName: null,
+              city: request.city,
               totalRequests: 0,
               totalValue: {
                 dai: 0,
@@ -78,16 +78,16 @@ export class ServiceRequestService {
           }
 
       requestByCountryDict[request.country]['services'][
-        request.region+'-'+request.service_category
+        request.region+'-'+request.city+'-'+request.service_category
       ].totalRequests += 1;
       const currValueByCountryServiceCategoryDai = Number(
         requestByCountryDict[request.country]['services'][
-          request.region+'-'+request.service_category
+          request.region+'-'+request.city+'-'+request.service_category
         ].totalValue.dai,
       );
       
       requestByCountryDict[request.country]['services'][
-        request.region+'-'+request.service_category
+        request.region+'-'+request.city+'-'+request.service_category
       ].totalValue.dai = currValueByCountryServiceCategoryDai + value;
     }
 
@@ -99,13 +99,6 @@ export class ServiceRequestService {
       if (!countryObj) {
         continue;
       }
-      for (const region in requestByCountryDict[countryCode].services) {
-        const regionName = await this.stateService.getState(
-          countryCode,
-          requestByCountryDict[countryCode].services[region].regionCode
-          ) || {name: '-'}
-          requestByCountryDict[countryCode].services[region].regionName = regionName.name
-        }
       const { name } = countryObj;
       const { totalRequests, services } = requestByCountryDict[countryCode];
       let { totalValue } = requestByCountryDict[countryCode];
@@ -172,6 +165,7 @@ export class ServiceRequestService {
     async provideRequestService(
     country: string,
     region: string,
+    city: string,
     category: string,
     page: number,
     size: number
@@ -184,6 +178,7 @@ export class ServiceRequestService {
             must: [
               { match_phrase_prefix: { 'request.country': { query: country } } },
               { match_phrase_prefix: { 'request.region': { query: region } } },
+              { match_phrase_prefix: { 'request.city': { query: city } } },
               { match_phrase_prefix: { 'request.service_category': { query: category } } },
               { match_phrase_prefix: { 'request.status': { query: "Open" } } },
             ],
