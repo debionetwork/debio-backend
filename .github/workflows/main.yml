@@ -114,11 +114,6 @@ jobs:
           BUCKET_NAME=${{ steps.secrets.outputs.BUCKET_NAME }}
           STORAGE_BASE_URI=${{ steps.secrets.outputs.STORAGE_BASE_URI }}
           EOF
-
-          tee -a gcp_sa.json <<EOF
-          ${{ secrets.SA_GCS_DEV }}
-          EOF
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
