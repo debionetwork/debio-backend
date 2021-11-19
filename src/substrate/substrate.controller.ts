@@ -46,7 +46,10 @@ export class SubstrateController {
     if (debioApiKey != process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
-    const { ethAddress, accountId } = payload;
+    const { 
+      accountId,
+      ethAddress
+  } = payload;
     const rewardAmount = 1
 
     const dataInput : RewardDto = {
@@ -59,21 +62,25 @@ export class SubstrateController {
     }
     let gotRewardWording = ''
     
-    let substrateAddress =
-      await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+    let substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
 
     // If user has not bound wallet before, send them 1 DBIO
-    if (substrateAddress == '') {
-      await this.substrateService.sendReward(accountId, rewardAmount)
-      await this.rewardService.insert(dataInput)
-      gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`
-
-      await this.substrateService.bindEthAddressToSubstrateAddress(
+    if (!substrateAddress) {
+       await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
         accountId,
         );
-      
       substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+
+      if(substrateAddress){
+        await this.substrateService.sendReward(accountId, rewardAmount)
+        await this.rewardService.insert(dataInput)
+        gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`
+      } else {
+        response
+        .status(401)
+        .send('Unauthorized Sudo')
+      }
     } else {
       await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
@@ -83,6 +90,6 @@ export class SubstrateController {
 
     return response
       .status(200)
-      .send(`eth-address ${ethAddress} bound to ${substrateAddress} ${gotRewardWording}`);
+      .send(`eth-address ${ethAddress} bound to ${accountId} ${gotRewardWording}`);
   }
 }

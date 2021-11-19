@@ -1,6 +1,6 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { ethers } from 'ethers';
+import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { StateService } from 'src/location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
@@ -21,6 +21,7 @@ export class ServiceRequestService {
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
+    private dbioBalanceService : DbioBalanceService
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
@@ -34,6 +35,7 @@ export class ServiceRequestService {
       },
     } = serviceRequests;
     const oneDaiEqualToUsd = await this.ethereumService.convertCurrency('DAI', 'USD', 1)
+    const oneDbioEquailToDai = Number(await (await this.dbioBalanceService.getDebioBalance()).dai)
     
     // Accumulate totalRequests and totalValue by country
     const requestByCountryDict = {};
@@ -71,6 +73,7 @@ export class ServiceRequestService {
               city: request.city,
               totalRequests: 0,
               totalValue: {
+                dbio: 0,
                 dai: 0,
                 usd: 0,
               },
@@ -83,12 +86,12 @@ export class ServiceRequestService {
       const currValueByCountryServiceCategoryDai = Number(
         requestByCountryDict[request.country]['services'][
           request.region+'-'+request.city+'-'+request.service_category
-        ].totalValue.dai,
+        ].totalValue.dbio,
       );
       
       requestByCountryDict[request.country]['services'][
         request.region+'-'+request.city+'-'+request.service_category
-      ].totalValue.dai = currValueByCountryServiceCategoryDai + value;
+      ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
     }
 
     // Restructure data into array
@@ -107,8 +110,9 @@ export class ServiceRequestService {
       const servicesArr = Object.values(services).map((s: any) => ({
         ...s,
         totalValue: {
-          dai: s.totalValue.dai,
-          usd: (s.totalValue.dai * oneDaiEqualToUsd.price),
+          dbio: s.totalValue.dbio,
+          dai: (s.totalValue.dbio * oneDbioEquailToDai),
+          usd: (s.totalValue.dbio * oneDbioEquailToDai * oneDaiEqualToUsd.price)
         },
       }));
 
