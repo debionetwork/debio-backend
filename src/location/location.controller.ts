@@ -13,9 +13,9 @@ export class LocationController {
   ) {}
 
   @Get()
-  @ApiQuery({ name: 'country_code', required: false})
-  @ApiQuery({ name: 'state_code', required: false})
-  @ApiQuery({ name: 'city_id', required: false})
+  @ApiQuery({ name: 'country_code', required: false })
+  @ApiQuery({ name: 'state_code', required: false })
+  @ApiQuery({ name: 'city_id', required: false })
   async getLocation(
     @Query('country_code') country_code: string,
     @Query('state_code') state_code: string,

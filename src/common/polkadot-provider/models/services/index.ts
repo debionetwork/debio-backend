@@ -3,12 +3,14 @@ import { ServiceInfo } from './service-info';
 
 export class Service {
   constructor(anyJson: any) {
-    this.id = anyJson.id
-    this.owner_id = anyJson.owner_id
+    this.id = anyJson.id;
+    this.owner_id = anyJson.owner_id;
     this.info = anyJson.info;
     this.service_flow = anyJson.service_flow;
-    this.price = this.info.prices_by_currency[0].price_components[0].value.toString()
-    this.qc_price = this.info.prices_by_currency[0].additional_prices[0].value.toString()
+    this.price =
+      this.info.prices_by_currency[0].price_components[0].value.toString();
+    this.qc_price =
+      this.info.prices_by_currency[0].additional_prices[0].value.toString();
   }
   id: string;
   owner_id: string;

@@ -51,11 +51,11 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   onDnaSampleRegistered(event) {
     console.log('DnaSampleRegistered!');
   }
-  
+
   onDnaSampleArrived(event) {
     console.log('DnaSampleArrived!');
   }
-  
+
   onDnaSampleRejected(event) {
     console.log('DnaSampleRejected!');
   }
@@ -63,7 +63,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   async onDnaSampleQualityControlled(event) {
     console.log('DnaSampleQualityControlled!');
   }
-  
+
   onDnaSampleResultReady(event) {
     console.log('DnaSampleResultReady');
   }
@@ -79,21 +79,26 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
       await this.api.query.orders.orders(dataStaked.order_id)
     ).toJSON();
 
-    const debioToDai = Number((await this.dbioBalanceService.getDebioBalance()).dai)
-    const rewardPrice = dataOrder['price'][0].value * debioToDai
+    const debioToDai = Number(
+      (await this.dbioBalanceService.getDebioBalance()).dai,
+    );
+    const rewardPrice = dataOrder['price'][0].value * debioToDai;
 
     //send reward
-    await this.substrateService.sendReward(dataOrder['customer_id'], rewardPrice)
-    
-     // Write Logging Reward Customer Staking Request Service
-     const dataCustomerLoggingInput: RewardDto = {
+    await this.substrateService.sendReward(
+      dataOrder['customer_id'],
+      rewardPrice,
+    );
+
+    // Write Logging Reward Customer Staking Request Service
+    const dataCustomerLoggingInput: RewardDto = {
       address: dataOrder['customerId'],
       ref_number: dataOrder['id'],
       reward_amount: rewardPrice,
       reward_type: 'Customer Add Data as Bounty',
       currency: 'DBIO',
-      created_at: new Date()
-    }
-    await this.rewardService.insert(dataCustomerLoggingInput)
+      created_at: new Date(),
+    };
+    await this.rewardService.insert(dataCustomerLoggingInput);
   }
 }

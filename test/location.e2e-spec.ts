@@ -1,12 +1,12 @@
-import { INestApplication } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { City } from "../src/location/models/city.entity";
-import { Country } from "../src/location/models/country.entity";
-import { State } from "../src/location/models/state.entity";
-import { LocationModule } from "../src/location/location.module";
-import { Any } from "typeorm";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { City } from '../src/location/models/city.entity';
+import { Country } from '../src/location/models/country.entity';
+import { State } from '../src/location/models/state.entity';
+import { LocationModule } from '../src/location/location.module';
+import { Any } from 'typeorm';
 
 describe('Rating Controller (e2e)', () => {
   let app: INestApplication;
@@ -27,85 +27,85 @@ describe('Rating Controller (e2e)', () => {
           autoLoadEntities: true,
         }),
       ],
-    })  
-    .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('/location get all country', () => {
-    request(app.getHttpServer())
-      .get('/location')
-      .expect(200)
+    request(app.getHttpServer()).get('/location').expect(200);
   });
 
   it('/location get all state in selected country', () => {
     request(app.getHttpServer())
       .get('/location')
-      .query({ country_code : 'ID'})
+      .query({ country_code: 'ID' })
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
-          status : 'ok',
-          data : expect.arrayContaining([{
-            id : expect.any(Number),
-            country_code : expect.any(String),
-            country_id : expect.any(Number),
-            latitude : expect.any(Number),
-            longitude : expect.any(Number),
-            name : expect.any(String),
-            state_code : expect.any(String),
-          }])
-        })
-      })
+          status: 'ok',
+          data: expect.arrayContaining([
+            {
+              id: expect.any(Number),
+              country_code: expect.any(String),
+              country_id: expect.any(Number),
+              latitude: expect.any(Number),
+              longitude: expect.any(Number),
+              name: expect.any(String),
+              state_code: expect.any(String),
+            },
+          ]),
+        });
+      });
   });
 
   it('/location get all city in selected state', () => {
     request(app.getHttpServer())
       .get('/location')
-      .query({ 
-        country_code : 'ID',
-        state_code : 'JK'
+      .query({
+        country_code: 'ID',
+        state_code: 'JK',
       })
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
-          status : 'ok',
-          data : expect.arrayContaining([{
-            id : expect.any(Number),
-            country_code : expect.any(String),
-            country_id : expect.any(Number),
-            latitude : expect.any(Number),
-            longitude : expect.any(Number),
-            name : expect.any(String),
-            state_code : expect.any(String),
-            state_id : expect.any(Number),
-          }])
-        })
-      })
+          status: 'ok',
+          data: expect.arrayContaining([
+            {
+              id: expect.any(Number),
+              country_code: expect.any(String),
+              country_id: expect.any(Number),
+              latitude: expect.any(Number),
+              longitude: expect.any(Number),
+              name: expect.any(String),
+              state_code: expect.any(String),
+              state_id: expect.any(Number),
+            },
+          ]),
+        });
+      });
   });
 
   it('/location get selected city by id', () => {
     request(app.getHttpServer())
       .get('/location')
-      .query({ city_id : 56772 })
+      .query({ city_id: 56772 })
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual({
-          status : 'ok',
-          data : {
-            id : expect.any(Number),
-            country_code : expect.any(String),
-            country_id : expect.any(Number),
-            latitude : expect.any(Number),
-            longitude : expect.any(Number),
-            name : expect.any(String),
-            state_code : expect.any(String),
-            state_id : expect.any(Number),
-          }
-        })
-      })
+          status: 'ok',
+          data: {
+            id: expect.any(Number),
+            country_code: expect.any(String),
+            country_id: expect.any(Number),
+            latitude: expect.any(Number),
+            longitude: expect.any(Number),
+            name: expect.any(String),
+            state_code: expect.any(String),
+            state_id: expect.any(Number),
+          },
+        });
+      });
   });
-
 });

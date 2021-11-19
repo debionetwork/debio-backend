@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'service_category'})
+@Entity({ name: 'service_category' })
 export class ServiceCategory {
   @PrimaryGeneratedColumn()
   id: number;

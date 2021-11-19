@@ -1,19 +1,19 @@
-import { ApiPromise } from "@polkadot/api";
-import { MailerManager } from "src/common/mailer/mailer.manager";
-import { LabRegisterCertification } from "src/common/mailer/models/lab-register.model/certification";
-import { LabRegister } from "src/common/mailer/models/lab-register.model/lab-register.model";
-import { LabRegisterService } from "src/common/mailer/models/lab-register.model/service";
-import { Lab } from "src/common/polkadot-provider/models/labs";
-import { Service } from "src/common/polkadot-provider/models/services";
-import { queryCertificationsByMultipleIds, queryLabById } from "src/common/polkadot-provider/query/labs";
-import { queryServicesByMultipleIds } from "src/common/polkadot-provider/query/services";
+import { ApiPromise } from '@polkadot/api';
+import { MailerManager } from 'src/common/mailer/mailer.manager';
+import { LabRegisterCertification } from 'src/common/mailer/models/lab-register.model/certification';
+import { LabRegister } from 'src/common/mailer/models/lab-register.model/lab-register.model';
+import { LabRegisterService } from 'src/common/mailer/models/lab-register.model/service';
+import { Lab } from 'src/common/polkadot-provider/models/labs';
+import { Service } from 'src/common/polkadot-provider/models/services';
+import {
+  queryCertificationsByMultipleIds,
+  queryLabById,
+} from 'src/common/polkadot-provider/query/labs';
+import { queryServicesByMultipleIds } from 'src/common/polkadot-provider/query/services';
 
 export class ServiceEventHandler {
-  constructor(
-    private api: ApiPromise,
-    private mailerManager: MailerManager
-  ) {}
-  
+  constructor(private api: ApiPromise, private mailerManager: MailerManager) {}
+
   handle(event) {
     switch (event.method) {
       case 'ServiceCreated':
@@ -22,10 +22,16 @@ export class ServiceEventHandler {
     }
   }
 
-  async _getLabRegisterCertification(ids: string[]): Promise< Array<LabRegisterCertification>>{
-    const certifications = await queryCertificationsByMultipleIds(this.api, ids);
-    const labRegisterCertifications: Array<LabRegisterCertification> = new Array<LabRegisterCertification>();
-    certifications.forEach(val => {
+  async _getLabRegisterCertification(
+    ids: string[],
+  ): Promise<Array<LabRegisterCertification>> {
+    const certifications = await queryCertificationsByMultipleIds(
+      this.api,
+      ids,
+    );
+    const labRegisterCertifications: Array<LabRegisterCertification> =
+      new Array<LabRegisterCertification>();
+    certifications.forEach((val) => {
       const lrc: LabRegisterCertification = new LabRegisterCertification();
       lrc.title = val.info.title;
       lrc.issuer = val.info.issuer;
@@ -38,10 +44,13 @@ export class ServiceEventHandler {
     return labRegisterCertifications;
   }
 
-  async _getLabRegisterService(ids: string[]): Promise<Array<LabRegisterService>>{
+  async _getLabRegisterService(
+    ids: string[],
+  ): Promise<Array<LabRegisterService>> {
     const services = await queryServicesByMultipleIds(this.api, ids);
-    const labRegisterServices: Array<LabRegisterService> = new Array<LabRegisterService>();
-    services.forEach(val => {
+    const labRegisterServices: Array<LabRegisterService> =
+      new Array<LabRegisterService>();
+    services.forEach((val) => {
       const lrs: LabRegisterService = new LabRegisterService();
       lrs.name = val.info.name;
       lrs.category = val.info.category;
@@ -52,14 +61,15 @@ export class ServiceEventHandler {
       lrs.supporting_document = val.info.test_result_sample;
       lrs.test_result_sample = val.info.test_result_sample;
       lrs.expected_duration.duration = val.info.expected_duration.duration;
-      lrs.expected_duration.duration_type = val.info.expected_duration.duration_type;
+      lrs.expected_duration.duration_type =
+        val.info.expected_duration.duration_type;
       labRegisterServices.push(lrs);
     });
     return labRegisterServices;
   }
 
   async _labToLabRegister(lab: Lab): Promise<LabRegister> {
-    let labRegister = new LabRegister();
+    const labRegister = new LabRegister();
 
     labRegister.email = lab.info.email;
     labRegister.phone_number = lab.info.phone_number;
@@ -70,7 +80,9 @@ export class ServiceEventHandler {
     labRegister.city = lab.info.city;
     labRegister.address = lab.info.address;
     labRegister.profile_image = lab.info.profile_image;
-    labRegister.certifications = await this._getLabRegisterCertification(lab.certifications);
+    labRegister.certifications = await this._getLabRegisterCertification(
+      lab.certifications,
+    );
     labRegister.services = await this._getLabRegisterService(lab.services);
 
     return labRegister;
@@ -79,11 +91,12 @@ export class ServiceEventHandler {
   async _onServiceCreated(event) {
     const service: Service = event.data[0].toHuman();
     const lab: Lab = await queryLabById(this.api, service.owner_id);
-    if (lab.verification_status === "Unverified" && lab.services.length === 1) { // Send email for unverified accounts only (until further notice)
+    if (lab.verification_status === 'Unverified' && lab.services.length === 1) {
+      // Send email for unverified accounts only (until further notice)
       const labRegister: LabRegister = await this._labToLabRegister(lab);
       this.mailerManager.sendLabRegistrationEmail(
         process.env.EMAILS.split(','),
-        labRegister
+        labRegister,
       );
     }
   }

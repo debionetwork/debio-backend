@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class DbioBalanceDto {
   @ApiProperty({
     type: Number,
-    description: 'dai'
+    description: 'dai',
   })
   dai: number;
 

@@ -13,7 +13,7 @@ export class EscrowService {
   constructor(
     private substrateService: SubstrateService,
     private ethereumService: EthereumService,
-		private readonly elasticsearchService: ElasticsearchService,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {
     this.utils = new Utils();
   }
@@ -64,28 +64,30 @@ export class EscrowService {
         );
       }
 
-			const now = new Date();
+      const now = new Date();
 
-			await this.elasticsearchService.index({
-				index: 'payment-history',
-				refresh: 'wait_for',
-				id: lastOrderID,
-				body: {
-					id: lastOrderID,
-					sendedAmount: strAmount,
-					serviceId: orderDetail['serviceId'],
-					customerBoxPublicKey: orderDetail['customerBoxPublicKey'],
-					sellerId: orderDetail['sellerId'],
-					dnaSampleTrackingId: orderDetail['dnaSampleTrackingId'],
-					currency: orderDetail['currency'],
-					prices: orderDetail['prices'],
-					additionalPrices: orderDetail['additionalPrices'],
-					status: orderDetail['status'],
-					createdAt: orderDetail['createdAt'],
-					updatedAt: orderDetail['updatedAt'],
-					paymentDate: `${now.getUTCDate()}-${now.getUTCMonth() + 1}-${now.getUTCFullYear()}`,
-				}
-			});
+      await this.elasticsearchService.index({
+        index: 'payment-history',
+        refresh: 'wait_for',
+        id: lastOrderID,
+        body: {
+          id: lastOrderID,
+          sendedAmount: strAmount,
+          serviceId: orderDetail['serviceId'],
+          customerBoxPublicKey: orderDetail['customerBoxPublicKey'],
+          sellerId: orderDetail['sellerId'],
+          dnaSampleTrackingId: orderDetail['dnaSampleTrackingId'],
+          currency: orderDetail['currency'],
+          prices: orderDetail['prices'],
+          additionalPrices: orderDetail['additionalPrices'],
+          status: orderDetail['status'],
+          createdAt: orderDetail['createdAt'],
+          updatedAt: orderDetail['updatedAt'],
+          paymentDate: `${now.getUTCDate()}-${
+            now.getUTCMonth() + 1
+          }-${now.getUTCFullYear()}`,
+        },
+      });
 
       await this.substrateService.setOrderPaid(lastOrderID);
     } catch (error) {
@@ -99,20 +101,20 @@ export class EscrowService {
 
   async refundOrder(order) {
     console.log('[refundOrder] order: ', order);
-   try {
-      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+    try {
+      const provider = await new ethers.providers.JsonRpcProvider(
+        process.env.WEB3_RPC_HTTPS,
+      );
       const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet = await new ethers.Wallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
-        provider
-      )
+        provider,
+      );
       const balance = await provider.getBalance(wallet.address);
       console.log('balance', balance.toString());
       const tokenContractWithSigner = tokenContract.connect(wallet);
       try {
-        const tx = await tokenContractWithSigner.refundOrder(
-          order.id,
-        );
+        const tx = await tokenContractWithSigner.refundOrder(order.id);
       } catch (err) {
         console.log('err', err);
       }
@@ -128,31 +130,27 @@ export class EscrowService {
   async orderFulfilled(order) {
     console.log('[orderFulfilled] order: ', order);
     try {
-      
-      const provider = await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS)
+      const provider = await new ethers.providers.JsonRpcProvider(
+        process.env.WEB3_RPC_HTTPS,
+      );
       const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      const tx = await tokenContractWithSigner.fulfillOrder(
-        order.id,
-        provider
-      );
-      console.log('fullfilled order customerId :', order.customerId ,' ->', tx);
-    } catch (error) {
-      
-    }
+      const tx = await tokenContractWithSigner.fulfillOrder(order.id, provider);
+      console.log('fullfilled order customerId :', order.customerId, ' ->', tx);
+    } catch (error) {}
   }
-  
+
   async setOrderPaidWithSubstrate(orderID: string) {
     try {
-      await this.substrateService.setOrderPaid(orderID)
+      await this.substrateService.setOrderPaid(orderID);
     } catch (error) {
       console.log(error);
     }
   }
-  
+
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);

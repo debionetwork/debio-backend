@@ -13,11 +13,11 @@ describe('Bounty Controller (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         BountyModule,
-				ElasticsearchModule.registerAsync({
-					useFactory: async () => ({
-						node: process.env.ELASTICSEARCH_NODE,
-					}),
-				}),
+        ElasticsearchModule.registerAsync({
+          useFactory: async () => ({
+            node: process.env.ELASTICSEARCH_NODE,
+          }),
+        }),
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: process.env.HOST_POSTGRES,
@@ -29,24 +29,21 @@ describe('Bounty Controller (e2e)', () => {
           autoLoadEntities: true,
         }),
       ],
-    })  
-    .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('/bounty (POST) create data bounty to database', async () => {
-    const response = await request(app.getHttpServer())
-      .post('/bounty')
-			.send({
-				bounty_ocean: "hello world"
-			});
+    const response = await request(app.getHttpServer()).post('/bounty').send({
+      bounty_ocean: 'hello world',
+    });
 
-		expect(response.statusCode).toEqual(201);
+    expect(response.statusCode).toEqual(201);
 
-		expect(response.body).toEqual({
-			data: expect.any(Object),
-		});
+    expect(response.body).toEqual({
+      data: expect.any(Object),
+    });
   });
 });

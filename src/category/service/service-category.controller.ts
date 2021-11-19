@@ -1,5 +1,5 @@
-import { Controller, Get } from "@nestjs/common";
-import { ServiceCategoryService } from "./service-category.service";
+import { Controller, Get } from '@nestjs/common';
+import { ServiceCategoryService } from './service-category.service';
 
 @Controller('service-category')
 export class ServiceCategoryController {
@@ -10,9 +10,9 @@ export class ServiceCategoryController {
   @Get()
   getServiceCategory() {
     try {
-      return this.serviceCategoryService.getAll()
+      return this.serviceCategoryService.getAll();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 }

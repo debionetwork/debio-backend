@@ -5,24 +5,23 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 export class OrderService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async getOrderByHashId(
-    hash_id: string) {
-      const order = await this.elasticsearchService.search({
-        index: 'orders',
-        body: {
-          query: {
-            match: {
-              _id: {
-                query: hash_id
-              }
-            }
-          }
-        }
-      })
+  async getOrderByHashId(hash_id: string) {
+    const order = await this.elasticsearchService.search({
+      index: 'orders',
+      body: {
+        query: {
+          match: {
+            _id: {
+              query: hash_id,
+            },
+          },
+        },
+      },
+    });
 
-      const hits_order = order.body.hits.hits;
+    const hits_order = order.body.hits.hits;
 
-      return hits_order.length > 0 ? hits_order[0]._source : null;
+    return hits_order.length > 0 ? hits_order[0]._source : null;
   }
 
   async getOrderList(
@@ -35,25 +34,29 @@ export class OrderService {
 
     filter_array.push({
       bool: {
-        must: [
-          { match: { customer_id: customer_id } }
-        ],
+        must: [{ match: { customer_id: customer_id } }],
       },
     });
 
-    if (keyword && keyword.trim() !== "") {
+    if (keyword && keyword.trim() !== '') {
       filter_array.push({
         bool: {
           should: [
             { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
+            {
+              match_phrase_prefix: {
+                dna_sample_tracking_id: { query: keyword },
+              },
+            },
+            {
+              match_phrase_prefix: { 'service_info.name': { query: keyword } },
+            },
             { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
           ],
         },
       });
     }
-    
+
     const query = {
       bool: {
         filter: filter_array,
@@ -66,12 +69,12 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
-              order: "desc"
-            }
-          }
-        ]
+            'created_at.keyword': {
+              unmapped_type: 'keyword',
+              order: 'desc',
+            },
+          },
+        ],
       },
       from: 0,
       size: 10000,
@@ -115,24 +118,30 @@ export class OrderService {
       bool: {
         must: [
           { match: { customer_id: customer_id } },
-          { match: { bounty: true } }
+          { match: { bounty: true } },
         ],
       },
     });
 
-    if (keyword && keyword.trim() !== "") {
+    if (keyword && keyword.trim() !== '') {
       filter_array.push({
         bool: {
           should: [
             { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
+            {
+              match_phrase_prefix: {
+                dna_sample_tracking_id: { query: keyword },
+              },
+            },
+            {
+              match_phrase_prefix: { 'service_info.name': { query: keyword } },
+            },
             { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
           ],
         },
       });
     }
-    
+
     const query = {
       bool: {
         filter: filter_array,
@@ -145,12 +154,12 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
-              order: "desc"
-            }
-          }
-        ]
+            'created_at.keyword': {
+              unmapped_type: 'keyword',
+              order: 'desc',
+            },
+          },
+        ],
       },
       from: 0,
       size: 10000,

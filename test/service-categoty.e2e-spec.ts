@@ -1,9 +1,9 @@
-import { INestApplication } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ServiceCategory } from "../src/category/service/models/service-category.service";
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServiceCategory } from '../src/category/service/models/service-category.service';
 import request from 'supertest';
-import { ServiceCategoryModule } from "../src/category/service/service-category.module";
+import { ServiceCategoryModule } from '../src/category/service/service-category.module';
 
 describe('Service Category (e2e)', () => {
   let app: INestApplication;
@@ -35,14 +35,16 @@ describe('Service Category (e2e)', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
-          expect.arrayContaining([{
-            id: expect.any(Number),
-            service_categories: expect.any(String),
-            name: expect.any(String),
-            ticker: expect.any(String),
-            created_at: expect.any(String)
-          }])
-        )
-      })
+          expect.arrayContaining([
+            {
+              id: expect.any(Number),
+              service_categories: expect.any(String),
+              name: expect.any(String),
+              ticker: expect.any(String),
+              created_at: expect.any(String),
+            },
+          ]),
+        );
+      });
   });
 });

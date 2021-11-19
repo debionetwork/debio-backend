@@ -8,7 +8,7 @@ import { EscrowAccounts } from 'src/escrow/models/deposit.entity';
 import { SubstrateModule } from 'src/substrate/substrate.module';
 
 @Module({
-	imports: [
+  imports: [
     TypeOrmModule.forFeature([DataBounty]),
     TypeOrmModule.forFeature([EscrowAccounts]),
     forwardRef(() => SubstrateModule),
@@ -19,6 +19,6 @@ import { SubstrateModule } from 'src/substrate/substrate.module';
     }),
   ],
   providers: [BountyService],
-  controllers: [BountyController]
+  controllers: [BountyController],
 })
 export class BountyModule {}

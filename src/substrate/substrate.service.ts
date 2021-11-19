@@ -63,7 +63,7 @@ export class SubstrateService implements OnModuleInit {
       this.substrateService,
       this.dbioBalanceService,
       this.rewardService,
-      this.transactionLoggingService
+      this.transactionLoggingService,
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
@@ -76,7 +76,7 @@ export class SubstrateService implements OnModuleInit {
 
     this.serviceEventHandler = new ServiceEventHandler(
       this.api,
-      this.mailerManager
+      this.mailerManager,
     );
   }
 
@@ -208,7 +208,6 @@ export class SubstrateService implements OnModuleInit {
     ethAddress: string,
     substrateAddress: string,
   ) {
-
     return new Promise(async (resolve) => {
       const unsub = await this.api.tx.sudo
         .sudo(
@@ -233,7 +232,7 @@ export class SubstrateService implements OnModuleInit {
     });
   }
 
-  async submitStaking(hash: String, orderId: String) {
+  async submitStaking(hash: string, orderId: string) {
     const wallet = this.escrowWallet;
     const response = await this.api.tx.geneticTesting
       .submitDataBountyDetails(hash, orderId)
@@ -243,17 +242,11 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
-  async sendReward(
-    acountId: string,
-    amount: number
-    ) {      
-    const wallet = this.escrowWallet;    
-    const dbioUnit = 10**18
+  async sendReward(acountId: string, amount: number) {
+    const wallet = this.escrowWallet;
+    const dbioUnit = 10 ** 18;
     const response = await this.api.tx.rewards
-      .rewardFunds(
-        acountId,
-        (amount * dbioUnit).toString()
-      )
+      .rewardFunds(acountId, (amount * dbioUnit).toString())
       .signAndSend(wallet, {
         nonce: -1,
       });
@@ -261,20 +254,14 @@ export class SubstrateService implements OnModuleInit {
     console.log(response);
   }
 
-  async verificationLabWithSubstrate(
-    acountId: string,
-    labStatus:  string
-    ) {      
-      const wallet = this.sudoWallet;    
+  async verificationLabWithSubstrate(acountId: string, labStatus: string) {
+    const wallet = this.sudoWallet;
     const response = await this.api.tx.labs
-      .updateLabVerificationStatus(
-        acountId,
-        labStatus
-      )
+      .updateLabVerificationStatus(acountId, labStatus)
       .signAndSend(wallet, {
         nonce: -1,
       });
-      
+
     console.log(response);
   }
 }

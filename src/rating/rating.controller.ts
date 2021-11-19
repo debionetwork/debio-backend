@@ -22,61 +22,60 @@ export class RatingController {
   ) {}
 
   @Get('order/:order_id')
-  @ApiParam({ name: 'order_id'})
+  @ApiParam({ name: 'order_id' })
   async getByCustomer(@Param('order_id') order_id: string) {
     return {
-      data: await this.ratingService.getRatingByOrderId(order_id)
-    }
+      data: await this.ratingService.getRatingByOrderId(order_id),
+    };
   }
 
   @Post()
   @ApiBody({ type: CreateRatingDto })
-  async create(
-    @Body() data: CreateRatingDto,
-    @Res() response: Response
-    ) {
-    const isRatedByOrderId = await this.ratingService.getRatingByOrderId(data.order_id)
-    if(isRatedByOrderId){
+  async create(@Body() data: CreateRatingDto, @Res() response: Response) {
+    const isRatedByOrderId = await this.ratingService.getRatingByOrderId(
+      data.order_id,
+    );
+    if (isRatedByOrderId) {
       return {
-        message : "You've Rated Before"
-      }
+        message: "You've Rated Before",
+      };
     }
     await this.cacheManager.del('getAllRating');
     await this.cacheManager.del('ratings');
     await this.cacheManager.del(data.service_id);
     try {
-      response.status(201).send(await this.ratingService.insert(data))
+      response.status(201).send(await this.ratingService.insert(data));
     } catch (error) {
-      response.status(500).send(error)
+      response.status(500).send(error);
     }
   }
 
   @Get('service')
-  async getAllService(
-    @Res() response: Response
-    ) {
+  async getAllService(@Res() response: Response) {
     try {
-      response.status(200).send(await this.ratingService.getAllByServiceId())
+      response.status(200).send(await this.ratingService.getAllByServiceId());
     } catch (error) {
-      response.status(500).send(error)
+      response.status(500).send(error);
     }
   }
 
   @Get('service/:service_id')
-  @ApiParam({ name: 'service_id'})
+  @ApiParam({ name: 'service_id' })
   async getByServiceId(
     @Param('service_id') service_id: string,
-    @Res() response: Response
-    ) {
-    response.status(200).send(await this.ratingService.getRatingByServiceId(service_id))
+    @Res() response: Response,
+  ) {
+    response
+      .status(200)
+      .send(await this.ratingService.getRatingByServiceId(service_id));
   }
 
   @Get('lab/:lab_id')
-  @ApiParam({ name: 'lab_id'})
+  @ApiParam({ name: 'lab_id' })
   async getLabRating(
     @Param('lab_id') labor_id: string,
-    @Res() response: Response
-    ) {
+    @Res() response: Response,
+  ) {
     let cachingData = [];
     const valueCache = await this.cacheManager.get('ratings');
 
@@ -87,7 +86,7 @@ export class RatingController {
       );
 
       if (isCacheReady) {
-        response.status(200).send(isCacheReady)
+        response.status(200).send(isCacheReady);
       }
     }
     const labRatings = await this.ratingService.getRatingByLabId(labor_id);
@@ -95,7 +94,7 @@ export class RatingController {
       lab_id: labor_id,
       rating: null,
       sum: null,
-      count: labRatings.length
+      count: labRatings.length,
     };
 
     if (labRatings.length > 0) {
@@ -104,11 +103,10 @@ export class RatingController {
         labRatingCount += element.rating;
       });
       result.rating = labRatingCount / labRatings.length;
-      result.sum = labRatingCount
-
+      result.sum = labRatingCount;
     }
     cachingData.push(result);
     await this.cacheManager.set('ratings', cachingData, { ttl: 1800 });
-    response.status(200).send(result)
+    response.status(200).send(result);
   }
 }
