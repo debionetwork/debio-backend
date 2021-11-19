@@ -1,6 +1,10 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
+<<<<<<< HEAD
 import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
+=======
+import { ethers } from 'ethers';
+>>>>>>> 7d06712c23aa18703ccbadc460b629e16e806cf2
 import { StateService } from 'src/location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
@@ -86,12 +90,20 @@ export class ServiceRequestService {
       const currValueByCountryServiceCategoryDai = Number(
         requestByCountryDict[request.country]['services'][
           request.region+'-'+request.city+'-'+request.service_category
+<<<<<<< HEAD
         ].totalValue.dbio,
+=======
+        ].totalValue.dai,
+>>>>>>> 7d06712c23aa18703ccbadc460b629e16e806cf2
       );
       
       requestByCountryDict[request.country]['services'][
         request.region+'-'+request.city+'-'+request.service_category
+<<<<<<< HEAD
       ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
+=======
+      ].totalValue.dai = currValueByCountryServiceCategoryDai + value;
+>>>>>>> 7d06712c23aa18703ccbadc460b629e16e806cf2
     }
 
     // Restructure data into array
@@ -110,9 +122,14 @@ export class ServiceRequestService {
       const servicesArr = Object.values(services).map((s: any) => ({
         ...s,
         totalValue: {
+<<<<<<< HEAD
           dbio: s.totalValue.dbio,
           dai: (s.totalValue.dbio * oneDbioEquailToDai),
           usd: (s.totalValue.dbio * oneDbioEquailToDai * oneDaiEqualToUsd.price)
+=======
+          dai: s.totalValue.dai,
+          usd: (s.totalValue.dai * oneDaiEqualToUsd.price),
+>>>>>>> 7d06712c23aa18703ccbadc460b629e16e806cf2
         },
       }));
 
