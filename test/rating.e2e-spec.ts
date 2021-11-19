@@ -15,8 +15,8 @@ describe('Rating Controller (e2e)', () => {
     order_id: '0xj3mj4',
     rating_by: 'Jordan',
     rating: 4,
-    created: new Date()
-  }
+    created: new Date(),
+  };
 
   const RatingServiceProvider = {
     provide: RatingService,
@@ -24,12 +24,12 @@ describe('Rating Controller (e2e)', () => {
       create: jest.fn(),
       getRatingByLabId: jest.fn(),
     }),
-  }
+  };
 
   const RatingRepository = {
     create: jest.fn().mockResolvedValue(mockRatings),
-    save: jest.fn().mockReturnValue(Promise.resolve())
-  }
+    save: jest.fn().mockReturnValue(Promise.resolve()),
+  };
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -54,8 +54,7 @@ describe('Rating Controller (e2e)', () => {
           useValue: RatingRepository,
         },
       ],
-    })  
-    .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -67,9 +66,9 @@ describe('Rating Controller (e2e)', () => {
       .then((response) => {
         expect(response.body).toEqual({
           status: 'ok',
-          data : expect.any(Object)
-        })
-      })
+          data: expect.any(Object),
+        });
+      });
   });
 
   it('/rating (GET) by lab_id "3" success get from cache', () => {
@@ -78,9 +77,9 @@ describe('Rating Controller (e2e)', () => {
       .then((response) => {
         expect(response.body).toEqual({
           status: 'ok',
-          data : expect.any(Object)
-        })
-      })
+          data: expect.any(Object),
+        });
+      });
   });
 
   it('/rating (GET) by lab_id "zzzz" rating will be null', () => {
@@ -89,25 +88,19 @@ describe('Rating Controller (e2e)', () => {
       .then((response) => {
         expect(response.body).toEqual({
           status: 'ok',
-          data : {
+          data: {
             lab_id: 'zzzz',
-            rating: null
-          }
-        })
-      })
+            rating: null,
+          },
+        });
+      });
   });
 
   it('/rating (POST) return status 200', () => {
-    request(app.getHttpServer())
-    .post('/rating')
-    .send(mockRatings)
-    .expect(201);
+    request(app.getHttpServer()).post('/rating').send(mockRatings).expect(201);
   });
 
   it('/rating (POST) return status 500 Internal Server Error', () => {
-    request(app.getHttpServer())
-    .post('/rating')
-    .send(null)
-    .expect(500);
+    request(app.getHttpServer()).post('/rating').send(null).expect(500);
   });
 });

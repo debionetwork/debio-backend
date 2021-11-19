@@ -8,18 +8,18 @@ import { RewardDto } from 'src/reward/dto/reward.dto';
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
 export class GetDbioOnRegisterDto {
-  @ApiProperty({ type: String})
+  @ApiProperty({ type: String })
   accountId: string;
 
-  @ApiProperty({ description: 'RegistrationRole'})
+  @ApiProperty({ description: 'RegistrationRole' })
   role: RegistrationRole;
 }
 
 export class WalletBindingDTO {
-  @ApiProperty({ type: String})
+  @ApiProperty({ type: String })
   accountId: string;
 
-  @ApiProperty({ type: String})
+  @ApiProperty({ type: String })
   ethAddress: string;
 }
 
@@ -28,8 +28,8 @@ export class SubstrateController {
   substrateService: SubstrateService;
   constructor(
     substrateService: SubstrateService,
-    private rewardService: RewardService
-    ) {
+    private rewardService: RewardService,
+  ) {
     this.substrateService = substrateService;
   }
 
@@ -46,50 +46,49 @@ export class SubstrateController {
     if (debioApiKey != process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
-    const { 
-      accountId,
-      ethAddress
-  } = payload;
-    const rewardAmount = 1
+    const { accountId, ethAddress } = payload;
+    const rewardAmount = 1;
 
-    const dataInput : RewardDto = {
+    const dataInput: RewardDto = {
       address: accountId,
       ref_number: '-',
       reward_amount: rewardAmount,
       reward_type: 'Registered User',
       currency: 'DBIO',
-      created_at: new Date()
-    }
-    let gotRewardWording = ''
-    
-    let substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+      created_at: new Date(),
+    };
+    let gotRewardWording = '';
+
+    let substrateAddress =
+      await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
 
     // If user has not bound wallet before, send them 1 DBIO
     if (!substrateAddress) {
-       await this.substrateService.bindEthAddressToSubstrateAddress(
+      await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
         accountId,
-        );
-      substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
+      );
+      substrateAddress =
+        await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
 
-      if(substrateAddress){
-        await this.substrateService.sendReward(accountId, rewardAmount)
-        await this.rewardService.insert(dataInput)
-        gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`
+      if (substrateAddress) {
+        await this.substrateService.sendReward(accountId, rewardAmount);
+        await this.rewardService.insert(dataInput);
+        gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`;
       } else {
-        response
-        .status(401)
-        .send('Unauthorized Sudo')
+        response.status(401).send('Unauthorized Sudo');
       }
     } else {
       await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
         accountId,
-        );
+      );
     }
 
     return response
       .status(200)
-      .send(`eth-address ${ethAddress} bound to ${accountId} ${gotRewardWording}`);
+      .send(
+        `eth-address ${ethAddress} bound to ${accountId} ${gotRewardWording}`,
+      );
   }
 }

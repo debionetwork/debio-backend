@@ -30,7 +30,7 @@ export class EthereumController {
       }
     });
 
-    escrowContract.on('OrderPaid', async (order) => {    
+    escrowContract.on('OrderPaid', async (order) => {
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
   }

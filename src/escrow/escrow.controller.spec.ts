@@ -1,20 +1,20 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { EscrowController } from "./escrow.controller";
+import { Test, TestingModule } from '@nestjs/testing';
+import { EscrowController } from './escrow.controller';
 
-describe("EscrowController", () => {
-    let escrowController: EscrowController;
-    
-    beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
-            controllers: [EscrowController],
-        }).compile();
+describe('EscrowController', () => {
+  let escrowController: EscrowController;
 
-        escrowController = module.get<EscrowController>(EscrowController);
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [EscrowController],
+    }).compile();
+
+    escrowController = module.get<EscrowController>(EscrowController);
+  });
+
+  describe('root', () => {
+    it('Escrow Controller must defined', () => {
+      expect(escrowController).toBeDefined();
     });
-
-    describe("root", () => {
-        it('Escrow Controller must defined', () => {
-            expect(escrowController).toBeDefined();
-        });
-    });
+  });
 });

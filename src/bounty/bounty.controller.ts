@@ -6,20 +6,23 @@ import { CreateBountyDto } from './dto/create-bounty.dto';
 
 @Controller('bounty')
 export class BountyController {
-	constructor(
-		private substrateService: SubstrateService,
-		private readonly bountyService: BountyService
-	) {}
+  constructor(
+    private substrateService: SubstrateService,
+    private readonly bountyService: BountyService,
+  ) {}
 
-	@Post('/create-data-bounty')
-	@ApiBody({ type: CreateBountyDto })
-	async create(@Body() data: CreateBountyDto) {
-		const resultDataBounty = await this.bountyService.create(data);
-		
-		await this.substrateService.submitStaking(resultDataBounty.hash_bounty_ocean, data.order_id);
+  @Post('/create-data-bounty')
+  @ApiBody({ type: CreateBountyDto })
+  async create(@Body() data: CreateBountyDto) {
+    const resultDataBounty = await this.bountyService.create(data);
 
-		return {
-			data: resultDataBounty
-		}
-	}
+    await this.substrateService.submitStaking(
+      resultDataBounty.hash_bounty_ocean,
+      data.order_id,
+    );
+
+    return {
+      data: resultDataBounty,
+    };
+  }
 }

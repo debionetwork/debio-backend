@@ -1,8 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'rewards'})
+@Entity({ name: 'rewards' })
 export class Reward {
-  @PrimaryGeneratedColumn({ type: 'bigint'})
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: string;
 
   @Column()

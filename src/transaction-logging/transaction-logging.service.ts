@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { TransactionLoggingDto } from './dto/transaction-logging.dto';
 import { TransactionRequest } from './models/transaction-request.entity';
 
-
 @Injectable()
 export class TransactionLoggingService {
   constructor(
@@ -26,9 +25,11 @@ export class TransactionLoggingService {
   }
 
   getLoggingByOrderId(ref_number: string) {
-    return this.transactionRequestRepository.findOne({where : {
-      ref_number,
-      parent_id: 0
-    }})
+    return this.transactionRequestRepository.findOne({
+      where: {
+        ref_number,
+        parent_id: 0,
+      },
+    });
   }
 }
