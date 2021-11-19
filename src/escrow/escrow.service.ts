@@ -60,10 +60,8 @@ export class EscrowService {
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      const tx = await tokenContractWithSigner.fulfillOrder(
-        order.id,
-      );
-      console.log('fullfilled order customerId :', order.customerId ,' ->', tx);
+      const tx = await tokenContractWithSigner.fulfillOrder(order.id);
+      console.log('fullfilled order customerId :', order.customerId, ' ->', tx);
     } catch (error) {
       console.log(error);
     }

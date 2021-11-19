@@ -76,9 +76,7 @@ export class SubstrateService implements OnModuleInit {
       this.mailerManager,
     );
 
-    this.serviceRequestEventHandler = new ServiceRequestEventHandler(
-      this.api,
-    );
+    this.serviceRequestEventHandler = new ServiceRequestEventHandler(this.api);
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
