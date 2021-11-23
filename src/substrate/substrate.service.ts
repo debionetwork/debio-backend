@@ -216,7 +216,7 @@ export class SubstrateService implements OnModuleInit {
     .signAndSend(wallet, {
       nonce: -1,
     });
-    console.log(response);
+    console.log(`set ${ethAddress}`);
   }
 
   async submitStaking(hash: string, orderId: string) {
@@ -226,7 +226,7 @@ export class SubstrateService implements OnModuleInit {
       .signAndSend(wallet, {
         nonce: -1,
       });
-    console.log(response);
+    console.log("Submit Data Bounty");
   }
 
   async sendReward(acountId: string, amount: number) {
@@ -238,7 +238,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    console.log(`Send Reward ${amount} DBIO to ${acountId}`);
   }
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
@@ -249,6 +249,6 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    console.log(`lab ${acountId} is ${labStatus}`);
   }
 }
