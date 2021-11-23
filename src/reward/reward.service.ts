@@ -1,9 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { RewardDto } from "./dto/reward.dto";
-import { Reward } from "./models/reward.entity";
-
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { RewardDto } from './dto/reward.dto';
+import { Reward } from './models/reward.entity';
 
 @Injectable()
 export class RewardService {
@@ -12,11 +11,11 @@ export class RewardService {
     private readonly rewardRepository: Repository<Reward>,
   ) {}
 
-  insert(data : RewardDto) {
+  insert(data: RewardDto) {
     try {
-      return this.rewardRepository.save(data)
+      return this.rewardRepository.save(data);
     } catch (error) {
-      return { error }
+      return { error };
     }
   }
 }

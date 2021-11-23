@@ -11,15 +11,17 @@ export class BountyService {
   constructor(
     @InjectRepository(DataBounty)
     private readonly dataBountyRepository: Repository<DataBounty>,
-		private readonly elasticsearchService: ElasticsearchService,
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   async create(data: CreateBountyDto) {
     const data_bounty = new DataBounty();
 
-    data_bounty.hash_bounty_ocean = ethers.utils.sha256(ethers.utils.toUtf8Bytes(data.bounty_ocean));
+    data_bounty.hash_bounty_ocean = ethers.utils.sha256(
+      ethers.utils.toUtf8Bytes(data.bounty_ocean),
+    );
 
-		const save_result = await this.dataBountyRepository.save(data_bounty);
+    const save_result = await this.dataBountyRepository.save(data_bounty);
 
     return save_result;
   }

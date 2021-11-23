@@ -1,11 +1,11 @@
-import { INestApplication } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { City } from "../src/location/models/city.entity";
-import { Country } from "../src/location/models/country.entity";
-import { State } from "../src/location/models/state.entity";
-import { EthereumIndexedDataModule } from "../src/ethereum-indexed-data/ethereum-indexed-data.module";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { City } from '../src/location/models/city.entity';
+import { Country } from '../src/location/models/country.entity';
+import { State } from '../src/location/models/state.entity';
+import { EthereumIndexedDataModule } from '../src/ethereum-indexed-data/ethereum-indexed-data.module';
 
 describe('Service Request Controller (e2e)', () => {
   let app: INestApplication;
@@ -26,8 +26,7 @@ describe('Service Request Controller (e2e)', () => {
           autoLoadEntities: true,
         }),
       ],
-    })  
-    .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -39,20 +38,24 @@ describe('Service Request Controller (e2e)', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
-          expect.arrayContaining([{
-            country: expect.any(String),
-            totalRequests: expect.any(Number),
-            totalValue: expect.any(String),
-            services: expect.arrayContaining([{
-              name: expect.any(String),
+          expect.arrayContaining([
+            {
+              country: expect.any(String),
               totalRequests: expect.any(Number),
-              totalValue: {
-                dai: expect.any(String),
-                usd: expect.any(String),
-              }
-            }])
-          }])
-        )
-      })
+              totalValue: expect.any(String),
+              services: expect.arrayContaining([
+                {
+                  name: expect.any(String),
+                  totalRequests: expect.any(Number),
+                  totalValue: {
+                    dai: expect.any(String),
+                    usd: expect.any(String),
+                  },
+                },
+              ]),
+            },
+          ]),
+        );
+      });
   });
 });

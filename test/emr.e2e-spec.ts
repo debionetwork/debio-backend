@@ -35,12 +35,14 @@ describe('EMR Category (e2e)', () => {
       .expect(200)
       .then((response) => {
         expect(response.body).toEqual(
-          expect.arrayContaining([{
-            id: expect.any(Number),
-            category: expect.any(String),
-            created_at: expect.any(String)
-          }])
-        )
-      })
+          expect.arrayContaining([
+            {
+              id: expect.any(Number),
+              category: expect.any(String),
+              created_at: expect.any(String),
+            },
+          ]),
+        );
+      });
   });
 });

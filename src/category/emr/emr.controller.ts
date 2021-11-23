@@ -1,18 +1,16 @@
-import { Controller, Get } from "@nestjs/common";
-import { EmrService } from "./emr.service";
+import { Controller, Get } from '@nestjs/common';
+import { EmrService } from './emr.service';
 
 @Controller('emr-category')
 export class EmrController {
-  constructor(
-    private readonly emrService: EmrService,
-  ) {}
+  constructor(private readonly emrService: EmrService) {}
 
-  @Get() 
+  @Get()
   getCategory() {
     try {
-      return this.emrService.getAll()
+      return this.emrService.getAll();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 }

@@ -13,7 +13,7 @@ import { MailModule } from 'src/common/mailer/mailer.module';
     forwardRef(() => RewardModule),
     DbioBalanceModule,
     TransactionLoggingModule,
-    MailModule
+    MailModule,
   ],
   controllers: [SubstrateController],
   providers: [SubstrateService],

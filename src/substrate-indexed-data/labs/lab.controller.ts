@@ -8,16 +8,16 @@ export class LabController {
 
   // host/{country}/{city}/{category}?page=1&size=20
   @Get()
-  @ApiQuery({ name: 'country'})
-  @ApiQuery({ name: 'region'})
-  @ApiQuery({ name: 'city'})
-  @ApiQuery({ name: 'category'})
-  @ApiQuery({ name: 'service_flow', enum:[
-    'RequestTest',
-    'StakingRequestService'
-   ]})
-  @ApiQuery({ name: 'page', required: false})
-  @ApiQuery({ name: 'size', required: false})
+  @ApiQuery({ name: 'country' })
+  @ApiQuery({ name: 'region' })
+  @ApiQuery({ name: 'city' })
+  @ApiQuery({ name: 'category' })
+  @ApiQuery({
+    name: 'service_flow',
+    enum: ['RequestTest', 'StakingRequestService'],
+  })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
   async findByCountryCityCategory(
     @Query('country') country,
     @Query('region') region,

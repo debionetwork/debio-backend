@@ -1,9 +1,9 @@
-import { INestApplication } from "@nestjs/common";
+import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { ElasticsearchModule } from "@nestjs/elasticsearch";
-import { Test, TestingModule } from "@nestjs/testing";
-import { ServiceService } from "../src/substrate-indexed-data/services/service.service";
-import { ServiceController } from "../src/substrate-indexed-data/services/service.controller";
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { Test, TestingModule } from '@nestjs/testing';
+import { ServiceService } from '../src/substrate-indexed-data/services/service.service';
+import { ServiceController } from '../src/substrate-indexed-data/services/service.controller';
 
 describe('subtrate indexed data Services controller (e2e)', () => {
   let app: INestApplication;
@@ -19,8 +19,7 @@ describe('subtrate indexed data Services controller (e2e)', () => {
       ],
       controllers: [ServiceController],
       providers: [ServiceService],
-    })  
-    .compile();
+    }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -31,15 +30,13 @@ describe('subtrate indexed data Services controller (e2e)', () => {
       .get('/services/ID/ID-JK')
       .expect(200)
       .then((response) => {
-        expect(response.body).toEqual(
-          {
-            body : expect.anything(),
-            statusCode: 200,
-            headers: expect.anything(),
-            meta: expect.anything()
-          }
-        )
-      })
+        expect(response.body).toEqual({
+          body: expect.anything(),
+          statusCode: 200,
+          headers: expect.anything(),
+          meta: expect.anything(),
+        });
+      });
   });
 
   it('/services/ without params', () => {
@@ -47,7 +44,7 @@ describe('subtrate indexed data Services controller (e2e)', () => {
       .get('/services')
       .expect(404)
       .then((response) => {
-        expect(response.body).toHaveProperty('error')
-      })
+        expect(response.body).toHaveProperty('error');
+      });
   });
 });

@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'dbio_balance'})
+@Entity({ name: 'dbio_balance' })
 export class DbioBalance {
   @PrimaryGeneratedColumn()
   id: number;
@@ -9,5 +9,5 @@ export class DbioBalance {
   dai: number;
 
   @Column()
-  updated: Date
+  updated: Date;
 }

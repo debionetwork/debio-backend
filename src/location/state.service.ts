@@ -18,4 +18,13 @@ export class StateService extends TypeOrmQueryService<State> {
       where: { country_code },
     });
   }
+
+  async getState(country_code: string, state_code: string) {
+    return this.stateRepository.findOne({
+      where: {
+        country_code,
+        state_code,
+      },
+    });
+  }
 }

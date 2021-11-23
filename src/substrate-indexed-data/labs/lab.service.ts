@@ -20,11 +20,21 @@ export class LabService {
         query: {
           bool: {
             must: [
-              { match_phrase_prefix: { 'services.country': { query: country } } },
+              {
+                match_phrase_prefix: { 'services.country': { query: country } },
+              },
               { match_phrase_prefix: { 'services.region': { query: region } } },
               { match_phrase_prefix: { 'services.city': { query: city } } },
-              { match_phrase_prefix: { 'services.info.category': { query: category } } },
-              { match_phrase_prefix: { 'services.service_flow': { query: service_flow } } },
+              {
+                match_phrase_prefix: {
+                  'services.info.category': { query: category },
+                },
+              },
+              {
+                match_phrase_prefix: {
+                  'services.service_flow': { query: service_flow },
+                },
+              },
             ],
           },
         },
@@ -40,21 +50,25 @@ export class LabService {
       searchObj.from = from;
       searchObj.size = _size;
     }
-    const result = []
+    const result = [];
     const labs = await this.elasticsearchService.search(searchObj);
-    labs.body.hits.hits.forEach(lab => {
-      lab._source.services = lab._source.services.filter( (serviceFilter) => (serviceFilter.info['category'] === category && serviceFilter.service_flow === service_flow))
-      lab._source.services.forEach(labService => {
-        labService.lab_detail = lab._source.info
-        labService.certifications = lab._source.certifications
-        labService.verification_status = lab._source.verification_status
-        labService.blockMetaData = lab._source.blockMetaData
-        labService.service_flow = lab._source.services.service_flow
-        labService.lab_id = lab._source.account_id
-        result.push(labService)
-      });      
+    labs.body.hits.hits.forEach((lab) => {
+      lab._source.services = lab._source.services.filter(
+        (serviceFilter) =>
+          serviceFilter.info['category'] === category &&
+          serviceFilter.service_flow === service_flow,
+      );
+      lab._source.services.forEach((labService) => {
+        labService.lab_detail = lab._source.info;
+        labService.certifications = lab._source.certifications;
+        labService.verification_status = lab._source.verification_status;
+        labService.blockMetaData = lab._source.blockMetaData;
+        labService.service_flow = lab._source.services.service_flow;
+        labService.lab_id = lab._source.account_id;
+        result.push(labService);
+      });
     });
-    
+
     return { result };
   }
 }
