@@ -211,7 +211,7 @@ export class SubstrateService implements OnModuleInit {
     return new Promise(async (resolve) => {
       const unsub = await this.api.tx.sudo
         .sudo(
-          this.api.tx.userProfile.sudoSetEthAddress(
+          this.api.tx.userProfile.adminSetEthAddress(
             substrateAddress,
             ethAddress,
           ),
