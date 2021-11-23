@@ -72,6 +72,7 @@ jobs:
             ELASTICSEARCH_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASS_EMAIL
+            EMAILS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -106,6 +107,7 @@ jobs:
           ELASTICSEARCH_PASSWORD=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }}
           EMAIL=${{ steps.secrets.outputs.EMAIL }}
           PASS_EMAIL=${{ steps.secrets.outputs.PASS_EMAIL }}
+          EMAILS=${{ steps.secrets.outputs.EMAILS }}
           BUCKET_NAME=${{ steps.secrets.outputs.BUCKET_NAME }}
           STORAGE_BASE_URI=${{ steps.secrets.outputs.STORAGE_BASE_URI }}
           EOF
@@ -219,6 +221,7 @@ jobs:
             ELASTICSEARCH_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
             EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASS_EMAIL
+            EMAILS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -267,6 +270,7 @@ jobs:
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
+              --set-string config.email.emails=${{ steps.secrets.outputs.EMAILS }} \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
