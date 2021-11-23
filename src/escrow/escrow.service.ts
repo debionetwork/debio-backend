@@ -51,7 +51,6 @@ export class EscrowService {
   }
 
   async orderFulfilled(order) {
-    console.log('[orderFulfilled] order: ', order);
     try {
       const provider = await new ethers.providers.JsonRpcProvider(
         process.env.WEB3_RPC_HTTPS,
@@ -61,9 +60,13 @@ export class EscrowService {
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      const tx = await tokenContractWithSigner.fulfillOrder(order.id, provider);
-      console.log('fullfilled order customerId :', order.customerId, ' ->', tx);
-    } catch (error) {}
+      const tx = await tokenContractWithSigner.fulfillOrder(
+        order.id,
+      );
+      console.log('fullfilled order customerId :', order.customerId ,' ->', tx);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async setOrderPaidWithSubstrate(orderID: string) {
