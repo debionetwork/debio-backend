@@ -208,28 +208,15 @@ export class SubstrateService implements OnModuleInit {
     ethAddress: string,
     substrateAddress: string,
   ) {
-    return new Promise(async (resolve) => {
-      const unsub = await this.api.tx.sudo
-        .sudo(
-          this.api.tx.userProfile.adminSetEthAddress(
-            substrateAddress,
-            ethAddress,
-          ),
-        )
-        .signAndSend(this.sudoWallet, { nonce: -1 }, (result) => {
-          if (result.status.isInBlock) {
-            this.logger.log(
-              `Transaction included at blockHash ${result.status.asInBlock}`,
-            );
-          } else if (result.status.isFinalized) {
-            this.logger.log(
-              `Transaction finalized at blockHash ${result.status.asFinalized}`,
-            );
-            unsub();
-            resolve(true);
-          }
-        });
+    const wallet = this.escrowWallet;
+    const response = await   this.api.tx.userProfile.adminSetEthAddress(
+      substrateAddress,
+      ethAddress,
+    )
+    .signAndSend(wallet, {
+      nonce: -1,
     });
+    console.log(response);
   }
 
   async submitStaking(hash: string, orderId: string) {
