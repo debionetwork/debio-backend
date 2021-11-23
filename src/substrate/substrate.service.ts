@@ -123,7 +123,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderRefunded(orderId: string) {
-    const wallet = this.sudoWallet;
+    const wallet = this.escrowWallet;
     const response = await this.api.tx.orders
       .setOrderRefunded(orderId)
       .signAndSend(wallet, {
@@ -193,7 +193,7 @@ export class SubstrateService implements OnModuleInit {
     .signAndSend(wallet, {
       nonce: -1,
     });
-    console.log(`set ${ethAddress}`);
+    console.log(`set eth address: ${ethAddress}`);
   }
 
   async submitStaking(hash: string, orderId: string) {
@@ -219,7 +219,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
-    const wallet = this.sudoWallet;
+    const wallet = this.escrowWallet;
     const response = await this.api.tx.labs
       .updateLabVerificationStatus(acountId, labStatus)
       .signAndSend(wallet, {
