@@ -73,14 +73,6 @@ export class EthereumService {
     }
   }
 
-  getServiceRequestContract(): SmartContract {
-    const contract: SmartContract = this.ethersContract.create(
-      process.env.SERVICE_REQUEST_CONTRACT_ADDRESS,
-      serviceRequestContract.abi,
-    );
-    return contract;
-  }
-
   async createWallet(privateKey: string): Promise<WalletSigner> {
     const wallet: WalletSigner = await this.ethersSigner.createWallet(
       privateKey,
