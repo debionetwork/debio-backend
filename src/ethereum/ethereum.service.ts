@@ -46,7 +46,7 @@ export class EthereumService {
   async getContract(): Promise<any> {
     try {
       const contract: SmartContract = this.ethersContract.create(
-        process.env.CONTRACT_ADDRESS,
+        process.env.ESCROW_CONTRACT_ADDRESS,
         ABI,
       );
 
