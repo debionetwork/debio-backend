@@ -47,7 +47,7 @@ export class SubstrateService implements OnModuleInit {
 
     const keyring = new Keyring({ type: 'sr25519' });
     this.adminWallet = await keyring.addFromUri(
-      process.env.ESCROW_SUBSTRATE_MNEMONIC,
+      process.env.ADMIN_SUBSTRATE_MNEMONIC,
     );
 
     this.orderEventHandler = new OrderEventHandler(
