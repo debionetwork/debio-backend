@@ -107,28 +107,4 @@ export class EscrowService {
    * @param amount : amount of erc20 being transferred to customer
    * @returns string
    */
-  async getRefundGasEstimationFee(
-    customerAddress: string,
-    amount: number | string,
-  ): Promise<string> {
-    const escrowAddress = process.env.DEBIO_ETH_ADDRESS;
-    const erc20Address = process.env.CONTRACT_ADDRESS;
-    const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
-
-    const iface = new ethers.utils.Interface(ABI);
-    const encoded = iface.encodeFunctionData('transferFrom', [
-      escrowAddress,
-      customerAddress,
-      tokenAmount,
-    ]);
-
-    const gasEstimation: string =
-      await this.ethereumService.getGasEstimationFee(
-        escrowAddress,
-        erc20Address,
-        encoded,
-      );
-
-    return gasEstimation;
-  }
 }
