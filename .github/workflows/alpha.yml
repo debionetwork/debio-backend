@@ -237,7 +237,7 @@ jobs:
               --set-string config.postgres.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
               --set-string config.postgres.dbLocations=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.escrowSubstrateMnemonic="${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}" \
+              --set-string config.adminSubstrateMnemonic="${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}" \
               --set-string config.web3RPC=${{ steps.secrets.outputs.WEB3_RPC }} \
               --set-string config.web3RPCHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string config.debioEscrowPrivateKey=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }} \
