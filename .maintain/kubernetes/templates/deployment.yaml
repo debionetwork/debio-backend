@@ -1,0 +1,256 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "debio-backend.fullname" . }}
+  labels:
+    {{- include "debio-backend.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "debio-backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "debio-backend.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "debio-backend.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.config.google.serviceAccountBase64 }}
+      volumes:
+        - name: google-service-account-credentials
+          secret:
+            secretName: {{ include "debio-backend.serviceAccountSecretName" . }}
+            items:
+              - key: serviceAccount
+                path: sa_credentials.json
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- if .Values.config.swagger.enable }}
+            - name: SWAGGER_ENABLE
+              value: "{{ .Values.config.swagger.enable }}"
+            {{- end }}
+            {{- if .Values.config.port }}
+            - name: PORT
+              value: "{{ .Values.config.port }}"
+            {{- end }}
+            {{- if and .Values.config.postgres.host .Values.config.postgres.username .Values.config.postgres.password .Values.config.postgres.dbname }}
+            - name: HOST_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.postgresSecretName" . }}
+                  key: host
+            - name: USERNAME_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.postgresSecretName" . }}
+                  key: username
+            - name: PASSWORD_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.postgresSecretName" . }}
+                  key: password
+            - name: DB_POSTGRES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.postgresSecretName" . }}
+                  key: dbname
+            {{- end }}
+            {{- if .Values.config.postgres.dbCity }}
+            - name: DB_LOCATIONS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.dbCitySecretName" . }}
+                  key: dbCity
+            {{- end }}
+            {{- if .Values.config.postgres.dbLocations }}
+            - name: DB_LOCATIONS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.dbLocationsSecretName" . }}
+                  key: dbLocations
+            {{- end }}
+            {{- if .Values.config.substrateURL }}
+            - name: SUBSTRATE_URL
+              value: {{ .Values.config.substrateURL }}
+            {{- end }}
+            {{- if .Values.config.adminSubstrateMnemonic }}
+            - name: ADMIN_SUBSTRATE_MNEMONIC
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.adminSubstrateMnemonicSecretName" . }}
+                  key: adminSubstrateMnemonic
+            {{- end }}
+            {{- if .Values.config.web3RPC }}
+            - name: WEB3_RPC
+              value: {{ .Values.config.web3RPC }}
+            {{- end }}
+            {{- if .Values.config.web3RPCHttps }}
+            - name: WEB3_RPC_HTTPS
+              value: {{ .Values.config.web3RPCHttps }}
+            {{- end }}
+            {{- if .Values.config.debioEscrowPrivateKey }}
+            - name: DEBIO_ESCROW_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.debioEscrowPrivateKeySecretName" . }}
+                  key: debioEscrowPrivateKey
+            {{- end }}
+            {{- if .Values.config.escrowContractAddress }}
+            - name: ESCROW_CONTRACT_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.escrowContractAddressSecretName" . }}
+                  key: escrowContractAddress
+            {{- end }}
+            {{- if .Values.config.coinmarketcapApiKey }}
+            - name: COINMARKETCAP_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.coinmarketcapApiKeySecretName" . }}
+                  key: coinmarketcapApiKey
+            {{- end }}
+            {{- if .Values.config.recaptchaSecretKey }}
+            - name: RECAPTCHA_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.recaptchaSecretKeySecretName" . }}
+                  key: recaptchaSecretKey
+            {{- end }}
+            {{- if .Values.config.debioApiKey }}
+            - name: DEBIO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.debioApiKeySecretName" . }}
+                  key: debioApiKey
+            {{- end }}
+            {{- if .Values.config.elastic.node }}
+            - name: ELASTICSEARCH_NODE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.elasticNodeSecretName" . }}
+                  key: node
+            {{- end }}
+            {{- if .Values.config.elastic.username }}
+            - name: ELASTICSEARCH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.elasticUsernameSecretName" . }}
+                  key: username
+            {{- end }}
+            {{- if .Values.config.elastic.password }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.elasticPasswordSecretName" . }}
+                  key: password
+            {{- end }}
+            {{- if and .Values.config.email.email .Values.config.email.password .Values.config.email.emails }}
+            - name: EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.emailSecretName" . }}
+                  key: email
+            - name: PASS_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.emailSecretName" . }}
+                  key: password
+            - name: EMAILS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.emailSecretName" . }}
+                  key: emails
+            {{- end }}
+            {{- if .Values.config.bucketname }}
+            - name: BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.bucketnameSecretName" . }}
+                  key: bucketname
+            {{- end }}
+            {{- if .Values.config.storageBaseURI }}
+            - name: STORAGE_BASE_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "debio-backend.storageBaseURISecretName" . }}
+                  key: storageBaseURI
+            {{- end }}
+            {{- if .Values.config.google.serviceAccountBase64 }}
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/google/sa_credentials.json
+            {{- end }}
+          {{- if .Values.config.google.serviceAccountBase64 }}
+          volumeMounts:
+            - name: google-service-account-credentials
+              mountPath: /etc/google
+              readOnly: true
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          {{- if .Values.config.startupProbe.path }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.config.startupProbe.path }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+            successThreshold: 1
+          {{- end }}
+          {{- if .Values.config.livenessProbe.path }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.config.livenessProbe.path }}
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          {{- end }}
+          {{- if .Values.config.readinessProbe.path }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.config.readinessProbe.path }}
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          {{- end }}
