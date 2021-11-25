@@ -1,5 +1,12 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Query, Req } from '@nestjs/common';
-import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { 
+  Controller, 
+  Get, 
+  HttpException, 
+  HttpStatus, 
+  Param, 
+  Query,
+} from '@nestjs/common';
+import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 
 @Controller('orders')
