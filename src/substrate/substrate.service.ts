@@ -22,8 +22,7 @@ import { ServiceRequestEventHandler } from './serviceRequestEvent';
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private api: ApiPromise;
-  private escrowWallet: any;
-  private sudoWallet: KeyringPair;
+  private adminWallet: any;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
   private serviceRequestEventHandler: ServiceRequestEventHandler;
@@ -47,11 +46,8 @@ export class SubstrateService implements OnModuleInit {
     });
 
     const keyring = new Keyring({ type: 'sr25519' });
-    this.escrowWallet = await keyring.addFromUri(
+    this.adminWallet = await keyring.addFromUri(
       process.env.ESCROW_SUBSTRATE_MNEMONIC,
-    );
-    this.sudoWallet = await keyring.addFromUri(
-      process.env.SUDO_SUBSTRATE_MNEMONIC,
     );
 
     this.orderEventHandler = new OrderEventHandler(
@@ -112,7 +108,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderPaid(orderId: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const response = await this.api.tx.orders
       .setOrderPaid(orderId)
       .signAndSend(wallet, {
@@ -123,7 +119,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async setOrderRefunded(orderId: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const response = await this.api.tx.orders
       .setOrderRefunded(orderId)
       .signAndSend(wallet, {
@@ -185,7 +181,7 @@ export class SubstrateService implements OnModuleInit {
     ethAddress: string,
     substrateAddress: string,
   ) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const response = await   this.api.tx.userProfile.adminSetEthAddress(
       substrateAddress,
       ethAddress,
@@ -197,7 +193,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async submitStaking(hash: string, orderId: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const response = await this.api.tx.geneticTesting
       .submitDataBountyDetails(hash, orderId)
       .signAndSend(wallet, {
@@ -207,7 +203,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async sendReward(acountId: string, amount: number) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const dbioUnit = 10 ** 18;
     const response = await this.api.tx.rewards
       .rewardFunds(acountId, (amount * dbioUnit).toString())
@@ -219,7 +215,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
-    const wallet = this.escrowWallet;
+    const wallet = this.adminWallet;
     const response = await this.api.tx.labs
       .updateLabVerificationStatus(acountId, labStatus)
       .signAndSend(wallet, {
