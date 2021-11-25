@@ -1,26 +1,20 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Param,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param, Query, Req } from '@nestjs/common';
 import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { OrderService } from './order.service';
 
 @Controller('orders')
 export class OrderController {
   constructor(readonly orderService: OrderService) {}
-
+  
   // host/{hash_id}
   @Get(':hash_id')
-  async getOrderById(@Param('hash_id') hashId: string) {
+  async getOrderById(
+    @Param('hash_id') hashId: string,
+  ) {
     const order = await this.orderService.getOrderByHashId(hashId);
 
     if (!order) {
-      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+      throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
     }
 
     return order;
@@ -28,32 +22,33 @@ export class OrderController {
 
   // host/list/{customer_id}?query=&page=&size=
   @Get('/list/:customer_id')
-  @ApiParam({ name: 'customer_id' })
-  @ApiQuery({ name: 'keyword', required: false })
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'size', required: false })
-  async getOrderByProductNameStatusLabName(
+  @ApiParam({ name: 'customer_id'})
+  @ApiQuery({ name: 'keyword', required: false})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
+  async getOrderByCustomer(
     @Param() params,
     @Query('keyword') keyword: string,
     @Query('page') page,
     @Query('size') size,
   ) {
     const orders = await this.orderService.getOrderList(
+      'customer',
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
       page,
       size,
     );
-
+    
     return orders;
   }
 
   // host/bounty_list/{customer_id}?query=&page=&size=
   @Get('/bounty_list/:customer_id')
-  @ApiParam({ name: 'customer_id' })
-  @ApiQuery({ name: 'keyword', required: false })
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'size', required: false })
+  @ApiParam({ name: 'customer_id'})
+  @ApiQuery({ name: 'keyword', required: false})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
   async getBountyByProductNameStatusLabName(
     @Param() params,
     @Query('keyword') keyword: string,
@@ -66,7 +61,30 @@ export class OrderController {
       page,
       size,
     );
+    
+    return orders;
+  }
 
+  // host/list/lab/{:lab_id}?query=&page=&size=
+  @Get('/list/lab/:lab_id')
+  @ApiParam({ name: 'lab_id'})
+  @ApiQuery({ name: 'keyword', required: false})
+  @ApiQuery({ name: 'page', required: false})
+  @ApiQuery({ name: 'size', required: false})
+  async getOrderByLab(
+    @Param() params,
+    @Query('keyword') keyword: string,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const orders = await this.orderService.getOrderList(
+      'lab',
+      params.lab_id,
+      keyword ? keyword.toLowerCase() : '',
+      page,
+      size,
+    );
+    
     return orders;
   }
 }
