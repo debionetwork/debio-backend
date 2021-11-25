@@ -17,83 +17,6 @@ export class EscrowService {
   ) {
     this.utils = new Utils();
   }
-  async handlePaymentToEscrow(from, amount) {
-    console.log('[handlePaymentToEscrow] from:', from, ' amount:', amount);
-    try {
-      const strAmount = await formatEther(amount);
-      console.log(strAmount);
-
-      const substrateAddr =
-        await this.substrateService.getSubstrateAddressByEthAddress(from);
-      const lastOrderID = await this.substrateService.getLastOrderByCustomer(
-        substrateAddr,
-      );
-
-      const orderDetail = await this.substrateService.getOrderDetailByOrderID(
-        lastOrderID,
-      );
-
-      // get sellerid (lab id)
-      const sellerID = orderDetail['sellerId'];
-
-      const priceList = this.utils.GetDetailPrice(orderDetail);
-      const totalPrice = priceList[0] + priceList[1];
-
-      if (parseInt(strAmount, 10) != totalPrice) {
-        console.log(
-          '[handlePaymentToEscrow] return cancel.',
-          strAmount,
-          ' : ',
-          totalPrice,
-        );
-        return;
-      }
-
-      // get balance of sellerId (lab)
-      const balance = await this.substrateService.getBalanceAccount(sellerID);
-
-      // show balance of lab
-      console.log('balance of lab : ', balance);
-
-      // if balance is less than 0.5
-      if (balance < 0.5) {
-        // send 1 DBIO to lab
-        await this.substrateService.sendDbioFromFaucet(
-          sellerID,
-          '1000000000000000000',
-        );
-      }
-
-      const now = new Date();
-
-      await this.elasticsearchService.index({
-        index: 'payment-history',
-        refresh: 'wait_for',
-        id: lastOrderID,
-        body: {
-          id: lastOrderID,
-          sendedAmount: strAmount,
-          serviceId: orderDetail['serviceId'],
-          customerBoxPublicKey: orderDetail['customerBoxPublicKey'],
-          sellerId: orderDetail['sellerId'],
-          dnaSampleTrackingId: orderDetail['dnaSampleTrackingId'],
-          currency: orderDetail['currency'],
-          prices: orderDetail['prices'],
-          additionalPrices: orderDetail['additionalPrices'],
-          status: orderDetail['status'],
-          createdAt: orderDetail['createdAt'],
-          updatedAt: orderDetail['updatedAt'],
-          paymentDate: `${now.getUTCDate()}-${
-            now.getUTCMonth() + 1
-          }-${now.getUTCFullYear()}`,
-        },
-      });
-
-      await this.substrateService.setOrderPaid(lastOrderID);
-    } catch (error) {
-      console.log('[handlePaymentToEscrow] failed: ', error);
-    }
-  }
 
   async createOrder(request) {
     console.log('[createOrder] request: ', request);
@@ -128,7 +51,6 @@ export class EscrowService {
   }
 
   async orderFulfilled(order) {
-    console.log('[orderFulfilled] order: ', order);
     try {
       const provider = await new ethers.providers.JsonRpcProvider(
         process.env.WEB3_RPC_HTTPS,
@@ -138,9 +60,11 @@ export class EscrowService {
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
-      const tx = await tokenContractWithSigner.fulfillOrder(order.id, provider);
+      const tx = await tokenContractWithSigner.fulfillOrder(order.id);
       console.log('fullfilled order customerId :', order.customerId, ' ->', tx);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async setOrderPaidWithSubstrate(orderID: string) {

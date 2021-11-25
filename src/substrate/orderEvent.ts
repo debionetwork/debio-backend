@@ -143,15 +143,23 @@ export class OrderEventHandler {
       const amountToForward = totalPrice + totalAdditionalPrice;
 
       if (
-        orderByOrderId['order_flow'] === 'StakingRequestService' &&
-        serviceByOrderId['service_flow'] === 'StakingRequestService'
+        orderByOrderId['orderFlow'] === 'StakingRequestService' &&
+        serviceByOrderId['serviceFlow'] === 'StakingRequestService'
       ) {
+        const serviceRequest = await (
+          await this.substrateApi.query.serviceRequest.serviceInvoiceByOrderId(
+            order.id,
+          )
+        ).toJSON();
         const debioToDai = Number(
           (await this.dbioBalanceService.getDebioBalance()).dai,
         );
         const servicePrice = order['price'][0].value * debioToDai;
         // send reward to customer
         await this.substrateService.sendReward(order.customerId, servicePrice);
+        await this.substrateApi.tx.serviceRequest.serviceInvoiceByOrderId(
+          serviceRequest['hash_'],
+        );
 
         // Write Logging Reward Customer Staking Request Service
         const dataCustomerLoggingInput: RewardDto = {
@@ -181,6 +189,8 @@ export class OrderEventHandler {
         };
         await this.rewardService.insert(dataLabLoggingInput);
       }
+
+      await this.escrowService.orderFulfilled(order);
 
       this.logger.log('OrderFulfilled Event');
       this.logger.log('Forwarding payment to lab');

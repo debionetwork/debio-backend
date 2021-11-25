@@ -24,12 +24,6 @@ export class EthereumController {
       this.ethereumService.setLastBlock(blockNum);
     });
 
-    contract.on('Transfer', async (from, to, amount, event) => {
-      if (to == process.env.DEBIO_ETH_ADDRESS) {
-        await this.escrowService.handlePaymentToEscrow(from, amount);
-      }
-    });
-
     escrowContract.on('OrderPaid', async (order) => {
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
