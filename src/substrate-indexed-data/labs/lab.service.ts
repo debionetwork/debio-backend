@@ -64,7 +64,6 @@ export class LabService {
         labService.verification_status = lab._source.verification_status;
         labService.blockMetaData = lab._source.blockMetaData;
         labService.lab_id = lab._source.account_id;
-        console.log( labService);
         
         result.push(labService);
       });
