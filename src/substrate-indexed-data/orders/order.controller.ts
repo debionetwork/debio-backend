@@ -1,9 +1,9 @@
 import { 
-  Controller, 
-  Get, 
-  HttpException, 
-  HttpStatus, 
-  Param, 
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
   Query,
 } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
