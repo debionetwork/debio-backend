@@ -58,17 +58,12 @@ jobs:
             POSTGRES_DB:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_CITY:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
             POSTGRES_DB_LOCATIONS:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            DEBIO_ETH_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_ETH_ADDRESS
-            ESCROW_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_SUBSTRATE_MNEMONIC
-            FAUCET_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/FAUCET_SUBSTRATE_MNEMONIC
-            SUDO_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/SUDO_SUBSTRATE_MNEMONIC
+            SUBSTRATE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUBSTRATE_URL            
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC                        
             WEB3_RPC:${{ secrets.DEV_GCP_PROJECT_ID }}/WEB3_RPC
             WEB3_RPC_HTTPS:${{ secrets.DEV_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/CONTRACT_ADDRESS
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
-            SERVICE_REQUEST_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/SERVICE_REQUEST_CONTRACT_ADDRESS
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS            
             COINMARKETCAP_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
             RECAPTCHA_SECRET_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
             DEBIO_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_API_KEY
@@ -93,17 +88,12 @@ jobs:
           DB_POSTGRES=${{ steps.secrets.outputs.POSTGRES_DB }}
           DB_CITY=${{ steps.secrets.outputs.POSTGRES_DB_CITY }}
           DB_LOCATIONS=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }}
-          SUBSTRATE_URL=${{ steps.secrets.outputs.SUBSTRATE_URL }}
-          DEBIO_ETH_ADDRESS=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }}
-          ESCROW_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }}
-          FAUCET_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.FAUCET_SUBSTRATE_MNEMONIC }}
-          SUDO_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.SUDO_SUBSTRATE_MNEMONIC }}
+          SUBSTRATE_URL=${{ steps.secrets.outputs.SUBSTRATE_URL }}          
+          ADMIN_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}                    
           WEB3_RPC=${{ steps.secrets.outputs.WEB3_RPC }}
           WEB3_RPC_HTTPS=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }}
-          DEBIO_ESCROW_PRIVATE_KEY=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }}
-          CONTRACT_ADDRESS=${{ steps.secrets.outputs.CONTRACT_ADDRESS }}
-          ESCROW_CONTRACT_ADDRESS=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }}
-          SERVICE_REQUEST_CONTRACT_ADDRESS=${{ steps.secrets.outputs.SERVICE_REQUEST_CONTRACT_ADDRESS }}
+          DEBIO_ESCROW_PRIVATE_KEY=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }}          
+          ESCROW_CONTRACT_ADDRESS=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }}          
           COINMARKETCAP_API_KEY=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }}
           DEBIO_API_KEY=${{ steps.secrets.outputs.DEBIO_API_KEY }}
@@ -191,17 +181,12 @@ jobs:
             POSTGRES_DB:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_CITY:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
             POSTGRES_DB_LOCATIONS:${{ secrets.DEV_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            DEBIO_ETH_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_ETH_ADDRESS
-            ESCROW_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_SUBSTRATE_MNEMONIC
-            FAUCET_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/FAUCET_SUBSTRATE_MNEMONIC
-            SUDO_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/SUDO_SUBSTRATE_MNEMONIC
+            SUBSTRATE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/SUBSTRATE_URL            
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.DEV_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC                        
             WEB3_RPC:${{ secrets.DEV_GCP_PROJECT_ID }}/WEB3_RPC
             WEB3_RPC_HTTPS:${{ secrets.DEV_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/CONTRACT_ADDRESS
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
-            SERVICE_REQUEST_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/SERVICE_REQUEST_CONTRACT_ADDRESS
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.DEV_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS            
             COINMARKETCAP_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
             RECAPTCHA_SECRET_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
             DEBIO_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/DEBIO_API_KEY
@@ -242,16 +227,11 @@ jobs:
               --set-string config.postgres.dbCity=${{ steps.secrets.outputs.POSTGRES_DB_CITY }} \
               --set-string config.postgres.dbLocations=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }} \
               --set-string config.substrateURL=${{ steps.secrets.outputs.SUBSTRATE_URL }} \
-              --set-string config.debioETHAddress=${{ steps.secrets.outputs.DEBIO_ETH_ADDRESS }} \
-              --set-string config.escrowSubstrateMnemonic="${{ steps.secrets.outputs.ESCROW_SUBSTRATE_MNEMONIC }}" \
-              --set-string config.faucetSubstrateMnemonic="${{ steps.secrets.outputs.FAUCET_SUBSTRATE_MNEMONIC }}" \
-              --set-string config.sudoSubstrateMnemonic="${{ steps.secrets.outputs.SUDO_SUBSTRATE_MNEMONIC }}" \
+              --set-string config.adminSubstrateMnemonic="${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}" \
               --set-string config.web3RPC=${{ steps.secrets.outputs.WEB3_RPC }} \
               --set-string config.web3RPCHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string config.debioEscrowPrivateKey=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }} \
-              --set-string config.contractAddress=${{ steps.secrets.outputs.CONTRACT_ADDRESS }} \
               --set-string config.escrowContractAddress=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }} \
-              --set-string config.serviceRequestContractAddress=${{ steps.secrets.outputs.SERVICE_REQUEST_CONTRACT_ADDRESS }} \
               --set-string config.coinmarketcapApiKey=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }} \
               --set-string config.recaptchaSecretKey=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }} \
               --set-string config.debioApiKey=${{ steps.secrets.outputs.DEBIO_API_KEY }} \
