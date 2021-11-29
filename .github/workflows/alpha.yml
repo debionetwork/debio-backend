@@ -229,6 +229,7 @@ jobs:
             helm upgrade debio-backend debio/debio-backend \
               --install \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
               --set-string config.postgres.host=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.username=${{ steps.secrets.outputs.POSTGRES_USERNAME }} \
