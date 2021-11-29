@@ -35,12 +35,17 @@ export class OrderService {
     const filter_array = [];
 
     let match;
+    let mustNot = [];
     switch (type) {
       case "customer":
         match = { customer_id: hash_id };
       break;
       case "lab":
         match = { seller_id: hash_id };
+        
+        mustNot.push({
+          match: { status: { query: 'Unpaid' } }
+        });
       break;
       default:
         match = { customer_id: hash_id };
@@ -52,6 +57,7 @@ export class OrderService {
         must: [
           { match: match }
         ],
+        must_not: mustNot,
       },
     });
 
