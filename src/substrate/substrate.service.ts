@@ -157,6 +157,9 @@ export class SubstrateService implements OnModuleInit {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
         const { event } = record;
+        if(event.section!=='system'){
+          console.log('ininiiii',event.section, event.data[0].toJSON());
+        }
         switch (
           event.section // event.section == pallet name
         ) {
