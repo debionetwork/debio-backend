@@ -19,3 +19,9 @@ export class Service {
   info: ServiceInfo;
   service_flow: ServiceFlow;
 }
+
+export * from './expected-duration';
+export * from './price';
+export * from './price-by-currency';
+export * from './service-flow';
+export * from './service-info';
