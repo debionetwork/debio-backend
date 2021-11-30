@@ -1,15 +1,17 @@
 import { ApiPromise } from '@polkadot/api';
-import { MailerManager } from 'src/common/mailer/mailer.manager';
-import { LabRegisterCertification } from 'src/common/mailer/models/lab-register.model/certification';
-import { LabRegister } from 'src/common/mailer/models/lab-register.model/lab-register.model';
-import { LabRegisterService } from 'src/common/mailer/models/lab-register.model/service';
-import { Lab } from 'src/common/polkadot-provider/models/labs';
-import { Service } from 'src/common/polkadot-provider/models/services';
-import {
+import { 
+  MailerManager, 
+  LabRegister, 
+  LabRegisterService, 
+  LabRegisterCertification 
+} from '../common/mailer';
+import { 
+  Lab, 
+  Service,
   queryCertificationsByMultipleIds,
   queryLabById,
-} from 'src/common/polkadot-provider/query/labs';
-import { queryServicesByMultipleIds } from 'src/common/polkadot-provider/query/services';
+  queryServicesByMultipleIds
+} from '../common/polkadot-provider';
 
 export class ServiceEventHandler {
   constructor(private api: ApiPromise, private mailerManager: MailerManager) {}
