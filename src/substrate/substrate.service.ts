@@ -16,7 +16,7 @@ import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
-import { MailerManager } from 'src/common/mailer/mailer.manager';
+import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
 
 @Injectable()
