@@ -1,11 +1,15 @@
 import { Controller, Headers, Post, Query, Res } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
+import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
 import { VerificationService } from './verification.service';
 
 @Controller('lab-verification')
 export class VerificationController {
-  constructor(private readonly verificationService: VerificationService) {}
+  constructor(
+    private readonly processEnvProxy: ProcessEnvProxy,
+    private readonly verificationService: VerificationService
+  ) {}
 
   @Post()
   @ApiQuery({ name: 'acount_id' })
@@ -20,7 +24,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (debioApiKey != process.env.DEBIO_API_KEY) {
+      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.vericationLab(
