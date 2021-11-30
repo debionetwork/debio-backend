@@ -52,6 +52,10 @@ export class ServiceRequestService {
         _source: { request },
       } = req;
 
+      if (request.status !== 'Open'){
+        continue
+      }
+
       if (!requestByCountryDict[request.country]) {
         requestByCountryDict[request.country] = {
           totalRequests: 0,
