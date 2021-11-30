@@ -50,8 +50,6 @@ describe('Cloud Storage Controller Unit Tests', () => {
 
   it('should be defined', () => {
     // Assert
-    expect(dateTimeProxyMock).toBeDefined();
-    expect(cloudStorageServiceMock).toBeDefined();
     expect(cloudStorageController).toBeDefined();
   });
 
