@@ -2,16 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
 import { File, Bucket } from '@google-cloud/storage';
 import { CloudStorageController } from '../../../src/cloud-storage/cloud-storage.controller';
-import { MockType } from '../mock';
+import { dateTimeProxyMockFactory, MockType } from '../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../src/common/date-time/date-time.proxy';
 
 describe('Cloud Storage Controller Unit Tests', () => {
-  const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(() => ({
-    now: jest.fn(entity => entity),
-    nowAndAdd: jest.fn(entity => entity)
-  }));
-
   const fileMockFactory: () => MockType<File> = jest.fn(() => ({
     getSignedUrl: jest.fn(entity => entity)
   }));
