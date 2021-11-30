@@ -35,12 +35,17 @@ export class OrderService {
     const filter_array = [];
 
     let match;
+    let mustNot = [];
     switch (type) {
-      case "customer":
+      case 'customer':
         match = { customer_id: hash_id };
       break;
-      case "lab":
+      case 'lab':
         match = { seller_id: hash_id };
+        
+        mustNot.push({
+          match: { status: { query: 'Unpaid' } }
+        });
       break;
       default:
         match = { customer_id: hash_id };
@@ -52,6 +57,7 @@ export class OrderService {
         must: [
           { match: match }
         ],
+        must_not: mustNot,
       },
     });
 
@@ -59,10 +65,34 @@ export class OrderService {
       filter_array.push({
         bool: {
           should: [
-            { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
-            { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
+            { 
+              match_phrase_prefix: { 
+                status: { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                dna_sample_tracking_id: { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                'service_info.name': { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                'lab_info.name': { 
+                  query: keyword 
+                } 
+              } 
+            },
           ],
         },
       });
@@ -80,9 +110,9 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
-              order: "desc"
+            'created_at.keyword': {
+              unmapped_type: 'keyword',
+              order: 'desc'
             }
           }
         ]
@@ -138,10 +168,34 @@ export class OrderService {
       filter_array.push({
         bool: {
           should: [
-            { match_phrase_prefix: { status: { query: keyword } } },
-            { match_phrase_prefix: { dna_sample_tracking_id: { query: keyword } } },
-            { match_phrase_prefix: { 'service_info.name': { query: keyword } } },
-            { match_phrase_prefix: { 'lab_info.name': { query: keyword } } },
+            { 
+              match_phrase_prefix: { 
+                status: { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                dna_sample_tracking_id: { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                'service_info.name': { 
+                  query: keyword 
+                } 
+              } 
+            },
+            { 
+              match_phrase_prefix: { 
+                'lab_info.name': { 
+                  query: keyword 
+                } 
+              } 
+            },
           ],
         },
       });
@@ -159,9 +213,9 @@ export class OrderService {
         query: query,
         sort: [
           {
-            "created_at.keyword": {
-              unmapped_type: "keyword",
-              order: "desc"
+            'created_at.keyword': {
+              unmapped_type: 'keyword',
+              order: 'desc'
             }
           }
         ]
