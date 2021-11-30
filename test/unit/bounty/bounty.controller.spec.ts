@@ -2,18 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BountyController } from '../../../src/bounty/bounty.controller';
 import { DataStakingEvents } from '../../../src/bounty/models/data-staking-events.entity';
 import { DataStakingDto } from '../../../src/bounty/dto/data-staking.dto';
-import { MockType, repositoryMockFactory } from '../mock';
+import { dateTimeProxyMockFactory, MockType, repositoryMockFactory } from '../mock';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../src/common/date-time/date-time.proxy';
 
 describe('Bounty Controller Unit Tests', () => {
-  const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(() => ({
-    now: jest.fn(entity => entity),
-    nowAndAdd: jest.fn(entity => entity)
-  }));
-  
   let bountyController: BountyController;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let dataStakingEventsRepositoryMock: MockType<Repository<DataStakingEvents>>;
