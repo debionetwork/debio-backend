@@ -3,8 +3,9 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import { RewardDto } from '../reward/dto/reward.dto';
 import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
-import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { SubstrateService } from './substrate.service';
+import { ethers } from 'ethers'
+
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
@@ -74,6 +75,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
   async onDataStaked(event) {
     console.log('DataStaked');
     const dataStaked = event.data[0].toJSON();
+    dataStaked.trackingId = ethers.utils.toUtf8String(dataStaked.trackingId)
     const dataOrder = await (
       await this.api.query.orders.orders(dataStaked.order_id)
     ).toJSON();

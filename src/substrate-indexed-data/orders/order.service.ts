@@ -61,7 +61,7 @@ export class OrderService {
       },
     });
 
-    if (keyword && keyword.trim() !== '') {
+    if (keyword && keyword.trim() !== "") {
       filter_array.push({
         bool: {
           should: [
@@ -164,7 +164,7 @@ export class OrderService {
       },
     });
 
-    if (keyword && keyword.trim() !== '') {
+    if (keyword && keyword.trim() !== "") {
       filter_array.push({
         bool: {
           should: [

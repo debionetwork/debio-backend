@@ -52,7 +52,11 @@ export class ServiceRequestService {
         _source: { request },
       } = req;
 
-      if (!requestByCountryDict[request.country] && request.status === 'Open') {
+      if (request.status !== 'Open'){
+        continue
+      }
+
+      if (!requestByCountryDict[request.country]) {
         requestByCountryDict[request.country] = {
           totalRequests: 0,
           totalValue: 0,
@@ -71,8 +75,7 @@ export class ServiceRequestService {
       if (
         !requestByCountryDict[request.country]['services'][
           request.region + '-' + request.city + '-' + request.service_category
-        ] &&
-        request.status === 'Open'
+        ]        
       ) {
         requestByCountryDict[request.country]['services'][
           request.region + '-' + request.city + '-' + request.service_category

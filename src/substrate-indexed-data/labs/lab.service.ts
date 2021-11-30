@@ -63,8 +63,8 @@ export class LabService {
         labService.certifications = lab._source.certifications;
         labService.verification_status = lab._source.verification_status;
         labService.blockMetaData = lab._source.blockMetaData;
-        labService.service_flow = lab._source.services.service_flow;
         labService.lab_id = lab._source.account_id;
+        
         result.push(labService);
       });
     });
