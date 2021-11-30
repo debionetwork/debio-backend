@@ -17,7 +17,7 @@ describe('Service Category Service Unit Tests', () => {
         { provide: getRepositoryToken(ServiceCategory), useFactory: repositoryMockFactory },
       ],
     }).compile();
-    serviceCategoryService = module.get<ServiceCategoryService>(ServiceCategoryService);
+    serviceCategoryService = module.get(ServiceCategoryService);
     repositoryMock = module.get(getRepositoryToken(ServiceCategory));
   });
 
