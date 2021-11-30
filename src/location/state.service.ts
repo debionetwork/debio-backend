@@ -16,6 +16,9 @@ export class StateService extends TypeOrmQueryService<State> {
   getAllRegion(country_code: string) {
     return this.stateRepository.find({
       where: { country_code },
+      order: {
+        'name' : 'ASC'
+      }
     });
   }
 
