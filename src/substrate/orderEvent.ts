@@ -8,6 +8,7 @@ import { SubstrateService } from './substrate.service';
 import { Logger } from '@nestjs/common';
 import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
+import { ethers } from 'ethers'
 
 export class OrderEventHandler {
   constructor(
@@ -48,6 +49,12 @@ export class OrderEventHandler {
   async onOrderCreated(event) {
     console.log('OrderCreated!');
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
 
     console.log(order);
     //insert logging to DB
@@ -72,6 +79,12 @@ export class OrderEventHandler {
   async onOrderPaid(event) {
     console.log('OrderPaid!');
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
     const orderHistory = await this.loggingService.getLoggingByOrderId(
       order.id,
     );
@@ -98,6 +111,12 @@ export class OrderEventHandler {
   async onOrderFulfilled(event) {
     console.log('Order Fulfilled!');
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
     const orderHistory = await this.loggingService.getLoggingByOrderId(
       order.id,
     );
@@ -211,6 +230,12 @@ export class OrderEventHandler {
     console.log('OrderRefunded!');
 
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
     const orderHistory = await this.loggingService.getLoggingByOrderId(
       order.id,
     );
@@ -237,6 +262,12 @@ export class OrderEventHandler {
   async onOrderCancelled(event) {
     console.log('OrderCancelled');
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
     const orderHistory = await this.loggingService.getLoggingByOrderId(
       order.id,
     );
@@ -267,6 +298,12 @@ export class OrderEventHandler {
   async onOrderFailed(event) {
     console.log('OrderFailed!');
     const order = event.data[0].toJSON();
+    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+    order.prices[0].value = Number(order.prices[0].value) / 10**18
+    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+    
 
     await this.escrowService.refundOrder(order.id);
     await this.substrateService.setOrderRefunded(order.id);
