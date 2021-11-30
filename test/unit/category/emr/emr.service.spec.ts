@@ -26,7 +26,7 @@ describe('Emr Service Unit Tests', () => {
     expect(emrService).toBeDefined();
   });
 
-  it('should find all categories', async () => {
+  it('should find all categories', () => {
     // Arrange
     const categories = [
         {

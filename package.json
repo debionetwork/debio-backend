@@ -41,6 +41,7 @@
     "ethers": "^5.4.4",
     "fs": "0.0.1-security",
     "handlebars": "^4.7.7",
+    "jest-when": "^3.4.2",
     "nestjs-ethers": "^0.3.1",
     "nodemailer": "^6.6.3",
     "pg": "^8.6.0",
