@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { DateTimeProxy } from 'src/common/date-time/date-time.proxy';
-import { RewardDto } from 'src/reward/dto/reward.dto';
-import { RewardService } from 'src/reward/reward.service';
-import { SubstrateService } from 'src/substrate/substrate.service';
+import { DateTimeProxy } from '../common/date-time';
+import { RewardDto } from '../reward/dto/reward.dto';
+import { RewardService } from '../reward/reward.service';
+import { SubstrateService } from '../substrate/substrate.service';
 
 @Injectable()
 export class VerificationService {
@@ -12,15 +12,15 @@ export class VerificationService {
     private readonly rewardService: RewardService,
   ) {}
 
-  async vericationLab(acountId: string, verification_status: string) {
+  async vericationLab(acountId: string, verificationStatus: string) {
     // Update Status Lab to Verified
     await this.subtrateService.verificationLabWithSubstrate(
       acountId,
-      verification_status,
+      verificationStatus,
     );
 
     //Send Reward 2 DBIO
-    if (verification_status === 'Verified') {
+    if (verificationStatus === 'Verified') {
       await this.subtrateService.sendReward(acountId, 2);
     }
 
@@ -33,6 +33,6 @@ export class VerificationService {
       currency: 'DBIO',
       created_at: new Date(this.dateTimeProxy.now()),
     };
-    await this.rewardService.insert(dataInput);
+    return await this.rewardService.insert(dataInput);
   }
 }
