@@ -1,9 +1,11 @@
-import { Controller, Get, Query, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
+import { DateTimeProxy } from 'src/common/date-time/date-time.proxy';
 
 @Controller('gcs')
 export class CloudStorageController {
   constructor(
+    private readonly dateTime: DateTimeProxy,
     private readonly cloudStorageService: GCloudStorageService,
   ) {}
 
@@ -19,7 +21,7 @@ export class CloudStorageController {
       const [url] = await file.getSignedUrl({
         version: 'v4',
         action: 'write',
-        expires: Date.now() + URL_VALID_DURATION,
+        expires: this.dateTime.nowAndAdd(URL_VALID_DURATION),
         contentType: 'application/x-www-form-urlencoded',
       });
 
@@ -31,7 +33,7 @@ export class CloudStorageController {
     const [url] = await file.getSignedUrl({
       version: 'v4',
       action: 'read',
-      expires: Date.now() + URL_VALID_DURATION,
+      expires: this.dateTime.nowAndAdd(URL_VALID_DURATION),
       contentType: 'application/x-www-form-urlencoded',
     });
 
