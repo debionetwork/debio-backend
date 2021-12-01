@@ -29,16 +29,12 @@ export class ServiceRequestEventHandler {
   }
 
   async sendEmailNotificationServiceRequestCreated(event) {
-    console.log('masuk email nih',  process.env.EMAILS.split(','));
-    
     const serviceRequest = await event.data[1].toJSON();
-
-    console.log(1, serviceRequest);
-    
 
     serviceRequest.country = ethers.utils.toUtf8String(serviceRequest.country)
     serviceRequest.region = ethers.utils.toUtf8String(serviceRequest.region)
     serviceRequest.city = ethers.utils.toUtf8String(serviceRequest.city)
+    serviceRequest.stakingAmount = Number(serviceRequest.stakingAmount) / 10**18
     serviceRequest.serviceCategory = ethers.utils.toUtf8String(serviceRequest.serviceCategory)
 
     const context = {
@@ -51,7 +47,6 @@ export class ServiceRequestEventHandler {
       currency: 'DBIO'
     }
 
-    console.log('service Request: ', serviceRequest);
     await this.mailerManager.sendCustomerStakingRequestServiceEmail(
       process.env.EMAILS.split(','),
       context
