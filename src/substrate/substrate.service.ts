@@ -189,7 +189,7 @@ export class SubstrateService implements OnModuleInit {
     .signAndSend(wallet, {
       nonce: -1,
     });
-    console.log(`set eth address: ${ethAddress}`);
+    return response.toJSON()
   }
 
   async submitStaking(hash: string, orderId: string) {
