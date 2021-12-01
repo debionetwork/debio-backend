@@ -1,7 +1,7 @@
 import { Controller, Headers, Post, Query, Res } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { ProcessEnvProxy } from 'src/common/process-env/process-env.proxy';
+import { ProcessEnvProxy } from '../common/process-env';
 import { VerificationService } from './verification.service';
 
 @Controller('lab-verification')
@@ -12,7 +12,7 @@ export class VerificationController {
   ) {}
 
   @Post()
-  @ApiQuery({ name: 'acount_id' })
+  @ApiQuery({ name: 'account_id' })
   @ApiQuery({
     name: 'verification_status',
     enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
@@ -20,7 +20,7 @@ export class VerificationController {
   async updateStatusLab(
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
-    @Query('acount_id') acount_id: string,
+    @Query('account_id') account_id: string,
     @Query('verification_status') verification_status: string,
   ) {
     try {
@@ -28,7 +28,7 @@ export class VerificationController {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.vericationLab(
-        acount_id,
+        account_id,
         verification_status,
       );
       let isVerified = '';
@@ -37,7 +37,7 @@ export class VerificationController {
       }
       return response
         .status(200)
-        .send(`Lab ${acount_id} ${verification_status}${isVerified}`);
+        .send(`Lab ${account_id} ${verification_status}${isVerified}`);
     } catch (error) {
       return response.status(500).send(error);
     }
