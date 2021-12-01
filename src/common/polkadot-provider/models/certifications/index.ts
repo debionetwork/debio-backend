@@ -10,3 +10,5 @@ export class Certification {
   owner_id: string;
   info: CertificationInfo;
 }
+
+export * from './certification-info';

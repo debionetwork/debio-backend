@@ -15,3 +15,6 @@ export class Lab {
   verification_status: LabVerificationStatus;
   info: LabInfo;
 }
+
+export * from './lab-info';
+export * from './lab-verification-status';
