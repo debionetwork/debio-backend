@@ -17,7 +17,6 @@ describe('Verification Service Unit Tests', () => {
   }));
   let substrateServiceMock: MockType<SubstrateService>;
   
-  
   const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(() => ({
     insert: jest.fn(entity => entity),
   }));
@@ -63,8 +62,10 @@ describe('Verification Service Unit Tests', () => {
     when(rewardServiceMock.insert).calledWith(PARAM).mockReturnValue(EXPECTED_RESULTS);
     dateTimeProxyMock.now.mockReturnValue(NOW);
 
-    // Assert
+    // Act
     const RESULTS = await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
+    
+    // Assert
     expect(RESULTS).toEqual(EXPECTED_RESULTS);
     expect(substrateServiceMock.verificationLabWithSubstrate).toHaveBeenCalledTimes(1);
     expect(substrateServiceMock.verificationLabWithSubstrate).toHaveBeenCalledWith(ACCOUNT_ID, VERIFICATION_STATUS);
@@ -90,9 +91,11 @@ describe('Verification Service Unit Tests', () => {
     const EXPECTED_RESULTS = "EXPECTED_RESULTS";
     when(rewardServiceMock.insert).calledWith(PARAM).mockReturnValue(EXPECTED_RESULTS);
     dateTimeProxyMock.now.mockReturnValue(NOW);
+    
+    // Act
+    const RESULTS = await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
 
     // Assert
-    const RESULTS = await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
     expect(RESULTS).toEqual(EXPECTED_RESULTS);
     expect(substrateServiceMock.verificationLabWithSubstrate).toHaveBeenCalledTimes(1);
     expect(substrateServiceMock.verificationLabWithSubstrate).toHaveBeenCalledWith(ACCOUNT_ID, VERIFICATION_STATUS);
