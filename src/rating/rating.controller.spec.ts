@@ -5,8 +5,6 @@ import { LabRating } from './models/rating.entity';
 import { RatingController } from './rating.controller';
 import { RatingService } from './rating.service';
 import { Cache } from 'cache-manager';
-import { async } from 'rxjs';
-import { id } from '@ethersproject/hash';
 
 describe('Rating Controller', () => {
   let cacheManager: Cache;

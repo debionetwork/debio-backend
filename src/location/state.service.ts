@@ -13,14 +13,17 @@ export class StateService extends TypeOrmQueryService<State> {
     super(stateRepository);
   }
 
-  getAllRegion(country_code: string) {
-    return this.stateRepository.find({
+  async getAllRegion(country_code: string) {
+    return await this.stateRepository.find({
       where: { country_code },
+      order: {
+        'name' : 'ASC'
+      }
     });
   }
 
   async getState(country_code: string, state_code: string) {
-    return this.stateRepository.findOne({
+    return await this.stateRepository.findOne({
       where: {
         country_code,
         state_code,

@@ -57,26 +57,25 @@ export class SubstrateController {
       currency: 'DBIO',
       created_at: new Date(),
     };
-    let gotRewardWording = '';
+    let reward = null;
 
     let substrateAddress =
       await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
 
     // If user has not bound wallet before, send them 1 DBIO
     if (!substrateAddress) {
-      await this.substrateService.bindEthAddressToSubstrateAddress(
+      const bindingEth = await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
         accountId,
       );
-      substrateAddress =
-        await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
-
-      if (substrateAddress) {
+      
+      if (bindingEth) {
+        substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
         await this.substrateService.sendReward(accountId, rewardAmount);
+        reward = rewardAmount
         await this.rewardService.insert(dataInput);
-        gotRewardWording = ` And Got Reward ${rewardAmount} DBIO`;
       } else {
-        response.status(401).send('Unauthorized Sudo');
+        response.status(401).send('Binding Error');
       }
     } else {
       await this.substrateService.bindEthAddressToSubstrateAddress(
@@ -87,8 +86,9 @@ export class SubstrateController {
 
     return response
       .status(200)
-      .send(
-        `eth-address ${ethAddress} bound to ${accountId} ${gotRewardWording}`,
-      );
+      .send({
+        reward,
+        message :`eth-address ${ethAddress} bound to ${accountId}`
+      });
   }
 }

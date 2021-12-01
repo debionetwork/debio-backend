@@ -12,11 +12,11 @@ import { EscrowService } from '../escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
+import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
-import { MailerManager } from 'src/common/mailer/mailer.manager';
+import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
 
 @Injectable()
@@ -72,7 +72,10 @@ export class SubstrateService implements OnModuleInit {
       this.mailerManager,
     );
 
-    this.serviceRequestEventHandler = new ServiceRequestEventHandler(this.api);
+    this.serviceRequestEventHandler = new ServiceRequestEventHandler(
+      this.api,
+      this.mailerManager,
+      );
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -189,7 +192,7 @@ export class SubstrateService implements OnModuleInit {
     .signAndSend(wallet, {
       nonce: -1,
     });
-    console.log(`set eth address: ${ethAddress}`);
+    return response.toJSON()
   }
 
   async submitStaking(hash: string, orderId: string) {

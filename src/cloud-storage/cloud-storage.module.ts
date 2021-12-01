@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
-import { DataStakingSyncEvents } from './models/data-staking-sync-events.entity';
+import { DateTimeModule } from 'src/common/date-time/date-time.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -13,9 +13,8 @@ require('dotenv').config(); // eslint-disable-line
       storageBaseUri: process.env.STORAGE_BASE_URI,
       predefinedAcl: 'private',
     }),
-    TypeOrmModule.forFeature([DataStakingSyncEvents]),
+    DateTimeModule,
   ],
-  exports: [TypeOrmModule],
   controllers: [CloudStorageController],
 })
 export class CloudStorageModule {}

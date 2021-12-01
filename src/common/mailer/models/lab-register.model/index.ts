@@ -14,3 +14,6 @@ export class LabRegister {
   certifications: Array<LabRegisterCertification>;
   services: Array<LabRegisterService>;
 }
+
+export * from './service';
+export * from './certification';

@@ -14,7 +14,6 @@ import { TransactionRequest } from './transaction-logging/models/transaction-req
 import { RecaptchaModule } from './recaptcha/recaptcha.module';
 import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { BountyModule } from './bounty/bounty.module';
-import { DataBounty } from './bounty/models/bounty.entity';
 import { EmrModule } from './category/emr/emr.module';
 import { ServiceCategoryModule } from './category/service/service-category.module';
 import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
@@ -33,7 +32,7 @@ require('dotenv').config(); // eslint-disable-line
       username: process.env.USERNAME_POSTGRES,
       password: process.env.PASSWORD_POSTGRES,
       database: process.env.DB_POSTGRES,
-      entities: [LabRating, DataBounty, TransactionRequest],
+      entities: [LabRating, TransactionRequest],
       autoLoadEntities: true,
     }),
     TypeOrmModule.forRoot({
