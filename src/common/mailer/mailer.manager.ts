@@ -1,5 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { CountryService } from 'src/location/country.service';
+import { StateService } from 'src/location/state.service';
 import { 
   CustomerStakingRequestService, 
   LabRegister 
@@ -7,15 +9,27 @@ import {
 
 @Injectable()
 export class MailerManager {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly countryService: CountryService,
+    private readonly stateService: StateService
+    ) {}
 
   async sendCustomerStakingRequestServiceEmail(
-    to: string,
+    to: string | string[],
     context: CustomerStakingRequestService,
   ) {
+    const countryName = await (await this.countryService.getByIso2Code(context.country)).name
+    const regionName = await (await this.stateService.getState(
+      context.country,
+      context.state
+      )).name
+      
+    context.country = countryName
+    context.state = regionName
     this.mailerService.sendMail({
       to: to,
-      subject: `New Service Request - [${context.service_name}] - [${context.city}, ${context.state}, ${context.country}]`,
+      subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
       template: './customer-staking-request-service',
       context: context,
     });
@@ -38,7 +52,7 @@ export class MailerManager {
 
     this.mailerService.sendMail({
       to: to,
-      subject: `New Lab Register – [${context.lab_name}] - [${context.city}, ${context.state}, ${context.country}]`,
+      subject: `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`,
       template: './lab-register',
       context: {
         profile_image: context.profile_image,
