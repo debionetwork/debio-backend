@@ -16,6 +16,9 @@ export class CityService extends TypeOrmQueryService<City> {
   getAllCity(country_code: string, state_code: string) {
     return this.cityRepository.find({
       where: { country_code, state_code },
+      order: {
+        'name': 'ASC'
+      }
     });
   }
 

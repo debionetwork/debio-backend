@@ -15,7 +15,11 @@ export class CountryService extends TypeOrmQueryService<Country> {
   }
 
   getAll() {
-    return this.countryRepository.find();
+    return this.countryRepository.find({
+      order: {
+        'name' : 'ASC'
+      }
+    });
   }
 
   async getByIso2Code(iso2: string) {
