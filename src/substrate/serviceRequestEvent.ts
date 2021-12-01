@@ -59,6 +59,7 @@ export class ServiceRequestEventHandler {
       currency: 'DBIO'
     }
 
+    console.log('service Request: ', serviceRequest);
     await this.mailerManager.sendCustomerStakingRequestServiceEmail(
       process.env.EMAILS.split(','),
       context
