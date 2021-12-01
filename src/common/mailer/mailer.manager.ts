@@ -10,7 +10,7 @@ export class MailerManager {
   constructor(private readonly mailerService: MailerService) {}
 
   async sendCustomerStakingRequestServiceEmail(
-    to: string,
+    to: string | string[],
     context: CustomerStakingRequestService,
   ) {
     this.mailerService.sendMail({

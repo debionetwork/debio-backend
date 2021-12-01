@@ -12,7 +12,7 @@ import { EscrowService } from '../escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
+import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
@@ -72,7 +72,10 @@ export class SubstrateService implements OnModuleInit {
       this.mailerManager,
     );
 
-    this.serviceRequestEventHandler = new ServiceRequestEventHandler(this.api);
+    this.serviceRequestEventHandler = new ServiceRequestEventHandler(
+      this.api,
+      this.mailerManager,
+      );
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -157,6 +160,11 @@ export class SubstrateService implements OnModuleInit {
     this.api.query.system.events((events) => {
       events.forEach((record) => {
         const { event } = record;
+        if(event.section!=='system' && event.section!=='balances'){
+          console.log('masuk proses->', event.section, event.method);
+          console.log('data->', event.data.toJSON());
+        }
+        
         switch (
           event.section // event.section == pallet name
         ) {
