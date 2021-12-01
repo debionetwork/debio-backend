@@ -17,7 +17,7 @@ describe('Emr Service Unit Tests', () => {
         { provide: getRepositoryToken(EmrCategory), useFactory: repositoryMockFactory },
       ],
     }).compile();
-    emrService = module.get<EmrService>(EmrService);
+    emrService = module.get(EmrService);
     repositoryMock = module.get(getRepositoryToken(EmrCategory));
   });
 
@@ -26,7 +26,7 @@ describe('Emr Service Unit Tests', () => {
     expect(emrService).toBeDefined();
   });
 
-  it('should find all categories', async () => {
+  it('should find all categories', () => {
     // Arrange
     const categories = [
         {

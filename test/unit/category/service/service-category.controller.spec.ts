@@ -28,7 +28,7 @@ describe('Service Category Controller Unit Tests', () => {
     expect(serviceCategoryController).toBeDefined();
   });
 
-  it('should find all categories', async () => {
+  it('should find all categories', () => {
     // Arrange
     const categories = [
         {

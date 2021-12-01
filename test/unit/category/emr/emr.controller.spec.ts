@@ -19,7 +19,7 @@ describe('Emr Controller Unit Tests', () => {
         { provide: EmrService, useFactory: emrServiceMockFactory },
       ],
     }).compile();
-    emrController = module.get<EmrController>(EmrController);
+    emrController = module.get(EmrController);
     emrServiceMock = module.get(EmrService);
   });
 
@@ -28,7 +28,7 @@ describe('Emr Controller Unit Tests', () => {
     expect(emrController).toBeDefined();
   });
 
-  it('should find all categories', async () => {
+  it('should find all categories', () => {
     // Arrange
     const categories = [
         {

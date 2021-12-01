@@ -37,40 +37,40 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
-          project_id: ${{ secrets.PREPROD_GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.PREPROD_GCP_SA_KEY }}
+          project_id: ${{ secrets.TESTNET_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TESTNET_GCP_SA_KEY }}
           export_default_credentials: true
       - name: Get secrets
         id: secrets
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
-            SWAGGER_ENABLE:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SWAGGER_ENABLE
-            PORT:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PORT
-            POSTGRES_HOST:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_HOST
-            POSTGRES_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_USERNAME
-            POSTGRES_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_PASSWORD
-            POSTGRES_DB:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB
-            POSTGRES_DB_CITY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
-            POSTGRES_DB_LOCATIONS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
-            WEB3_RPC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC
-            WEB3_RPC_HTTPS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
-            DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
-            COINMARKETCAP_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
-            RECAPTCHA_SECRET_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
-            DEBIO_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_API_KEY
-            ELASTICSEARCH_NODE:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
-            ELASTICSEARCH_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
-            ELASTICSEARCH_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
-            EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAIL
-            PASS_EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASS_EMAIL
-            EMAILS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAILS
-            BUCKET_NAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/BUCKET_NAME
-            STORAGE_BASE_URI:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            SWAGGER_ENABLE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SWAGGER_ENABLE
+            PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PORT
+            POSTGRES_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_HOST
+            POSTGRES_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_USERNAME
+            POSTGRES_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_PASSWORD
+            POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_CITY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
+            POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
+            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
+            WEB3_RPC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC
+            WEB3_RPC_HTTPS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
+            DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
+            COINMARKETCAP_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
+            RECAPTCHA_SECRET_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
+            DEBIO_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_API_KEY
+            ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
+            ELASTICSEARCH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            ELASTICSEARCH_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAIL
+            PASS_EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PASS_EMAIL
+            EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
+            BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
+            STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
       - name: Create .env & gcp sa
         shell: bash
         run: |
@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [compute-build-info, publish-draft-release]
     env:
-      DEPLOY: ${{ secrets.PREPROD_DEPLOY }}
+      DEPLOY: ${{ secrets.TESTNET_DEPLOY }}
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
@@ -175,8 +175,8 @@ jobs:
         if: "${{ env.DEPLOY == 'true' }}"
         uses: google-github-actions/setup-gcloud@master
         with:
-          project_id: ${{ secrets.PREPROD_GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.PREPROD_GCP_SA_KEY }}
+          project_id: ${{ secrets.TESTNET_GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.TESTNET_GCP_SA_KEY }}
           export_default_credentials: true
       - name: Get secrets
         if: "${{ env.DEPLOY == 'true' }}"
@@ -184,36 +184,36 @@ jobs:
         uses: google-github-actions/get-secretmanager-secrets@main
         with:
           secrets: |-
-            SWAGGER_ENABLE:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SWAGGER_ENABLE
-            PORT:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PORT
-            POSTGRES_HOST:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_HOST
-            POSTGRES_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_USERNAME
-            POSTGRES_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_PASSWORD
-            POSTGRES_DB:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB
-            POSTGRES_DB_CITY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
-            POSTGRES_DB_LOCATIONS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
-            WEB3_RPC:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC
-            WEB3_RPC_HTTPS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
-            DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
-            COINMARKETCAP_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
-            RECAPTCHA_SECRET_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
-            DEBIO_API_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/DEBIO_API_KEY
-            ELASTICSEARCH_NODE:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
-            ELASTICSEARCH_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
-            ELASTICSEARCH_PASSWORD:${{ secrets.PREPROD_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
-            EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAIL
-            PASS_EMAIL:${{ secrets.PREPROD_GCP_PROJECT_ID }}/PASS_EMAIL
-            EMAILS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/EMAILS
-            BUCKET_NAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/BUCKET_NAME
-            STORAGE_BASE_URI:${{ secrets.PREPROD_GCP_PROJECT_ID }}/STORAGE_BASE_URI
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.PREPROD_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
-            SSH_HOST:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_HOST
-            SSH_USERNAME:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_USERNAME
-            SSH_KEY:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_KEY
-            SSH_PORT:${{ secrets.PREPROD_GCP_PROJECT_ID }}/SSH_PORT
+            SWAGGER_ENABLE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SWAGGER_ENABLE
+            PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PORT
+            POSTGRES_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_HOST
+            POSTGRES_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_USERNAME
+            POSTGRES_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_PASSWORD
+            POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
+            POSTGRES_DB_CITY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
+            POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
+            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
+            WEB3_RPC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC
+            WEB3_RPC_HTTPS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
+            DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
+            COINMARKETCAP_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
+            RECAPTCHA_SECRET_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
+            DEBIO_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_API_KEY
+            ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
+            ELASTICSEARCH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
+            ELASTICSEARCH_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAIL
+            PASS_EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PASS_EMAIL
+            EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
+            BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
+            STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
+            SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
+            SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
+            SSH_PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_PORT
       - name: Deploy
         if: "${{ env.DEPLOY == 'true' }}"
         uses: appleboy/ssh-action@master

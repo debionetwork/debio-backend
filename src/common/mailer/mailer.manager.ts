@@ -1,7 +1,9 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { CustomerStakingRequestService } from './models/customer-staking-request-service.model';
-import { LabRegister } from './models/lab-register.model/lab-register.model';
+import { 
+  CustomerStakingRequestService, 
+  LabRegister 
+} from './models';
 
 @Injectable()
 export class MailerManager {
