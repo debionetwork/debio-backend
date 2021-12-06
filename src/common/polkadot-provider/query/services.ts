@@ -5,7 +5,11 @@ export async function queryServiceById(
   api: ApiPromise,
   serviceId: string,
 ): Promise<Service> {
+  console.log('service one', serviceId);
+  
   const res = (await api.query.services.services(serviceId)).toHuman();
+  console.log('res', res);
+  
   return new Service(res);
 }
 
@@ -16,6 +20,17 @@ export async function queryServicesByMultipleIds(
   const services: Array<Service> = new Array<Service>();
   for (const id in serviceIds) {
     services.push(await queryServiceById(api, id));
+  }
+  return services;
+}
+
+export async function queryServicesByMultipleIdsArray(
+  api: ApiPromise,
+  serviceIds: string[],
+): Promise<Array<Service>> {
+  const services: Array<Service> = new Array<Service>();
+  for (const id in serviceIds) {
+    console.log(await queryServiceById(api, serviceIds[id]));
   }
   return services;
 }

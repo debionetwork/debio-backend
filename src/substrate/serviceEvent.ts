@@ -59,12 +59,11 @@ export class ServiceEventHandler {
       lrs.price = val.price;
       lrs.qc_price = val.qc_price;
       lrs.description = val.info.description;
-      lrs.long_description = val.info.long_description;
-      lrs.supporting_document = val.info.test_result_sample;
-      lrs.test_result_sample = val.info.test_result_sample;
-      lrs.expected_duration.duration = val.info.expected_duration.duration;
+      lrs.long_description = val.info.longDescription;
+      lrs.test_result_sample = val.info.testResultSample;
+      lrs.expected_duration.duration = val.info.expectedDuration.duration;
       lrs.expected_duration.duration_type =
-        val.info.expected_duration.duration_type;
+        val.info.expectedDuration.duration_type;
       labRegisterServices.push(lrs);
     });
     return labRegisterServices;

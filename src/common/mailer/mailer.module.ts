@@ -3,6 +3,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { LocationModule } from 'src/location/location.module';
+import { MailerController } from './mailer.controller';
 import { MailerManager } from './mailer.manager';
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MailerManager } from './mailer.manager';
       },
     }),
   ],
+  controllers: [MailerController],
   providers: [MailerManager],
   exports: [MailModule, MailerManager],
 })
