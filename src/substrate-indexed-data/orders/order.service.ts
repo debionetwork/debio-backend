@@ -46,6 +46,10 @@ export class OrderService {
         mustNot.push({
           match: { status: { query: 'Unpaid' } }
         });
+        
+        mustNot.push({
+          match: { status: { query: 'Cancelled' } }
+        });
       break;
       default:
         match = { customer_id: hash_id };

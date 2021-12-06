@@ -2,9 +2,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { join } from 'path';
+import { LocationModule } from 'src/location/location.module';
 import { MailerManager } from './mailer.manager';
 @Module({
   imports: [
+    LocationModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',
