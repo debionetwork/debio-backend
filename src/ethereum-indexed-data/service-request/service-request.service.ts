@@ -25,6 +25,7 @@ export class ServiceRequestService {
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
+    
     const serviceRequests = await this.elasticsearchService.search({
       index: 'create-service-request',
       body: { from: 0, size: 1000 },
@@ -64,7 +65,7 @@ export class ServiceRequestService {
         };
       }
 
-      const value = Number(request.staking_amount) / 10 ** 18;
+      const value = Number(request.staking_amount.split(',').join('')) / 10 ** 18;
       requestByCountryDict[request.country].totalRequests += 1;
       const currValueByCountry = Number(
         requestByCountryDict[request.country].totalValue,
@@ -114,9 +115,15 @@ export class ServiceRequestService {
       if (!countryObj) {
         continue;
       }
+      requestByCountryDict[countryCode]['totalValue'] = {
+        dbio: requestByCountryDict[countryCode]['totalValue'],
+        dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai,
+        usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai * oneDaiEqualToUsd.price
+      }
       const { name } = countryObj;
       const { totalRequests, services } = requestByCountryDict[countryCode];
       let { totalValue } = requestByCountryDict[countryCode];
+      
       totalValue = totalValue;
 
       const servicesArr = Object.values(services).map((s: any) => ({

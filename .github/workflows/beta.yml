@@ -1,4 +1,4 @@
-name: Main automation
+name: Beta automation
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - '[0-9]+.[0-9]+.[0-9]+-beta*'
 
 concurrency:
-  group: main-automation
+  group: beta-automation
 
 jobs:
   compute-build-info:
