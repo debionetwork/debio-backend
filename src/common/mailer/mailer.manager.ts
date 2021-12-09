@@ -51,16 +51,11 @@ export class MailerManager implements OnModuleInit {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    let files: any[];
+    let files = []
     context.certifications.forEach((val, idx) => {
       files.push({
-        filename: `Certifications Supporting Document ${idx + 1}`,
+        filename: `Certifications Supporting Document ${idx + 1}.pdf`,
         path: val.supporting_document,
-      });
-    });
-    context.services.forEach((val, idx) => {
-      files.push({
-        filename: `Services Supporting Document ${idx + 1}`,
       });
     });
 
@@ -77,6 +72,8 @@ export class MailerManager implements OnModuleInit {
         state: context.state,
         city: context.city,
         address: context.address,
+        services: context.services,
+        certifications: context.certifications
       },
       attachments: files,
     });
@@ -98,7 +95,7 @@ export class MailerManager implements OnModuleInit {
       lrc.description = val.info.description;
       lrc.month = val.info.month;
       lrc.year = val.info.year;
-      lrc.supporting_document = val.info.supporting_document;
+      lrc.supporting_document = val.info.supportingDocument;
       labRegisterCertifications.push(lrc);
     });
     return labRegisterCertifications;
@@ -119,10 +116,9 @@ export class MailerManager implements OnModuleInit {
       lrs.description = val.info.description;
       lrs.long_description = val.info.longDescription;
       lrs.test_result_sample = val.info.testResultSample;
-      lrs.expected_duration.duration = val.info.expectedDuration.duration;
-      lrs.expected_duration.duration_type =
-        val.info.expectedDuration.duration_type;
+      lrs.expected_duration = val.info.expectedDuration;
       labRegisterServices.push(lrs);
+
     });
     return labRegisterServices;
   }
@@ -131,18 +127,18 @@ export class MailerManager implements OnModuleInit {
     const labRegister = new LabRegister();
 
     labRegister.email = lab.info.email;
-    labRegister.phone_number = lab.info.phone_number;
+    labRegister.phone_number = lab.info.phoneNumber;
     labRegister.website = lab.info.website;
     labRegister.lab_name = lab.info.name;
     labRegister.country = lab.info.country;
     labRegister.state = lab.info.region;
     labRegister.city = lab.info.city;
     labRegister.address = lab.info.address;
-    labRegister.profile_image = lab.info.profile_image;
+    labRegister.profile_image = lab.info.profileImage;
+    labRegister.services = await this.getLabRegisterService(lab.services);
     labRegister.certifications = await this.getLabRegisterCertification(
       lab.certifications,
     );
-    labRegister.services = await this.getLabRegisterService(lab.services);
 
     return labRegister;
   }

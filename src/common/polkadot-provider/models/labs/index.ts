@@ -3,10 +3,10 @@ import { LabVerificationStatus } from './lab-verification-status';
 
 export class Lab {
   constructor(anyJson: any) {
-    this.account_id = anyJson.account_id;
+    this.account_id = anyJson.accountId;
     this.services = anyJson.services;
     this.certifications = anyJson.certifications;
-    this.verification_status = anyJson.verification_status;
+    this.verification_status = anyJson.verificationStatus;
     this.info = anyJson.info;
   }
   account_id: string;

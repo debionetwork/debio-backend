@@ -5,6 +5,10 @@ import { join } from 'path';
 import { LocationModule } from 'src/location/location.module';
 import { MailerController } from './mailer.controller';
 import { MailerManager } from './mailer.manager';
+
+const plus = (value: string) => {
+  return parseInt(value) + 1;
+}
 @Module({
   imports: [
     LocationModule,
@@ -19,7 +23,7 @@ import { MailerManager } from './mailer.manager';
       },
       template: {
         dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        adapter: new HandlebarsAdapter({ plus: (value) => parseInt(value) + 1}), // or new PugAdapter() or new EjsAdapter()
         options: {
           strict: true,
         },

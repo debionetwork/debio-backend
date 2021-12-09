@@ -4,5 +4,5 @@ export class CertificationInfo {
   month: string;
   year: string;
   description: string;
-  supporting_document?: string;
+  supportingDocument?: string;
 }

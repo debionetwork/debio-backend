@@ -40,7 +40,7 @@ export class ServiceEventHandler {
       lrc.description = val.info.description;
       lrc.month = val.info.month;
       lrc.year = val.info.year;
-      lrc.supporting_document = val.info.supporting_document;
+      lrc.supporting_document = val.info.supportingDocument;
       labRegisterCertifications.push(lrc);
     });
     return labRegisterCertifications;
@@ -73,14 +73,14 @@ export class ServiceEventHandler {
     const labRegister = new LabRegister();
 
     labRegister.email = lab.info.email;
-    labRegister.phone_number = lab.info.phone_number;
+    labRegister.phone_number = lab.info.phoneNumber;
     labRegister.website = lab.info.website;
     labRegister.lab_name = lab.info.name;
     labRegister.country = lab.info.country;
     labRegister.state = lab.info.region;
     labRegister.city = lab.info.city;
     labRegister.address = lab.info.address;
-    labRegister.profile_image = lab.info.profile_image;
+    labRegister.profile_image = lab.info.profileImage;
     labRegister.certifications = await this._getLabRegisterCertification(
       lab.certifications,
     );
