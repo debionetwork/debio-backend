@@ -54,7 +54,7 @@ export class MailerManager implements OnModuleInit {
     let files = []
     context.certifications.forEach((val, idx) => {
       files.push({
-        filename: `Certifications Supporting Document ${idx + 1}.pdf`,
+        filename: `${val.title}.pdf`,
         path: val.supporting_document,
       });
     });
