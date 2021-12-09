@@ -125,13 +125,18 @@ export class MailerManager implements OnModuleInit {
 
   async labToLabRegister(lab: Lab): Promise<LabRegister> {
     const labRegister = new LabRegister();
+    const countryName = await (await this.countryService.getByIso2Code(lab.info.country)).name
+    const regionName = await (await this.stateService.getState(
+      lab.info.country,
+      lab.info.region
+      )).name
 
     labRegister.email = lab.info.email;
     labRegister.phone_number = lab.info.phoneNumber;
     labRegister.website = lab.info.website;
     labRegister.lab_name = lab.info.name;
-    labRegister.country = lab.info.country;
-    labRegister.state = lab.info.region;
+    labRegister.country = countryName || lab.info.country;
+    labRegister.state = regionName || lab.info.region;
     labRegister.city = lab.info.city;
     labRegister.address = lab.info.address;
     labRegister.profile_image = lab.info.profileImage;
