@@ -1,19 +1,34 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ApiPromise, WsProvider } from '@polkadot/api';
 import { CountryService } from 'src/location/country.service';
 import { StateService } from 'src/location/state.service';
 import { 
   CustomerStakingRequestService, 
-  LabRegister 
+  LabRegister,
+  LabRegisterCertification,
+  LabRegisterService,
 } from './models';
-
+import {
+  Lab,
+  queryCertificationsByMultipleIds,
+  queryServicesByMultipleIds
+} from'../polkadot-provider'
 @Injectable()
-export class MailerManager {
+export class MailerManager implements OnModuleInit {
+  private api: ApiPromise
   constructor(
     private readonly mailerService: MailerService,
     private readonly countryService: CountryService,
-    private readonly stateService: StateService
+    private readonly stateService: StateService,
     ) {}
+
+  async onModuleInit(){
+    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL)
+    this.api = await ApiPromise.create({
+      provider: wsProvider
+    })
+  }
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
@@ -65,5 +80,70 @@ export class MailerManager {
       },
       attachments: files,
     });
+  }
+
+  async getLabRegisterCertification(
+    ids: string[],
+  ): Promise<Array<LabRegisterCertification>> {
+    const certifications = await queryCertificationsByMultipleIds(
+      this.api,
+      ids,
+    );
+    const labRegisterCertifications: Array<LabRegisterCertification> =
+      new Array<LabRegisterCertification>();
+    certifications.forEach((val) => {
+      const lrc: LabRegisterCertification = new LabRegisterCertification();
+      lrc.title = val.info.title;
+      lrc.issuer = val.info.issuer;
+      lrc.description = val.info.description;
+      lrc.month = val.info.month;
+      lrc.year = val.info.year;
+      lrc.supporting_document = val.info.supporting_document;
+      labRegisterCertifications.push(lrc);
+    });
+    return labRegisterCertifications;
+  }
+
+  async getLabRegisterService(
+    ids: string[],
+  ): Promise<Array<LabRegisterService>> {
+    const services = await queryServicesByMultipleIds(this.api, ids);
+    const labRegisterServices: Array<LabRegisterService> =
+      new Array<LabRegisterService>();
+    services.forEach((val) => {
+      const lrs: LabRegisterService = new LabRegisterService();
+      lrs.name = val.info.name;
+      lrs.category = val.info.category;
+      lrs.price = val.price;
+      lrs.qc_price = val.qc_price;
+      lrs.description = val.info.description;
+      lrs.long_description = val.info.longDescription;
+      lrs.test_result_sample = val.info.testResultSample;
+      lrs.expected_duration.duration = val.info.expectedDuration.duration;
+      lrs.expected_duration.duration_type =
+        val.info.expectedDuration.duration_type;
+      labRegisterServices.push(lrs);
+    });
+    return labRegisterServices;
+  }
+
+  async labToLabRegister(lab: Lab): Promise<LabRegister> {
+    const labRegister = new LabRegister();
+
+    labRegister.email = lab.info.email;
+    labRegister.phone_number = lab.info.phone_number;
+    labRegister.website = lab.info.website;
+    labRegister.lab_name = lab.info.name;
+    labRegister.country = lab.info.country;
+    labRegister.state = lab.info.region;
+    labRegister.city = lab.info.city;
+    labRegister.address = lab.info.address;
+    labRegister.profile_image = lab.info.profile_image;
+    labRegister.certifications = await this.getLabRegisterCertification(
+      lab.certifications,
+    );
+    labRegister.services = await this.getLabRegisterService(lab.services);
+
+    return labRegister;
   }
 }

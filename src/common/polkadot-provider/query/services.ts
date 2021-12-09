@@ -5,11 +5,7 @@ export async function queryServiceById(
   api: ApiPromise,
   serviceId: string,
 ): Promise<Service> {
-  console.log('service one', serviceId);
-  
   const res = (await api.query.services.services(serviceId)).toHuman();
-  console.log('res', res);
-  
   return new Service(res);
 }
 
@@ -30,7 +26,7 @@ export async function queryServicesByMultipleIdsArray(
 ): Promise<Array<Service>> {
   const services: Array<Service> = new Array<Service>();
   for (const id in serviceIds) {
-    console.log(await queryServiceById(api, serviceIds[id]));
+    services.push(await queryServiceById(api, serviceIds[id]))
   }
   return services;
 }
