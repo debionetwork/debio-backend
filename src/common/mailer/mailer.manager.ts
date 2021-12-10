@@ -111,6 +111,7 @@ export class MailerManager implements OnModuleInit {
       const lrs: LabRegisterService = new LabRegisterService();
       lrs.name = val.info.name;
       lrs.category = val.info.category;
+      lrs.currency = val.currency
       lrs.price = val.price;
       lrs.qc_price = val.qc_price;
       lrs.description = val.info.description;
