@@ -1,23 +1,26 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DataStakingDto } from './dto/data-staking.dto';
-import { DataStakingEvents } from './models/data-staking-events.entity';
-import { DateTimeProxy } from '../common/date-time/date-time.proxy';
-import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
+import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { ApiBody } from "@nestjs/swagger";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { DataStakingDto } from "./dto/data-staking.dto";
+import { DataStakingEvents } from "./models/data-staking-events.entity";
+import { DateTimeProxy } from "../common/date-time/date-time.proxy";
+import { DataTokenToDatasetMapping } from "./models/data-token-to-dataset-mapping.entity";
+import { GCloudStorageService } from "@aginix/nestjs-gcloud-storage";
+import { DataTokenToDatasetMappingDto } from "./dto/data-token-to-dataset-mapping.dto";
 
-@Controller('bounty')
+@Controller("bounty")
 export class BountyController {
   constructor(
     @InjectRepository(DataStakingEvents)
     private readonly dataStakingEventsRepository: Repository<DataStakingEvents>,
     @InjectRepository(DataTokenToDatasetMapping)
     private readonly dataTokenToDatasetMapping: Repository<DataTokenToDatasetMapping>,
+    private readonly cloudStorageService: GCloudStorageService,
     private readonly dateTimeProxy: DateTimeProxy
   ) {}
 
-  @Post('/create-sync-event')
+  @Post("/create-sync-event")
   @ApiBody({ type: DataStakingDto })
   async CreateSyncEvent(@Body() dto: DataStakingDto) {
     const dataStakingEvents = new DataStakingEvents();
@@ -29,10 +32,27 @@ export class BountyController {
     return await this.dataStakingEventsRepository.save(dataStakingEvents);
   }
 
-  @Get('/staked-files')
+  @Get("/staked-files")
   async StakedFiles(
-    @Query('tokenId') tokenId: string,
+    @Query("tokenId") tokenId: string,
   ) {
-    return await this.dataTokenToDatasetMapping.find({ token_id: tokenId });
+    const mappings = await this.dataTokenToDatasetMapping.find({ token_id: tokenId });
+    const res: DataTokenToDatasetMappingDto[] = [];
+    for(const x of mappings) {
+      const URL_VALID_DURATION = 100000;
+      const [url] = await this.cloudStorageService
+        .bucket
+        .file(x.filename)
+        .getSignedUrl({
+          version: "v4",
+          action: "read",
+          expires: this.dateTimeProxy.nowAndAdd(URL_VALID_DURATION),
+        });
+
+      const dataTokenToDatasetMappingDto = new DataTokenToDatasetMappingDto(x);
+      dataTokenToDatasetMappingDto.file_url = url;
+      res.push(dataTokenToDatasetMappingDto);
+    }
+    return res;
   }
 }
