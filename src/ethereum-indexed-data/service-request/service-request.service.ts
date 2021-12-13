@@ -177,13 +177,17 @@ export class ServiceRequestService {
     }
 
     const result = [];
-    const requestServiceByCustomers = await this.elasticsearchService.search(
-      searchObj,
-    );
-
-    requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
-      result.push(requestService._source);
-    });
+    try {
+      const requestServiceByCustomers = await this.elasticsearchService.search(
+        searchObj,
+      );
+  
+      requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
+        result.push(requestService._source);
+      });
+    } catch (error) {    
+      console.log('API "service-requests/customer/:customerId":', error.body.error.reason);
+    }
     return result;
   }
 
@@ -229,13 +233,17 @@ export class ServiceRequestService {
     }
 
     const result = [];
-    const requestServiceByCustomers = await this.elasticsearchService.search(
-      searchObj,
-    );
-
-    requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
-      result.push(requestService._source);
-    });
+    try {
+      const requestServiceByCustomers = await this.elasticsearchService.search(
+        searchObj,
+      );
+  
+      requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
+        result.push(requestService._source);
+      });
+    } catch (error) {  
+      console.log('API "service-requests/provideRequestService":', error.body.error.reason);
+    }
     return result;
   }
 }

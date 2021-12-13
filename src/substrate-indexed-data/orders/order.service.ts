@@ -7,6 +7,8 @@ export class OrderService {
 
   async getOrderByHashId(
     hash_id: string) {
+    let hits_order = []
+    try {
       const order = await this.elasticsearchService.search({
         index: 'orders',
         body: {
@@ -19,10 +21,11 @@ export class OrderService {
           }
         }
       })
-
-      const hits_order = order.body.hits.hits;
-
-      return hits_order.length > 0 ? hits_order[0]._source : null;
+      hits_order = order.body.hits.hits
+    } catch (error) {
+      console.log('API "orders/:hash_id":', error.body.error.reason);
+    }
+    return hits_order.length > 0 ? hits_order[0]._source : {};
   }
 
   async getOrderList(
@@ -132,22 +135,30 @@ export class OrderService {
       searchObj.from = from;
       searchObj.size = _size;
     }
+    let count = null
+    let data = []
 
-    const total_orders = await this.elasticsearchService.count({
-      index: 'orders',
-      body: {
-        query: query,
-      },
-    });
-
-    const orders = await this.elasticsearchService.search(searchObj);
-
+    try {
+       const total_orders = await this.elasticsearchService.count({
+        index: 'orders',
+        body: {
+          query: query,
+        },
+      });
+  
+      const orders = await this.elasticsearchService.search(searchObj);
+      count = total_orders
+      data = orders.body.hits.hits
+    } catch (error) {
+      console.log('API "orders/list/:customerId":', error.body.error.reason);
+    }
+    
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count,
       },
-      data: orders.body.hits.hits,
+      data,
     };
   }
 
@@ -236,21 +247,30 @@ export class OrderService {
       searchObj.size = _size;
     }
 
-    const total_orders = await this.elasticsearchService.count({
-      index: 'orders',
-      body: {
-        query: query,
-      },
-    });
+    let count = null
+    let data = []
 
-    const orders = await this.elasticsearchService.search(searchObj);
+    try {
+      const total_orders = await this.elasticsearchService.count({
+        index: 'orders',
+        body: {
+          query: query,
+        },
+      });
+  
+      const orders = await this.elasticsearchService.search(searchObj);
+      count = total_orders.body.count
+      data = orders.body.hits.hits
+    } catch (error) {
+      console.log('API "bounty_list/:customer_id":', error.body.error.reason);
+    }
 
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count,
       },
-      data: orders.body.hits.hits,
+      data,
     };
   }
 }

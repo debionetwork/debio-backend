@@ -6,16 +6,22 @@ export class ServiceService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCity(country: string, city: string) {
-    const services = await this.elasticsearchService.search({
-      index: 'services',
-      body: {
-        query: {
-          bool: {
-            filter: [{ match: { country } }, { match: { city } }],
+    let result = []
+    try {
+      const services = await this.elasticsearchService.search({
+        index: 'services',
+        body: {
+          query: {
+            bool: {
+              filter: [{ match: { country } }, { match: { city } }],
+            },
           },
         },
-      },
-    });
-    return services;
+      });
+      result = services.body.hits.hits
+    } catch (error) {
+      console.log('API "services/:country/:city":', error.body.error.reason);
+    }
+    return result;
   }
 }

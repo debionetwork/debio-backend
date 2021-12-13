@@ -19,11 +19,6 @@ export class OrderController {
     @Param('hash_id') hashId: string,
   ) {
     const order = await this.orderService.getOrderByHashId(hashId);
-
-    if (!order) {
-      throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
-    }
-
     return order;
   }
 

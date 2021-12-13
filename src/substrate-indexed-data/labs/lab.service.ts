@@ -51,24 +51,27 @@ export class LabService {
       searchObj.size = _size;
     }
     const result = [];
-    const labs = await this.elasticsearchService.search(searchObj);
-    labs.body.hits.hits.forEach((lab) => {
-      lab._source.services = lab._source.services.filter(
-        (serviceFilter) =>
-          serviceFilter.info['category'] === category &&
-          serviceFilter.service_flow === service_flow,
-      );
-      lab._source.services.forEach((labService) => {
-        labService.lab_detail = lab._source.info;
-        labService.certifications = lab._source.certifications;
-        labService.verification_status = lab._source.verification_status;
-        labService.blockMetaData = lab._source.blockMetaData;
-        labService.lab_id = lab._source.account_id;
-        
-        result.push(labService);
+    try {
+      const labs = await this.elasticsearchService.search(searchObj);
+      labs.body.hits.hits.forEach((lab) => {
+        lab._source.services = lab._source.services.filter(
+          (serviceFilter) =>
+            serviceFilter.info['category'] === category &&
+            serviceFilter.service_flow === service_flow,
+        );
+        lab._source.services.forEach((labService) => {
+          labService.lab_detail = lab._source.info;
+          labService.certifications = lab._source.certifications;
+          labService.verification_status = lab._source.verification_status;
+          labService.blockMetaData = lab._source.blockMetaData;
+          labService.lab_id = lab._source.account_id;
+          
+          result.push(labService);
+        });
       });
-    });
-
+    } catch (error) {
+      console.log('API "labs":', error.body.error.reason)
+    }
     return { result };
   }
 }
