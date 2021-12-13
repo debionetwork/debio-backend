@@ -69,8 +69,8 @@ export class SubstrateController {
         accountId,
       );      
       if (bindingEth) {
-        const isRewardHasBeenSent = await this.rewardService.getRewardBindingByAccountId(accountId)
-        if(!isRewardHasBeenSent){
+        const isRewardHasBeenSend = await this.rewardService.getRewardBindingByAccountId(accountId)
+        if(!isRewardHasBeenSend){
           await this.substrateService.sendReward(accountId, rewardAmount);
           reward = rewardAmount
           await this.rewardService.insert(dataInput);
