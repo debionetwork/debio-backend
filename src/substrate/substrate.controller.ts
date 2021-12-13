@@ -67,13 +67,14 @@ export class SubstrateController {
       const bindingEth = await this.substrateService.bindEthAddressToSubstrateAddress(
         ethAddress,
         accountId,
-      );
-      
+      );      
       if (bindingEth) {
-        substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
-        await this.substrateService.sendReward(accountId, rewardAmount);
-        reward = rewardAmount
-        await this.rewardService.insert(dataInput);
+        const isRewardHasBeenSent = await this.rewardService.getRewardBindingByAccountId(accountId)
+        if(!isRewardHasBeenSent){
+          await this.substrateService.sendReward(accountId, rewardAmount);
+          reward = rewardAmount
+          await this.rewardService.insert(dataInput);
+        }
       } else {
         response.status(401).send('Binding Error');
       }
