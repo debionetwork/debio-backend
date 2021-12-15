@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class ServiceService {
+  private readonly logger : Logger = new Logger(ServiceService.name)
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCity(country: string, city: string) {
@@ -20,7 +21,11 @@ export class ServiceService {
       });
       result = services.body.hits.hits
     } catch (error) {
-      console.log('API "services/:country/:city":', error.body.error.reason);
+      if (error.body.error.type === 'index_not_found_exception') {
+        await this.logger.log(`API "services/{country}/{city}":' ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
     return result;
   }

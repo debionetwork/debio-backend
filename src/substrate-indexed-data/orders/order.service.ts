@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class OrderService {
+  private readonly logger : Logger = new Logger(OrderService.name)
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getOrderByHashId(
@@ -23,7 +24,11 @@ export class OrderService {
       })
       hits_order = order.body.hits.hits
     } catch (error) {
-      console.log('API "orders/:hash_id":', error.body.error.reason);
+      if (error.body.error.type === "index_not_found_exception") {        
+        await this.logger.log(`API "orders/{hash_id}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
     return hits_order.length > 0 ? hits_order[0]._source : {};
   }
@@ -150,7 +155,11 @@ export class OrderService {
       count = total_orders
       data = orders.body.hits.hits
     } catch (error) {
-      console.log('API "orders/list/:customerId":', error.body.error.reason);
+      if (error.body.error.type === "index_not_found_exception") {
+        await this.logger.log(`API "orders/list/{customerId}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
     
     return {
@@ -262,7 +271,11 @@ export class OrderService {
       count = total_orders.body.count
       data = orders.body.hits.hits
     } catch (error) {
-      console.log('API "bounty_list/:customer_id":', error.body.error.reason);
+      if (error.body.error.type === 'index_not_found_exception') {
+        await this.logger.log(`API "bounty_list/{customer_id}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
 
     return {

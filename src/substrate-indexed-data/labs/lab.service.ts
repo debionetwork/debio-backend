@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class LabService {
+  private readonly logger : Logger = new Logger(LabService.name)
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCityCategory(
@@ -70,7 +71,11 @@ export class LabService {
         });
       });
     } catch (error) {
-      console.log('API "labs":', error.body.error.reason)
+      if (error.body.error.type === 'index_not_found_exception') {
+        await this.logger.log(`API "labs": ${error.body.error.reason}`)
+      } else {
+        throw error
+      }
     }
     return { result };
   }
