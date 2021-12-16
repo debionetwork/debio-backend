@@ -40,17 +40,10 @@ export class LabService {
           },
         },
       },
-      from: 0,
-      size: 10,
+      from: (size * page - size) | 0,
+      size: size | 10,
     };
 
-    if (page) {
-      const _size = size ? size : 10;
-      const from = size * page - _size;
-
-      searchObj.from = from;
-      searchObj.size = _size;
-    }
     const result = [];
     try {
       const labs = await this.elasticsearchService.search(searchObj);

@@ -20,7 +20,7 @@ export class OrderService {
               }
             }
           }
-        }
+        },
       })
       hits_order = order.body.hits.hits
     } catch (error) {
@@ -129,17 +129,10 @@ export class OrderService {
           }
         ]
       },
-      from: 0,
-      size: 10000,
+      from: (size * page - size) || 0,
+      size: size || 10,
     };
 
-    if (page) {
-      const _size = size ? size : 10;
-      const from = (page - 1) * _size;
-
-      searchObj.from = from;
-      searchObj.size = _size;
-    }
     let count = null
     let data = []
 
@@ -244,17 +237,9 @@ export class OrderService {
           }
         ]
       },
-      from: 0,
-      size: 10000,
+      from: (size * page - size) || 0,
+      size: size || 10,
     };
-
-    if (page) {
-      const _size = size ? size : 10;
-      const from = (page - 1) * _size;
-
-      searchObj.from = from;
-      searchObj.size = _size;
-    }
 
     let count = null
     let data = []

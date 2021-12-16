@@ -38,8 +38,8 @@ export class OrderController {
       'customer',
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;
@@ -60,8 +60,8 @@ export class OrderController {
     const orders = await this.orderService.getBountyList(
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;
@@ -83,8 +83,8 @@ export class OrderController {
       'lab',
       params.lab_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;

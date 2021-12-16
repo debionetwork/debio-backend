@@ -173,18 +173,10 @@ export class ServiceRequestService {
           },
         },
       },
-      from: 0,
-      size: 10,
+      from: (size * page - size) || 0,
+      size: size || 10,
     };
-
-    if (page || size) {
-      const _size = size ? size : 10;
-      const from = size * page - _size;
-
-      searchObj.from = from;
-      searchObj.size = _size;
-    }
-
+    
     const result = [];
     try {
       const requestServiceByCustomers = await this.elasticsearchService.search(
@@ -209,8 +201,6 @@ export class ServiceRequestService {
     region: string,
     city: string,
     category: string,
-    page: number,
-    size: number,
   ) {
     const searchObj = {
       index: 'create-service-request',
@@ -233,17 +223,7 @@ export class ServiceRequestService {
           },
         },
       },
-      from: 0,
-      size: 10,
     };
-
-    if (page || size) {
-      const _size = size ? size : 10;
-      const from = size * page - _size;
-
-      searchObj.from = from;
-      searchObj.size = _size;
-    }
 
     const result = [];
     try {
