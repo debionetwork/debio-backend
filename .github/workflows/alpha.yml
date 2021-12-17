@@ -263,12 +263,12 @@ jobs:
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="PUT, GET, POST, OPTIONS" \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="https://app.stg.debio.network, https://lab.stg.debio.network" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="PUT\, GET\, POST\, OPTIONS" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="https://app.stg.debio.network\, https://lab.stg.debio.network" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-expose-headers"="*, X-CustomResponseHeader" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-expose-headers"="*\, X-CustomResponseHeader" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="Origin, X-Requested-With, Content-Type, Accept" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="Origin\, X-Requested-With\, Content-Type\, Accept" \
               --set-string ingress.hosts[0].host=api.stg.debio.network \
               --set-string ingress.hosts[0].paths[0].path=/ \
               --set-string ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
