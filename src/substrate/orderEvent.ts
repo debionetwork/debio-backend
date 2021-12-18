@@ -139,7 +139,7 @@ export class OrderEventHandler {
 
       const resp =
         await this.substrateApi.query.userProfile.ethAddressByAccountId(
-          order['seller_id'],
+          order['sellerId'],
         );
       if ((resp as Option<any>).isNone) {
         return null;

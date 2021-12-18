@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class OrderService {
+  private readonly logger : Logger = new Logger(OrderService.name)
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getOrderByHashId(
     hash_id: string) {
+    let hits_order = []
+    try {
       const order = await this.elasticsearchService.search({
         index: 'orders',
         body: {
@@ -17,12 +20,17 @@ export class OrderService {
               }
             }
           }
-        }
+        },
       })
-
-      const hits_order = order.body.hits.hits;
-
-      return hits_order.length > 0 ? hits_order[0]._source : null;
+      hits_order = order.body.hits.hits
+    } catch (error) {
+      if (error.body.error.type === "index_not_found_exception") {        
+        await this.logger.log(`API "orders/{hash_id}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
+    }
+    return hits_order.length > 0 ? hits_order[0]._source : {};
   }
 
   async getOrderList(
@@ -121,33 +129,38 @@ export class OrderService {
           }
         ]
       },
-      from: 0,
-      size: 10000,
+      from: (size * page - size) || 0,
+      size: size || 10,
     };
 
-    if (page) {
-      const _size = size ? size : 10;
-      const from = (page - 1) * _size;
+    let count = null
+    let data = []
 
-      searchObj.from = from;
-      searchObj.size = _size;
+    try {
+       const total_orders = await this.elasticsearchService.count({
+        index: 'orders',
+        body: {
+          query: query,
+        },
+      });
+  
+      const orders = await this.elasticsearchService.search(searchObj);
+      count = total_orders
+      data = orders.body.hits.hits
+    } catch (error) {
+      if (error.body.error.type === "index_not_found_exception") {
+        await this.logger.log(`API "orders/list/{customerId}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
-
-    const total_orders = await this.elasticsearchService.count({
-      index: 'orders',
-      body: {
-        query: query,
-      },
-    });
-
-    const orders = await this.elasticsearchService.search(searchObj);
-
+    
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count,
       },
-      data: orders.body.hits.hits,
+      data,
     };
   }
 
@@ -224,33 +237,38 @@ export class OrderService {
           }
         ]
       },
-      from: 0,
-      size: 10000,
+      from: (size * page - size) || 0,
+      size: size || 10,
     };
 
-    if (page) {
-      const _size = size ? size : 10;
-      const from = (page - 1) * _size;
+    let count = null
+    let data = []
 
-      searchObj.from = from;
-      searchObj.size = _size;
+    try {
+      const total_orders = await this.elasticsearchService.count({
+        index: 'orders',
+        body: {
+          query: query,
+        },
+      });
+  
+      const orders = await this.elasticsearchService.search(searchObj);
+      count = total_orders.body.count
+      data = orders.body.hits.hits
+    } catch (error) {
+      if (error.body.error.type === 'index_not_found_exception') {
+        await this.logger.log(`API "bounty_list/{customer_id}": ${error.body.error.reason}`);
+      } else {
+        throw error
+      }
     }
-
-    const total_orders = await this.elasticsearchService.count({
-      index: 'orders',
-      body: {
-        query: query,
-      },
-    });
-
-    const orders = await this.elasticsearchService.search(searchObj);
 
     return {
       info: {
         page: page,
-        count: total_orders.body.count,
+        count,
       },
-      data: orders.body.hits.hits,
+      data,
     };
   }
 }
