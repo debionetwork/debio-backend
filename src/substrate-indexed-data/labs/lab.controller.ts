@@ -33,8 +33,8 @@ export class LabController {
       city,
       category,
       service_flow,
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     return services;
   }
