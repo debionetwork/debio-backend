@@ -58,32 +58,26 @@ export class SubstrateController {
       created_at: new Date(),
     };
     let reward = null;
-
-    let substrateAddress =
+    let isSubstrateAddressHasBeenBinding =
       await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
-
-    // If user has not bound wallet before, send them 1 DBIO
-    if (!substrateAddress) {
-      const bindingEth = await this.substrateService.bindEthAddressToSubstrateAddress(
-        ethAddress,
-        accountId,
-      );
       
-      if (bindingEth) {
-        substrateAddress = await this.substrateService.getSubstrateAddressByEthAddress(ethAddress);
-        await this.substrateService.sendReward(accountId, rewardAmount);
-        reward = rewardAmount
-        await this.rewardService.insert(dataInput);
-      } else {
-        response.status(401).send('Binding Error');
-      }
-    } else {
-      await this.substrateService.bindEthAddressToSubstrateAddress(
-        ethAddress,
-        accountId,
-      );
+    const bindingEth = await this.substrateService.bindEthAddressToSubstrateAddress(
+      ethAddress,
+      accountId,
+    );      
+    
+    if (!bindingEth) {
+      response.status(401).send('Binding Error');
     }
 
+    const isRewardHasBeenSend = await this.rewardService.getRewardBindingByAccountId(accountId)
+    
+    if(!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend){
+      await this.substrateService.sendReward(accountId, rewardAmount);
+      reward = rewardAmount
+      await this.rewardService.insert(dataInput);
+    }
+    
     return response
       .status(200)
       .send({

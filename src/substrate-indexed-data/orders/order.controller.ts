@@ -19,11 +19,6 @@ export class OrderController {
     @Param('hash_id') hashId: string,
   ) {
     const order = await this.orderService.getOrderByHashId(hashId);
-
-    if (!order) {
-      throw new HttpException("Not Found", HttpStatus.NOT_FOUND);
-    }
-
     return order;
   }
 
@@ -43,8 +38,8 @@ export class OrderController {
       'customer',
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;
@@ -65,8 +60,8 @@ export class OrderController {
     const orders = await this.orderService.getBountyList(
       params.customer_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;
@@ -88,8 +83,8 @@ export class OrderController {
       'lab',
       params.lab_id,
       keyword ? keyword.toLowerCase() : '',
-      page,
-      size,
+      Number(page),
+      Number(size),
     );
     
     return orders;

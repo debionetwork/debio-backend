@@ -18,4 +18,17 @@ export class RewardService {
       return { error };
     }
   }
+
+  getRewardBindingByAccountId(accountId){
+    try {
+      return this.rewardRepository.findOne({
+        where: { 
+          reward_type : 'Registered User',
+          address: accountId
+        }
+      })
+    } catch (error) {
+      return error
+    }
+  }
 }
