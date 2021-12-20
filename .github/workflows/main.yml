@@ -248,6 +248,9 @@ jobs:
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="100" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, PUT\, POST\, DELETE\, PATCH\, OPTIONS" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="https://app.dev.debio.network\, https://lab.dev.debio.network" \
