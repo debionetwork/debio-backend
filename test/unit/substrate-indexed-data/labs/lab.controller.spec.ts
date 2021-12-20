@@ -81,8 +81,52 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
         1,
         10
     );
-    const RESULT = [1];
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(RESULT);
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                certifications: "cert",
+                verification_status: false,
+                blockMetaData: 1,
+                account_id: "ID",
+                info: {
+                  category: "XX",
+                },
+                services: [
+                  {
+                    info: {
+                      category: "XX",
+                    },
+                    service_flow: false
+                  }
+                ],
+              }
+            }
+          ]
+        }
+      }
+    };
+    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
+    
+    const RESULT = {
+      result: [
+        {
+          lab_id: "ID",
+          info: {
+            category: "XX",
+          },
+          lab_detail: {
+            category: "XX",
+          },
+          certifications: "cert",
+          verification_status: false,
+          service_flow: false,
+          blockMetaData: 1,
+        }
+      ]
+    }
 
     // Assert
     expect(labControllerMock.findByCountryCityCategory(
@@ -101,47 +145,54 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
   it('should return empty', () => {
     // Arrange
     const RESULT = [];
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject({
-      error: {
-        body : {
-          error: {
-            type: 'index_not_found_exception'
-          }
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'index_not_found_exception'
         }
       }
-    }))
+    };
+    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(labControllerMock.findByCountryCityCategory(
-        "XX",
-        "XX",
-        "XX",
-        "XX",
-        false,
-        1,
-        10
-    )).resolves.toEqual(RESULT);
+      "XX",
+      "XX",
+      "XX",
+      "XX",
+      false,
+      1,
+      10
+    )).resolves.toEqual({
+      result: RESULT
+    });
     expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
     // Arrange
-    const ERROR_RESULT = "ERR";
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'failed'
+        }
+      }
+    };
     const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(new Error(ERROR_RESULT)))
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT))
 
     // Assert
     expect(labControllerMock.findByCountryCityCategory(
-        "XX",
-        "XX",
-        "XX",
-        "XX",
-        false,
-        1,
-        10
-    )).resolves.toThrowError(ERROR_RESULT);
+      "XX",
+      "XX",
+      "XX",
+      "XX",
+      false,
+      1,
+      10
+    )).rejects.toMatchObject(ERROR_RESULT);
     expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });

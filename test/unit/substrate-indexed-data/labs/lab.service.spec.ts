@@ -76,8 +76,52 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
         1,
         10
     );
-    const RESULT = [1];
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(RESULT);
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                certifications: "cert",
+                verification_status: false,
+                blockMetaData: 1,
+                account_id: "ID",
+                info: {
+                  category: "XX",
+                },
+                services: [
+                  {
+                    info: {
+                      category: "XX",
+                    },
+                    service_flow: false
+                  }
+                ],
+              }
+            }
+          ]
+        }
+      }
+    };
+    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
+
+    const RESULT = {
+      result: [
+        {
+          lab_id: "ID",
+          info: {
+            category: "XX",
+          },
+          lab_detail: {
+            category: "XX",
+          },
+          certifications: "cert",
+          verification_status: false,
+          service_flow: false,
+          blockMetaData: 1,
+        }
+      ]
+    }
 
     // Assert
     expect(labServiceMock.getByCountryCityCategory(
@@ -95,15 +139,14 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   it('should return empty', () => {
     // Arrange
     const RESULT = [];
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject({
-      error: {
-        body : {
-          error: {
-            type: 'index_not_found_exception'
-          }
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'index_not_found_exception'
         }
       }
-    }));
+    };
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(labServiceMock.getByCountryCityCategory(
@@ -114,25 +157,33 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
         false,
         1,
         10
-    )).resolves.toEqual(RESULT);
+    )).resolves.toEqual({
+      result: RESULT
+    });
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
     // Arrange
-    const ERROR_RESULT = "ERR";
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject());
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'failed'
+        }
+      }
+    };
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(labServiceMock.getByCountryCityCategory(
-        "XX",
-        "XX",
-        "XX",
-        "XX",
-        false,
-        1,
-        10
-    )).resolves.toThrowError(ERROR_RESULT);
+      "XX",
+      "XX",
+      "XX",
+      "XX",
+      false,
+      1,
+      10
+    )).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });
