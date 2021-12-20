@@ -1,6 +1,7 @@
 import { DateTimeProxy } from "src/common/date-time/date-time.proxy";
 import { Repository } from "typeorm";
 import { File, Bucket } from '@google-cloud/storage';
+import { ElasticsearchService } from "@nestjs/elasticsearch";
 
 export type MockType<T> = {
     [P in keyof T]?: jest.Mock<{}>;
@@ -28,3 +29,12 @@ export const bucketMockFactory: () => MockType<Bucket> = jest.fn(() => ({
 export class GCloudStorageServiceMock {
   bucket = bucketMockFactory();
 }
+
+export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchService> = jest.fn(() => ({
+  delete: jest.fn(entity => entity),
+  deleteByQuery: jest.fn(entity => entity),
+  index: jest.fn(entity => entity),
+  update: jest.fn(entity => entity),
+  updateByQuery: jest.fn(entity => entity),
+  search: jest.fn(entity => entity),
+}));
