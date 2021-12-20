@@ -42,7 +42,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const READ = "read";
     const FILENAME = "filename";
-    const READ_SIGNED_URL = "r";
+    const READ_SIGNED_URL = ["readurl"];
     const READ_CONDITIONS = {
       action: READ,
       expires: EXPIRES,
@@ -55,7 +55,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
 
     // Assert
     expect(cloudStorageController.GetSignedUrl(FILENAME, READ)).resolves.toEqual({
-        signedUrl: READ_SIGNED_URL
+        signedUrl: READ_SIGNED_URL[0]
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();
@@ -68,7 +68,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const WRITE = "write";
     const FILENAME = "filename";
-    const WRITE_SIGNED_URL = "w";
+    const WRITE_SIGNED_URL = ["writeurl"];
     const WRITE_CONDITIONS = {
       action: WRITE,
       contentType: 'application/x-www-form-urlencoded',
@@ -82,7 +82,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
 
     // Assert
     expect(cloudStorageController.GetSignedUrl(FILENAME, WRITE)).resolves.toEqual({
-        signedUrl: WRITE_SIGNED_URL
+        signedUrl: WRITE_SIGNED_URL[0]
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();
