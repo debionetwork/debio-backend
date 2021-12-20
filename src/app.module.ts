@@ -19,11 +19,14 @@ import { ServiceCategoryModule } from './category/service/service-category.modul
 import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
 import { RewardModule } from './reward/reward.module';
 import { VerificationModule } from './verification/verification.module';
+import { SchedulersModule } from './schedulers/schedulers.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.HOST_POSTGRES,
@@ -61,6 +64,7 @@ require('dotenv').config(); // eslint-disable-line
     VerificationModule,
     RecaptchaModule,
     BountyModule,
+    SchedulersModule,
   ],
 })
 export class AppModule {}
