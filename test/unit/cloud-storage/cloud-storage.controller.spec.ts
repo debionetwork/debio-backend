@@ -53,12 +53,11 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const READ = "read";
     const FILENAME = "filename";
-    const READ_SIGNED_URL = "readurl";
+    const READ_SIGNED_URL = "r";
     const READ_CONDITIONS = {
-        version: 'v4',
-        action: READ,
-        expires: EXPIRES,
-        contentType: 'application/x-www-form-urlencoded',
+      action: READ,
+      expires: EXPIRES,
+      version: 'v4',
     };
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
@@ -80,12 +79,12 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const WRITE = "write";
     const FILENAME = "filename";
-    const WRITE_SIGNED_URL = "writeurl";
+    const WRITE_SIGNED_URL = "w";
     const WRITE_CONDITIONS = {
-        version: 'v4',
-        action: WRITE,
-        expires: EXPIRES,
-        contentType: 'application/x-www-form-urlencoded',
+      action: WRITE,
+      contentType: 'application/x-www-form-urlencoded',
+      expires: EXPIRES,
+      version: 'v4',
     }
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
