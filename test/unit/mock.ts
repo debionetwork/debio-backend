@@ -21,7 +21,6 @@ export const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn((
 export const fileMockFactory: () => MockType<File> = jest.fn(() => ({
   getSignedUrl: jest.fn(entity => entity)
 }));
-const fileMock = fileMockFactory();
 
 export const bucketMockFactory: () => MockType<Bucket> = jest.fn(() => ({
     file: jest.fn(entity => entity)
