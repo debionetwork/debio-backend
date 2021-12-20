@@ -54,7 +54,14 @@ describe('Substrate Indexer Service Controller Unit Tests', () => {
         "XX",
     );
     const RESULT = [1];
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(RESULT);
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: RESULT
+        }
+      }
+    };
+    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
 
     // Assert
     expect(serviceControllerMock.findByCountryCity({
@@ -68,16 +75,15 @@ describe('Substrate Indexer Service Controller Unit Tests', () => {
   it('should return empty', () => {
     // Arrange
     const RESULT = [];
-    const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject({
-      error: {
-        body : {
-          error: {
-            type: 'index_not_found_exception'
-          }
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'index_not_found_exception'
         }
       }
-    }))
+    };
+    const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(serviceControllerMock.findByCountryCity({
@@ -90,15 +96,21 @@ describe('Substrate Indexer Service Controller Unit Tests', () => {
 
   it('should throw error', () => {
     // Arrange
-    const ERROR_RESULT = "ERR";
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'failed'
+        }
+      }
+    };
     const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(new Error(ERROR_RESULT)))
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT))
 
     // Assert
     expect(serviceControllerMock.findByCountryCity({
       city: "XX",
       country: "XX",
-    })).resolves.toThrowError(ERROR_RESULT);
+    })).rejects.toMatchObject(ERROR_RESULT);
     expect(serviceServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });

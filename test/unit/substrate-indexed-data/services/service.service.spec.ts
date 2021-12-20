@@ -49,7 +49,14 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
         "XX",
     );
     const RESULT = [1];
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(RESULT);
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: RESULT
+        }
+      }
+    };
+    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
 
     // Assert
     expect(serviceServiceMock.getByCountryCity(
@@ -62,15 +69,14 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
   it('should return empty', () => {
     // Arrange
     const RESULT = [];
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject({
-      error: {
-        body : {
-          error: {
-            type: 'index_not_found_exception'
-          }
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'index_not_found_exception'
         }
       }
-    }));
+    };
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(serviceServiceMock.getByCountryCity(
@@ -82,14 +88,20 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
 
   it('should throw error', () => {
     // Arrange
-    const ERROR_RESULT = "ERR";
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject());
+    const ERROR_RESULT = {
+      body : {
+        error: {
+          type: 'failed'
+        }
+      }
+    };
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
     expect(serviceServiceMock.getByCountryCity(
-        "XX",
-        "XX"
-    )).resolves.toThrowError(ERROR_RESULT);
+      "XX",
+      "XX"
+    )).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });
