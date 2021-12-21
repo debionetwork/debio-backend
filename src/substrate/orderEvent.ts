@@ -1,6 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
 import { Option } from '@polkadot/types';
-import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
 import { EscrowService } from 'src/escrow/escrow.service';
 import { RewardDto } from 'src/reward/dto/reward.dto';
 import { RewardService } from 'src/reward/reward.service';
@@ -9,6 +8,7 @@ import { Logger } from '@nestjs/common';
 import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
 import { ethers } from 'ethers'
+import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
 
 export class OrderEventHandler {
   constructor(
@@ -16,7 +16,7 @@ export class OrderEventHandler {
     private substrateApi: ApiPromise,
     private logger: Logger,
     private substrateService: SubstrateService,
-    private dbioBalanceService: DbioBalanceService,
+    private exchangeCacheService: CacheRedisService,
     private rewardService: RewardService,
     private loggingService: TransactionLoggingService,
   ) {}
@@ -187,7 +187,7 @@ export class OrderEventHandler {
           )
         ).toJSON();
         const debioToDai = Number(
-          (await this.dbioBalanceService.getDebioBalance()).dai,
+          (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
         const servicePrice = order['price'][0].value * debioToDai;
         // send reward to customer

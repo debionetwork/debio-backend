@@ -1,17 +1,17 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { RewardDto } from '../reward/dto/reward.dto';
-import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { ethers } from 'ethers'
+import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
 
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
     private readonly rewardService: RewardService,
-    private dbioBalanceService: DbioBalanceService,
+    private exchangeCacheService: CacheRedisService,
     private substrateService: SubstrateService,
     private api: ApiPromise,
   ) {}
@@ -81,7 +81,7 @@ export default class GeneticTestingEventHandler implements OnModuleInit {
     ).toJSON();
 
     const debioToDai = Number(
-      (await this.dbioBalanceService.getDebioBalance()).dai,
+      (await this.exchangeCacheService.getExchange())['dbioToDai'],
     );
     const rewardPrice = dataOrder['price'][0].value * debioToDai;
 
