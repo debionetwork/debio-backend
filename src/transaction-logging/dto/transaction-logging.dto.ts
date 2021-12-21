@@ -4,7 +4,7 @@ export class TransactionLoggingDto {
   address: string;
 
   @Transform((val) => BigInt(val.value))
-  amount: bigint;
+  amount: number;
 
   created_at: Date;
 

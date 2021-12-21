@@ -32,4 +32,13 @@ export class TransactionLoggingService {
       },
     });
   }
+
+  getLoggingByHashAndStatus(ref_number: string, transaction_status: number) {
+    return this.transactionRequestRepository.findOne({
+      where: {
+        ref_number,
+        transaction_status,
+      },
+    });
+  }
 }

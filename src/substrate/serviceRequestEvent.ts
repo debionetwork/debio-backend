@@ -1,11 +1,16 @@
 import { ApiPromise } from '@polkadot/api';
 import { ethers } from 'ethers'
+import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { MailerManager } from '../common/mailer';
+import { Logger } from '@nestjs/common';
 
 export class ServiceRequestEventHandler {
   constructor(
     private api: ApiPromise,
-    private mailerManager: MailerManager
+    private mailerManager: MailerManager,
+    private loggingService: TransactionLoggingService,
+    private logger: Logger
     ) {}
     
   handle(event) {
@@ -15,6 +20,13 @@ export class ServiceRequestEventHandler {
         break;
       case 'ServiceRequestCreated':
         this.sendEmailNotificationServiceRequestCreated(event);
+        this.insertStakingLoggingToDatabase(event)
+        break;
+      case 'ServiceRequestWaitingForUnstaked':
+        this.insertWaitingForUnstakeLoggingToDatabase(event)
+        break;
+      case 'ServiceRequestUnstaked':
+        this.insertUnstakeLoggingToDatabase(event)
         break;
     }
   }
@@ -23,7 +35,7 @@ export class ServiceRequestEventHandler {
     const serviceRequest = await event.data[0].toHuman();
     const serviceInvoice =
       await this.api.query.serviceRequest.serviceInvoiceById(
-        serviceRequest.hash_,
+        serviceRequest.hash,
       );
     await this.api.tx.orders.setOrderPaid(serviceInvoice['orderId']);
   }
@@ -51,5 +63,119 @@ export class ServiceRequestEventHandler {
       process.env.EMAILS.split(','),
       context
     )
+  }
+
+  async insertStakingLoggingToDatabase(event) {
+    const serviceRequest = await event.data[1].toJSON();
+    const stakingLogging : TransactionLoggingDto = {
+      address: serviceRequest.requesterAddress,
+      amount: Number(serviceRequest.stakingAmount)/ 10**18,
+      created_at: new Date(parseInt(serviceRequest.createdAt)),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: serviceRequest.hash,
+      transaction_status: 7,
+      transaction_type: 2
+    }
+    
+    try {
+      const isServiceRequestHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        serviceRequest.hash,
+        7
+      )
+      if (!isServiceRequestHasBeenInsert) {
+        await this.loggingService.create(stakingLogging)
+      }
+    } catch (error) {
+      await this.logger.log(error);
+    }
+  }
+
+  async insertWaitingForUnstakeLoggingToDatabase(event) {
+    const serviceRequest = await event.data[1].toJSON();
+    
+    try {
+      const serviceRequestParent = await this.loggingService.getLoggingByOrderId(
+        serviceRequest.hash
+      )
+      const isServiceRequestHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        serviceRequest.hash,
+        11
+      )
+      const stakingLogging : TransactionLoggingDto = {
+        address: serviceRequest.requesterAddress,
+        amount: 0,
+        created_at: new Date(),
+        currency: 'DBIO',
+        parent_id: BigInt(serviceRequestParent.id),
+        ref_number: serviceRequest.hash,
+        transaction_status: 11,
+        transaction_type: 2
+      }
+
+      if(!isServiceRequestHasBeenInsert){
+        await this.loggingService.create(stakingLogging)
+      }
+    } catch (error) {
+      await this.logger.log(error);
+    }
+  }
+
+  async insertUnstakeLoggingToDatabase(event) {
+    const serviceRequest = await event.data[1].toJSON();
+    
+    try {
+      const serviceRequestParent = await this.loggingService.getLoggingByOrderId(
+        serviceRequest.hash
+      )
+      const isServiceRequestHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        serviceRequest.hash,
+        8
+      )
+      const stakingLogging : TransactionLoggingDto = {
+        address: serviceRequest.requesterAddress,
+        amount: Number(serviceRequest.stakingAmount)/ 10**18,
+        created_at: new Date(),
+        currency: 'DBIO',
+        parent_id: BigInt(serviceRequestParent.id),
+        ref_number: serviceRequest.hash,
+        transaction_status: 8,
+        transaction_type: 2
+      }
+      if(!isServiceRequestHasBeenInsert){
+        await this.loggingService.create(stakingLogging)
+      }
+    } catch (error) {
+      await this.logger.log(error);
+    }
+  }
+
+  async insertFinalizedLoggingToDatabase(event) {
+    const serviceRequest = await event.data[1].toJSON();
+    
+    try {
+      const serviceRequestParent = await this.loggingService.getLoggingByOrderId(
+        serviceRequest.hash
+      )
+      const isServiceRequestHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        serviceRequest.hash,
+        12
+      )
+      const stakingLogging : TransactionLoggingDto = {
+        address: serviceRequest.requesterAddress,
+        amount: Number(serviceRequest.stakingAmount)/ 10**18,
+        created_at: new Date(),
+        currency: 'DBIO',
+        parent_id: BigInt(serviceRequestParent.id),
+        ref_number: serviceRequest.hash,
+        transaction_status: 12,
+        transaction_type: 2
+      }
+      if(!isServiceRequestHasBeenInsert){
+        await this.loggingService.create(stakingLogging)
+      }
+    } catch (error) {
+      await this.logger.log(error);
+    }
   }
 }
