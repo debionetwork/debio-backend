@@ -242,7 +242,7 @@ jobs:
               --set-string config.web3RPCHttps=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }} \
               --set-string config.debioEscrowPrivateKey=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }} \
               --set-string config.escrowContractAddress=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }} \
-              --set-string config.coinmarketcapApiKey=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }} \
+              --set-string config.coinmarketcapApiKey="${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }}" \
               --set-string config.recaptchaSecretKey=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }} \
               --set-string config.debioApiKey=${{ steps.secrets.outputs.DEBIO_API_KEY }} \
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
