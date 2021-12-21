@@ -47,95 +47,111 @@ export class OrderEventHandler {
   }
 
   async onOrderCreated(event) {
-    console.log('OrderCreated!');
+    await this.logger.log('OrderCreated!');
     const order = event.data[0].toJSON();
-    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
-    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
-    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
-    order.prices[0].value = Number(order.prices[0].value) / 10**18
-    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
     
-
-    console.log(order);
-    //insert logging to DB
-    const orderLogging: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: order.additionalPrices[0].value + order.prices[0].value,
-      created_at: new Date(parseInt(order.createdAt)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(0),
-      ref_number: order.id,
-      transaction_status: 1,
-      transaction_type: 1,
-    };
-
     try {
-      await this.loggingService.create(orderLogging);
+      const isOrderHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        order.id,
+        1
+      )
+      order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+      order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+      order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+      order.prices[0].value = Number(order.prices[0].value) / 10**18
+      order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+      
+      //insert logging to DB
+      const orderLogging: TransactionLoggingDto = {
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: new Date(parseInt(order.createdAt)),
+        currency: order.currency.toUpperCase(),
+        parent_id: BigInt(0),
+        ref_number: order.id,
+        transaction_status: 1,
+        transaction_type: 1,
+      };
+      if (!isOrderHasBeenInsert) {    
+        await this.loggingService.create(orderLogging);
+      }
     } catch (error) {
-      console.log(error);
+      await this.logger.log(error);
     }
   }
 
   async onOrderPaid(event) {
-    console.log('OrderPaid!');
+    await this.logger.log('OrderPaid!');
     const order = event.data[0].toJSON();
-    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
-    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
-    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
-    order.prices[0].value = Number(order.prices[0].value) / 10**18
-    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
     
-    const orderHistory = await this.loggingService.getLoggingByOrderId(
-      order.id,
-    );
-
-    //insert logging to DB
-    const orderLogging: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: order.additionalPrices[0].value + order.prices[0].value,
-      created_at: new Date(parseInt(order.updatedAt)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 2,
-      transaction_type: 1,
-    };
-
     try {
-      await this.loggingService.create(orderLogging);
+      const isOrderHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        order.id,
+        2
+      )
+      order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+      order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+      order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+      order.prices[0].value = Number(order.prices[0].value) / 10**18
+      order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+      
+      const orderHistory = await this.loggingService.getLoggingByOrderId(
+        order.id,
+      );
+  
+      //insert logging to DB
+      const orderLogging: TransactionLoggingDto = {
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: new Date(parseInt(order.updatedAt)),
+        currency: order.currency.toUpperCase(),
+        parent_id: BigInt(orderHistory.id),
+        ref_number: order.id,
+        transaction_status: 2,
+        transaction_type: 1,
+      };
+      if (!isOrderHasBeenInsert) {    
+        await this.loggingService.create(orderLogging);
+      }
     } catch (error) {
-      console.log(error);
+      await this.logger.log(error);
     }
   }
 
   async onOrderFulfilled(event) {
-    console.log('Order Fulfilled!');
+    await this.logger.log('Order Fulfilled!');
     const order = event.data[0].toJSON();
-    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
-    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
-    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
-    order.prices[0].value = Number(order.prices[0].value) / 10**18
-    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
     
-    const orderHistory = await this.loggingService.getLoggingByOrderId(
-      order.id,
-    );
-
-    //Logging data input
-    const orderLogging: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: order.additionalPrices[0].value + order.prices[0].value,
-      created_at: new Date(parseInt(order.updatedAt)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 3,
-      transaction_type: 1,
-    };
-
     try {
+      const isOrderHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        order.id,
+        3
+      )
+      order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+      order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+      order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+      order.prices[0].value = Number(order.prices[0].value) / 10**18
+      order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+      
+      const orderHistory = await this.loggingService.getLoggingByOrderId(
+        order.id,
+      );
+  
+      //Logging data input
+      const orderLogging: TransactionLoggingDto = {
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: new Date(parseInt(order.updatedAt)),
+        currency: order.currency.toUpperCase(),
+        parent_id: BigInt(orderHistory.id),
+        ref_number: order.id,
+        transaction_status: 3,
+        transaction_type: 1,
+      };
       //logging transaction
-      await this.loggingService.create(orderLogging);
+      if (!isOrderHasBeenInsert) {
+        await this.loggingService.create(orderLogging);
+      }
 
       const resp =
         await this.substrateApi.query.userProfile.ethAddressByAccountId(
@@ -221,90 +237,100 @@ export class OrderEventHandler {
       );
       this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
     } catch (err) {
-      console.log(err);
+      await this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
   }
 
   async onOrderRefunded(event) {
-    console.log('OrderRefunded!');
-
+    await this.logger.log('OrderRefunded!');
     const order = event.data[0].toJSON();
-    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
-    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
-    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
-    order.prices[0].value = Number(order.prices[0].value) / 10**18
-    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
     
-    const orderHistory = await this.loggingService.getLoggingByOrderId(
-      order.id,
-    );
-
-    //insert logging to DB
-    const orderLogging: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: order.prices[0].value,
-      created_at: new Date(parseInt(order.updatedAt)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 4,
-      transaction_type: 1,
-    };
-
     try {
-      await this.loggingService.create(orderLogging);
+      const isOrderHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        order.id,
+        4
+      )
+      order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+      order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+      order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+      order.prices[0].value = Number(order.prices[0].value) / 10**18
+      order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+      
+      const orderHistory = await this.loggingService.getLoggingByOrderId(
+        order.id,
+      );
+  
+      //insert logging to DB
+      const orderLogging: TransactionLoggingDto = {
+        address: order.customerId,
+        amount: order.prices[0].value,
+        created_at: new Date(parseInt(order.updatedAt)),
+        currency: order.currency.toUpperCase(),
+        parent_id: BigInt(orderHistory.id),
+        ref_number: order.id,
+        transaction_status: 4,
+        transaction_type: 1,
+      };
+      if (!isOrderHasBeenInsert) {      
+        await this.loggingService.create(orderLogging);
+      }
     } catch (error) {
-      console.log(error);
+      await this.logger.log(error);
     }
   }
 
   async onOrderCancelled(event) {
-    console.log('OrderCancelled');
+    await this.logger.log('OrderCancelled');
     const order = event.data[0].toJSON();
-    order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
-    order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
-    order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
-    order.prices[0].value = Number(order.prices[0].value) / 10**18
-    order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
     
-    const orderHistory = await this.loggingService.getLoggingByOrderId(
-      order.id,
-    );
-    //Logging data Input
-    const orderLogging: TransactionLoggingDto = {
-      address: order.customerId,
-      amount: order.additionalPrices[0].value + order.prices[0].value,
-      created_at: new Date(parseInt(order.updatedAt)),
-      currency: order.currency.toUpperCase(),
-      parent_id: BigInt(orderHistory.id),
-      ref_number: order.id,
-      transaction_status: 5,
-      transaction_type: 1,
-    };
-    await this.escrowService.cancelOrder(order);
-
     try {
-      await this.loggingService.create(orderLogging);
+      const isOrderHasBeenInsert = await this.loggingService.getLoggingByHashAndStatus(
+        order.id,
+        5
+      )
+      order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
+      order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
+      order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
+      order.prices[0].value = Number(order.prices[0].value) / 10**18
+      order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
+      
+      const orderHistory = await this.loggingService.getLoggingByOrderId(
+        order.id,
+      );
+      //Logging data Input
+      const orderLogging: TransactionLoggingDto = {
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: new Date(parseInt(order.updatedAt)),
+        currency: order.currency.toUpperCase(),
+        parent_id: BigInt(orderHistory.id),
+        ref_number: order.id,
+        transaction_status: 5,
+        transaction_type: 1,
+      };
+      await this.escrowService.cancelOrder(order);
+      if (!isOrderHasBeenInsert) {      
+        await this.loggingService.create(orderLogging);
+      }
     } catch (error) {
-      console.log(error);
+      await this.logger.log(error);
     }
   }
 
   onOrderNotFound(event) {
-    console.log('OrderNotFound!');
+    this.logger.log('OrderNotFound!');
   }
 
   async onOrderFailed(event) {
-    console.log('OrderFailed!');
+    await this.logger.log('OrderFailed!');
     const order = event.data[0].toJSON();
     order.dnaSampleTrackingId = ethers.utils.toUtf8String(order.dnaSampleTrackingId)
     order.additionalPrices[0].value = Number(order.additionalPrices[0].value) / 10**18
     order.additionalPrices[0].component = ethers.utils.toUtf8String(order.additionalPrices[0].component)
     order.prices[0].value = Number(order.prices[0].value) / 10**18
     order.prices[0].component = ethers.utils.toUtf8String(order.prices[0].component)
-    
-
+  
     await this.escrowService.refundOrder(order.id);
     await this.substrateService.setOrderRefunded(order.id);
   }
