@@ -44,21 +44,23 @@ export class UnstakedService implements OnModuleInit {
       const listRequestService = createRequestService.body.hits.hits;
   
       for (const requestService of listRequestService) {
-        const timeWaitingUnstaked: string = requestService['_source']['request']['unstaked_at'];
+        const timeWaitingUnstaked: string | null = requestService['_source']['request']['unstaked_at'];
 
-        if (timeWaitingUnstaked) {
-          const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
+        if (!timeWaitingUnstaked) {
+          continue;
+        }
+        
+        const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
           
-          // const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
-          const timeNext6Days = numberTimeWaitingUnstaked + (5 * 60 * 1000);
-          const timeNow = new Date().getTime();
-  
-          const diffTime = timeNext6Days - timeNow;
-  
-          if (diffTime <= 0) {
-            const requestId = requestService['_source']['request']['hash'];
-            await this.subtrateService.retrieveUnstakedAmount(requestId);
-          }
+        // const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
+        const timeNext6Days = numberTimeWaitingUnstaked + (5 * 60 * 1000);
+        const timeNow = new Date().getTime();
+
+        const diffTime = timeNext6Days - timeNow;
+
+        if (diffTime <= 0) {
+          const requestId = requestService['_source']['request']['hash'];
+          await this.subtrateService.retrieveUnstakedAmount(requestId);
         }
       }
     } catch (err) {
