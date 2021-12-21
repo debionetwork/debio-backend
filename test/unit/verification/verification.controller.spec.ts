@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../mock';
+import { when } from 'jest-when';
 import { VerificationService } from '../../../src/verification/verification.service';
 import { VerificationController } from '../../../src/verification/verification.controller';
 import { ProcessEnvProxy } from '../../../src/common/process-env';
 
-const httpMocks = require('node-mocks-http');
+import httpMocks from 'node-mocks-http';
 
 describe('Verification Controller Unit Tests', () => {
   let verificationController: VerificationController;
