@@ -47,7 +47,7 @@ export class SubstrateController {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;
-    const rewardAmount = 1;
+    const rewardAmount = 0.1;
 
     const dataInput: RewardDto = {
       address: accountId,

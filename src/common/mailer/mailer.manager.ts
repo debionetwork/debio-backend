@@ -25,8 +25,8 @@ export class MailerManager {
       context.state
       )).name
       
-    context.country = countryName
-    context.state = regionName
+    context.country = countryName || context.country
+    context.state = regionName || context.state
     this.mailerService.sendMail({
       to: to,
       subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
