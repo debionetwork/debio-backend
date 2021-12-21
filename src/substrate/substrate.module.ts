@@ -4,14 +4,14 @@ import { SubstrateController } from './substrate.controller';
 import { EscrowModule } from '../escrow/escrow.module';
 import { TransactionLoggingModule } from '../transaction-logging/transaction-logging.module';
 import { RewardModule } from 'src/reward/reward.module';
-import { DbioBalanceModule } from 'src/dbio-balance/dbio_balance.module';
 import { MailModule } from 'src/common/mailer/mailer.module';
+import { CacheRedisModule } from 'src/cache-redis/cache-redis.module';
 
 @Module({
   imports: [
     forwardRef(() => EscrowModule),
     forwardRef(() => RewardModule),
-    DbioBalanceModule,
+    CacheRedisModule,
     TransactionLoggingModule,
     MailModule,
   ],

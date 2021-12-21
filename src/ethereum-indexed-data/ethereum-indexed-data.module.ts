@@ -4,13 +4,13 @@ import { ServiceRequestController } from './service-request/service-request.cont
 import { ServiceRequestService } from './service-request/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { EthereumModule } from '../ethereum/ethereum.module';
-import { DbioBalanceModule } from '../dbio-balance/dbio_balance.module';
+import { CacheRedisModule } from '../cache-redis/cache-redis.module';
 
 @Module({
   imports: [
     forwardRef(() => LocationModule),
     forwardRef(() => EthereumModule),
-    DbioBalanceModule,
+    CacheRedisModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,

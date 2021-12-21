@@ -1,9 +1,10 @@
 import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
-import { StateService } from 'src/location/state.service';
+import { StateService } from '../../location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
+import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
+import { map } from 'rxjs';
 
 interface RequestsByCountry {
   country: string;
@@ -22,13 +23,19 @@ export class ServiceRequestService {
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
-    private dbioBalanceService: DbioBalanceService,
+    private exchangeCacheService: CacheRedisService,
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
 
     const requestByCountryList: Array<RequestsByCountry> = [];
     try {
+      const exchangeBalance = await this.exchangeCacheService.getExchange()
+      .pipe(
+        map(res => res.data)
+      )
+      console.log('exchangeBalance', JSON.stringify(exchangeBalance, null, 2));
+      
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
         body: { from: 0, size: 1000 },
@@ -43,11 +50,9 @@ export class ServiceRequestService {
         'USD',
         1,
       );
-      const oneDbioEquailToDai = Number(
-        await (
-          await this.dbioBalanceService.getDebioBalance()
-        ).dai,
-      );
+      const oneDbioEquailToDai = exchangeBalance['dbioToDai']
+      console.log('oneDbioEquailToDai',oneDbioEquailToDai);
+      
   
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
