@@ -1,5 +1,4 @@
 import { ApiPromise, WsProvider, Keyring } from '@polkadot/api';
-import { KeyringPair } from '@polkadot/keyring/types';
 import {
   forwardRef,
   Inject,
@@ -18,6 +17,8 @@ import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
+import { CountryService } from '../location/country.service';
+import { StateService } from '../location/state.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -37,6 +38,8 @@ export class SubstrateService implements OnModuleInit {
     private escrowService: EscrowService,
     private mailerManager: MailerManager,
     private readonly transactionLoggingService: TransactionLoggingService,
+    private readonly countryService: CountryService,
+    private readonly stateService: StateService,
   ) {}
 
   async onModuleInit() {
@@ -73,11 +76,13 @@ export class SubstrateService implements OnModuleInit {
     );
 
     this.serviceRequestEventHandler = new ServiceRequestEventHandler(
+      this.countryService,
+      this.stateService,
       this.api,
       this.mailerManager,
       this.transactionLoggingService,
       this.logger,
-      );
+    );
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
