@@ -254,6 +254,7 @@ jobs:
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="100" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
@@ -263,8 +264,12 @@ jobs:
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
               --set-string ingress.hosts[0].host=api.dev.debio.network \
-              --set-string ingress.hosts[0].paths[0].path=/ \
-              --set-string ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+              --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
+              --set-string ingress.hosts[0].paths[0].pathType=Prefix \
+              --set-string ingress.hosts[0].paths[1].path=/conversion/\(\)\(.\*\) \
+              --set-string ingress.hosts[0].paths[1].pathType=Prefix \
+              --set-string ingress.hosts[0].paths[1].serviceName=debio-conversion \
+              --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
               --set autoscaling.enabled=true
