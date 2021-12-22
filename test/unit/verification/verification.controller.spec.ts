@@ -4,7 +4,7 @@ import { VerificationService } from '../../../src/verification/verification.serv
 import { VerificationController } from '../../../src/verification/verification.controller';
 import { ProcessEnvProxy } from '../../../src/common/process-env';
 
-const httpMocks = require('node-mocks-http');
+const httpMocks = require('node-mocks-http'); // eslint-disable-line
 
 describe('Verification Controller Unit Tests', () => {
   let verificationController: VerificationController;
