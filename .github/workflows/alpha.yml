@@ -112,11 +112,12 @@ jobs:
           key: ${{ runner.os }}-buildx-main
           restore-keys: |
             ${{ runner.os }}-buildx-
-      - name: Login to DockerHub
+      - name: Login to GCR
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.STG_GCP_SA_KEY }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -124,8 +125,8 @@ jobs:
           push: true
           file: .maintain/docker/Dockerfile
           tags: |
-            ${{ github.repository }}:${{ needs.compute-build-info.outputs.latest_tag }}
-            ${{ github.repository }}:latest-alpha
+            gcr.io/${{ secrets.STG_GCP_PROJECT_ID }}/${{ github.repository }}:${{ needs.compute-build-info.outputs.latest_tag }}
+            gcr.io/${{ secrets.STG_GCP_PROJECT_ID }}/${{ github.repository }}:latest-alpha
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
       # Temp fix
@@ -231,7 +232,9 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
+              --set-string image.repository=gcr.io/${{ secrets.STG_GCP_PROJECT_ID }}
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
+              --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
               --set-string config.postgres.host=${{ steps.secrets.outputs.POSTGRES_HOST }} \
@@ -257,7 +260,7 @@ jobs:
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
-              --set-string config.email.emails=${{ steps.secrets.outputs.EMAILS }} \
+              --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
