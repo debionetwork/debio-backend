@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DbioBalanceModule } from '../dbio-balance/dbio_balance.module';
+import { DebioConversionModule } from 'src/debio-conversion/debio-conversion.module';
+
 import { SubstrateModule } from '../substrate/substrate.module';
 import { Reward } from './models/reward.entity';
 import { RewardService } from './reward.service';
@@ -8,7 +9,7 @@ import { RewardService } from './reward.service';
 @Module({
   imports: [
     forwardRef(() => SubstrateModule),
-    DbioBalanceModule,
+    DebioConversionModule,
     TypeOrmModule.forFeature([Reward]),
   ],
   controllers: [],
