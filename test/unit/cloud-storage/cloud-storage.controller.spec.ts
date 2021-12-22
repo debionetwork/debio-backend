@@ -1,23 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
-import { File, Bucket } from '@google-cloud/storage';
 import { CloudStorageController } from '../../../src/cloud-storage/cloud-storage.controller';
-import { dateTimeProxyMockFactory, MockType } from '../mock';
+import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType } from '../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../src/common/date-time/date-time.proxy';
 
 describe('Cloud Storage Controller Unit Tests', () => {
-  const fileMockFactory: () => MockType<File> = jest.fn(() => ({
-    getSignedUrl: jest.fn(entity => entity)
-  }));
   const fileMock = fileMockFactory();
-
-  const bucketMockFactory: () => MockType<Bucket> = jest.fn(() => ({
-      file: jest.fn(entity => entity)
-  }));
-  class GCloudStorageServiceMock {
-    bucket = bucketMockFactory();
-  }
 
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let cloudStorageServiceMock: GCloudStorageServiceMock;
@@ -53,12 +42,11 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const READ = "read";
     const FILENAME = "filename";
-    const READ_SIGNED_URL = "readurl";
+    const READ_SIGNED_URL = ["readurl"];
     const READ_CONDITIONS = {
-        version: 'v4',
-        action: READ,
-        expires: EXPIRES,
-        contentType: 'application/x-www-form-urlencoded',
+      action: READ,
+      expires: EXPIRES,
+      version: 'v4',
     };
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
@@ -67,7 +55,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
 
     // Assert
     expect(cloudStorageController.GetSignedUrl(FILENAME, READ)).resolves.toEqual({
-        signedUrl: READ_SIGNED_URL
+        signedUrl: READ_SIGNED_URL[0]
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();
@@ -80,12 +68,12 @@ describe('Cloud Storage Controller Unit Tests', () => {
     const EXPIRES = 0;
     const WRITE = "write";
     const FILENAME = "filename";
-    const WRITE_SIGNED_URL = "writeurl";
+    const WRITE_SIGNED_URL = ["writeurl"];
     const WRITE_CONDITIONS = {
-        version: 'v4',
-        action: WRITE,
-        expires: EXPIRES,
-        contentType: 'application/x-www-form-urlencoded',
+      action: WRITE,
+      contentType: 'application/x-www-form-urlencoded',
+      expires: EXPIRES,
+      version: 'v4',
     }
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
@@ -94,7 +82,7 @@ describe('Cloud Storage Controller Unit Tests', () => {
 
     // Assert
     expect(cloudStorageController.GetSignedUrl(FILENAME, WRITE)).resolves.toEqual({
-        signedUrl: WRITE_SIGNED_URL
+        signedUrl: WRITE_SIGNED_URL[0]
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();
