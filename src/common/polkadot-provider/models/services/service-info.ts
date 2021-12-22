@@ -5,11 +5,11 @@ export class ServiceInfo {
   name: string;
   category: string;
   description: string;
-  prices_by_currency: PriceByCurrency[];
-  expected_duration: ExpectedDuration;
-  test_result_sample: string;
-  long_description?: string;
+  pricesByCurrency: PriceByCurrency[];
+  expectedDuration: ExpectedDuration;
+  testResultSample: string;
+  longDescription?: string;
   image?: string;
-  dna_collection_process?: string;
+  dnaCollectionProcess?: string;
   price?: string;
 }

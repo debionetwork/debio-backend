@@ -17,7 +17,7 @@ export async function queryCertificationsByMultipleIds(
 ): Promise<Array<Certification>> {
   const certifications: Array<Certification> = new Array<Certification>();
   for (const id in certificationIds) {
-    certifications.push(await queryCertificationById(api, id));
+    certifications.push(await queryCertificationById(api, certificationIds[id]));
   }
   return certifications;
 }

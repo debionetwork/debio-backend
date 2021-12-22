@@ -40,7 +40,7 @@ export class ServiceEventHandler {
       lrc.description = val.info.description;
       lrc.month = val.info.month;
       lrc.year = val.info.year;
-      lrc.supporting_document = val.info.supporting_document;
+      lrc.supporting_document = val.info.supportingDocument;
       labRegisterCertifications.push(lrc);
     });
     return labRegisterCertifications;
@@ -59,12 +59,11 @@ export class ServiceEventHandler {
       lrs.price = val.price;
       lrs.qc_price = val.qc_price;
       lrs.description = val.info.description;
-      lrs.long_description = val.info.long_description;
-      lrs.supporting_document = val.info.test_result_sample;
-      lrs.test_result_sample = val.info.test_result_sample;
-      lrs.expected_duration.duration = val.info.expected_duration.duration;
+      lrs.long_description = val.info.longDescription;
+      lrs.test_result_sample = val.info.testResultSample;
+      lrs.expected_duration.duration = val.info.expectedDuration.duration;
       lrs.expected_duration.duration_type =
-        val.info.expected_duration.duration_type;
+        val.info.expectedDuration.duration_type;
       labRegisterServices.push(lrs);
     });
     return labRegisterServices;
@@ -74,14 +73,14 @@ export class ServiceEventHandler {
     const labRegister = new LabRegister();
 
     labRegister.email = lab.info.email;
-    labRegister.phone_number = lab.info.phone_number;
+    labRegister.phone_number = lab.info.phoneNumber;
     labRegister.website = lab.info.website;
     labRegister.lab_name = lab.info.name;
     labRegister.country = lab.info.country;
     labRegister.state = lab.info.region;
     labRegister.city = lab.info.city;
     labRegister.address = lab.info.address;
-    labRegister.profile_image = lab.info.profile_image;
+    labRegister.profile_image = lab.info.profileImage;
     labRegister.certifications = await this._getLabRegisterCertification(
       lab.certifications,
     );

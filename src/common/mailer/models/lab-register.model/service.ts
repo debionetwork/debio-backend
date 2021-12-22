@@ -6,11 +6,11 @@ export class LabRegisterExpectedDuration {
 export class LabRegisterService {
   category: string;
   name: string;
+  currency: string;
   price: string;
   qc_price: string;
   description: string;
   long_description: string;
-  supporting_document: string;
   test_result_sample: string;
   expected_duration: LabRegisterExpectedDuration;
 }

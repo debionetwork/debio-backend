@@ -11,7 +11,6 @@ import { EscrowService } from '../escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { DbioBalanceService } from '../dbio-balance/dbio_balance.service';
 import { RewardService } from '../reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
@@ -19,6 +18,7 @@ import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
 import { CountryService } from '../location/country.service';
 import { StateService } from '../location/state.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -30,7 +30,7 @@ export class SubstrateService implements OnModuleInit {
   private serviceEventHandler: ServiceEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
-  private dbioBalanceService: DbioBalanceService;
+  private exchangeCacheService: DebioConversionService;
   private rewardService: RewardService;
 
   constructor(
@@ -58,14 +58,14 @@ export class SubstrateService implements OnModuleInit {
       this.api,
       this.logger,
       this.substrateService,
-      this.dbioBalanceService,
+      this.exchangeCacheService,
       this.rewardService,
       this.transactionLoggingService,
     );
 
     this.geneticTestingEventHandler = new GeneticTestingEventHandler(
       this.rewardService,
-      this.dbioBalanceService,
+      this.exchangeCacheService,
       this.substrateService,
       this.api,
     );
@@ -233,5 +233,16 @@ export class SubstrateService implements OnModuleInit {
       });
 
     console.log(`lab ${acountId} is ${labStatus}`);
+  }
+
+  async retrieveUnstakedAmount(requestId) {
+    const wallet = this.adminWallet;
+    const response = await this.api.tx.serviceRequest
+    .retrieveUnstakedAmount(requestId)
+    .signAndSend(wallet, {
+      nonce: -1,
+    });
+
+    console.log(response);
   }
 }

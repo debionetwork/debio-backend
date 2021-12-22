@@ -16,15 +16,18 @@ import { CloudStorageModule } from './cloud-storage/cloud-storage.module';
 import { BountyModule } from './bounty/bounty.module';
 import { EmrModule } from './category/emr/emr.module';
 import { ServiceCategoryModule } from './category/service/service-category.module';
-import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
 import { RewardModule } from './reward/reward.module';
 import { VerificationModule } from './verification/verification.module';
+import { SchedulersModule } from './schedulers/schedulers.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
+import { DebioConversionModule } from './debio-conversion/debio-conversion.module';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.HOST_POSTGRES,
@@ -47,7 +50,6 @@ require('dotenv').config(); // eslint-disable-line
       autoLoadEntities: true,
     }),
     CloudStorageModule,
-    DbioBalanceModule,
     LocationModule,
     RewardModule,
     RatingModule,
@@ -55,6 +57,7 @@ require('dotenv').config(); // eslint-disable-line
     ServiceCategoryModule,
     EthereumModule,
     EscrowModule,
+    DebioConversionModule,
     SubstrateModule,
     SubstrateIndexedDataModule,
     EthereumIndexedDataModule,
@@ -62,6 +65,7 @@ require('dotenv').config(); // eslint-disable-line
     VerificationModule,
     RecaptchaModule,
     BountyModule,
+    SchedulersModule,
     HealthModule
   ],
 })

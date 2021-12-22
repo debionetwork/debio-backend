@@ -1,8 +1,8 @@
 export class LabInfo {
-  box_public_key: string;
+  boxPublicKey: string;
   name: string;
   email: string;
-  phone_number: string;
+  phoneNumber: string;
   website: string;
   country: string;
   region: string;
@@ -10,5 +10,5 @@ export class LabInfo {
   address: string;
   latitude?: string;
   longitude?: string;
-  profile_image?: string;
+  profileImage?: string;
 }
