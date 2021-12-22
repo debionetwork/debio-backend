@@ -32,6 +32,7 @@ export class SubstrateService implements OnModuleInit {
   private substrateService: SubstrateService;
   private exchangeCacheService: DebioConversionService;
   private rewardService: RewardService;
+  private listenStatus = false;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
@@ -125,7 +126,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    await this.logger.log('set order paid', orderId);
   }
 
   async setOrderRefunded(orderId: string) {
@@ -136,7 +137,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    await this.logger.log('set order refunded', orderId);
   }
 
   async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
@@ -209,7 +210,7 @@ export class SubstrateService implements OnModuleInit {
       .signAndSend(wallet, {
         nonce: -1,
       });
-    console.log("Submit Data Bounty");
+    await this.logger.log("Submit Data Bounty", orderId);
   }
 
   async sendReward(acountId: string, amount: number) {
@@ -221,7 +222,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(`Send Reward ${amount} DBIO to ${acountId}`);
+    await this.logger.log(`Send Reward ${amount} DBIO to ${acountId}`);
   }
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
@@ -232,7 +233,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(`lab ${acountId} is ${labStatus}`);
+    await this.logger.log(`lab ${acountId} is ${labStatus}`);
   }
 
   async retrieveUnstakedAmount(requestId) {
@@ -243,6 +244,13 @@ export class SubstrateService implements OnModuleInit {
       nonce: -1,
     });
 
-    console.log(response);
+    await this.logger.log('retrieve unstaked amount', requestId);
+  }
+
+  async startListen(){
+    if (this.listenStatus) return;
+
+    this.listenStatus = true;
+    
   }
 }
