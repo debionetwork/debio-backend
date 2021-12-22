@@ -1,7 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { CountryService } from 'src/location/country.service';
-import { StateService } from 'src/location/state.service';
 import { 
   CustomerStakingRequestService, 
   LabRegister 
@@ -11,22 +9,12 @@ import {
 export class MailerManager {
   constructor(
     private readonly mailerService: MailerService,
-    private readonly countryService: CountryService,
-    private readonly stateService: StateService
     ) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
-    const countryName = await (await this.countryService.getByIso2Code(context.country)).name
-    const regionName = await (await this.stateService.getState(
-      context.country,
-      context.state
-      )).name
-      
-    context.country = countryName || context.country
-    context.state = regionName || context.state
     this.mailerService.sendMail({
       to: to,
       subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
