@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import axios from "axios";
 
 @Injectable()
-export class CacheRedisService {
+export class DebioConversionService {
 	  async	getExchange() {
       const res = await axios.get(`${process.env.REDIS_STORE_URL}/cache`, {
         auth: {

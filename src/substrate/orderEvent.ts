@@ -8,7 +8,7 @@ import { Logger } from '@nestjs/common';
 import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
 import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
 import { ethers } from 'ethers'
-import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 export class OrderEventHandler {
   constructor(
@@ -16,7 +16,7 @@ export class OrderEventHandler {
     private substrateApi: ApiPromise,
     private logger: Logger,
     private substrateService: SubstrateService,
-    private exchangeCacheService: CacheRedisService,
+    private exchangeCacheService: DebioConversionService,
     private rewardService: RewardService,
     private loggingService: TransactionLoggingService,
   ) {}

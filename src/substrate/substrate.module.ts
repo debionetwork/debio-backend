@@ -5,13 +5,13 @@ import { EscrowModule } from '../escrow/escrow.module';
 import { TransactionLoggingModule } from '../transaction-logging/transaction-logging.module';
 import { RewardModule } from 'src/reward/reward.module';
 import { MailModule } from 'src/common/mailer/mailer.module';
-import { CacheRedisModule } from 'src/cache-redis/cache-redis.module';
+import { DebioConversionModule } from 'src/debio-conversion/debio-conversion.module';
 
 @Module({
   imports: [
     forwardRef(() => EscrowModule),
     forwardRef(() => RewardModule),
-    CacheRedisModule,
+    DebioConversionModule,
     TransactionLoggingModule,
     MailModule,
   ],

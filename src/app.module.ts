@@ -19,7 +19,7 @@ import { ServiceCategoryModule } from './category/service/service-category.modul
 import { RewardModule } from './reward/reward.module';
 import { VerificationModule } from './verification/verification.module';
 import { HealthModule } from './health/health.module';
-import { CacheRedisModule } from './cache-redis/cache-redis.module';
+import { DebioConversionModule } from './debio-conversion/debio-conversion.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -54,7 +54,7 @@ require('dotenv').config(); // eslint-disable-line
     ServiceCategoryModule,
     EthereumModule,
     EscrowModule,
-    CacheRedisModule,
+    DebioConversionModule,
     SubstrateModule,
     SubstrateIndexedDataModule,
     EthereumIndexedDataModule,

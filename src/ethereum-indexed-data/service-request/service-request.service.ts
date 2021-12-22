@@ -3,7 +3,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { StateService } from '../../location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
-import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 interface RequestsByCountry {
   country: string;
@@ -22,7 +22,7 @@ export class ServiceRequestService {
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
-    private exchangeCacheService: CacheRedisService,
+    private exchangeCacheService: DebioConversionService,
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {

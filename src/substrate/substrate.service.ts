@@ -17,7 +17,7 @@ import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
-import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -29,7 +29,7 @@ export class SubstrateService implements OnModuleInit {
   private serviceEventHandler: ServiceEventHandler;
   private readonly logger: Logger = new Logger(SubstrateService.name);
   private substrateService: SubstrateService;
-  private exchangeCacheService: CacheRedisService;
+  private exchangeCacheService: DebioConversionService;
   private rewardService: RewardService;
 
   constructor(

@@ -4,14 +4,14 @@ import { RewardDto } from '../reward/dto/reward.dto';
 import { RewardService } from '../reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { ethers } from 'ethers'
-import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 
 @Injectable()
 export default class GeneticTestingEventHandler implements OnModuleInit {
   constructor(
     private readonly rewardService: RewardService,
-    private exchangeCacheService: CacheRedisService,
+    private exchangeCacheService: DebioConversionService,
     private substrateService: SubstrateService,
     private api: ApiPromise,
   ) {}
