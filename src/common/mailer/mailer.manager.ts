@@ -24,7 +24,7 @@ export class MailerManager {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    let files: any[];
+    let files: any[] = [];
     context.certifications.forEach((val, idx) => {
       files.push({
         filename: `Certifications Supporting Document ${idx + 1}`,
