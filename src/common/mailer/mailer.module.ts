@@ -11,6 +11,7 @@ const plus = (value: string) => {
 }
 @Module({
   imports: [
+    LocationModule,
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',

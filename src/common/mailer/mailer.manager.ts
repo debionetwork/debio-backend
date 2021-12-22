@@ -1,5 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+import { CountryService } from 'src/location/country.service';
+import { StateService } from 'src/location/state.service';
 import { 
   CustomerStakingRequestService, 
   LabRegister,
@@ -16,6 +19,8 @@ export class MailerManager implements OnModuleInit {
   private api: ApiPromise
   constructor(
     private readonly mailerService: MailerService,
+    private readonly countryService: CountryService,
+    private readonly stateService: StateService,
     ) {}
 
   async onModuleInit(){
@@ -29,6 +34,14 @@ export class MailerManager implements OnModuleInit {
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
+    const countryName = await (await this.countryService.getByIso2Code(context.country)).name
+    const regionName = await (await this.stateService.getState(
+      context.country,
+      context.state
+      )).name
+      
+    context.country = countryName || context.country
+    context.state = regionName || context.state
     this.mailerService.sendMail({
       to: to,
       subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
@@ -38,7 +51,7 @@ export class MailerManager implements OnModuleInit {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    let files: any[] = [];
+    let files = []
     context.certifications.forEach((val, idx) => {
       files.push({
         filename: `${val.title}.pdf`,
@@ -104,7 +117,10 @@ export class MailerManager implements OnModuleInit {
       lrs.description = val.info.description;
       lrs.long_description = val.info.longDescription;
       lrs.test_result_sample = val.info.testResultSample;
-      lrs.expected_duration = val.info.expectedDuration;
+      lrs.expected_duration = {
+        duration: val.info.expectedDuration.duration,
+        duration_type: val.info.expectedDuration.durationType,
+      };
       labRegisterServices.push(lrs);
 
     });
