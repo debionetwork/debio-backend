@@ -1,4 +1,4 @@
-export class ExpectedDuration {
+export class ExpectedDurationMailer {
   duration: string;
   duration_type: string;
 }
@@ -12,5 +12,5 @@ export class LabRegisterService {
   long_description: string;
   supporting_document: string;
   test_result_sample: string;
-  expected_duration: ExpectedDuration;
+  expected_duration: ExpectedDurationMailer;
 }
