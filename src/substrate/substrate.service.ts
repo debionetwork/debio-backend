@@ -229,4 +229,15 @@ export class SubstrateService implements OnModuleInit {
 
     console.log(`lab ${acountId} is ${labStatus}`);
   }
+
+  async retrieveUnstakedAmount(requestId) {
+    const wallet = this.adminWallet;
+    const response = await this.api.tx.serviceRequest
+    .retrieveUnstakedAmount(requestId)
+    .signAndSend(wallet, {
+      nonce: -1,
+    });
+
+    console.log(response);
+  }
 }
