@@ -205,6 +205,9 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            REDIS_STORE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
+            REDIS_STORE_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
+            REDIS_STORE_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
             EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PASS_EMAIL
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
@@ -248,6 +251,9 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
+              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
@@ -318,6 +324,9 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
             ELASTICSEARCH_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            REDIS_STORE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
+            REDIS_STORE_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
+            REDIS_STORE_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
             EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PASS_EMAIL
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
@@ -361,6 +370,9 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
+              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails=${{ steps.secrets.outputs.EMAILS }} \
