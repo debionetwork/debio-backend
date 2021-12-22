@@ -14,8 +14,8 @@ export class TransactionRequest {
   @Column()
   transaction_type: number;
 
-  @Column({ type: 'bigint' })
-  amount: bigint;
+  @Column()
+  amount: number;
 
   @Column()
   transaction_status: number;
