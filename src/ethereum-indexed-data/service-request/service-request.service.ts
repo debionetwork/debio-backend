@@ -1,9 +1,9 @@
 import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { DbioBalanceService } from 'src/dbio-balance/dbio_balance.service';
-import { StateService } from 'src/location/state.service';
+import { StateService } from '../../location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
+import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 interface RequestsByCountry {
   country: string;
@@ -22,13 +22,14 @@ export class ServiceRequestService {
     private readonly elasticsearchService: ElasticsearchService,
     @Inject(forwardRef(() => EthereumService))
     private ethereumService: EthereumService,
-    private dbioBalanceService: DbioBalanceService,
+    private exchangeCacheService: DebioConversionService,
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
 
     const requestByCountryList: Array<RequestsByCountry> = [];
     try {
+      const exchangeBalance = await this.exchangeCacheService.getExchange()      
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
         body: { from: 0, size: 1000 },
@@ -38,17 +39,9 @@ export class ServiceRequestService {
           hits: { hits },
         },
       } = serviceRequests;
-      const oneDaiEqualToUsd = await this.ethereumService.convertCurrency(
-        'DAI',
-        'USD',
-        1,
-      );
-      const oneDbioEquailToDai = Number(
-        await (
-          await this.dbioBalanceService.getDebioBalance()
-        ).dai,
-      );
-  
+      const oneDbioEqualToDai = exchangeBalance['dbioToDai']
+      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd']
+
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
       for (const req of hits) {
@@ -119,8 +112,8 @@ export class ServiceRequestService {
         }
         requestByCountryDict[countryCode]['totalValue'] = {
           dbio: requestByCountryDict[countryCode]['totalValue'],
-          dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai,
-          usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai * oneDaiEqualToUsd.price
+          dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
+          usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd
         }
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
@@ -132,8 +125,8 @@ export class ServiceRequestService {
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
-            dai: s.totalValue.dbio * oneDbioEquailToDai,
-            usd: s.totalValue.dbio * oneDbioEquailToDai * oneDaiEqualToUsd.price,
+            dai: s.totalValue.dbio * oneDbioEqualToDai,
+            usd: s.totalValue.dbio * oneDbioEqualToUsd
           },
         }));
   

@@ -26,7 +26,10 @@
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs-query/query-typeorm": "^0.28.1",
+<<<<<<< HEAD
     "@nestjs/axios": "0.0.3",
+=======
+>>>>>>> f7acd58 (resolve request change)
     "@nestjs/common": "^8.0.6",
     "@nestjs/core": "^8.0.0",
     "@nestjs/cqrs": "^8.0.0",
