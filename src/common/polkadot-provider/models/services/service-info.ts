@@ -1,4 +1,4 @@
-import { ExpectedDuration } from 'src/common/mailer/models/lab-register.model/service';
+import { ExpectedDuration } from './expected-duration';
 import { PriceByCurrency } from './price-by-currency';
 
 export class ServiceInfo {

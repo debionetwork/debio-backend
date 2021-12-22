@@ -4,13 +4,17 @@ import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-lo
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { MailerManager } from '../common/mailer';
 import { Logger } from '@nestjs/common';
+import { CountryService } from 'src/location/country.service';
+import { StateService } from 'src/location/state.service';
 
 export class ServiceRequestEventHandler {
   constructor(
+    private readonly countryService: CountryService,
+    private readonly stateService: StateService,
     private api: ApiPromise,
     private mailerManager: MailerManager,
     private loggingService: TransactionLoggingService,
-    private logger: Logger
+    private logger: Logger,
     ) {}
     
   handle(event) {
@@ -49,11 +53,17 @@ export class ServiceRequestEventHandler {
     serviceRequest.stakingAmount = Number(serviceRequest.stakingAmount.split(',').join('')) / 10**18
     serviceRequest.serviceCategory = ethers.utils.toUtf8String(serviceRequest.serviceCategory)
 
+    const countryName = await (await this.countryService.getByIso2Code(serviceRequest.country)).name
+    const regionName = await (await this.stateService.getState(
+      serviceRequest.country,
+      serviceRequest.state
+      )).name
+
     const context = {
       service_name: serviceRequest.serviceCategory,
       public_address: serviceRequest.requesterAddress,
-      country: serviceRequest.country,
-      state: serviceRequest.region,
+      country: serviceRequest.country || countryName,
+      state: serviceRequest.region || regionName,
       city: serviceRequest.city, 
       amount: serviceRequest.stakingAmount,
       currency: 'DBIO'

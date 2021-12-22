@@ -117,7 +117,10 @@ export class MailerManager implements OnModuleInit {
       lrs.description = val.info.description;
       lrs.long_description = val.info.longDescription;
       lrs.test_result_sample = val.info.testResultSample;
-      lrs.expected_duration = val.info.expectedDuration;
+      lrs.expected_duration = {
+        duration: val.info.expectedDuration.duration,
+        duration_type: val.info.expectedDuration.durationType,
+      };
       labRegisterServices.push(lrs);
 
     });

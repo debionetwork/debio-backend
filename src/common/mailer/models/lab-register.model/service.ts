@@ -1,4 +1,4 @@
-export class ExpectedDuration {
+export class LabRegisterExpectedDuration {
   duration: string;
   duration_type: string;
 }
@@ -12,5 +12,5 @@ export class LabRegisterService {
   description: string;
   long_description: string;
   test_result_sample: string;
-  expected_duration: ExpectedDuration;
+  expected_duration: LabRegisterExpectedDuration;
 }
