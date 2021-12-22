@@ -43,6 +43,7 @@
     "ethers": "^5.4.4",
     "fs": "0.0.1-security",
     "handlebars": "^4.7.7",
+    "helmet": "^4.6.0",
     "jest-when": "^3.4.2",
     "nestjs-ethers": "^0.3.1",
     "node-mocks-http": "^1.11.0",
