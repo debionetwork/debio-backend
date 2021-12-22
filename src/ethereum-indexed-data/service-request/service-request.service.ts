@@ -4,7 +4,6 @@ import { StateService } from '../../location/state.service';
 import { EthereumService } from '../../ethereum/ethereum.service';
 import { CountryService } from '../../location/country.service';
 import { CacheRedisService } from 'src/cache-redis/cache-redis.service';
-import { map } from 'rxjs';
 
 interface RequestsByCountry {
   country: string;
@@ -30,9 +29,7 @@ export class ServiceRequestService {
 
     const requestByCountryList: Array<RequestsByCountry> = [];
     try {
-      const exchangeBalance = await this.exchangeCacheService.getExchange()
-      console.log('exchangeBalance', JSON.stringify(exchangeBalance, null, 2));
-      
+      const exchangeBalance = await this.exchangeCacheService.getExchange()      
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
         body: { from: 0, size: 1000 },
@@ -42,15 +39,9 @@ export class ServiceRequestService {
           hits: { hits },
         },
       } = serviceRequests;
-      const oneDaiEqualToUsd = await this.ethereumService.convertCurrency(
-        'DAI',
-        'USD',
-        1,
-      );
-      const oneDbioEquailToDai = exchangeBalance['dbioToDai']
-      console.log('oneDbioEquailToDai',oneDbioEquailToDai);
-      
-  
+      const oneDbioEqualToDai = exchangeBalance['dbioToDai']
+      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd']
+
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
       for (const req of hits) {
@@ -121,8 +112,8 @@ export class ServiceRequestService {
         }
         requestByCountryDict[countryCode]['totalValue'] = {
           dbio: requestByCountryDict[countryCode]['totalValue'],
-          dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai,
-          usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEquailToDai * oneDaiEqualToUsd.price
+          dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
+          usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd
         }
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
@@ -134,8 +125,8 @@ export class ServiceRequestService {
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
-            dai: s.totalValue.dbio * oneDbioEquailToDai,
-            usd: s.totalValue.dbio * oneDbioEquailToDai * oneDaiEqualToUsd.price,
+            dai: s.totalValue.dbio * oneDbioEqualToDai,
+            usd: s.totalValue.dbio * oneDbioEqualToUsd
           },
         }));
   
