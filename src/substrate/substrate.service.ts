@@ -75,6 +75,8 @@ export class SubstrateService implements OnModuleInit {
     this.serviceRequestEventHandler = new ServiceRequestEventHandler(
       this.api,
       this.mailerManager,
+      this.transactionLoggingService,
+      this.logger,
       );
   }
 

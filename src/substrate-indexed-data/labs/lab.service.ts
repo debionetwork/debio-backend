@@ -63,13 +63,16 @@ export class LabService {
           result.push(labService);
         });
       });
-    } catch (error) {
+      
+      return { result };
+    } 
+    catch (error) {
       if (error.body.error.type === 'index_not_found_exception') {
         await this.logger.log(`API "labs": ${error.body.error.reason}`)
-      } else {
-        throw error
+        return { result };
       }
+
+      throw error
     }
-    return { result };
   }
 }
