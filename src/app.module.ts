@@ -19,6 +19,7 @@ import { ServiceCategoryModule } from './category/service/service-category.modul
 import { DbioBalanceModule } from './dbio-balance/dbio_balance.module';
 import { RewardModule } from './reward/reward.module';
 import { VerificationModule } from './verification/verification.module';
+import { HealthModule } from './health/health.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -61,6 +62,7 @@ require('dotenv').config(); // eslint-disable-line
     VerificationModule,
     RecaptchaModule,
     BountyModule,
+    HealthModule
   ],
 })
 export class AppModule {}
