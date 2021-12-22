@@ -1,37 +1,155 @@
-<p>You have been assigned to provide verification for the following new lab register - {{lab_name}}. Here are the details:</p>
-<p> </p>
-<p>Logo: {{profile_image}}</p>
-<p>Email: {{email}}</p>
-<p>Phone No.: {{phone_number}}</p>
-<p>Lab Name: {{lab_name}}</p>
-<p>Country: {{country}}</p>
-<p>State: {{state}}</p>
-<p>City: {{city}}</p>
-<p>Address: {{address}}</p>
-<p> </p>
-<p>Certification.</p>
-{{#each certifications}}
-<p>{{@index}}. Title: {{title}}</p>
-<p>&ensp&nbsp Issuer: {{issuer}}</p>
-<p>&ensp&nbsp Month: {{month}}</p>
-<p>&ensp&nbsp Year: {{year}}</p>
-<p>&ensp&nbsp Description: {{description}}</p>
-<p>&ensp&nbsp Supporting Document: {{supporting_document}}</p>
-{{else}}
-<p>No Certificate</p>
-{{/each}}
-<p></p>
-<p>Services.</p>
-{{#each services}}
-<p>{{@index}}. Service Category: {{category}}</p>
-<p>&ensp&nbsp Service Name: {{name}}</p>
-<p>&ensp&nbsp Price: {{price}}</p>
-<p>&ensp&nbsp QC Price: {{qc_price}}</p>
-<p>&ensp&nbsp Short Description: {{description}}</p>
-<p>&ensp&nbsp Supporting Document: {{supporting_document}}</p>
-<p>&ensp&nbsp Expected Duration: {{#with expected_duration}} {{duration}} {{duration_type}} {{/with}}</p>
-<p>&ensp&nbsp Long Description: {{description}}</p>
-<p>&ensp&nbsp Test Result Sample: {{test_result_sample}}</p>
-{{else}}
-<p>No Service</p>
-{{/each}}
+<div>
+  <div>
+    <h4>You have been assigned to provide verification for the following new lab register - {{lab_name}}. Here are the details:</h4>
+    <p> </p>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <td>Logo</td>
+        <td>:</td>
+        <td>{{profile_image}}</td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>:</td>
+        <td>{{email}}</td>
+      </tr>
+      <tr>
+        <td>Phone Number</td>
+        <td>:</td>
+        <td>{{phone_number}}</td>
+      </tr>
+      <tr>
+        <td>Lab Name</td>
+        <td>:</td>
+        <td>{{lab_name}}</td>
+      </tr>
+      <tr>
+        <td>Country</td>
+        <td>:</td>
+        <td>{{country}}</td>
+      </tr>
+       <tr>
+        <td>State</td>
+        <td>:</td>
+        <td>{{state}}</td>
+      </tr>
+       <tr>
+        <td>City</td>
+        <td>:</td>
+        <td>{{city}}</td>
+      </tr>
+       <tr>
+        <td>Address</td>
+        <td>:</td>
+        <td>{{address}}</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <h4>Certifications :</h4>
+  </div>
+  {{#each certifications}}
+  <div>
+      <table>
+        <tr>
+          <td>{{plus @index}}.</td>
+          <td>Title</td>
+          <td>:</td>
+          <td>{{title}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Issuer</td>
+          <td>:</td>
+          <td>{{issuer}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Month</td>
+          <td>:</td>
+          <td>{{month}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Year</td>
+          <td>:</td>
+          <td>{{year}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Description</td>
+          <td>:</td>
+          <td>{{description}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Supporting Document</td>
+          <td>:</td>
+          <td>{{supporting_document}}</td>
+        </tr>
+      </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Certificate</p>
+  </div>
+  {{/each}}
+  <div>
+    <p></p>
+    <h4>Services :</h4>
+  </div>
+  {{#each services}}
+  <div>    
+    <table>
+      <tr>
+        <td>{{plus @index}}.</td>
+        <td>Service Category</td>
+        <td>:</td>
+        <td>{{category}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Service Name</td>
+        <td>:</td>
+        <td>{{name}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Price</td>
+        <td>:</td>
+        <td>{{price}} {{currency}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>QC Price</td>
+        <td>:</td>
+        <td>{{qc_price}} {{currency}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Short Description</td>
+        <td>:</td>
+        <td>{{description}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Expected Duration</td>
+        <td>:</td>
+        <td>{{#with expected_duration}} {{duration}} {{durationType}} {{/with}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Long Description</td>
+        <td>:</td>
+        <td>{{long_description}}</td>
+      </tr>
+    </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Service</p>
+  </div>
+  {{/each}}
+</div>

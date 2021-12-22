@@ -46,7 +46,7 @@ export class ServiceRequestEventHandler {
     serviceRequest.country = ethers.utils.toUtf8String(serviceRequest.country)
     serviceRequest.region = ethers.utils.toUtf8String(serviceRequest.region)
     serviceRequest.city = ethers.utils.toUtf8String(serviceRequest.city)
-    serviceRequest.stakingAmount = Number(serviceRequest.stakingAmount) / 10**18
+    serviceRequest.stakingAmount = Number(serviceRequest.stakingAmount.split(',').join('')) / 10**18
     serviceRequest.serviceCategory = ethers.utils.toUtf8String(serviceRequest.serviceCategory)
 
     const context = {
