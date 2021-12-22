@@ -3,7 +3,6 @@ import axios from "axios";
 
 @Injectable()
 export class CacheRedisService {
-	constructor() {}
 	  async	getExchange() {
       const res = await axios.get(`${process.env.REDIS_STORE_URL}/cache`, {
         auth: {
