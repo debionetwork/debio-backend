@@ -44,7 +44,7 @@ export class UnstakedService implements OnModuleInit {
       const listRequestService = createRequestService.body.hits.hits;
   
       for (const requestService of listRequestService) {
-        const timeWaitingUnstaked: string | null = requestService['_source']['request']['unstaked_at'];
+        const timeWaitingUnstaked: string = requestService['_source']['request']['unstaked_at'];
 
         if (!timeWaitingUnstaked) {
           continue;
