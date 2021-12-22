@@ -33,6 +33,7 @@ export class SubstrateService implements OnModuleInit {
   private exchangeCacheService: DebioConversionService;
   private rewardService: RewardService;
   private listenStatus = false;
+  private wsProvider: WsProvider;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
@@ -44,10 +45,7 @@ export class SubstrateService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
-    this.api = await ApiPromise.create({
-      provider: wsProvider,
-    });
+    this.wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
 
     const keyring = new Keyring({ type: 'sr25519' });
     this.adminWallet = await keyring.addFromUri(
@@ -84,6 +82,8 @@ export class SubstrateService implements OnModuleInit {
       this.transactionLoggingService,
       this.logger,
     );
+
+    await this.startListen()
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -252,5 +252,32 @@ export class SubstrateService implements OnModuleInit {
 
     this.listenStatus = true;
     
+    this.api = await ApiPromise.create({
+      provider: this.wsProvider,
+    });
+
+    this.api.on('connected', () => {
+      this.logger.log(`Substrate Listener Connected`);
+    });
+
+    this.api.on('disconnected', async () => {
+      this.logger.log(`Substrate Listener Disconnected`);
+      await this.stopListen();
+      await this.startListen();
+    });
+
+    this.api.on('error', async (error) => {
+      this.logger.log(`Substrate Listener Error: ${error}`);
+      await this.stopListen();
+      await this.startListen();
+    });
+  }
+
+  stopListen() {
+    this.listenStatus = false;
+
+    if (this.api) {
+      delete this.api;
+    }
   }
 }
