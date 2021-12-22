@@ -37,6 +37,7 @@ export class BountyController {
     @Query("tokenId") tokenId: string,
   ) {
     const mappings = await this.dataTokenToDatasetMapping.find({ token_id: tokenId });
+
     const res: DataTokenToDatasetMappingDto[] = [];
     for(const x of mappings) {
       const URL_VALID_DURATION = 100000;
@@ -48,11 +49,12 @@ export class BountyController {
           action: "read",
           expires: this.dateTimeProxy.nowAndAdd(URL_VALID_DURATION),
         });
-
+        
       const dataTokenToDatasetMappingDto = new DataTokenToDatasetMappingDto(x);
       dataTokenToDatasetMappingDto.file_url = url;
       res.push(dataTokenToDatasetMappingDto);
     }
+    
     return res;
   }
 }
