@@ -112,8 +112,8 @@ export class MailerManager implements OnModuleInit {
       lrs.name = val.info.name;
       lrs.category = val.info.category;
       lrs.currency = val.currency
-      lrs.price = val.price;
-      lrs.qc_price = val.qc_price;
+      lrs.price = new Intl.NumberFormat().format(Number(val.price.split(',').join('')) / 10**18);
+      lrs.qc_price = new Intl.NumberFormat().format(Number(val.qc_price.split(',').join('')) / 10**18);
       lrs.description = val.info.description;
       lrs.long_description = val.info.longDescription;
       lrs.test_result_sample = val.info.testResultSample;
