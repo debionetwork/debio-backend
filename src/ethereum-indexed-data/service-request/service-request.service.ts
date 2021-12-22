@@ -31,9 +31,6 @@ export class ServiceRequestService {
     const requestByCountryList: Array<RequestsByCountry> = [];
     try {
       const exchangeBalance = await this.exchangeCacheService.getExchange()
-      .pipe(
-        map(res => res.data)
-      )
       console.log('exchangeBalance', JSON.stringify(exchangeBalance, null, 2));
       
       const serviceRequests = await this.elasticsearchService.search({
