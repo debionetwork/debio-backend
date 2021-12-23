@@ -141,11 +141,11 @@ export class ServiceRequestService {
         requestByCountryList.push(requestByCountry);
       }
     } catch (error) {
-      if (error.body.error.type === 'index_not_found_exception') {
+      
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "service-requests/countries": ${error.body.error.reason}`)
-      } else {
-        throw error
-      }
+      } 
+      throw error
     }
     return requestByCountryList;
   }
@@ -180,7 +180,7 @@ export class ServiceRequestService {
         result.push(requestService._source);
       });
     } catch (error) { 
-      if (error.body.error.type === 'index_not_found_exception') {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "service-requests/customer/{customerId}": ${error.body.error.reason}`)   
       } else {
         throw error        
@@ -228,7 +228,7 @@ export class ServiceRequestService {
         result.push(requestService._source);
       });
     } catch (error) {  
-      if (error.body.error.type === 'index_not_found_exception') {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "service-requests/provideRequestService": ${error.body.error.reason}`)
       } else {
         throw error        
