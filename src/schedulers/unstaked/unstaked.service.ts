@@ -16,7 +16,7 @@ export class UnstakedService implements OnModuleInit {
     await this.handleWaitingUnstaked();
   }
 
-  @Interval((60 * 1000))
+  @Interval((30 * 1000))
   async handleWaitingUnstaked() {
     try {
       this.logger.log('Retrieve Unstaked Amount');
@@ -27,6 +27,7 @@ export class UnstakedService implements OnModuleInit {
       
       const createRequestService = await this.elasticsearchService.search({
         index: 'create-service-request',
+        allow_no_indices: true,
         body: {
           query: {
             match: {
@@ -52,8 +53,7 @@ export class UnstakedService implements OnModuleInit {
         
         const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
           
-        // const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
-        const timeNext6Days = numberTimeWaitingUnstaked + (5 * 60 * 1000);
+        const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
         const timeNow = new Date().getTime();
 
         const diffTime = timeNext6Days - timeNow;
