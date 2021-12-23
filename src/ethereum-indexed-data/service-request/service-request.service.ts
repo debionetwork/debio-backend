@@ -141,11 +141,11 @@ export class ServiceRequestService {
         requestByCountryList.push(requestByCountry);
       }
     } catch (error) {
-      
       if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "service-requests/countries": ${error.body.error.reason}`)
-      } 
-      throw error
+      } else {
+        throw error
+      }
     }
     return requestByCountryList;
   }
