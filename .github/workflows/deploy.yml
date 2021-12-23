@@ -89,6 +89,8 @@ jobs:
             BUCKET_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.DEV_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK
+            API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_KEY
@@ -137,6 +139,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -160,7 +166,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend
 
   deploy-alpha-release:
@@ -217,6 +230,8 @@ jobs:
             BUCKET_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.STG_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.STG_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK:${{ secrets.STG_GCP_PROJECT_ID }}/API_HEALTHCHECK
+            API_HEALTHCHECK_URL:${{ secrets.STG_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_KEY
@@ -265,6 +280,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -288,7 +307,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.stg.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend
 
   deploy-beta-release:
@@ -345,6 +371,8 @@ jobs:
             BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK
+            API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -392,6 +420,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -415,7 +447,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend
 
   deploy-pre-release:
@@ -472,6 +511,8 @@ jobs:
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK
+            API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -519,6 +560,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \              
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -542,7 +587,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend
 
   deploy-release:
@@ -599,6 +651,8 @@ jobs:
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK
+            API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -646,6 +700,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.startupProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.livenessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \
+              --set-string config.readinessProbe.path=${{ steps.secrets.outputs.API_HEALTHCHECK }} \              
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
@@ -669,5 +727,12 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend
