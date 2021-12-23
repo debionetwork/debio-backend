@@ -32,6 +32,8 @@ export class SubstrateService implements OnModuleInit {
   private substrateService: SubstrateService;
   private exchangeCacheService: DebioConversionService;
   private rewardService: RewardService;
+  private listenStatus = false;
+  private wsProvider: WsProvider;
 
   constructor(
     @Inject(forwardRef(() => EscrowService))
@@ -43,10 +45,7 @@ export class SubstrateService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
-    this.api = await ApiPromise.create({
-      provider: wsProvider,
-    });
+    this.wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
 
     const keyring = new Keyring({ type: 'sr25519' });
     this.adminWallet = await keyring.addFromUri(
@@ -83,6 +82,8 @@ export class SubstrateService implements OnModuleInit {
       this.transactionLoggingService,
       this.logger,
     );
+
+    await this.startListen()
   }
 
   async getSubstrateAddressByEthAddress(ethAddress: string) {
@@ -125,7 +126,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    await this.logger.log('set order paid', orderId);
   }
 
   async setOrderRefunded(orderId: string) {
@@ -136,7 +137,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(response);
+    await this.logger.log('set order refunded', orderId);
   }
 
   async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
@@ -209,7 +210,7 @@ export class SubstrateService implements OnModuleInit {
       .signAndSend(wallet, {
         nonce: -1,
       });
-    console.log("Submit Data Bounty");
+    await this.logger.log("Submit Data Bounty", orderId);
   }
 
   async sendReward(acountId: string, amount: number) {
@@ -221,7 +222,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(`Send Reward ${amount} DBIO to ${acountId}`);
+    await this.logger.log(`Send Reward ${amount} DBIO to ${acountId}`);
   }
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
@@ -232,7 +233,7 @@ export class SubstrateService implements OnModuleInit {
         nonce: -1,
       });
 
-    console.log(`lab ${acountId} is ${labStatus}`);
+    await this.logger.log(`lab ${acountId} is ${labStatus}`);
   }
 
   async retrieveUnstakedAmount(requestId) {
@@ -243,6 +244,40 @@ export class SubstrateService implements OnModuleInit {
       nonce: -1,
     });
 
-    console.log(response);
+    await this.logger.log('retrieve unstaked amount', requestId);
+  }
+
+  async startListen(){
+    if (this.listenStatus) return;
+
+    this.listenStatus = true;
+    
+    this.api = await ApiPromise.create({
+      provider: this.wsProvider,
+    });
+
+    this.api.on('connected', () => {
+      this.logger.log(`Substrate Listener Connected`);
+    });
+
+    this.api.on('disconnected', async () => {
+      this.logger.log(`Substrate Listener Disconnected`);
+      await this.stopListen();
+      await this.startListen();
+    });
+
+    this.api.on('error', async (error) => {
+      this.logger.log(`Substrate Listener Error: ${error}`);
+      await this.stopListen();
+      await this.startListen();
+    });
+  }
+
+  stopListen() {
+    this.listenStatus = false;
+
+    if (this.api) {
+      delete this.api;
+    }
   }
 }

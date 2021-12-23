@@ -56,7 +56,7 @@ export class ServiceRequestEventHandler {
     const countryName = await (await this.countryService.getByIso2Code(serviceRequest.country)).name
     const regionName = await (await this.stateService.getState(
       serviceRequest.country,
-      serviceRequest.state
+      serviceRequest.region
       )).name
 
     const context = {

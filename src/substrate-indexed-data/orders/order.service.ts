@@ -24,7 +24,7 @@ export class OrderService {
       })
       hits_order = order.body.hits.hits
     } catch (error) {
-      if (error.body.error.type === "index_not_found_exception") {        
+      if (error?.body?.error?.type === "index_not_found_exception") {        
         await this.logger.log(`API "orders/{hash_id}": ${error.body.error.reason}`);
       } else {
         throw error
@@ -148,7 +148,7 @@ export class OrderService {
       count = total_orders
       data = orders.body.hits.hits
     } catch (error) {
-      if (error.body.error.type === "index_not_found_exception") {
+      if (error?.body?.error?.type === "index_not_found_exception") {
         await this.logger.log(`API "orders/list/{customerId}": ${error.body.error.reason}`);
       } else {
         throw error
@@ -256,7 +256,7 @@ export class OrderService {
       count = total_orders.body.count
       data = orders.body.hits.hits
     } catch (error) {
-      if (error.body.error.type === 'index_not_found_exception') {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "bounty_list/{customer_id}": ${error.body.error.reason}`);
       } else {
         throw error

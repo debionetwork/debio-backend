@@ -22,7 +22,7 @@ export class ServiceService {
       result = services.body.hits.hits
     }
     catch (error) {
-      if (error.body.error.type === 'index_not_found_exception') {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "services/{country}/{city}":' ${error.body.error.reason}`);
         return result;
       }
