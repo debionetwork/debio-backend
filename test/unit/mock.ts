@@ -2,9 +2,10 @@ import { DateTimeProxy } from "src/common/date-time/date-time.proxy";
 import { Repository } from "typeorm";
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from "@nestjs/elasticsearch";
+import { MailerService } from "@nestjs-modules/mailer";
 
 export type MockType<T> = {
-    [P in keyof T]?: jest.Mock<unknown>;
+    [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
 };
 
 export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
@@ -37,4 +38,8 @@ export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchServic
   update: jest.fn(entity => entity),
   updateByQuery: jest.fn(entity => entity),
   search: jest.fn(entity => entity),
+}));
+
+export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(() => ({
+  sendMail: jest.fn(entity => entity),
 }));

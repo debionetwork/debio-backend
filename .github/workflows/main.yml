@@ -119,13 +119,12 @@ jobs:
           key: ${{ runner.os }}-buildx-main
           restore-keys: |
             ${{ runner.os }}-buildx-
-
-      - name: Login to DockerHub
+      - name: Login to GCR
         uses: docker/login-action@v1
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+          registry: gcr.io
+          username: _json_key
+          password: ${{ secrets.DEV_GCP_SA_KEY }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -133,11 +132,10 @@ jobs:
           push: true
           file: .maintain/docker/Dockerfile
           tags: |
-            ${{ github.repository }}:${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }}
-            ${{ github.repository }}:latest-pre-alpha
+            gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }}:${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }}
+            gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }}:latest-pre-alpha
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
@@ -193,6 +191,9 @@ jobs:
             ELASTICSEARCH_NODE:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
             ELASTICSEARCH_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            REDIS_STORE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_URL
+            REDIS_STORE_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
+            REDIS_STORE_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
             EMAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAILS
@@ -217,7 +218,9 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
+              --set-string image.repository=gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
               --set-string config.postgres.host=${{ steps.secrets.outputs.POSTGRES_HOST }} \
@@ -238,9 +241,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
+              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
-              --set-string config.email.emails=${{ steps.secrets.outputs.EMAILS }} \
+              --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
@@ -248,17 +254,23 @@ jobs:
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="100" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, PUT\, POST\, DELETE\, PATCH\, OPTIONS" \
+              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="Origin\,DNT\,X-CustomHeader\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Authorization\,Accept\,debio-api-key" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="https://app.dev.debio.network\, https://lab.dev.debio.network" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
               --set-string ingress.hosts[0].host=api.dev.debio.network \
-              --set-string ingress.hosts[0].paths[0].path=/ \
-              --set-string ingress.hosts[0].paths[0].pathType=ImplementationSpecific \
+              --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
+              --set-string ingress.hosts[0].paths[0].pathType=Prefix \
+              --set-string ingress.hosts[0].paths[1].path=/conversion/\(\)\(.\*\) \
+              --set-string ingress.hosts[0].paths[1].pathType=Prefix \
+              --set-string ingress.hosts[0].paths[1].serviceName=debio-conversion \
+              --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
               --set autoscaling.enabled=true
