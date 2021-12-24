@@ -79,7 +79,6 @@ jobs:
             BUCKET_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.DEV_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
-            API_HEALTHCHECK:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK
             API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -209,7 +208,6 @@ jobs:
             BUCKET_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.DEV_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
-            API_HEALTHCHECK:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK
             API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -261,10 +259,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="100" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
