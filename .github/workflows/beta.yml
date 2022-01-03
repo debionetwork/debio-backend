@@ -53,24 +53,32 @@ jobs:
             POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_CITY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
             POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
+            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL            
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC                        
             WEB3_RPC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC
             WEB3_RPC_HTTPS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS            
             COINMARKETCAP_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
             RECAPTCHA_SECRET_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
             DEBIO_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_API_KEY
             ELASTICSEARCH_NODE:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_NODE
             ELASTICSEARCH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_USERNAME
             ELASTICSEARCH_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ELASTICSEARCH_PASSWORD
+            REDIS_STORE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
+            REDIS_STORE_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
+            REDIS_STORE_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
             EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
+            SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
+            SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
+            SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
+            SSH_PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_PORT
       - name: Create .env & gcp sa
         shell: bash
         run: |
@@ -83,23 +91,27 @@ jobs:
           DB_POSTGRES=${{ steps.secrets.outputs.POSTGRES_DB }}
           DB_CITY=${{ steps.secrets.outputs.POSTGRES_DB_CITY }}
           DB_LOCATIONS=${{ steps.secrets.outputs.POSTGRES_DB_LOCATIONS }}
-          SUBSTRATE_URL=${{ steps.secrets.outputs.SUBSTRATE_URL }}
-          ADMIN_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}
+          SUBSTRATE_URL=${{ steps.secrets.outputs.SUBSTRATE_URL }}          
+          ADMIN_SUBSTRATE_MNEMONIC=${{ steps.secrets.outputs.ADMIN_SUBSTRATE_MNEMONIC }}                    
           WEB3_RPC=${{ steps.secrets.outputs.WEB3_RPC }}
           WEB3_RPC_HTTPS=${{ steps.secrets.outputs.WEB3_RPC_HTTPS }}
-          DEBIO_ESCROW_PRIVATE_KEY=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }}
-          ESCROW_CONTRACT_ADDRESS=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }}
+          DEBIO_ESCROW_PRIVATE_KEY=${{ steps.secrets.outputs.DEBIO_ESCROW_PRIVATE_KEY }}          
+          ESCROW_CONTRACT_ADDRESS=${{ steps.secrets.outputs.ESCROW_CONTRACT_ADDRESS }}          
           COINMARKETCAP_API_KEY=${{ steps.secrets.outputs.COINMARKETCAP_API_KEY }}
           RECAPTCHA_SECRET_KEY=${{ steps.secrets.outputs.RECAPTCHA_SECRET_KEY }}
           DEBIO_API_KEY=${{ steps.secrets.outputs.DEBIO_API_KEY }}
           ELASTICSEARCH_NODE=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }}
           ELASTICSEARCH_USERNAME=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }}
           ELASTICSEARCH_PASSWORD=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }}
+          REDIS_STORE_URL=${{ steps.secrets.outputs.REDIS_STORE_URL }}
+          REDIS_STORE_USERNAME=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }}
+          REDIS_STORE_PASSWORD=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }}
           EMAIL=${{ steps.secrets.outputs.EMAIL }}
           PASS_EMAIL=${{ steps.secrets.outputs.PASS_EMAIL }}
           EMAILS=${{ steps.secrets.outputs.EMAILS }}
           BUCKET_NAME=${{ steps.secrets.outputs.BUCKET_NAME }}
           STORAGE_BASE_URI=${{ steps.secrets.outputs.STORAGE_BASE_URI }}
+          BACKEND_HEALTHCHECK_URL=${{ steps.secrets.outputs.API_HEALTHCHECK_URL }}
           EOF
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -193,12 +205,12 @@ jobs:
             POSTGRES_DB:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB
             POSTGRES_DB_CITY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_CITY
             POSTGRES_DB_LOCATIONS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/POSTGRES_DB_LOCATIONS
-            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL
-            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC
+            SUBSTRATE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SUBSTRATE_URL            
+            ADMIN_SUBSTRATE_MNEMONIC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ADMIN_SUBSTRATE_MNEMONIC                        
             WEB3_RPC:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC
             WEB3_RPC_HTTPS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/WEB3_RPC_HTTPS
             DEBIO_ESCROW_PRIVATE_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_ESCROW_PRIVATE_KEY
-            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS
+            ESCROW_CONTRACT_ADDRESS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/ESCROW_CONTRACT_ADDRESS            
             COINMARKETCAP_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/COINMARKETCAP_API_KEY
             RECAPTCHA_SECRET_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/RECAPTCHA_SECRET_KEY
             DEBIO_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/DEBIO_API_KEY
@@ -214,6 +226,7 @@ jobs:
             BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
+            API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -235,6 +248,7 @@ jobs:
               --set-string image.repository=gcr.io/${{ secrets.TESTNET_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
+              --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
               --set-string config.postgres.host=${{ steps.secrets.outputs.POSTGRES_HOST }} \
               --set-string config.postgres.username=${{ steps.secrets.outputs.POSTGRES_USERNAME }} \
@@ -263,10 +277,10 @@ jobs:
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
+              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
               --set ingress.enabled=true \
               --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
-              --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/limit-rps"="100" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="auth-fe" \
@@ -286,5 +300,12 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
-              --set autoscaling.enabled=true
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
+              --set-string resources.limits.memory=1024Mi \
+              --set replicaCount=3 \
+              --set autoscaling.enabled=true \
+              --set autoscaling.minReplicas=3 \
+              --set autoscaling.maxReplicas=20
             kubectl rollout status deployment/debio-backend

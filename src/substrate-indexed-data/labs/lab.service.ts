@@ -67,7 +67,7 @@ export class LabService {
       return { result };
     } 
     catch (error) {
-      if (error.body.error.type === 'index_not_found_exception') {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
         await this.logger.log(`API "labs": ${error.body.error.reason}`)
         return { result };
       }
