@@ -25,3 +25,5 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
   ],
 })
 export class ElasticsearchHealthModule {}
+
+export * from './elasticsearch.health.indicator';

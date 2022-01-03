@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
 import { HealthController } from './health.controller';
 import { TerminusModule } from '@nestjs/terminus';
-import { HttpModule } from '@nestjs/axios';
-import { ElasticsearchHealthModule, ProcessEnvModule } from 'src/common';
+import { ElasticsearchHealthModule, SubstrateHealthModule } from 'src/common';
 
 @Module({
   imports: [
     TerminusModule,
-    ProcessEnvModule,
-    HttpModule,
-    ElasticsearchHealthModule
+    ElasticsearchHealthModule,
+    SubstrateHealthModule
   ],
   controllers: [HealthController],
 })
