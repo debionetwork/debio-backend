@@ -1,9 +1,10 @@
-import { Controller, Headers, Post, Query, Res } from '@nestjs/common';
+import { Controller, Headers, Post, Query, Res, UseInterceptors } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { ProcessEnvProxy } from '../common/process-env';
+import { SentryInterceptor, ProcessEnvProxy } from '../common';
 import { VerificationService } from './verification.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('lab-verification')
 export class VerificationController {
   constructor(

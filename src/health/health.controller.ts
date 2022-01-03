@@ -1,9 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { HealthCheckService, HttpHealthIndicator, HealthCheck, TypeOrmHealthIndicator } from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
+import { SentryInterceptor } from 'src/common';
 import { ProcessEnvProxy } from 'src/common/process-env';
 import { Connection } from 'typeorm';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('health')
 export class HealthController {
   constructor(

@@ -1,7 +1,9 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Query, UseInterceptors } from "@nestjs/common";
 import { GCloudStorageService } from "@aginix/nestjs-gcloud-storage";
 import { DateTimeProxy } from "../common/date-time/date-time.proxy";
+import { SentryInterceptor } from "src/common";
 
+@UseInterceptors(SentryInterceptor)
 @Controller("gcs")
 export class CloudStorageController {
   constructor(
