@@ -45,22 +45,39 @@ export class UnstakedService implements OnModuleInit {
       const listRequestService = createRequestService.body.hits.hits;
   
       for (const requestService of listRequestService) {
-        const timeWaitingUnstaked: string = requestService['_source']['request']['unstaked_at'];
-
-        if (!timeWaitingUnstaked) {
-          continue;
-        }
-        
-        const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
+        const requestId = requestService['_source']['request']['hash'];
+        const serviceRequestDetail = this.subtrateService.serviceRequest(requestId);
+        if (serviceRequestDetail['status'] === 'Unstaked') {
+          await this.elasticsearchService.update({
+            index: 'create-service-request',
+            id: requestId,
+            refresh: 'wait_for',
+            body: {
+              doc: {
+                request: {
+                  status: serviceRequestDetail['status'],
+                  unstaked_at: serviceRequestDetail['unstakedAt'],
+                },
+              }
+            }
+          });
+        } else {
+          const timeWaitingUnstaked: string = requestService['_source']['request']['unstaked_at'];
+  
+          if (!timeWaitingUnstaked) {
+            continue;
+          }
           
-        const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
-        const timeNow = new Date().getTime();
-
-        const diffTime = timeNext6Days - timeNow;
-
-        if (diffTime <= 0) {
-          const requestId = requestService['_source']['request']['hash'];
-          await this.subtrateService.retrieveUnstakedAmount(requestId);
+          const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
+            
+          const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
+          const timeNow = new Date().getTime();
+  
+          const diffTime = timeNext6Days - timeNow;
+  
+          if (diffTime <= 0) {
+            await this.subtrateService.retrieveUnstakedAmount(requestId);
+          }
         }
       }
     } catch (err) {
