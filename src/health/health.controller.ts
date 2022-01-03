@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { HealthCheckService, HttpHealthIndicator, HealthCheck, TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
-import { ProcessEnvProxy } from 'src/common/process-env';
+import { ElasticsearchHealthIndicator, ProcessEnvProxy } from 'src/common';
 import { Connection } from 'typeorm';
 
 @Controller('health')
@@ -12,6 +12,7 @@ export class HealthController {
     private db: TypeOrmHealthIndicator,
     private memory: MemoryHealthIndicator,
     private disk: DiskHealthIndicator,
+    private elasticSearch: ElasticsearchHealthIndicator,
     @InjectConnection('dbLocation')
     private dbLocationConnection: Connection,
     @InjectConnection()
@@ -29,6 +30,7 @@ export class HealthController {
       () => this.disk.checkStorage('disk health', {
         thresholdPercent: 0.5, path: '/'
       }),
+      () => this.elasticSearch.isHealthy('elasticsearch')
     ]);
   }
 }
