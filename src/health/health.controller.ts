@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { HealthCheckService, HttpHealthIndicator, HealthCheck, TypeOrmHealthIndicator } from '@nestjs/terminus';
+import { HealthCheckService, HttpHealthIndicator, HealthCheck, TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
 import { ProcessEnvProxy } from 'src/common/process-env';
 import { Connection } from 'typeorm';
@@ -10,6 +10,8 @@ export class HealthController {
     private health: HealthCheckService,
     private http: HttpHealthIndicator,
     private db: TypeOrmHealthIndicator,
+    private memory: MemoryHealthIndicator,
+    private disk: DiskHealthIndicator,
     @InjectConnection('dbLocation')
     private dbLocationConnection: Connection,
     @InjectConnection()
@@ -23,12 +25,10 @@ export class HealthController {
     return this.health.check([
       () => this.db.pingCheck('database', { connection: this.defaultConnection }),
       () => this.db.pingCheck('location-database', { connection: this.dbLocationConnection }),
-      () => this.http.pingCheck('backend-api', this.process.env.BACKEND_HEALTHCHECK_URL),
+      () => this.memory.checkHeap('memory heap', 300 * 1024 * 1024),
+      () => this.disk.checkStorage('disk health', {
+        thresholdPercent: 0.5, path: '/'
+      }),
     ]);
-  }
-
-  @Get('ping')
-  test() {
-    return "pong";
   }
 }
