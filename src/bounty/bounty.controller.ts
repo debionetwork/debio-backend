@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseInterceptors } from "@nestjs/common";
 import { ApiBody } from "@nestjs/swagger";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -8,7 +8,9 @@ import { DateTimeProxy } from "../common/date-time/date-time.proxy";
 import { DataTokenToDatasetMapping } from "./models/data-token-to-dataset-mapping.entity";
 import { GCloudStorageService } from "@aginix/nestjs-gcloud-storage";
 import { DataTokenToDatasetMappingDto } from "./dto/data-token-to-dataset-mapping.dto";
+import { SentryInterceptor } from "src/common";
 
+@UseInterceptors(SentryInterceptor)
 @Controller("bounty")
 export class BountyController {
   constructor(

@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Res, Headers } from '@nestjs/common';
+import { Body, Controller, Post, Res, Headers, UseInterceptors } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
 import { ApiProperty } from '@nestjs/swagger';
 import { RewardService } from 'src/reward/reward.service';
 import { RewardDto } from 'src/reward/dto/reward.dto';
+import { SentryInterceptor } from 'src/common';
 
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
@@ -23,6 +24,7 @@ export class WalletBindingDTO {
   ethAddress: string;
 }
 
+@UseInterceptors(SentryInterceptor)
 @Controller('substrate')
 export class SubstrateController {
   substrateService: SubstrateService;

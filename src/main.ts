@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as Sentry from '@sentry/node';
 import helmet = require('helmet');
 
 async function bootstrap() {
@@ -18,6 +19,14 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
+  }
+
+  const SENTRY_DSN = process.env.SENTRY_DSN
+
+  if (SENTRY_DSN) {
+    Sentry.init({
+      dsn: SENTRY_DSN,
+    });
   }
 
   await app.listen(process.env.PORT);

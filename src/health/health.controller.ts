@@ -1,9 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { SentryInterceptor } from 'src/common';
 import { HealthCheckService, HealthCheck, TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
 import { ElasticsearchHealthIndicator, SubstrateHealthIndicator } from 'src/common';
 import { Connection } from 'typeorm';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('health')
 export class HealthController {
   constructor(

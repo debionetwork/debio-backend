@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { SentryInterceptor } from 'src/common';
 import { ServiceCategoryService } from './service-category.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('service-category')
 export class ServiceCategoryController {
   constructor(
