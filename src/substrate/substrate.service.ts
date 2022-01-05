@@ -7,7 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
-import { EscrowService } from '../escrow/escrow.service';
+import { EscrowService } from '../endpoints/escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';

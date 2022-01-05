@@ -9,7 +9,7 @@ import {
   getFile,
   createFile,
   checkIfFileOrDirectoryExists,
-} from '../helper/storage.helper';
+} from '../../helper/storage.helper';
 import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';

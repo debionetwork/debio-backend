@@ -1,6 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import { Option } from '@polkadot/types';
-import { EscrowService } from 'src/escrow/escrow.service';
+import { EscrowService } from 'src/endpoints/escrow/escrow.service';
 import { RewardDto } from 'src/reward/dto/reward.dto';
 import { RewardService } from 'src/reward/reward.service';
 import { SubstrateService } from './substrate.service';
