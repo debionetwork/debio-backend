@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { VerificationController } from '../../../../src/endpoints/verification/verification.controller';
-import { ProcessEnvProxy } from '../../../../src/common/process-env';
+import { ProcessEnvProxy } from '../../../../src/common/proxies/process-env';
 import httpMocks = require('node-mocks-http');
 
 describe('Verification Controller Unit Tests', () => {

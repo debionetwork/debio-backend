@@ -6,7 +6,7 @@ import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, Mo
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { when } from 'jest-when';
-import { DateTimeProxy } from '../../../../src/common/date-time/date-time.proxy';
+import { DateTimeProxy } from '../../../../src/common/proxies/date-time/date-time.proxy';
 import { DataTokenToDatasetMapping } from '../../../../src/endpoints/bounty/models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from '../../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';

@@ -1,4 +1,4 @@
-import { DateTimeProxy } from "src/common/date-time/date-time.proxy";
+import { DateTimeProxy } from "src/common/proxies/date-time/date-time.proxy";
 import { Repository } from "typeorm";
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from "@nestjs/elasticsearch";
