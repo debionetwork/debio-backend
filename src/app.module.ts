@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LabRating } from './rating/models/rating.entity';
-import { LocationEntities } from './location/models';
-import { LocationModule } from './location/location.module';
+import { LocationEntities } from './endpoints/location/models';
+import { LocationModule } from './endpoints/location/location.module';
 import { RatingModule } from './rating/rating.module';
 import { EthereumModule } from './ethereum/ethereum.module';
 import { EscrowModule } from './escrow/escrow.module';

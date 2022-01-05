@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceRequestController } from './service-request/service-request.controller';
 import { ServiceRequestService } from './service-request/service-request.service';
-import { LocationModule } from '../location/location.module';
+import { LocationModule } from '../endpoints/location/location.module';
 import { EthereumModule } from '../ethereum/ethereum.module';
 import { DebioConversionModule } from 'src/debio-conversion/debio-conversion.module';
 

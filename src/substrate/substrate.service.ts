@@ -16,8 +16,8 @@ import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
-import { CountryService } from '../location/country.service';
-import { StateService } from '../location/state.service';
+import { CountryService } from '../endpoints/location/country.service';
+import { StateService } from '../endpoints/location/state.service';
 import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
 
 @Injectable()

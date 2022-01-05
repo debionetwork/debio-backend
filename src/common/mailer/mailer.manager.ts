@@ -1,8 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { CountryService } from 'src/location/country.service';
-import { StateService } from 'src/location/state.service';
+import { CountryService } from 'src/endpoints/location/country.service';
+import { StateService } from 'src/endpoints/location/state.service';
 import { 
   CustomerStakingRequestService, 
   LabRegister,

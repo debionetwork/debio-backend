@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { StateService } from '../../../src/location/state.service';
-import { State } from '../../../src/location/models/state.entity';
+import { StateService } from '../../../src/endpoints/location/state.service';
+import { State } from '../../../src/endpoints/location/models/state.entity';
 import { MockType, repositoryMockFactory } from '../mock';
 import { Repository } from 'typeorm';
 import { when } from 'jest-when';

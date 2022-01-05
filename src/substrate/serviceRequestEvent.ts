@@ -4,8 +4,8 @@ import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-lo
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { MailerManager } from '../common/mailer';
 import { Logger } from '@nestjs/common';
-import { CountryService } from 'src/location/country.service';
-import { StateService } from 'src/location/state.service';
+import { CountryService } from 'src/endpoints/location/country.service';
+import { StateService } from 'src/endpoints/location/state.service';
 
 export class ServiceRequestEventHandler {
   constructor(
