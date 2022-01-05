@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { SentryInterceptor } from '../../common';
+import { SentryInterceptor } from '../../common/interceptors';
 import { CityService } from './city.service';
 import { CountryService } from './country.service';
 import { StateService } from './state.service';

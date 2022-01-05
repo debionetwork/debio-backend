@@ -1,8 +1,8 @@
 import { ApiPromise } from '@polkadot/api';
 import { ethers } from 'ethers'
-import { TransactionLoggingDto } from '../common/transaction-logging/dto/transaction-logging.dto';
-import { TransactionLoggingService } from '../common/transaction-logging/transaction-logging.service';
-import { MailerManager } from '../common/mailer';
+import { TransactionLoggingDto } from '../common/utilities/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '../common/utilities/transaction-logging/transaction-logging.service';
+import { MailerManager } from '../common/utilities/mailer';
 import { Logger } from '@nestjs/common';
 import { CountryService } from '../endpoints/location/country.service';
 import { StateService } from '../endpoints/location/state.service';

@@ -1,10 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { RewardDto } from '../common/reward/dto/reward.dto';
-import { RewardService } from '../common/reward/reward.service';
+import { RewardDto } from '../common/utilities/reward/dto/reward.dto';
+import { RewardService } from '../common/utilities/reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { ethers } from 'ethers'
-import { DebioConversionService } from '../common/debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../common/utilities/debio-conversion/debio-conversion.service';
 
 
 @Injectable()

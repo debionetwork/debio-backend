@@ -10,15 +10,15 @@ import { Option } from '@polkadot/types';
 import { EscrowService } from '../endpoints/escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { TransactionLoggingService } from '../common/transaction-logging/transaction-logging.service';
-import { RewardService } from '../common/reward/reward.service';
+import { TransactionLoggingService } from '../common/utilities/transaction-logging/transaction-logging.service';
+import { RewardService } from '../common/utilities/reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
-import { MailerManager } from '../common/mailer/mailer.manager';
+import { MailerManager } from '../common/utilities/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
 import { CountryService } from '../endpoints/location/country.service';
 import { StateService } from '../endpoints/location/state.service';
-import { DebioConversionService } from '../common/debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../common/utilities/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {

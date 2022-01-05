@@ -9,19 +9,19 @@ import { EscrowModule } from './endpoints/escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
 import { SubstrateIndexedDataModule } from './endpoints/substrate-indexed-data/substrate-indexed-data.module';
 import { EthereumIndexedDataModule } from './endpoints/ethereum-indexed-data/ethereum-indexed-data.module';
-import { TransactionLoggingModule } from './common/transaction-logging/transaction-logging.module';
-import { TransactionRequest } from './common/transaction-logging/models/transaction-request.entity';
+import { TransactionLoggingModule } from './common/utilities/transaction-logging/transaction-logging.module';
+import { TransactionRequest } from './common/utilities/transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './endpoints/recaptcha/recaptcha.module';
 import { CloudStorageModule } from './endpoints/cloud-storage/cloud-storage.module';
 import { BountyModule } from './endpoints/bounty/bounty.module';
 import { EmrModule } from './endpoints/category/emr/emr.module';
 import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
-import { RewardModule } from './common/reward/reward.module';
+import { RewardModule } from './common/utilities/reward/reward.module';
 import { VerificationModule } from './endpoints/verification/verification.module';
 import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
-import { DebioConversionModule } from './common/debio-conversion/debio-conversion.module';
+import { DebioConversionModule } from './common/utilities/debio-conversion/debio-conversion.module';
 
 require('dotenv').config(); // eslint-disable-line
 

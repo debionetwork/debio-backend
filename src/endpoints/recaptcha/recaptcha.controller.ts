@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import axios from 'axios';
 import { Response } from 'express';
-import { SentryInterceptor } from '../../common';
+import { SentryInterceptor } from '../../common/interceptors';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('recaptcha')

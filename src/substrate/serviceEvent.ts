@@ -4,7 +4,7 @@ import {
   LabRegister, 
   LabRegisterService, 
   LabRegisterCertification 
-} from '../common/mailer';
+} from '../common/utilities/mailer';
 import { 
   Lab, 
   Service,

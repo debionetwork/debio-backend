@@ -3,7 +3,7 @@ import { ApiParam } from "@nestjs/swagger";
 import { LabRegister, MailerManager } from ".";
 import { Response } from 'express';
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { queryLabById} from "../polkadot-provider";
+import { queryLabById} from "../../polkadot-provider";
 
 @Controller('email')
 export class MailerController implements OnModuleInit {

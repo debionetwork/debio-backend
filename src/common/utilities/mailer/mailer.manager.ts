@@ -1,8 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { CountryService } from '../../endpoints/location/country.service';
-import { StateService } from '../../endpoints/location/state.service';
+import { CountryService } from '../../../endpoints/location/country.service';
+import { StateService } from '../../../endpoints/location/state.service';
 import { 
   CustomerStakingRequestService, 
   LabRegister,
@@ -13,7 +13,7 @@ import {
   Lab,
   queryCertificationsByMultipleIds,
   queryServicesByMultipleIds
-} from'../polkadot-provider'
+} from'../../polkadot-provider'
 @Injectable()
 export class MailerManager implements OnModuleInit {
   private api: ApiPromise

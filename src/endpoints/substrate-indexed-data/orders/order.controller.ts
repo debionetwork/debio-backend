@@ -8,7 +8,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
-import { SentryInterceptor } from '../../../common';
+import { SentryInterceptor } from '../../../common/interceptors';
 import { OrderService } from './order.service';
 
 @UseInterceptors(SentryInterceptor)
