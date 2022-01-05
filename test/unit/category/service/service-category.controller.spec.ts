@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ServiceCategoryService } from '../../../../src/category/service/service-category.service';
-import { ServiceCategoryController } from '../../../../src/category/service/service-category.controller';
+import { ServiceCategoryService } from '../../../../src/endpoints/category/service/service-category.service';
+import { ServiceCategoryController } from '../../../../src/endpoints/category/service/service-category.controller';
 import { MockType } from '../../mock';
 
 describe('Service Category Controller Unit Tests', () => {

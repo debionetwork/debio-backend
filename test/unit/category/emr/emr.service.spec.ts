@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { EmrService } from '../../../../src/category/emr/emr.service';
-import { EmrCategory } from '../../../../src/category/emr/models/emr.entity';
+import { EmrService } from '../../../../src/endpoints/category/emr/emr.service';
+import { EmrCategory } from '../../../../src/endpoints/category/emr/models/emr.entity';
 import { MockType, repositoryMockFactory } from '../../mock';
 import { Repository } from 'typeorm';
 

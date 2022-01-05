@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BountyController } from '../../../src/bounty/bounty.controller';
-import { DataStakingEvents } from '../../../src/bounty/models/data-staking-events.entity';
-import { DataStakingDto } from '../../../src/bounty/dto/data-staking.dto';
+import { BountyController } from '../../../src/endpoints/bounty/bounty.controller';
+import { DataStakingEvents } from '../../../src/endpoints/bounty/models/data-staking-events.entity';
+import { DataStakingDto } from '../../../src/endpoints/bounty/dto/data-staking.dto';
 import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType, repositoryMockFactory } from '../mock';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../src/common/date-time/date-time.proxy';
-import { DataTokenToDatasetMapping } from '../../../src/bounty/models/data-token-to-dataset-mapping.entity';
+import { DataTokenToDatasetMapping } from '../../../src/endpoints/bounty/models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
-import { DataTokenToDatasetMappingDto } from '../../../src/bounty/dto/data-token-to-dataset-mapping.dto';
+import { DataTokenToDatasetMappingDto } from '../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
 
 describe('Bounty Controller Unit Tests', () => {
   const fileMock = fileMockFactory();

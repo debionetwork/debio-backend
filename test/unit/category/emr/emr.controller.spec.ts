@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EmrController } from '../../../../src/category/emr/emr.controller';
-import { EmrService } from '../../../../src/category/emr/emr.service';
+import { EmrController } from '../../../../src/endpoints/category/emr/emr.controller';
+import { EmrService } from '../../../../src/endpoints/category/emr/emr.service';
 import { MockType } from '../../mock';
 
 describe('Emr Controller Unit Tests', () => {

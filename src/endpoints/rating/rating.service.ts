@@ -1,7 +1,7 @@
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
-import { CreateRatingDto } from 'src/rating/dto/create-rating.dto';
+import { CreateRatingDto } from '../rating/dto/create-rating.dto';
 import { LabRating } from './models/rating.entity';
 import { Repository } from 'typeorm';
 
