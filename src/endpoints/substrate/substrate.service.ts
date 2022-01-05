@@ -86,13 +86,6 @@ export class SubstrateService implements OnModuleInit {
     await this.startListen()
   }
 
-  async getSubstrateAddressByEthAddress(ethAddress: string) {
-    const response = await this.api.query.userProfile.accountIdByEthAddress(
-      ethAddress,
-    );
-
-    return response.toString();
-  }
 
   async getLastOrderByCustomer(substrateAddress: string) {
     const response = await this.api.query.orders.lastOrderByCustomer(
