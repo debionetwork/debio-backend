@@ -1,43 +1,18 @@
 import { Body, Controller, Post, Res, Headers, UseInterceptors } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
-import { ApiProperty } from '@nestjs/swagger';
-import { RewardService } from '../common/utilities/reward/reward.service';
-import { RewardDto } from '../common/utilities/reward/dto/reward.dto';
-import { SentryInterceptor } from '../common/interceptors';
-
-export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
-
-export class GetDbioOnRegisterDto {
-  @ApiProperty({ type: String })
-  accountId: string;
-
-  @ApiProperty({ description: 'RegistrationRole' })
-  role: RegistrationRole;
-}
-
-export class WalletBindingDTO {
-  @ApiProperty({ type: String })
-  accountId: string;
-
-  @ApiProperty({ type: String })
-  ethAddress: string;
-}
+import { RewardService } from '../../common/utilities/reward/reward.service';
+import { RewardDto } from '../../common/utilities/reward/dto/reward.dto';
+import { SentryInterceptor } from '../../common/interceptors';
+import { WalletBindingDTO } from './dto/wallet-binding.dto';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('substrate')
 export class SubstrateController {
-  substrateService: SubstrateService;
   constructor(
-    substrateService: SubstrateService,
-    private rewardService: RewardService,
-  ) {
-    this.substrateService = substrateService;
-  }
-
-  async onApplicationBootstrap() {
-    this.substrateService.listenToEvents();
-  }
+    private readonly substrateService: SubstrateService,
+    private readonly rewardService: RewardService,
+  ) {}
 
   @Post('/wallet-binding')
   async walletBinding(

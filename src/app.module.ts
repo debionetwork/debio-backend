@@ -7,7 +7,7 @@ import { RatingModule } from './endpoints/rating/rating.module';
 import { EthereumModule } from './endpoints/ethereum/ethereum.module';
 import { EscrowModule } from './endpoints/escrow/escrow.module';
 import { SubstrateModule } from './substrate/substrate.module';
-import { SubstrateIndexedDataModule } from './endpoints/substrate-indexed-data/substrate-indexed-data.module';
+import { SubstrateIndexedDataModule } from './endpoints/substrate/substrate-endpoint.module';
 import { EthereumIndexedDataModule } from './endpoints/ethereum-indexed-data/ethereum-indexed-data.module';
 import { TransactionLoggingModule } from './common/utilities/transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './common/utilities/transaction-logging/models/transaction-request.entity';

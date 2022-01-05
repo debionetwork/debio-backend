@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { SubstrateService } from './substrate.service';
-import { SubstrateController } from './substrate.controller';
+import { SubstrateService } from '../endpoints/substrate/substrate.service';
+import { SubstrateController } from '../endpoints/substrate/substrate.controller';
 import { EscrowModule } from '../endpoints/escrow/escrow.module';
 import { TransactionLoggingModule } from '../common/utilities/transaction-logging/transaction-logging.module';
 import { RewardModule } from '../common/utilities/reward/reward.module';

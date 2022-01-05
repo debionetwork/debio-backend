@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   SubstrateController,
+} from './substrate.controller';
+import {
   RegistrationRole,
   GetDbioOnRegisterDto,
   WalletBindingDTO,
-} from './substrate.controller';
+} from './dto';
 import { SubstrateService } from './substrate.service';
 
 describe('Substrate Controller', () => {

@@ -7,18 +7,18 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
-import { EscrowService } from '../endpoints/escrow/escrow.service';
-import { RegistrationRole } from './substrate.controller';
-import GeneticTestingEventHandler from './geneticTestingEvent';
-import { TransactionLoggingService } from '../common/utilities/transaction-logging/transaction-logging.service';
-import { RewardService } from '../common/utilities/reward/reward.service';
-import { OrderEventHandler } from './orderEvent';
-import { ServiceEventHandler } from './serviceEvent';
-import { MailerManager } from '../common/utilities/mailer/mailer.manager';
-import { ServiceRequestEventHandler } from './serviceRequestEvent';
-import { CountryService } from '../endpoints/location/country.service';
-import { StateService } from '../endpoints/location/state.service';
-import { DebioConversionService } from '../common/utilities/debio-conversion/debio-conversion.service';
+import { EscrowService } from '../escrow/escrow.service';
+import { RegistrationRole } from './dto/get-dbio-on-register.dto';
+import GeneticTestingEventHandler from '../../substrate/geneticTestingEvent';
+import { TransactionLoggingService } from '../../common/utilities/transaction-logging/transaction-logging.service';
+import { RewardService } from '../../common/utilities/reward/reward.service';
+import { OrderEventHandler } from '../../substrate/orderEvent';
+import { ServiceEventHandler } from '../../substrate/serviceEvent';
+import { MailerManager } from '../../common/utilities/mailer/mailer.manager';
+import { ServiceRequestEventHandler } from '../../substrate/serviceRequestEvent';
+import { CountryService } from '../location/country.service';
+import { StateService } from '../location/state.service';
+import { DebioConversionService } from '../../common/utilities/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -140,54 +140,6 @@ export class SubstrateService implements OnModuleInit {
     await this.logger.log('set order refunded', orderId);
   }
 
-  async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
-    let hasRole = false;
-    let resp: any;
-    switch (role) {
-      case 'doctor':
-        resp = await this.api.query.doctors.doctors(accountId);
-        if ((resp as Option<any>).isSome) {
-          hasRole = true;
-        }
-      case 'hospital':
-        resp = await this.api.query.hospitals.hospitals(accountId);
-        if ((resp as Option<any>).isSome) {
-          hasRole = true;
-        }
-      case 'lab':
-        resp = await this.api.query.labs.labs(accountId);
-        if ((resp as Option<any>).isSome) {
-          hasRole = true;
-        }
-    }
-
-    return hasRole;
-  }
-
-  listenToEvents() {
-    this.api.query.system.events((events) => {
-      events.forEach((record) => {
-        const { event } = record;
-        switch (
-          event.section // event.section == pallet name
-        ) {
-          case 'services':
-            this.serviceEventHandler.handle(event);
-            break;
-          case 'orders':
-            this.orderEventHandler.handle(event);
-            break;
-          case 'geneticTesting':
-            this.geneticTestingEventHandler.handle(event);
-            break;
-          case 'serviceRequest':
-            this.serviceRequestEventHandler.handle(event);
-            break;
-        }
-      });
-    });
-  }
-
   async bindEthAddressToSubstrateAddress(
     ethAddress: string,
     substrateAddress: string,
@@ -245,6 +197,54 @@ export class SubstrateService implements OnModuleInit {
     });
 
     await this.logger.log('retrieve unstaked amount', requestId);
+  }
+
+  async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
+    let hasRole = false;
+    let resp: any;
+    switch (role) {
+      case 'doctor':
+        resp = await this.api.query.doctors.doctors(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+      case 'hospital':
+        resp = await this.api.query.hospitals.hospitals(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+      case 'lab':
+        resp = await this.api.query.labs.labs(accountId);
+        if ((resp as Option<any>).isSome) {
+          hasRole = true;
+        }
+    }
+
+    return hasRole;
+  }
+
+  listenToEvents() {
+    this.api.query.system.events((events) => {
+      events.forEach((record) => {
+        const { event } = record;
+        switch (
+          event.section // event.section == pallet name
+        ) {
+          case 'services':
+            this.serviceEventHandler.handle(event);
+            break;
+          case 'orders':
+            this.orderEventHandler.handle(event);
+            break;
+          case 'geneticTesting':
+            this.geneticTestingEventHandler.handle(event);
+            break;
+          case 'serviceRequest':
+            this.serviceRequestEventHandler.handle(event);
+            break;
+        }
+      });
+    });
   }
 
   async startListen(){

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RegistrationRole } from './substrate.controller';
+import { RegistrationRole } from './dto/get-dbio-on-register.dto';
 import { SubstrateService } from './substrate.service';
 
 class SubstrateServiceMock {

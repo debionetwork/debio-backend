@@ -13,11 +13,6 @@ require('dotenv').config(); // eslint-disable-line
     TypeOrmModule.forFeature([EscrowAccounts]),
     forwardRef(() => SubstrateModule),
     forwardRef(() => EthereumModule),
-    ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
-      }),
-    }),
   ],
   controllers: [EscrowController],
   providers: [EscrowService],
