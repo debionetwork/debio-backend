@@ -5,8 +5,8 @@ import { RewardDto } from '../common/reward/dto/reward.dto';
 import { RewardService } from '../common/reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { Logger } from '@nestjs/common';
-import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '../common/transaction-logging/transaction-logging.service';
+import { TransactionLoggingDto } from '../common/transaction-logging/dto/transaction-logging.dto';
 import { ethers } from 'ethers'
 import { DebioConversionService } from '../common/debio-conversion/debio-conversion.service';
 

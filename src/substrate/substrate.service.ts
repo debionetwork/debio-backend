@@ -10,7 +10,7 @@ import { Option } from '@polkadot/types';
 import { EscrowService } from '../endpoints/escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
+import { TransactionLoggingService } from '../common/transaction-logging/transaction-logging.service';
 import { RewardService } from '../common/reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';

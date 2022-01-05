@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { SubstrateService } from './substrate.service';
 import { SubstrateController } from './substrate.controller';
 import { EscrowModule } from '../endpoints/escrow/escrow.module';
-import { TransactionLoggingModule } from '../transaction-logging/transaction-logging.module';
+import { TransactionLoggingModule } from '../common/transaction-logging/transaction-logging.module';
 import { RewardModule } from '../common/reward/reward.module';
 import { MailModule } from '../common/mailer/mailer.module';
 import { LocationModule } from '../endpoints/location/location.module';
