@@ -17,7 +17,7 @@ import { BountyModule } from './bounty/bounty.module';
 import { EmrModule } from './category/emr/emr.module';
 import { ServiceCategoryModule } from './category/service/service-category.module';
 import { RewardModule } from './reward/reward.module';
-import { VerificationModule } from './verification/verification.module';
+import { VerificationModule } from './endpoints/verification/verification.module';
 import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';

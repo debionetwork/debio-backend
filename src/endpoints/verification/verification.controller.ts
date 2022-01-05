@@ -1,7 +1,7 @@
 import { Controller, Headers, Post, Query, Res, UseInterceptors } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { SentryInterceptor, ProcessEnvProxy } from '../common';
+import { SentryInterceptor, ProcessEnvProxy } from '../../common';
 import { VerificationService } from './verification.service';
 
 @UseInterceptors(SentryInterceptor)

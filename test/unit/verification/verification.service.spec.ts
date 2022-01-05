@@ -4,7 +4,7 @@ import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../src/common/date-time';
 import { SubstrateService } from '../../../src/substrate/substrate.service';
 import { RewardService } from '../../../src/reward/reward.service';
-import { VerificationService } from '../../../src/verification/verification.service';
+import { VerificationService } from '../../../src/endpoints/verification/verification.service';
 import { RewardDto } from '../../../src/reward/dto/reward.dto';
 
 describe('Verification Service Unit Tests', () => {
