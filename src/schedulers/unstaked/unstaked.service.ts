@@ -19,8 +19,6 @@ export class UnstakedService implements OnModuleInit {
   @Interval((30 * 1000))
   async handleWaitingUnstaked() {
     try {
-      this.logger.log('Retrieve Unstaked Amount');
-      
       if (this.isRunning) return;
 
       this.isRunning = true;
