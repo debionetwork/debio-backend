@@ -11,7 +11,7 @@ import { EscrowService } from '../endpoints/escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { RewardService } from '../reward/reward.service';
+import { RewardService } from '../common/reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
 import { MailerManager } from '../common/mailer/mailer.manager';

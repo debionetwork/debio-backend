@@ -1,8 +1,8 @@
 import { ApiPromise } from '@polkadot/api';
 import { Option } from '@polkadot/types';
 import { EscrowService } from '../endpoints/escrow/escrow.service';
-import { RewardDto } from '../reward/dto/reward.dto';
-import { RewardService } from '../reward/reward.service';
+import { RewardDto } from '../common/reward/dto/reward.dto';
+import { RewardService } from '../common/reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { Logger } from '@nestjs/common';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';

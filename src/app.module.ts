@@ -16,7 +16,7 @@ import { CloudStorageModule } from './endpoints/cloud-storage/cloud-storage.modu
 import { BountyModule } from './endpoints/bounty/bounty.module';
 import { EmrModule } from './endpoints/category/emr/emr.module';
 import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
-import { RewardModule } from './reward/reward.module';
+import { RewardModule } from './common/reward/reward.module';
 import { VerificationModule } from './endpoints/verification/verification.module';
 import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
