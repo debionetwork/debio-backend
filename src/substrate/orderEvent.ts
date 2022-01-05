@@ -8,7 +8,7 @@ import { Logger } from '@nestjs/common';
 import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
 import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-logging.dto';
 import { ethers } from 'ethers'
-import { DebioConversionService } from '../debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../common/debio-conversion/debio-conversion.service';
 
 export class OrderEventHandler {
   constructor(

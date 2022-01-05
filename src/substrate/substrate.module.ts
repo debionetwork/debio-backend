@@ -6,7 +6,7 @@ import { TransactionLoggingModule } from '../transaction-logging/transaction-log
 import { RewardModule } from '../reward/reward.module';
 import { MailModule } from '../common/mailer/mailer.module';
 import { LocationModule } from '../endpoints/location/location.module';
-import { DebioConversionModule } from '../debio-conversion/debio-conversion.module';
+import { DebioConversionModule } from '../common/debio-conversion/debio-conversion.module';
 
 @Module({
   imports: [

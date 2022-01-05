@@ -21,7 +21,7 @@ import { VerificationModule } from './endpoints/verification/verification.module
 import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
-import { DebioConversionModule } from './debio-conversion/debio-conversion.module';
+import { DebioConversionModule } from './common/debio-conversion/debio-conversion.module';
 
 require('dotenv').config(); // eslint-disable-line
 

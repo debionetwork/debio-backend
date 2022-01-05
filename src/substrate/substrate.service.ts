@@ -18,7 +18,7 @@ import { MailerManager } from '../common/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
 import { CountryService } from '../endpoints/location/country.service';
 import { StateService } from '../endpoints/location/state.service';
-import { DebioConversionService } from '../debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../common/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
