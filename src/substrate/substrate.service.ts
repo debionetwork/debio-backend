@@ -7,18 +7,18 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Option } from '@polkadot/types';
-import { EscrowService } from '../escrow/escrow.service';
+import { EscrowService } from '../endpoints/escrow/escrow.service';
 import { RegistrationRole } from './substrate.controller';
 import GeneticTestingEventHandler from './geneticTestingEvent';
-import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { RewardService } from '../reward/reward.service';
+import { TransactionLoggingService } from '../common/utilities/transaction-logging/transaction-logging.service';
+import { RewardService } from '../common/utilities/reward/reward.service';
 import { OrderEventHandler } from './orderEvent';
 import { ServiceEventHandler } from './serviceEvent';
-import { MailerManager } from '../common/mailer/mailer.manager';
+import { MailerManager } from '../common/utilities/mailer/mailer.manager';
 import { ServiceRequestEventHandler } from './serviceRequestEvent';
-import { CountryService } from '../location/country.service';
-import { StateService } from '../location/state.service';
-import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
+import { CountryService } from '../endpoints/location/country.service';
+import { StateService } from '../endpoints/location/state.service';
+import { DebioConversionService } from '../common/utilities/debio-conversion/debio-conversion.service';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {

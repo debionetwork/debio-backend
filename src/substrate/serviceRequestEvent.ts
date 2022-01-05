@@ -1,11 +1,11 @@
 import { ApiPromise } from '@polkadot/api';
 import { ethers } from 'ethers'
-import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-logging.dto';
-import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
-import { MailerManager } from '../common/mailer';
+import { TransactionLoggingDto } from '../common/utilities/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '../common/utilities/transaction-logging/transaction-logging.service';
+import { MailerManager } from '../common/utilities/mailer';
 import { Logger } from '@nestjs/common';
-import { CountryService } from 'src/location/country.service';
-import { StateService } from 'src/location/state.service';
+import { CountryService } from '../endpoints/location/country.service';
+import { StateService } from '../endpoints/location/state.service';
 
 export class ServiceRequestEventHandler {
   constructor(

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
-import { SubstrateService } from 'src/common';
+import { SubstrateService } from '../../../common';
  
 @Injectable()
 export class SubstrateHealthIndicator extends HealthIndicator {
