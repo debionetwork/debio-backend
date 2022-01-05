@@ -118,8 +118,6 @@ export class ServiceRequestService {
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
         let { totalValue } = requestByCountryDict[countryCode];
-        
-        totalValue = totalValue;
   
         const servicesArr = Object.values(services).map((s: any) => ({
           ...s,
