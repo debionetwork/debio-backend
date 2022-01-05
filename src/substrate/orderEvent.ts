@@ -1,12 +1,12 @@
 import { ApiPromise } from '@polkadot/api';
 import { Option } from '@polkadot/types';
 import { EscrowService } from '../endpoints/escrow/escrow.service';
-import { RewardDto } from 'src/reward/dto/reward.dto';
-import { RewardService } from 'src/reward/reward.service';
+import { RewardDto } from '../reward/dto/reward.dto';
+import { RewardService } from '../reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { Logger } from '@nestjs/common';
-import { TransactionLoggingService } from 'src/transaction-logging/transaction-logging.service';
-import { TransactionLoggingDto } from 'src/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingService } from '../transaction-logging/transaction-logging.service';
+import { TransactionLoggingDto } from '../transaction-logging/dto/transaction-logging.dto';
 import { ethers } from 'ethers'
 import { DebioConversionService } from '../debio-conversion/debio-conversion.service';
 

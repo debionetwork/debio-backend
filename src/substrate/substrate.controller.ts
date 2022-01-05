@@ -2,9 +2,9 @@ import { Body, Controller, Post, Res, Headers, UseInterceptors } from '@nestjs/c
 import { SubstrateService } from './substrate.service';
 import { Response } from 'express';
 import { ApiProperty } from '@nestjs/swagger';
-import { RewardService } from 'src/reward/reward.service';
-import { RewardDto } from 'src/reward/dto/reward.dto';
-import { SentryInterceptor } from 'src/common';
+import { RewardService } from '../reward/reward.service';
+import { RewardDto } from '../reward/dto/reward.dto';
+import { SentryInterceptor } from '../common';
 
 export type RegistrationRole = 'lab' | 'doctor' | 'hospital';
 
