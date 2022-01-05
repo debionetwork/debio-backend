@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Req } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseInterceptors } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
+import { SentryInterceptor } from 'src/common';
 import { ServiceService } from './service.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('services')
 export class ServiceController {
   constructor(readonly serviceService: ServiceService) {}

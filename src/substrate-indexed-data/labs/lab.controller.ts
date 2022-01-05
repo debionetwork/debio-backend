@@ -1,7 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
+import { SentryInterceptor } from 'src/common';
 import { LabService } from './lab.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('labs')
 export class LabController {
   constructor(readonly labService: LabService) {}

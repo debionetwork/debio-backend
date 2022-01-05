@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { SentryInterceptor } from 'src/common';
 import { EmrService } from './emr.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('emr-category')
 export class EmrController {
   constructor(private readonly emrService: EmrService) {}

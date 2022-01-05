@@ -5,10 +5,13 @@ import {
   HttpStatus,
   Param,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
+import { SentryInterceptor } from 'src/common';
 import { OrderService } from './order.service';
 
+@UseInterceptors(SentryInterceptor)
 @Controller('orders')
 export class OrderController {
   constructor(readonly orderService: OrderService) {}
