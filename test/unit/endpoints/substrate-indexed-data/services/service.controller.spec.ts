@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { ServiceService } from '../../../../src/endpoints/substrate-indexed-data/services/service.service';
-import { elasticsearchServiceMockFactory, MockType } from '../../mock';
+import { ServiceService } from '../../../../../src/endpoints/substrate-indexed-data/services/service.service';
+import { ServiceController } from '../../../../../src/endpoints/substrate-indexed-data/services/service.controller';
+import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
 
-describe('Substrate Indexer Service Service Unit Tests', () => {
+describe('Substrate Indexer Service Controller Unit Tests', () => {
+  let serviceControllerMock: ServiceController;
   let serviceServiceMock: ServiceService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
 
@@ -24,26 +26,29 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
     }
   }
   
-  // Arrange before each iteration
+    // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        ServiceController,
         ServiceService,
         { provide: ElasticsearchService, useFactory: elasticsearchServiceMockFactory }
       ],
     }).compile();
 
+    serviceControllerMock = module.get(ServiceController);
     serviceServiceMock = module.get(ServiceService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
   });
 
   it('should be defined', () => {
     // Assert
-    expect(serviceServiceMock).toBeDefined();
+    expect(serviceControllerMock).toBeDefined();
   });
 
   it('should find service by country, city, and category', () => {
     // Arrange
+    const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
     const CALLED_WITH = createSearchObject(
         "XX",
         "XX",
@@ -59,10 +64,11 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
     when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-        "XX",
-        "XX"
-    )).resolves.toEqual(RESULT);
+    expect(serviceControllerMock.findByCountryCity({
+      city: "XX",
+      country: "XX",
+    })).resolves.toEqual(RESULT);
+    expect(serviceServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -76,13 +82,15 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
         }
       }
     };
+    const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
     elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-        "XX",
-        "XX"
-    )).resolves.toEqual(RESULT);
+    expect(serviceControllerMock.findByCountryCity({
+      city: "XX",
+      country: "XX",
+    })).resolves.toEqual(RESULT);
+    expect(serviceServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -95,13 +103,15 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
         }
       }
     };
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
+    const serviceServiceSpy = jest.spyOn(serviceServiceMock, 'getByCountryCity');
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT))
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-      "XX",
-      "XX"
-    )).rejects.toMatchObject(ERROR_RESULT);
+    expect(serviceControllerMock.findByCountryCity({
+      city: "XX",
+      country: "XX",
+    })).rejects.toMatchObject(ERROR_RESULT);
+    expect(serviceServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });

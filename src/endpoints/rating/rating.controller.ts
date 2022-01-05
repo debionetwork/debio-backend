@@ -12,7 +12,7 @@ import {
 import { ApiBody, ApiParam } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 import { Response } from 'express';
-import { SentryInterceptor } from 'src/common';
+import { SentryInterceptor } from '../../common';
 import { CreateRatingDto } from './dto/create-rating.dto';
 import { RatingService } from './rating.service';
 

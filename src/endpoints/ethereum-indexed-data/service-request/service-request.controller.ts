@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query, UseInterceptors } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
-import { SentryInterceptor } from 'src/common';
+import { SentryInterceptor } from '../../../common';
 import { ServiceRequestService } from './service-request.service';
 
 @UseInterceptors(SentryInterceptor)

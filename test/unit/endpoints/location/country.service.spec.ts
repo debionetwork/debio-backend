@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CountryService } from '../../../src/endpoints/location/country.service';
-import { Country } from '../../../src/endpoints/location/models/country.entity';
-import { MockType, repositoryMockFactory } from '../mock';
+import { CountryService } from '../../../../src/endpoints/location/country.service';
+import { Country } from '../../../../src/endpoints/location/models/country.entity';
+import { MockType, repositoryMockFactory } from '../../mock';
 import { Repository } from 'typeorm';
 import { when } from 'jest-when';
 

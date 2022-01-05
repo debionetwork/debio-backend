@@ -4,7 +4,7 @@ import { RewardDto } from '../reward/dto/reward.dto';
 import { RewardService } from '../reward/reward.service';
 import { SubstrateService } from './substrate.service';
 import { ethers } from 'ethers'
-import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../debio-conversion/debio-conversion.service';
 
 
 @Injectable()

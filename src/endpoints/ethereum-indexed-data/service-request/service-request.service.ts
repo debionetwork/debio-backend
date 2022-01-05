@@ -3,7 +3,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { StateService } from '../../../endpoints/location/state.service';
 import { EthereumService } from '../../../endpoints/ethereum/ethereum.service';
 import { CountryService } from '../../../endpoints/location/country.service';
-import { DebioConversionService } from 'src/debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../../../debio-conversion/debio-conversion.service';
 
 interface RequestsByCountry {
   country: string;

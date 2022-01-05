@@ -8,7 +8,7 @@ import { DateTimeProxy } from "../../common/date-time/date-time.proxy";
 import { DataTokenToDatasetMapping } from "./models/data-token-to-dataset-mapping.entity";
 import { GCloudStorageService } from "@aginix/nestjs-gcloud-storage";
 import { DataTokenToDatasetMappingDto } from "./dto/data-token-to-dataset-mapping.dto";
-import { SentryInterceptor } from "src/common";
+import { SentryInterceptor } from "../../common";
 
 @UseInterceptors(SentryInterceptor)
 @Controller("bounty")

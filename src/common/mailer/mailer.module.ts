@@ -2,7 +2,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { forwardRef, Module } from '@nestjs/common';
 import { join } from 'path';
-import { LocationModule } from 'src/endpoints/location/location.module';
+import { LocationModule } from '../../endpoints/location/location.module';
 import { MailerController } from './mailer.controller';
 import { MailerManager } from './mailer.manager';
 

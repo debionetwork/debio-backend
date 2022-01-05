@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ServiceCategory } from '../../../../src/endpoints/category/service/models/service-category.service';
-import { ServiceCategoryService } from '../../../../src/endpoints/category/service/service-category.service';
-import { MockType, repositoryMockFactory } from '../../mock';
+import { ServiceCategory } from '../../../../../src/endpoints/category/service/models/service-category.service';
+import { ServiceCategoryService } from '../../../../../src/endpoints/category/service/service-category.service';
+import { MockType, repositoryMockFactory } from '../../../mock';
 import { Repository } from 'typeorm';
 
 describe('Service Category Service Unit Tests', () => {

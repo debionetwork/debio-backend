@@ -1,5 +1,5 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { SentryInterceptor } from 'src/common';
+import { SentryInterceptor } from '../../../common';
 import { EmrService } from './emr.service';
 
 @UseInterceptors(SentryInterceptor)

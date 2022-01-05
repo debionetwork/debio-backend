@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ServiceCategoryService } from '../../../../src/endpoints/category/service/service-category.service';
-import { ServiceCategoryController } from '../../../../src/endpoints/category/service/service-category.controller';
-import { MockType } from '../../mock';
+import { ServiceCategoryService } from '../../../../../src/endpoints/category/service/service-category.service';
+import { ServiceCategoryController } from '../../../../../src/endpoints/category/service/service-category.controller';
+import { MockType } from '../../../mock';
 
 describe('Service Category Controller Unit Tests', () => {
   const serviceCategoryServiceMockFactory: () => MockType<ServiceCategoryService> = jest.fn(() => ({

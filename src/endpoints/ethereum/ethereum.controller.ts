@@ -1,7 +1,7 @@
 import { Controller, UseInterceptors } from '@nestjs/common';
 import { EthereumService } from './ethereum.service';
 import { EscrowService } from '../escrow/escrow.service';
-import { SentryInterceptor } from 'src/common';
+import { SentryInterceptor } from '../../common';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('ethereum')

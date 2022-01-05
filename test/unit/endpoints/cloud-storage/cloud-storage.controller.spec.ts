@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
-import { CloudStorageController } from '../../../src/cloud-storage/cloud-storage.controller';
-import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType } from '../mock';
+import { CloudStorageController } from '../../../../src/endpoints/cloud-storage/cloud-storage.controller';
+import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType } from '../../mock';
 import { when } from 'jest-when';
-import { DateTimeProxy } from '../../../src/common/date-time/date-time.proxy';
+import { DateTimeProxy } from '../../../../src/common/date-time/date-time.proxy';
 
 describe('Cloud Storage Controller Unit Tests', () => {
   const fileMock = fileMockFactory();

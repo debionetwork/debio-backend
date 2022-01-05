@@ -4,7 +4,6 @@ import { EthereumService } from '../ethereum/ethereum.service';
 import { SubstrateService } from '../../substrate/substrate.service';
 import { Utils } from './utils/utils';
 import { ethers } from 'ethers';
-import ABI from '../ethereum/utils/ABI.json';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()

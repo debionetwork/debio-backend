@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { LabService } from '../../../../src/endpoints/substrate-indexed-data/labs/lab.service';
-import { LabController } from '../../../../src/endpoints/substrate-indexed-data/labs/lab.controller';
-import { elasticsearchServiceMockFactory, MockType } from '../../mock';
+import { LabService } from '../../../../../src/endpoints/substrate-indexed-data/labs/lab.service';
+import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
 
-describe('Substrate Indexer Lab Controller Unit Tests', () => {
-  let labControllerMock: LabController;
+describe('Substrate Indexer Lab Service Unit Tests', () => {
   let labServiceMock: LabService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
 
@@ -53,25 +51,22 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        LabController,
         LabService,
         { provide: ElasticsearchService, useFactory: elasticsearchServiceMockFactory }
       ],
     }).compile();
 
-    labControllerMock = module.get(LabController);
     labServiceMock = module.get(LabService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
   });
 
   it('should be defined', () => {
     // Assert
-    expect(labControllerMock).toBeDefined();
+    expect(labServiceMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
     // Arrange
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
     const CALLED_WITH = createSearchObject(
         "XX",
         "XX",
@@ -109,7 +104,7 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
       }
     };
     when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
-    
+
     const RESULT = {
       result: [
         {
@@ -129,7 +124,7 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
     }
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
+    expect(labServiceMock.getByCountryCityCategory(
         "XX",
         "XX",
         "XX",
@@ -138,7 +133,6 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
         1,
         10
     )).resolves.toEqual(RESULT);
-    expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -152,22 +146,20 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
         }
       }
     };
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
     elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
-      "XX",
-      "XX",
-      "XX",
-      "XX",
-      false,
-      1,
-      10
+    expect(labServiceMock.getByCountryCityCategory(
+        "XX",
+        "XX",
+        "XX",
+        "XX",
+        false,
+        1,
+        10
     )).resolves.toEqual({
       result: RESULT
     });
-    expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -180,11 +172,10 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
         }
       }
     };
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT))
+    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
+    expect(labServiceMock.getByCountryCityCategory(
       "XX",
       "XX",
       "XX",
@@ -193,7 +184,6 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
       1,
       10
     )).rejects.toMatchObject(ERROR_RESULT);
-    expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });

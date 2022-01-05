@@ -1,5 +1,5 @@
 import { Controller, UseInterceptors } from '@nestjs/common';
-import { SentryInterceptor } from 'src/common';
+import { SentryInterceptor } from '../../common';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('escrow')

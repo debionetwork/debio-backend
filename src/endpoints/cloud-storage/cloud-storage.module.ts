@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
-import { DateTimeModule } from 'src/common/date-time/date-time.module';
+import { DateTimeModule } from '../../common/date-time/date-time.module';
 
 require('dotenv').config(); // eslint-disable-line
 
