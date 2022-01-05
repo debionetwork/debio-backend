@@ -86,20 +86,6 @@ export class SubstrateService implements OnModuleInit {
     await this.startListen()
   }
 
-
-  async getLastOrderByCustomer(substrateAddress: string) {
-    const response = await this.api.query.orders.lastOrderByCustomer(
-      substrateAddress,
-    );
-
-    return response.toString();
-  }
-
-  async getOrderDetailByOrderID(orderID: string) {
-    const response = await this.api.query.orders.orders(orderID);
-    return response.toHuman();
-  }
-
   async setOrderPaid(orderId: string) {
     const wallet = this.adminWallet;
     const response = await this.api.tx.orders
