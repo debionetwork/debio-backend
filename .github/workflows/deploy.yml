@@ -108,7 +108,6 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.repository=gcr.io/${{ secrets.DEV_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
@@ -246,7 +245,6 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.repository=gcr.io/${{ secrets.STG_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
@@ -384,7 +382,6 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.repository=gcr.io/${{ secrets.TESTNET_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
@@ -522,7 +519,6 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.repository=gcr.io/${{ secrets.MAINNET_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
@@ -660,7 +656,6 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.repository=gcr.io/${{ secrets.MAINNET_GCP_PROJECT_ID }}/${{ github.repository }} \
               --set-string image.tag=${{ needs.compute-build-info.outputs.latest_tag }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
