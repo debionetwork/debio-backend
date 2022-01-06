@@ -67,8 +67,9 @@ export class UnstakedService implements OnModuleInit {
           }
           
           const numberTimeWaitingUnstaked = Number(timeWaitingUnstaked.replace(/,/gi, ""));
-            
-          const timeNext6Days = numberTimeWaitingUnstaked + (6 * 24 * 60 * 60 * 1000);
+          
+          const sixDays = 6 * 24 * 60 * 60 * 1000;
+          const timeNext6Days = numberTimeWaitingUnstaked + sixDays;
           const timeNow = new Date().getTime();
   
           const diffTime = timeNext6Days - timeNow;
