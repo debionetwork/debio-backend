@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Interval } from '@nestjs/schedule';
-import { SubstrateService } from 'src/substrate/substrate.service';
+import { SubstrateService } from '../../substrate/substrate.service';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
