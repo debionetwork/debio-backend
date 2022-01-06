@@ -108,7 +108,7 @@ jobs:
             helm repo update
             helm upgrade debio-backend debio/debio-backend \
               --install \
-              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }}-${{ needs.compute-build-info.outputs.date }} \
+              --set-string image.tag=${{ needs.compute-build-info.outputs.sha_short }} \
               --set-string imagePullSecrets[0].name=gcr-auth \
               --set-string config.swagger.enable=${{ steps.secrets.outputs.SWAGGER_ENABLE }} \
               --set-string config.port=${{ steps.secrets.outputs.PORT }} \
