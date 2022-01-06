@@ -149,16 +149,19 @@ export class SubstrateService implements OnModuleInit {
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
+        break;
       case 'hospital':
         resp = await this.api.query.hospitals.hospitals(accountId);
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
+        break;
       case 'lab':
         resp = await this.api.query.labs.labs(accountId);
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
+        break;
     }
 
     return hasRole;
@@ -245,6 +248,11 @@ export class SubstrateService implements OnModuleInit {
     });
 
     await this.logger.log('retrieve unstaked amount', requestId);
+  }
+
+  async serviceRequest(requestId) {
+    const resp = await this.api.query.serviceRequest.requestById(requestId);
+    return resp.toHuman();
   }
 
   async startListen(){
