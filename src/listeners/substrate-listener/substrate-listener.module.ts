@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { EscrowModule } from "src/endpoints/escrow/escrow.module";
+import { EscrowModule } from "../../endpoints/escrow/escrow.module";
 import { DebioConversionModule, MailModule, RewardModule, SubstrateModule, TransactionLoggingModule } from "../../common";
 import { GeneticTestingCommandHandlers } from "./commands/genetic-testing";
 import { ServiceCommandHandlers } from "./commands/services";
