@@ -6,7 +6,7 @@ import { LabController } from './labs/lab.controller';
 import { LabService } from './services/lab.service';
 import { OrderController } from './orders/order.controller';
 import { OrderService } from './services/order.service';
-import { SubstrateModule } from '../../common';
+import { RewardModule, SubstrateModule } from '../../common';
 import { SubstrateController } from './substrate.controller';
 
 @Module({
@@ -20,7 +20,8 @@ import { SubstrateController } from './substrate.controller';
         }
       }),
     }),
-    SubstrateModule
+    SubstrateModule,
+    RewardModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [SubstrateController, ServiceController, LabController, OrderController],
