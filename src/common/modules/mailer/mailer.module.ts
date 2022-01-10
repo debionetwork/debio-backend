@@ -17,8 +17,8 @@ const plus = (value: string) => {
         host: 'smtp.gmail.com',
         secure: false,
         auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASS_EMAIL,
+          user: "notifications@debio.network",
+          pass: "ACTGenomic5585",
         },
       },
       template: {
