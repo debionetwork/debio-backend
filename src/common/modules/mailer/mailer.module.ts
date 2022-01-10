@@ -3,8 +3,9 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { forwardRef, Module } from '@nestjs/common';
 import { join } from 'path';
 import { LocationModule } from '../../../endpoints/location/location.module';
-import { MailerController } from './mailer.controller';
 import { MailerManager } from './mailer.manager';
+
+require('dotenv').config(); // eslint-disable-line
 
 const plus = (value: string) => {
   return parseInt(value) + 1;
@@ -17,8 +18,8 @@ const plus = (value: string) => {
         host: 'smtp.gmail.com',
         secure: false,
         auth: {
-          user: "notifications@debio.network",
-          pass: "ACTGenomic5585",
+          user: process.env.EMAIL,
+          pass: process.env.PASS_EMAIL,
         },
       },
       template: {
@@ -30,7 +31,6 @@ const plus = (value: string) => {
       },
     }),
   ],
-  controllers: [MailerController],
   providers: [MailerManager],
   exports: [MailModule, MailerManager],
 })
