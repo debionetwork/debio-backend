@@ -44,7 +44,7 @@ export class ServiceCreatedHandler implements ICommandHandler<ServiceCreatedComm
       labRegisterCertifications.push(lrc);
     });
 
-    return labRegisterCertifications;
+    return labRegisterCertifications; 
   }
 
   async _getLabRegisterService(ids: string[]): Promise<Array<LabRegisterService>> {
