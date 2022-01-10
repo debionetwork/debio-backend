@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Interval } from '@nestjs/schedule';
-import { retrieveUnstakedAmount, SubstrateService } from '../../common';
+import { queryServiceRequestById, retrieveUnstakedAmount, SubstrateService } from '../../common';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
@@ -44,8 +44,11 @@ export class UnstakedService implements OnModuleInit {
   
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
-        const serviceRequestDetail = this.subtrateService.serviceRequest(requestId);
-        if (serviceRequestDetail['status'] === 'Unstaked') {
+        const serviceRequestDetail = await queryServiceRequestById(
+          this.subtrateService.api,
+          requestId
+        );
+        if (serviceRequestDetail.status === 'Unstaked') {
           await this.elasticsearchService.update({
             index: 'create-service-request',
             id: requestId,
@@ -53,8 +56,8 @@ export class UnstakedService implements OnModuleInit {
             body: {
               doc: {
                 request: {
-                  status: serviceRequestDetail['status'],
-                  unstaked_at: serviceRequestDetail['unstakedAt'],
+                  status: serviceRequestDetail.status,
+                  unstaked_at: serviceRequestDetail.unstaked_at,
                 },
               }
             }
