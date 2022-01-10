@@ -11,10 +11,6 @@ export class EthereumController {
     private readonly escrowService: EscrowService,
   ) {}
 
-  async onModuleInit() {
-    console.log('Init Ethereum Controller');
-  }
-
   async onApplicationBootstrap() {
     const contract = await this.ethereumService.getContract();
     const escrowContract = await this.ethereumService.getEscrowSmartContract();

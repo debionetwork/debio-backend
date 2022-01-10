@@ -5,6 +5,5 @@ import { SentryInterceptor } from '../../common/interceptors';
 @Controller('escrow')
 export class EscrowController {
   onModuleInit() {
-    console.log('Init Ethereum Controller');
   }
 }
