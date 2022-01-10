@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../../common/interceptors';
-import { OrderService } from './order.service';
+import { OrderService } from '../services/order.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('orders')

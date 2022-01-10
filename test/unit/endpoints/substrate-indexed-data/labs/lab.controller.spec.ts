@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { LabService } from '../../../../../src/endpoints/substrate/labs/lab.service';
+import { LabService } from '../../../../../src/endpoints/substrate/services/lab.service';
 import { LabController } from '../../../../../src/endpoints/substrate/labs/lab.controller';
 import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
 

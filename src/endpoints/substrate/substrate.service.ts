@@ -22,7 +22,7 @@ import { DebioConversionService } from '../../common/utilities/debio-conversion/
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
-  private api: ApiPromise;
+  private _api: ApiPromise;
   private adminWallet: any;
   private orderEventHandler: OrderEventHandler;
   private geneticTestingEventHandler: GeneticTestingEventHandler;
@@ -54,7 +54,7 @@ export class SubstrateService implements OnModuleInit {
 
     this.orderEventHandler = new OrderEventHandler(
       this.escrowService,
-      this.api,
+      this._api,
       this.logger,
       this.substrateService,
       this.exchangeCacheService,
@@ -66,18 +66,18 @@ export class SubstrateService implements OnModuleInit {
       this.rewardService,
       this.exchangeCacheService,
       this.substrateService,
-      this.api,
+      this._api,
     );
 
     this.serviceEventHandler = new ServiceEventHandler(
-      this.api,
+      this._api,
       this.mailerManager,
     );
 
     this.serviceRequestEventHandler = new ServiceRequestEventHandler(
       this.countryService,
       this.stateService,
-      this.api,
+      this._api,
       this.mailerManager,
       this.transactionLoggingService,
       this.logger,
@@ -86,9 +86,13 @@ export class SubstrateService implements OnModuleInit {
     await this.startListen()
   }
 
+  get api(): ApiPromise {
+    return this._api;
+  }
+
   async setOrderPaid(orderId: string) {
     const wallet = this.adminWallet;
-    const response = await this.api.tx.orders
+    const response = await this._api.tx.orders
       .setOrderPaid(orderId)
       .signAndSend(wallet, {
         nonce: -1,
@@ -99,7 +103,7 @@ export class SubstrateService implements OnModuleInit {
 
   async setOrderRefunded(orderId: string) {
     const wallet = this.adminWallet;
-    const response = await this.api.tx.orders
+    const response = await this._api.tx.orders
       .setOrderRefunded(orderId)
       .signAndSend(wallet, {
         nonce: -1,
@@ -113,7 +117,7 @@ export class SubstrateService implements OnModuleInit {
     substrateAddress: string,
   ) {
     const wallet = this.adminWallet;
-    const response = await   this.api.tx.userProfile.adminSetEthAddress(
+    const response = await   this._api.tx.userProfile.adminSetEthAddress(
       substrateAddress,
       ethAddress,
     )
@@ -125,7 +129,7 @@ export class SubstrateService implements OnModuleInit {
 
   async submitStaking(hash: string, orderId: string) {
     const wallet = this.adminWallet;
-    const response = await this.api.tx.geneticTesting
+    const response = await this._api.tx.geneticTesting
       .submitDataBountyDetails(hash, orderId)
       .signAndSend(wallet, {
         nonce: -1,
@@ -136,7 +140,7 @@ export class SubstrateService implements OnModuleInit {
   async sendReward(acountId: string, amount: number) {
     const wallet = this.adminWallet;
     const dbioUnit = 10 ** 18;
-    const response = await this.api.tx.rewards
+    const response = await this._api.tx.rewards
       .rewardFunds(acountId, (amount * dbioUnit).toString())
       .signAndSend(wallet, {
         nonce: -1,
@@ -147,7 +151,7 @@ export class SubstrateService implements OnModuleInit {
 
   async verificationLabWithSubstrate(acountId: string, labStatus: string) {
     const wallet = this.adminWallet;
-    const response = await this.api.tx.labs
+    const response = await this._api.tx.labs
       .updateLabVerificationStatus(acountId, labStatus)
       .signAndSend(wallet, {
         nonce: -1,
@@ -158,7 +162,7 @@ export class SubstrateService implements OnModuleInit {
 
   async retrieveUnstakedAmount(requestId) {
     const wallet = this.adminWallet;
-    const response = await this.api.tx.serviceRequest
+    const response = await this._api.tx.serviceRequest
     .retrieveUnstakedAmount(requestId)
     .signAndSend(wallet, {
       nonce: -1,
@@ -172,17 +176,17 @@ export class SubstrateService implements OnModuleInit {
     let resp: any;
     switch (role) {
       case 'doctor':
-        resp = await this.api.query.doctors.doctors(accountId);
+        resp = await this._api.query.doctors.doctors(accountId);
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
       case 'hospital':
-        resp = await this.api.query.hospitals.hospitals(accountId);
+        resp = await this._api.query.hospitals.hospitals(accountId);
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
       case 'lab':
-        resp = await this.api.query.labs.labs(accountId);
+        resp = await this._api.query.labs.labs(accountId);
         if ((resp as Option<any>).isSome) {
           hasRole = true;
         }
@@ -192,7 +196,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   listenToEvents() {
-    this.api.query.system.events((events) => {
+    this._api.query.system.events((events) => {
       events.forEach((record) => {
         const { event } = record;
         switch (
@@ -220,21 +224,21 @@ export class SubstrateService implements OnModuleInit {
 
     this.listenStatus = true;
     
-    this.api = await ApiPromise.create({
+    this._api = await ApiPromise.create({
       provider: this.wsProvider,
     });
 
-    this.api.on('connected', () => {
+    this._api.on('connected', () => {
       this.logger.log(`Substrate Listener Connected`);
     });
 
-    this.api.on('disconnected', async () => {
+    this._api.on('disconnected', async () => {
       this.logger.log(`Substrate Listener Disconnected`);
       await this.stopListen();
       await this.startListen();
     });
 
-    this.api.on('error', async (error) => {
+    this._api.on('error', async (error) => {
       this.logger.log(`Substrate Listener Error: ${error}`);
       await this.stopListen();
       await this.startListen();
@@ -244,8 +248,8 @@ export class SubstrateService implements OnModuleInit {
   stopListen() {
     this.listenStatus = false;
 
-    if (this.api) {
-      delete this.api;
+    if (this._api) {
+      delete this._api;
     }
   }
 }
