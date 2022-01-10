@@ -7,7 +7,7 @@ import { SentryInterceptor } from "../../common/interceptors";
 import { WalletBindingDTO } from "./dto/wallet-binding.dto";
 import { ApiParam, ApiQuery } from "@nestjs/swagger";
 import { LabService, OrderService, ServiceService } from "./services";
-import { queryAccountIdByEthAddress } from "src/common/polkadot-provider/query/user-profile";
+import { sendRewards, queryAccountIdByEthAddress, setEthAddress } from "../../common/polkadot-provider";
 
 @UseInterceptors(SentryInterceptor)
 @Controller("substrate")
@@ -159,7 +159,9 @@ export class SubstrateController {
     let reward = null;
     let isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(this.substrateService.api, ethAddress);
       
-    const bindingEth = await this.substrateService.bindEthAddressToSubstrateAddress(
+    const bindingEth = await setEthAddress(
+      this.substrateService.api,
+      this.substrateService.pair,
       ethAddress,
       accountId,
     );      
@@ -170,8 +172,9 @@ export class SubstrateController {
 
     const isRewardHasBeenSend = await this.rewardService.getRewardBindingByAccountId(accountId)
     
-    if(!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend){
-      await this.substrateService.sendReward(accountId, rewardAmount);
+    if(!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
+      const dbioUnit = 10 ** 18;
+      await sendRewards(this.substrateService.api, this.substrateService.pair, accountId, (rewardAmount * dbioUnit).toString());
       reward = rewardAmount
       await this.rewardService.insert(dataInput);
     }

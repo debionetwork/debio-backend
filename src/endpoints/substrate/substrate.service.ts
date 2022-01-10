@@ -90,85 +90,8 @@ export class SubstrateService implements OnModuleInit {
     return this._api;
   }
 
-  async setOrderPaid(orderId: string) {
-    const wallet = this.adminWallet;
-    const response = await this._api.tx.orders
-      .setOrderPaid(orderId)
-      .signAndSend(wallet, {
-        nonce: -1,
-      });
-
-    await this.logger.log('set order paid', orderId);
-  }
-
-  async setOrderRefunded(orderId: string) {
-    const wallet = this.adminWallet;
-    const response = await this._api.tx.orders
-      .setOrderRefunded(orderId)
-      .signAndSend(wallet, {
-        nonce: -1,
-      });
-
-    await this.logger.log('set order refunded', orderId);
-  }
-
-  async bindEthAddressToSubstrateAddress(
-    ethAddress: string,
-    substrateAddress: string,
-  ) {
-    const wallet = this.adminWallet;
-    const response = await   this._api.tx.userProfile.adminSetEthAddress(
-      substrateAddress,
-      ethAddress,
-    )
-    .signAndSend(wallet, {
-      nonce: -1,
-    });
-    return response.toJSON()
-  }
-
-  async submitStaking(hash: string, orderId: string) {
-    const wallet = this.adminWallet;
-    const response = await this._api.tx.geneticTesting
-      .submitDataBountyDetails(hash, orderId)
-      .signAndSend(wallet, {
-        nonce: -1,
-      });
-    await this.logger.log("Submit Data Bounty", orderId);
-  }
-
-  async sendReward(acountId: string, amount: number) {
-    const wallet = this.adminWallet;
-    const dbioUnit = 10 ** 18;
-    const response = await this._api.tx.rewards
-      .rewardFunds(acountId, (amount * dbioUnit).toString())
-      .signAndSend(wallet, {
-        nonce: -1,
-      });
-
-    await this.logger.log(`Send Reward ${amount} DBIO to ${acountId}`);
-  }
-
-  async verificationLabWithSubstrate(acountId: string, labStatus: string) {
-    const wallet = this.adminWallet;
-    const response = await this._api.tx.labs
-      .updateLabVerificationStatus(acountId, labStatus)
-      .signAndSend(wallet, {
-        nonce: -1,
-      });
-
-    await this.logger.log(`lab ${acountId} is ${labStatus}`);
-  }
-
-  async retrieveUnstakedAmount(requestId) {
-    const wallet = this.adminWallet;
-    const response = await this._api.tx.serviceRequest
-    .retrieveUnstakedAmount(requestId)
-    .signAndSend(wallet, {
-      nonce: -1,
-    });
-
-    await this.logger.log('retrieve unstaked amount', requestId);
+  get pair(): any {
+    return this.adminWallet;
   }
 
   async hasRole(accountId: string, role: RegistrationRole): Promise<boolean> {
