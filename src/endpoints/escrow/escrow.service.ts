@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
 import { EthereumService } from '../ethereum/ethereum.service';
-import { SubstrateService } from '../substrate/substrate.service';
+import { setOrderPaid, SubstrateService } from '../../common';
 import { ethers } from 'ethers';
 
 @Injectable()
@@ -60,9 +60,9 @@ export class EscrowService {
     }
   }
 
-  async setOrderPaidWithSubstrate(orderID: string) {
+  async setOrderPaidWithSubstrate(orderId: string) {
     try {
-      await this.substrateService.setOrderPaid(orderID);
+      await setOrderPaid(this.substrateService.api, this.substrateService.pair, orderId);
     } catch (error) {
       console.log(error);
     }

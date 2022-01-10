@@ -6,8 +6,7 @@ import { LocationModule } from './endpoints/location/location.module';
 import { RatingModule } from './endpoints/rating/rating.module';
 import { EthereumModule } from './endpoints/ethereum/ethereum.module';
 import { EscrowModule } from './endpoints/escrow/escrow.module';
-import { SubstrateModule } from './substrate/substrate.module';
-import { SubstrateIndexedDataModule } from './endpoints/substrate/substrate-endpoint.module';
+import { SubstrateEndpointModule } from './endpoints/substrate/substrate-endpoint.module';
 import { EthereumIndexedDataModule } from './endpoints/ethereum-indexed-data/ethereum-indexed-data.module';
 import { TransactionLoggingModule } from './common/utilities/transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './common/utilities/transaction-logging/models/transaction-request.entity';
@@ -58,8 +57,7 @@ require('dotenv').config(); // eslint-disable-line
     EthereumModule,
     EscrowModule,
     DebioConversionModule,
-    SubstrateModule,
-    SubstrateIndexedDataModule,
+    SubstrateEndpointModule,
     EthereumIndexedDataModule,
     TransactionLoggingModule,
     VerificationModule,

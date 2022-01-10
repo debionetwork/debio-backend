@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Res, Headers, UseInterceptors, Get, Param, Query } from "@nestjs/common";
-import { SubstrateService } from "./substrate.service";
 import { Response } from "express";
 import { RewardService } from "../../common/utilities/reward/reward.service";
 import { RewardDto } from "../../common/utilities/reward/dto/reward.dto";
@@ -8,6 +7,7 @@ import { WalletBindingDTO } from "./dto/wallet-binding.dto";
 import { ApiParam, ApiQuery } from "@nestjs/swagger";
 import { LabService, OrderService, ServiceService } from "./services";
 import { sendRewards, queryAccountIdByEthAddress, setEthAddress } from "../../common/polkadot-provider";
+import { SubstrateService } from "../../common";
 
 @UseInterceptors(SentryInterceptor)
 @Controller("substrate")

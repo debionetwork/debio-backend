@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SubstrateModule } from '../substrate/substrate.module';
+import { SubstrateModule } from '../common';
 import { UnstakedService } from './unstaked/unstaked.service';
 
 @Module({

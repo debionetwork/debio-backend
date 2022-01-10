@@ -1,23 +1,39 @@
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import {
   Injectable,
   OnModuleInit,
   Logger,
 } from '@nestjs/common';
+import { ProcessEnvProxy } from '../../proxies';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
   private _api: ApiPromise;
+  private _pair: any;
   private _wsProvider: WsProvider;
   private _listenStatus: boolean;
-  private readonly _logger: Logger = new Logger(SubstrateService.name);;
+  private readonly _logger: Logger = new Logger(SubstrateService.name);
+  
+  constructor(
+    private readonly process: ProcessEnvProxy
+  ) {}
 
   get api(): ApiPromise {
     return this._api;
   }
+
+  get pair(): any {
+    return this._pair;
+  }
  
   async onModuleInit() {
-    this._wsProvider = new WsProvider(process.env.SUBSTRATE_URL);
+    this._wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
+
+    const keyring = new Keyring({ type: 'sr25519' });
+    this._pair = await keyring.addFromUri(
+      this.process.env.ADMIN_SUBSTRATE_MNEMONIC,
+    );
+    
     await this.startListen()
   }
 
