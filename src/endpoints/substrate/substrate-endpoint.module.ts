@@ -3,9 +3,11 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceController } from './services/service.controller';
 import { ServiceService } from './services/service.service';
 import { LabController } from './labs/lab.controller';
-import { LabService } from './labs/lab.service';
+import { LabService } from './services/lab.service';
 import { OrderController } from './orders/order.controller';
-import { OrderService } from './orders/order.service';
+import { OrderService } from './services/order.service';
+import { RewardModule, SubstrateModule } from '../../common';
+import { SubstrateController } from './substrate.controller';
 
 @Module({
   imports: [
@@ -18,9 +20,11 @@ import { OrderService } from './orders/order.service';
         }
       }),
     }),
+    SubstrateModule,
+    RewardModule,
   ],
   exports: [ElasticsearchModule],
-  controllers: [ServiceController, LabController, OrderController],
+  controllers: [SubstrateController, ServiceController, LabController, OrderController],
   providers: [ServiceService, LabService, OrderService],
 })
-export class SubstrateIndexedDataModule {}
+export class SubstrateEndpointModule {}

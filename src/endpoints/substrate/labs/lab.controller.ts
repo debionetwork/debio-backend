@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../../common/interceptors';
-import { LabService } from './lab.service';
+import { LabService } from '../services/lab.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('labs')

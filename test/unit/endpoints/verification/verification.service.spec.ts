@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { dateTimeProxyMockFactory, MockType } from '../../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../../src/common/proxies/date-time';
-import { SubstrateService } from '../../../../src/substrate/substrate.service';
-import { RewardService } from '../../../../src/common/utilities/reward/reward.service';
+import { SubstrateService } from '../../../../src/endpoints/substrate/substrate.service';
+import { RewardService } from '../../../../src/common/modules/reward/reward.service';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
-import { RewardDto } from '../../../../src/common/utilities/reward/dto/reward.dto';
+import { RewardDto } from '../../../../src/common/modules/reward/dto/reward.dto';
 
 describe('Verification Service Unit Tests', () => {
   let verificationService: VerificationService;

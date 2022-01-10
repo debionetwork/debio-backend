@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { ServiceService } from '../../../../../src/endpoints/substrate-indexed-data/services/service.service';
-import { ServiceController } from '../../../../../src/endpoints/substrate-indexed-data/services/service.controller';
+import { ServiceService } from '../../../../../src/endpoints/substrate/services/service.service';
+import { ServiceController } from '../../../../../src/endpoints/substrate/services/service.controller';
 import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
 
 describe('Substrate Indexer Service Controller Unit Tests', () => {

@@ -27,3 +27,4 @@ export * from './price';
 export * from './price-by-currency';
 export * from './service-flow';
 export * from './service-info';
+export * from './currency-type';

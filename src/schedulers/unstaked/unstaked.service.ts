@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Interval } from '@nestjs/schedule';
-import { SubstrateService } from '../../substrate/substrate.service';
+import { retrieveUnstakedAmount, SubstrateService } from '../../common';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
@@ -75,7 +75,7 @@ export class UnstakedService implements OnModuleInit {
           const diffTime = timeNext6Days - timeNow;
   
           if (diffTime <= 0) {
-            await this.subtrateService.retrieveUnstakedAmount(requestId);
+            await retrieveUnstakedAmount(this.subtrateService.api, this.subtrateService.pair, requestId);
           }
         }
       }
