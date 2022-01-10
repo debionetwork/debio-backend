@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DateTimeProxy } from '../../common/proxies/date-time';
-import { RewardDto } from '../../common/utilities/reward/dto/reward.dto';
-import { RewardService } from '../../common/utilities/reward/reward.service';
+import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
+import { RewardService } from '../../common/modules/reward/reward.service';
 import { convertToDbioUnitString, LabVerificationStatus, sendRewards, SubstrateService, updateLabVerificationStatus } from '../../common';
 
 @Injectable()

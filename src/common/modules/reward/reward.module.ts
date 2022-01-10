@@ -2,7 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DebioConversionModule } from '../debio-conversion/debio-conversion.module';
 
-import { SubstrateModule } from '../../../common';
+import { SubstrateModule } from '../..';
 import { Reward } from './models/reward.entity';
 import { RewardService } from './reward.service';
 

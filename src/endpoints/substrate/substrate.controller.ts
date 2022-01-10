@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res, Headers, UseInterceptors, Get, Param, Query } from "@nestjs/common";
 import { Response } from "express";
-import { RewardService } from "../../common/utilities/reward/reward.service";
-import { RewardDto } from "../../common/utilities/reward/dto/reward.dto";
+import { RewardService } from "../../common/modules/reward/reward.service";
+import { RewardDto } from "../../common/modules/reward/dto/reward.dto";
 import { SentryInterceptor } from "../../common/interceptors";
 import { WalletBindingDTO } from "./dto/wallet-binding.dto";
 import { ApiParam, ApiQuery } from "@nestjs/swagger";
