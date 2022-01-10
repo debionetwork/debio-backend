@@ -9,10 +9,17 @@ import { CommandBus } from '@nestjs/cqrs';
 import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
+import { ServiceRequestCreatedCommand, ServiceRequestProcessedCommand, ServiceRequestUnstakedCommand, ServiceRequestWaitingForUnstakedCommand } from './commands/service-request';
 
 const eventRoutes = {
   services: {
     ServiceCreated: ServiceCreatedCommand,
+  },
+  serviceRequest: {
+    ServiceRequestCreated: ServiceRequestCreatedCommand,
+    ServiceRequestProcessed: ServiceRequestProcessedCommand,
+    ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
+    ServiceRequestWaitingForUnstaked: ServiceRequestWaitingForUnstakedCommand
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
