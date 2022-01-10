@@ -7,7 +7,7 @@ import { LabService } from './services/lab.service';
 import { OrderController } from './orders/order.controller';
 import { OrderService } from './services/order.service';
 import { RewardModule, SubstrateModule } from '../../common';
-import { SubstrateController } from './substrate.controller';
+import { SubstrateController } from './substrate-endpoint.controller';
 
 @Module({
   imports: [

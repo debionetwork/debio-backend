@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   SubstrateController,
-} from './substrate.controller';
+} from './substrate-endpoint.controller';
 import {
   RegistrationRole,
   GetDbioOnRegisterDto,

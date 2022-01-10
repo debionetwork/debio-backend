@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { dateTimeProxyMockFactory, MockType } from '../../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../../src/common/proxies/date-time';
-import { SubstrateService } from '../../../../src/endpoints/substrate/substrate.service';
+import { SubstrateService } from '../../../../src/endpoints/substrate-endpoint/substrate.service';
 import { RewardService } from '../../../../src/common/modules/reward/reward.service';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { RewardDto } from '../../../../src/common/modules/reward/dto/reward.dto';
