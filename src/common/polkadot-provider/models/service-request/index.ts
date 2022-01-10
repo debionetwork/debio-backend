@@ -31,3 +31,4 @@ export class ServiceRequest {
 }
 
 export * from "./request-status";
+export * from "./service-invoice";
