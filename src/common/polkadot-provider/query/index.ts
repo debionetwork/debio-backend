@@ -3,3 +3,4 @@ export * from './services';
 export * from "./orders";
 export * from "./account";
 export * from "./user-profile";
+export * from "./service-request";
