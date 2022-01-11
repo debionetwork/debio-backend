@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { ProcessEnvProxy } from '../../../common';
+import { ProcessEnvProxy } from '../../proxies/process-env';
 
 @Injectable()
 export class DebioConversionService {

@@ -27,7 +27,7 @@ describe('Debio Conversion Service Unit Tests', () => {
         DebioConversionService,
         ProcessEnvProxy,
         { provide: HttpService, useFactory: httpServiceMockFactory },
-        // { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
       ],
     }).compile();
 

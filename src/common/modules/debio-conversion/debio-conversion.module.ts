@@ -1,6 +1,6 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../../common';
+import { ProcessEnvModule } from '../../proxies/process-env';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({
