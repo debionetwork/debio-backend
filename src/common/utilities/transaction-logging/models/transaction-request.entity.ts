@@ -28,4 +28,7 @@ export class TransactionRequest {
 
   @Column({ type: 'bigint' })
   parent_id: bigint;
+
+  @Column()
+  transaction_hash: string
 }
