@@ -20,7 +20,7 @@ import { OrderCommandHandlers } from "./commands/orders";
     SubstrateListenerHandler,
     ...ServiceCommandHandlers,
     ...GeneticTestingCommandHandlers,
-    ...ServiceRequestCommandHandlers
+    ...ServiceRequestCommandHandlers,
     ...OrderCommandHandlers,
   ],
 })
