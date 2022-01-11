@@ -1,5 +1,5 @@
-import { ServiceRequest } from "../../../../../common";
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
+import { ServiceRequest } from '../../../../../common';
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceRequestWaitingForUnstakedCommand {
   request: ServiceRequest;

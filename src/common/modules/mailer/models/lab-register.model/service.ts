@@ -1,5 +1,5 @@
-import { ApiPromise } from "@polkadot/api";
-import { queryServicesByMultipleIds } from "../../../../polkadot-provider";
+import { ApiPromise } from '@polkadot/api';
+import { queryServicesByMultipleIds } from '../../../../polkadot-provider';
 
 export class LabRegisterExpectedDuration {
   duration: string;
@@ -19,7 +19,10 @@ export class LabRegisterService {
   expected_duration: LabRegisterExpectedDuration;
 }
 
-export async function getLabRegisterService(api: ApiPromise, ids: string[]): Promise<Array<LabRegisterService>> {
+export async function getLabRegisterService(
+  api: ApiPromise,
+  ids: string[],
+): Promise<Array<LabRegisterService>> {
   const services = await queryServicesByMultipleIds(api, ids);
   const labRegisterServices: Array<LabRegisterService> =
     new Array<LabRegisterService>();

@@ -1,6 +1,9 @@
 import { ApiPromise } from '@polkadot/api';
 import { Lab } from '../../../../polkadot-provider';
-import { getLabRegisterCertification, LabRegisterCertification } from './certification';
+import {
+  getLabRegisterCertification,
+  LabRegisterCertification,
+} from './certification';
 import { getLabRegisterService, LabRegisterService } from './service';
 
 export class LabRegister {
@@ -17,7 +20,10 @@ export class LabRegister {
   services: Array<LabRegisterService>;
 }
 
-export async function labToLabRegister(api: ApiPromise, lab: Lab): Promise<LabRegister> {
+export async function labToLabRegister(
+  api: ApiPromise,
+  lab: Lab,
+): Promise<LabRegister> {
   const labRegister = new LabRegister();
 
   labRegister.email = lab.info.email;
@@ -33,10 +39,7 @@ export async function labToLabRegister(api: ApiPromise, lab: Lab): Promise<LabRe
     api,
     lab.certifications,
   );
-  labRegister.services = await getLabRegisterService(
-    api,
-    lab.services
-  );
+  labRegister.services = await getLabRegisterService(api, lab.services);
 
   return labRegister;
 }

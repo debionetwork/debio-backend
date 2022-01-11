@@ -1,12 +1,17 @@
-import { Logger, Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { convertToDbioUnit, TransactionLoggingService } from "../../../../../common";
-import { TransactionLoggingDto } from "../../../../../common/modules/transaction-logging/dto/transaction-logging.dto";
-import { ServiceRequestUnstakedCommand } from "./service-request-unstaked.command";
+import { Logger, Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import {
+  convertToDbioUnit,
+  TransactionLoggingService,
+} from '../../../../../common';
+import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { ServiceRequestUnstakedCommand } from './service-request-unstaked.command';
 
 @Injectable()
 @CommandHandler(ServiceRequestUnstakedCommand)
-export class ServiceRequestUnstakedHandler implements ICommandHandler<ServiceRequestUnstakedCommand> {
+export class ServiceRequestUnstakedHandler
+  implements ICommandHandler<ServiceRequestUnstakedCommand>
+{
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly logger: Logger,

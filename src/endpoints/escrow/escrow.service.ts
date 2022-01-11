@@ -30,7 +30,7 @@ export class EscrowService {
       console.log('balance', balance.toString());
       const tokenContractWithSigner = tokenContract.connect(wallet);
       try {
-        const tx = await tokenContractWithSigner.refundOrder(order.id);
+        await tokenContractWithSigner.refundOrder(order.id);
       } catch (err) {
         console.log('err', err);
       }
@@ -45,9 +45,7 @@ export class EscrowService {
 
   async orderFulfilled(order) {
     try {
-      const provider = await new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
-      );
+      await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
       const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,

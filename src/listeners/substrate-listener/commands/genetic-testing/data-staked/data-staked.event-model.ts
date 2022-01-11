@@ -1,7 +1,7 @@
 export class DataStaked {
   constructor(
-    public from: string, 
-    public hashDataBounty: string, 
-    public orderId: string
+    public from: string,
+    public hashDataBounty: string,
+    public orderId: string,
   ) {}
 }

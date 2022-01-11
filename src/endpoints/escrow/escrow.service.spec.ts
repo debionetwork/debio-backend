@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EscrowService } from './escrow.service';
 
+/* eslint-disable */
+
 class EscrowServiceMock {
   handlePaymentToEscrow(from, amount): void {
     return;

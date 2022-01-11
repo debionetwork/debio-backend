@@ -10,5 +10,6 @@ import { VerificationService } from './verification.service';
   imports: [SubstrateModule, RewardModule, DateTimeModule, ProcessEnvModule],
   controllers: [VerificationController],
   providers: [VerificationService],
+  exports: [VerificationService],
 })
 export class VerificationModule {}

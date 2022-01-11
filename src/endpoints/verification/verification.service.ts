@@ -2,7 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { DateTimeProxy } from '../../common/proxies/date-time';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
-import { convertToDbioUnitString, LabVerificationStatus, sendRewards, SubstrateService, updateLabVerificationStatus } from '../../common';
+import {
+  convertToDbioUnitString,
+  LabVerificationStatus,
+  sendRewards,
+  SubstrateService,
+  updateLabVerificationStatus,
+} from '../../common';
 
 @Injectable()
 export class VerificationService {
@@ -25,10 +31,10 @@ export class VerificationService {
     if (verificationStatus === 'Verified') {
       const reward = 2;
       await sendRewards(
-        this.subtrateService.api, 
-        this.subtrateService.pair, 
-        substrateAddress, 
-        convertToDbioUnitString(reward)
+        this.subtrateService.api,
+        this.subtrateService.pair,
+        substrateAddress,
+        convertToDbioUnitString(reward),
       );
     }
 

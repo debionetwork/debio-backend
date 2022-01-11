@@ -1,8 +1,18 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { HealthCheckService, HealthCheck, TypeOrmHealthIndicator, MemoryHealthIndicator, DiskHealthIndicator } from '@nestjs/terminus';
+import {
+  HealthCheckService,
+  HealthCheck,
+  TypeOrmHealthIndicator,
+  MemoryHealthIndicator,
+  DiskHealthIndicator,
+} from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
-import { ElasticsearchHealthIndicator, SubstrateHealthIndicator, SentryInterceptor } from '../../common';
+import {
+  ElasticsearchHealthIndicator,
+  SubstrateHealthIndicator,
+  SentryInterceptor,
+} from '../../common';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('health')
@@ -24,14 +34,20 @@ export class HealthController {
   @HealthCheck()
   check() {
     return this.health.check([
-      () => this.db.pingCheck('database', { connection: this.defaultConnection }),
-      () => this.db.pingCheck('location-database', { connection: this.dbLocationConnection }),
+      () =>
+        this.db.pingCheck('database', { connection: this.defaultConnection }),
+      () =>
+        this.db.pingCheck('location-database', {
+          connection: this.dbLocationConnection,
+        }),
       () => this.memory.checkHeap('memory heap', 300 * 1024 * 1024),
-      () => this.disk.checkStorage('disk health', {
-        thresholdPercent: 0.5, path: '/'
-      }),
+      () =>
+        this.disk.checkStorage('disk health', {
+          thresholdPercent: 0.5,
+          path: '/',
+        }),
       () => this.elasticSearch.isHealthy('elasticsearch'),
-      () => this.substrate.isHealthy()
+      () => this.substrate.isHealthy(),
     ]);
   }
 }

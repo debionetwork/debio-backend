@@ -3,7 +3,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class LabService {
-  private readonly logger : Logger = new Logger(LabService.name)
+  private readonly logger: Logger = new Logger(LabService.name);
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCityCategory(
@@ -59,20 +59,19 @@ export class LabService {
           labService.verification_status = lab._source.verification_status;
           labService.blockMetaData = lab._source.blockMetaData;
           labService.lab_id = lab._source.account_id;
-          
+
           result.push(labService);
         });
       });
-      
+
       return { result };
-    } 
-    catch (error) {
+    } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(`API "labs": ${error.body.error.reason}`)
+        await this.logger.log(`API "labs": ${error.body.error.reason}`);
         return { result };
       }
 
-      throw error
+      throw error;
     }
   }
 }

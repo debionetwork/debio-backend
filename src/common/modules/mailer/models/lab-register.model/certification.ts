@@ -1,5 +1,5 @@
-import { ApiPromise } from "@polkadot/api";
-import { queryCertificationsByMultipleIds } from "../../../../polkadot-provider";
+import { ApiPromise } from '@polkadot/api';
+import { queryCertificationsByMultipleIds } from '../../../../polkadot-provider';
 
 export class LabRegisterCertification {
   title: string;
@@ -10,11 +10,11 @@ export class LabRegisterCertification {
   supporting_document: string;
 }
 
-export async function getLabRegisterCertification(api: ApiPromise, ids: string[]): Promise<Array<LabRegisterCertification>> {
-  const certifications = await queryCertificationsByMultipleIds(
-    api,
-    ids,
-  );
+export async function getLabRegisterCertification(
+  api: ApiPromise,
+  ids: string[],
+): Promise<Array<LabRegisterCertification>> {
+  const certifications = await queryCertificationsByMultipleIds(api, ids);
   const labRegisterCertifications: Array<LabRegisterCertification> =
     new Array<LabRegisterCertification>();
 
@@ -29,5 +29,5 @@ export async function getLabRegisterCertification(api: ApiPromise, ids: string[]
     labRegisterCertifications.push(lrc);
   });
 
-  return labRegisterCertifications; 
+  return labRegisterCertifications;
 }

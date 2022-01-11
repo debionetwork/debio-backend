@@ -15,7 +15,10 @@ describe('State Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         StateService,
-        { provide: getRepositoryToken(State, 'dbLocation'), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(State, 'dbLocation'),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     stateService = module.get(StateService);
@@ -29,20 +32,20 @@ describe('State Service Unit Tests', () => {
 
   it('should find all states', () => {
     // Arrange
-    const COUNTRY = "1";
+    const COUNTRY = '1';
     const RESULTS = [
-        {
-            state: "Region 1"
-        },
-        {
-            state: "Region 2"
-        }
+      {
+        state: 'Region 1',
+      },
+      {
+        state: 'Region 2',
+      },
     ];
     const PARAM = {
       where: { country_code: COUNTRY },
       order: {
-        'name' : 'ASC'
-      }
+        name: 'ASC',
+      },
     };
     when(repositoryMock.find).calledWith(PARAM).mockReturnValue(RESULTS);
 
@@ -54,15 +57,15 @@ describe('State Service Unit Tests', () => {
 
   it('should find one state', () => {
     // Arrange
-    const COUNTRY = "1";
-    const STATE = "1";
+    const COUNTRY = '1';
+    const STATE = '1';
     const RESULTS = [
-        {
-            state: "Region 1"
-        },
-        {
-            state: "Region 2"
-        }
+      {
+        state: 'Region 1',
+      },
+      {
+        state: 'Region 2',
+      },
     ];
     const PARAM = {
       where: {

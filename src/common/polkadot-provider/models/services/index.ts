@@ -11,7 +11,7 @@ export class Service {
       this.info.pricesByCurrency[0].priceComponents[0].value.toString();
     this.qc_price =
       this.info.pricesByCurrency[0].additionalPrices[0].value.toString();
-    this.currency = this.info.pricesByCurrency[0].currency
+    this.currency = this.info.pricesByCurrency[0].currency;
   }
   id: string;
   owner_id: string;

@@ -14,7 +14,10 @@ describe('Service Category Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ServiceCategoryService,
-        { provide: getRepositoryToken(ServiceCategory), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(ServiceCategory),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     serviceCategoryService = module.get(ServiceCategoryService);
@@ -29,12 +32,12 @@ describe('Service Category Service Unit Tests', () => {
   it('should find all categories', () => {
     // Arrange
     const categories = [
-        {
-            category: "Example 1"
-        },
-        {
-            category: "Example 2"
-        }
+      {
+        category: 'Example 1',
+      },
+      {
+        category: 'Example 2',
+      },
     ];
     repositoryMock.find.mockReturnValue(categories);
 

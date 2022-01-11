@@ -1,5 +1,5 @@
-import { Module } from "@nestjs/common";
-import { DateTimeProxy } from "./date-time.proxy";
+import { Module } from '@nestjs/common';
+import { DateTimeProxy } from './date-time.proxy';
 
 @Module({
   providers: [DateTimeProxy],

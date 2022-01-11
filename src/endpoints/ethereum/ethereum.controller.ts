@@ -48,7 +48,7 @@ export class EthereumController {
     while (iStart < endBlock) {
       console.log(`Syncing ${iStart} - ${iEnd}`);
 
-      const filter = contract.filters.Transfer(
+      contract.filters.Transfer(
         null,
         '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
       );

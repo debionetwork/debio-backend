@@ -2,7 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BountyController } from '../../../../src/endpoints/bounty/bounty.controller';
 import { DataStakingEvents } from '../../../../src/endpoints/bounty/models/data-staking-events.entity';
 import { DataStakingDto } from '../../../../src/endpoints/bounty/dto/data-staking.dto';
-import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType, repositoryMockFactory } from '../../mock';
+import {
+  dateTimeProxyMockFactory,
+  fileMockFactory,
+  GCloudStorageServiceMock,
+  MockType,
+  repositoryMockFactory,
+} from '../../mock';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { when } from 'jest-when';
@@ -17,7 +23,9 @@ describe('Bounty Controller Unit Tests', () => {
   let bountyController: BountyController;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let dataStakingEventsRepositoryMock: MockType<Repository<DataStakingEvents>>;
-  let dataTokenToDatasetMappingRepositoryMock: MockType<Repository<DataTokenToDatasetMapping>>;
+  let dataTokenToDatasetMappingRepositoryMock: MockType<
+    Repository<DataTokenToDatasetMapping>
+  >;
   let cloudStorageServiceMock: GCloudStorageServiceMock;
 
   // Arrange before each iteration
@@ -25,12 +33,18 @@ describe('Bounty Controller Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         BountyController,
-        { provide: getRepositoryToken(DataStakingEvents), useFactory: repositoryMockFactory },
-        { provide: getRepositoryToken(DataTokenToDatasetMapping), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(DataStakingEvents),
+          useFactory: repositoryMockFactory,
+        },
+        {
+          provide: getRepositoryToken(DataTokenToDatasetMapping),
+          useFactory: repositoryMockFactory,
+        },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         {
-            provide: GCloudStorageService,
-            useClass: GCloudStorageServiceMock
+          provide: GCloudStorageService,
+          useClass: GCloudStorageServiceMock,
         },
       ],
     }).compile();
@@ -38,8 +52,12 @@ describe('Bounty Controller Unit Tests', () => {
     bountyController = module.get(BountyController);
     dateTimeProxyMock = module.get(DateTimeProxy);
     cloudStorageServiceMock = module.get(GCloudStorageService);
-    dataTokenToDatasetMappingRepositoryMock = module.get(getRepositoryToken(DataTokenToDatasetMapping));
-    dataStakingEventsRepositoryMock = module.get(getRepositoryToken(DataStakingEvents));
+    dataTokenToDatasetMappingRepositoryMock = module.get(
+      getRepositoryToken(DataTokenToDatasetMapping),
+    );
+    dataStakingEventsRepositoryMock = module.get(
+      getRepositoryToken(DataStakingEvents),
+    );
   });
 
   it('should be defined', () => {
@@ -51,34 +69,36 @@ describe('Bounty Controller Unit Tests', () => {
     // Arrange
     const EXPIRES = 0;
     const dataStakingDto: DataStakingDto = {
-        order_id: "1",
-        service_category_id: 1,
-        filename: "1"
-    }
+      order_id: '1',
+      service_category_id: 1,
+      filename: '1',
+    };
     const CALLED_WITH = new DataStakingEvents();
     CALLED_WITH.order_id = dataStakingDto.order_id;
     CALLED_WITH.service_category_id = dataStakingDto.service_category_id;
     CALLED_WITH.filename = dataStakingDto.filename;
     CALLED_WITH.created_at = new Date(EXPIRES);
     CALLED_WITH.event_processed = false;
-    const RESULT = "TADA"
+    const RESULT = 'TADA';
 
     dateTimeProxyMock.now.mockReturnValue(EXPIRES);
-    when(dataStakingEventsRepositoryMock.save).calledWith(CALLED_WITH).mockReturnValue(RESULT);
+    when(dataStakingEventsRepositoryMock.save)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(RESULT);
 
     // Assert
-    expect(bountyController.CreateSyncEvent(dataStakingDto)).resolves.toEqual(RESULT);
+    expect(bountyController.CreateSyncEvent(dataStakingDto)).resolves.toEqual(
+      RESULT,
+    );
     expect(dataStakingEventsRepositoryMock.save).toHaveBeenCalled();
   });
-  
 
   it('should stake files', () => {
     // Arrange
     const EXPIRES = 0;
-    const MAPPING_ID = "MAPPING_ID";
-    const TOKEN_ID = "TOKEN_ID";
-    const FILENAME = "FILENAME";
-    const CALLED_WITH = TOKEN_ID;
+    const MAPPING_ID = 'MAPPING_ID';
+    const TOKEN_ID = 'TOKEN_ID';
+    const FILENAME = 'FILENAME';
 
     const REPOSITORY_RESULT: DataTokenToDatasetMapping = {
       mapping_id: MAPPING_ID,
@@ -86,16 +106,19 @@ describe('Bounty Controller Unit Tests', () => {
       filename: FILENAME,
       created_at: new Date(EXPIRES),
       updated_at: new Date(EXPIRES),
-    }
-    
+    };
+
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
-    dataTokenToDatasetMappingRepositoryMock.find.mockReturnValue([REPOSITORY_RESULT]);
-    
-    const READ_SIGNED_URL = ["readurl"];
+    dataTokenToDatasetMappingRepositoryMock.find.mockReturnValue([
+      REPOSITORY_RESULT,
+    ]);
+
+    const READ_SIGNED_URL = ['readurl'];
     fileMock.getSignedUrl.mockReturnValue(READ_SIGNED_URL);
     cloudStorageServiceMock.bucket.file.mockReturnValue(fileMock);
-    
-    const RESULT: DataTokenToDatasetMappingDto = new DataTokenToDatasetMappingDto(REPOSITORY_RESULT);
+
+    const RESULT: DataTokenToDatasetMappingDto =
+      new DataTokenToDatasetMappingDto(REPOSITORY_RESULT);
     RESULT.file_url = READ_SIGNED_URL[0];
 
     // Assert

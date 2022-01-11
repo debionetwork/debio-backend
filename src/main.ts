@@ -21,7 +21,7 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  const SENTRY_DSN = process.env.SENTRY_DSN
+  const SENTRY_DSN = process.env.SENTRY_DSN;
 
   if (SENTRY_DSN) {
     Sentry.init({

@@ -28,7 +28,7 @@ export class ServiceRequestController {
       await this.serviceRequestService.getByCustomerId(
         customerId,
         Number(page),
-        Number(size)
+        Number(size),
       );
     return requestServiceByCustomer;
   }
