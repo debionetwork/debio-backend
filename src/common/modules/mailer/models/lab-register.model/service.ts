@@ -39,4 +39,4 @@ export async function getLabRegisterService(api: ApiPromise, ids: string[]): Pro
   });
 
   return labRegisterServices;
-32}
+}
