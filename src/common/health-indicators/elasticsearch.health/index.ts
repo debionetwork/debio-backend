@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TerminusModule } from '@nestjs/terminus';
 import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
- 
+
 @Module({
   imports: [
     TerminusModule,
@@ -11,18 +11,13 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
         node: process.env.ELASTICSEARCH_NODE,
         auth: {
           username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD
-        }
+          password: process.env.ELASTICSEARCH_PASSWORD,
+        },
       }),
     }),
   ],
-  exports: [
-    ElasticsearchModule,
-    ElasticsearchHealthIndicator
-  ],
-  providers: [
-    ElasticsearchHealthIndicator
-  ],
+  exports: [ElasticsearchModule, ElasticsearchHealthIndicator],
+  providers: [ElasticsearchHealthIndicator],
 })
 export class ElasticsearchHealthModule {}
 

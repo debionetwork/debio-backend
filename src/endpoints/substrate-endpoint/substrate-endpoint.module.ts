@@ -16,15 +16,20 @@ import { SubstrateController } from './substrate-endpoint.controller';
         node: process.env.ELASTICSEARCH_NODE,
         auth: {
           username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD
-        }
+          password: process.env.ELASTICSEARCH_PASSWORD,
+        },
       }),
     }),
     SubstrateModule,
     RewardModule,
   ],
   exports: [ElasticsearchModule],
-  controllers: [SubstrateController, ServiceController, LabController, OrderController],
+  controllers: [
+    SubstrateController,
+    ServiceController,
+    LabController,
+    OrderController,
+  ],
   providers: [ServiceService, LabService, OrderService],
 })
 export class SubstrateEndpointModule {}

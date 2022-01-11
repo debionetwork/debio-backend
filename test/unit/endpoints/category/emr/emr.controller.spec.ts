@@ -5,7 +5,7 @@ import { MockType } from '../../../mock';
 
 describe('Emr Controller Unit Tests', () => {
   const emrServiceMockFactory: () => MockType<EmrService> = jest.fn(() => ({
-    getAll: jest.fn(entity => entity),
+    getAll: jest.fn((entity) => entity),
   }));
 
   let emrController: EmrController;
@@ -31,12 +31,12 @@ describe('Emr Controller Unit Tests', () => {
   it('should find all categories', () => {
     // Arrange
     const categories = [
-        {
-            category: "Example 1"
-        },
-        {
-            category: "Example 2"
-        }
+      {
+        category: 'Example 1',
+      },
+      {
+        category: 'Example 2',
+      },
     ];
     emrServiceMock.getAll.mockReturnValue(categories);
 

@@ -1,13 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CacheModule, CACHE_MANAGER } from '@nestjs/common';
+import { CacheModule } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { LabRating } from './models/rating.entity';
 import { RatingController } from './rating.controller';
 import { RatingService } from './rating.service';
-import { Cache } from 'cache-manager';
 
 describe('Rating Controller', () => {
-  let cacheManager: Cache;
   let ratingController: RatingController;
 
   const mockRatingService = {
@@ -36,7 +34,6 @@ describe('Rating Controller', () => {
       .compile();
 
     ratingController = module.get<RatingController>(RatingController);
-    cacheManager = module.get<Cache>(CACHE_MANAGER);
   });
 
   it('should be defined', () => {

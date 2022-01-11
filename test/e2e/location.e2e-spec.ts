@@ -6,7 +6,6 @@ import { City } from '../src/location/models/city.entity';
 import { Country } from '../src/location/models/country.entity';
 import { State } from '../src/location/models/state.entity';
 import { LocationModule } from '../src/location/location.module';
-import { Any } from 'typeorm';
 
 describe('Rating Controller (e2e)', () => {
   let app: INestApplication;

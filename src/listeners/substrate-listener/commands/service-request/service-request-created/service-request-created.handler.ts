@@ -3,7 +3,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ServiceRequestCreatedCommand } from './service-request-created.command';
 import { ethers } from 'ethers';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { convertToDbioUnit, MailerManager, TransactionLoggingService } from '../../../../../common';
+import {
+  convertToDbioUnit,
+  MailerManager,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
 

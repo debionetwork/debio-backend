@@ -7,9 +7,7 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
-export class OrderPaidHandler
-  implements ICommandHandler<OrderPaidCommand>
-{
+export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly logger: Logger,

@@ -3,11 +3,11 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class ServiceService {
-  private readonly logger : Logger = new Logger(ServiceService.name)
+  private readonly logger: Logger = new Logger(ServiceService.name);
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async getByCountryCity(country: string, city: string) {
-    let result = []
+    let result = [];
     try {
       const services = await this.elasticsearchService.search({
         index: 'services',
@@ -19,17 +19,18 @@ export class ServiceService {
           },
         },
       });
-      result = services.body.hits.hits
-    }
-    catch (error) {
+      result = services.body.hits.hits;
+    } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(`API "services/{country}/{city}":' ${error.body.error.reason}`);
+        await this.logger.log(
+          `API "services/{country}/{city}":' ${error.body.error.reason}`,
+        );
         return result;
       }
 
-      throw error
+      throw error;
     }
-    
+
     return result;
   }
 }

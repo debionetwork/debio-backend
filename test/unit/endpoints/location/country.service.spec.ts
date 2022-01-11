@@ -15,7 +15,10 @@ describe('Country Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CountryService,
-        { provide: getRepositoryToken(Country, 'dbLocation'), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(Country, 'dbLocation'),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     countryService = module.get(CountryService);
@@ -30,17 +33,17 @@ describe('Country Service Unit Tests', () => {
   it('should find all countries', () => {
     // Arrange
     const RESULTS = [
-        {
-            country: "Country 1"
-        },
-        {
-            country: "Country 2"
-        }
+      {
+        country: 'Country 1',
+      },
+      {
+        country: 'Country 2',
+      },
     ];
     const PARAM = {
       order: {
-        'name' : 'ASC'
-      }
+        name: 'ASC',
+      },
     };
     when(repositoryMock.find).calledWith(PARAM).mockReturnValue(RESULTS);
 
@@ -52,17 +55,17 @@ describe('Country Service Unit Tests', () => {
 
   it('should find one country', () => {
     // Arrange
-    const ISO2 = "ISO2";
+    const ISO2 = 'ISO2';
     const RESULTS = [
-        {
-            country: "Country 1"
-        },
-        {
-            country: "Country 2"
-        }
+      {
+        country: 'Country 1',
+      },
+      {
+        country: 'Country 2',
+      },
     ];
     const PARAM = {
-        where: { iso2: ISO2 },
+      where: { iso2: ISO2 },
     };
     when(repositoryMock.findOne).calledWith(PARAM).mockReturnValue(RESULTS);
 

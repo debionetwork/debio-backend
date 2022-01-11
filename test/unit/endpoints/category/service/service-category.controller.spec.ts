@@ -4,9 +4,10 @@ import { ServiceCategoryController } from '../../../../../src/endpoints/category
 import { MockType } from '../../../mock';
 
 describe('Service Category Controller Unit Tests', () => {
-  const serviceCategoryServiceMockFactory: () => MockType<ServiceCategoryService> = jest.fn(() => ({
-    getAll: jest.fn(entity => entity),
-  }));
+  const serviceCategoryServiceMockFactory: () => MockType<ServiceCategoryService> =
+    jest.fn(() => ({
+      getAll: jest.fn((entity) => entity),
+    }));
 
   let serviceCategoryController: ServiceCategoryController;
   let serviceCategoryServiceMock: MockType<ServiceCategoryService>;
@@ -16,7 +17,10 @@ describe('Service Category Controller Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ServiceCategoryController,
-        { provide: ServiceCategoryService, useFactory: serviceCategoryServiceMockFactory },
+        {
+          provide: ServiceCategoryService,
+          useFactory: serviceCategoryServiceMockFactory,
+        },
       ],
     }).compile();
     serviceCategoryController = module.get(ServiceCategoryController);
@@ -31,12 +35,12 @@ describe('Service Category Controller Unit Tests', () => {
   it('should find all categories', () => {
     // Arrange
     const categories = [
-        {
-            category: "Example 1"
-        },
-        {
-            category: "Example 2"
-        }
+      {
+        category: 'Example 1',
+      },
+      {
+        category: 'Example 2',
+      },
     ];
     serviceCategoryServiceMock.getAll.mockReturnValue(categories);
 

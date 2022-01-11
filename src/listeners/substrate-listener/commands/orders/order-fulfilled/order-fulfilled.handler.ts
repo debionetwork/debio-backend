@@ -3,7 +3,18 @@ import { Option } from '@polkadot/types';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFulfilledCommand } from './order-fulfilled.command';
 import { ethers } from 'ethers';
-import { convertToDbioUnitString, DebioConversionService, queryAccountIdByEthAddress, queryEthAdressByAccountId, queryOrderDetailByOrderID, queryServiceById, queryServiceInvoiceByOrderId, RewardService, sendRewards, SubstrateService, TransactionLoggingService } from 'src/common';
+import {
+  convertToDbioUnitString,
+  DebioConversionService,
+  queryEthAdressByAccountId,
+  queryOrderDetailByOrderID,
+  queryServiceById,
+  queryServiceInvoiceByOrderId,
+  RewardService,
+  sendRewards,
+  SubstrateService,
+  TransactionLoggingService,
+} from 'src/common';
 import { EscrowService } from 'src/endpoints/escrow/escrow.service';
 import { TransactionLoggingDto } from 'src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
@@ -74,11 +85,11 @@ export class OrderFulfilledHandler
       const labEthAddress = (resp as Option<any>).unwrap().toString();
       const orderByOrderId = await queryOrderDetailByOrderID(
         this.substrateService.api,
-        order.id
+        order.id,
       );
       const serviceByOrderId = await queryServiceById(
         this.substrateService.api,
-        order.service_id
+        order.service_id,
       );
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + price.value,
@@ -96,7 +107,7 @@ export class OrderFulfilledHandler
       ) {
         const serviceRequest = await queryServiceInvoiceByOrderId(
           this.substrateService.api,
-          order.id
+          order.id,
         );
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
@@ -108,12 +119,12 @@ export class OrderFulfilledHandler
           this.substrateService.api,
           this.substrateService.pair,
           order.customer_id,
-          convertToDbioUnitString(servicePrice)
+          convertToDbioUnitString(servicePrice),
         );
 
         await queryServiceInvoiceByOrderId(
           this.substrateService.api,
-          serviceRequest['hash_']
+          serviceRequest['hash_'],
         );
 
         // Write Logging Reward Customer Staking Request Service
@@ -132,7 +143,7 @@ export class OrderFulfilledHandler
           this.substrateService.api,
           this.substrateService.pair,
           order.customer_id,
-          convertToDbioUnitString(servicePrice / 10)
+          convertToDbioUnitString(servicePrice / 10),
         );
 
         // Write Logging Reward Lab

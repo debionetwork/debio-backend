@@ -1,5 +1,5 @@
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
-import { DataStaked } from "./data-staked.event-model";
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
+import { DataStaked } from './data-staked.event-model';
 
 export class DataStakedCommand {
   dataStaked: DataStaked;
