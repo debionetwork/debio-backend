@@ -1,15 +1,10 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { 
-  CustomerStakingRequestService, 
-  LabRegister 
-} from './models';
+import { CustomerStakingRequestService, LabRegister } from './models';
 
 @Injectable()
 export class MailerManager {
-  constructor(
-    private readonly mailerService: MailerService,
-    ) {}
+  constructor(private readonly mailerService: MailerService) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
@@ -24,7 +19,7 @@ export class MailerManager {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    let files: any[] = [];
+    const files: any[] = [];
     context.certifications.forEach((val, idx) => {
       files.push({
         filename: `Certifications Supporting Document ${idx + 1}`,

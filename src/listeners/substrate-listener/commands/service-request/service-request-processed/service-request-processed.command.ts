@@ -1,6 +1,5 @@
-import { ServiceInvoice } from "../../../../../common";
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
-
+import { ServiceInvoice } from '../../../../../common';
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceRequestProcessedCommand {
   serviceInvoice: ServiceInvoice;

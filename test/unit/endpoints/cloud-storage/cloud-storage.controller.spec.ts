@@ -1,7 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
 import { CloudStorageController } from '../../../../src/endpoints/cloud-storage/cloud-storage.controller';
-import { dateTimeProxyMockFactory, fileMockFactory, GCloudStorageServiceMock, MockType } from '../../mock';
+import {
+  dateTimeProxyMockFactory,
+  fileMockFactory,
+  GCloudStorageServiceMock,
+  MockType,
+} from '../../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../../src/common/proxies/date-time/date-time.proxy';
 
@@ -18,13 +23,13 @@ describe('Cloud Storage Controller Unit Tests', () => {
       providers: [
         CloudStorageController,
         {
-            provide: GCloudStorageService,
-            useClass: GCloudStorageServiceMock
+          provide: GCloudStorageService,
+          useClass: GCloudStorageServiceMock,
         },
         {
-            provide: DateTimeProxy,
-            useFactory: dateTimeProxyMockFactory
-        }
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
       ],
     }).compile();
     dateTimeProxyMock = module.get(DateTimeProxy);
@@ -40,9 +45,9 @@ describe('Cloud Storage Controller Unit Tests', () => {
   it('should get READ signed url', () => {
     // Arrange
     const EXPIRES = 0;
-    const READ = "read";
-    const FILENAME = "filename";
-    const READ_SIGNED_URL = ["readurl"];
+    const READ = 'read';
+    const FILENAME = 'filename';
+    const READ_SIGNED_URL = ['readurl'];
     const READ_CONDITIONS = {
       action: READ,
       expires: EXPIRES,
@@ -50,12 +55,16 @@ describe('Cloud Storage Controller Unit Tests', () => {
     };
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
-    when(fileMock.getSignedUrl).calledWith(READ_CONDITIONS).mockReturnValue(READ_SIGNED_URL);
+    when(fileMock.getSignedUrl)
+      .calledWith(READ_CONDITIONS)
+      .mockReturnValue(READ_SIGNED_URL);
     cloudStorageServiceMock.bucket.file.mockReturnValue(fileMock);
 
     // Assert
-    expect(cloudStorageController.GetSignedUrl(FILENAME, READ)).resolves.toEqual({
-        signedUrl: READ_SIGNED_URL[0]
+    expect(
+      cloudStorageController.GetSignedUrl(FILENAME, READ),
+    ).resolves.toEqual({
+      signedUrl: READ_SIGNED_URL[0],
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();
@@ -66,23 +75,27 @@ describe('Cloud Storage Controller Unit Tests', () => {
   it('should get WRITE signed url', () => {
     // Arrange
     const EXPIRES = 0;
-    const WRITE = "write";
-    const FILENAME = "filename";
-    const WRITE_SIGNED_URL = ["writeurl"];
+    const WRITE = 'write';
+    const FILENAME = 'filename';
+    const WRITE_SIGNED_URL = ['writeurl'];
     const WRITE_CONDITIONS = {
       action: WRITE,
       contentType: 'application/x-www-form-urlencoded',
       expires: EXPIRES,
       version: 'v4',
-    }
+    };
 
     dateTimeProxyMock.nowAndAdd.mockReturnValue(EXPIRES);
-    when(fileMock.getSignedUrl).calledWith(WRITE_CONDITIONS).mockReturnValue(WRITE_SIGNED_URL);
+    when(fileMock.getSignedUrl)
+      .calledWith(WRITE_CONDITIONS)
+      .mockReturnValue(WRITE_SIGNED_URL);
     cloudStorageServiceMock.bucket.file.mockReturnValue(fileMock);
 
     // Assert
-    expect(cloudStorageController.GetSignedUrl(FILENAME, WRITE)).resolves.toEqual({
-        signedUrl: WRITE_SIGNED_URL[0]
+    expect(
+      cloudStorageController.GetSignedUrl(FILENAME, WRITE),
+    ).resolves.toEqual({
+      signedUrl: WRITE_SIGNED_URL[0],
     });
     expect(dateTimeProxyMock.nowAndAdd).toHaveBeenCalled();
     expect(cloudStorageServiceMock.bucket.file).toHaveBeenCalled();

@@ -1,5 +1,5 @@
-import { ApiPromise } from "@polkadot/api";
-import { queryServicesByMultipleIds } from "../../../../polkadot-provider";
+import { ApiPromise } from '@polkadot/api';
+import { queryServicesByMultipleIds } from '../../../../polkadot-provider';
 
 export class LabRegisterExpectedDuration {
   duration: string;
@@ -19,7 +19,10 @@ export class LabRegisterService {
   expected_duration: LabRegisterExpectedDuration;
 }
 
-export async function getLabRegisterService(api: ApiPromise, ids: string[]): Promise<Array<LabRegisterService>> {
+export async function getLabRegisterService(
+  api: ApiPromise,
+  ids: string[],
+): Promise<Array<LabRegisterService>> {
   const services = await queryServicesByMultipleIds(api, ids);
   const labRegisterServices: Array<LabRegisterService> =
     new Array<LabRegisterService>();
@@ -34,7 +37,8 @@ export async function getLabRegisterService(api: ApiPromise, ids: string[]): Pro
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;
     lrs.expected_duration.duration = val.info.expectedDuration.duration;
-    lrs.expected_duration.duration_type = val.info.expectedDuration.durationType;
+    lrs.expected_duration.duration_type =
+      val.info.expectedDuration.durationType;
     labRegisterServices.push(lrs);
   });
 

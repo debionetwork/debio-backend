@@ -7,9 +7,7 @@ import { refundOrder, SubstrateService } from '../../../../../common';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
-export class OrderFailedHandler
-  implements ICommandHandler<OrderFailedCommand>
-{
+export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   constructor(
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
@@ -35,9 +33,9 @@ export class OrderFailedHandler
 
     await this.escrowService.refundOrder(order.id);
     await refundOrder(
-      this.substrateService.api, 
-      this.substrateService.pair, 
-      order.id
+      this.substrateService.api,
+      this.substrateService.pair,
+      order.id,
     );
   }
 }

@@ -1,4 +1,4 @@
 export interface BlockMetaData {
-    blockNumber: number;
-    blockHash: string;
+  blockNumber: number;
+  blockHash: string;
 }

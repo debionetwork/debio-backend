@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  SubstrateController,
-} from './substrate-endpoint.controller';
+import { SubstrateController } from './substrate-endpoint.controller';
 import {
   RegistrationRole,
   GetDbioOnRegisterDto,
   WalletBindingDTO,
 } from './dto';
 import { SubstrateService } from './substrate.service';
+
+/* eslint-disable */
 
 describe('Substrate Controller', () => {
   let substrateController: SubstrateController;

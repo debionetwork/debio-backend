@@ -13,10 +13,7 @@ import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
       storageBaseUri: process.env.STORAGE_BASE_URI,
       predefinedAcl: 'private',
     }),
-    TypeOrmModule.forFeature([
-      DataStakingEvents, 
-      DataTokenToDatasetMapping
-    ]),
+    TypeOrmModule.forFeature([DataStakingEvents, DataTokenToDatasetMapping]),
     DateTimeModule,
   ],
   controllers: [BountyController],

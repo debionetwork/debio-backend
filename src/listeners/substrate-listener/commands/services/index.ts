@@ -1,7 +1,5 @@
-export * from "./service-created/service-created.command";
+export * from './service-created/service-created.command';
 
-import { ServiceCreatedHandler } from "./service-created/service-created.handler";
+import { ServiceCreatedHandler } from './service-created/service-created.handler';
 
-export const ServiceCommandHandlers = [
-  ServiceCreatedHandler,
-];
+export const ServiceCommandHandlers = [ServiceCreatedHandler];

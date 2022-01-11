@@ -1,5 +1,5 @@
-import { Order } from "../../../../../common";
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
+import { Order } from '../../../../../common';
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class OrderPaidCommand {
   orders: Order;

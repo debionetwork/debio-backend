@@ -5,7 +5,7 @@ export class DateTimeProxy {
   now(): number {
     return Date.now();
   }
-  nowAndAdd(addition: number = 0): number {
+  nowAndAdd(addition = 0): number {
     return Date.now() + addition;
   }
 }

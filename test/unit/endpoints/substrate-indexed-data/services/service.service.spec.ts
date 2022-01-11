@@ -8,10 +8,7 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
   let serviceServiceMock: ServiceService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
 
-  const createSearchObject = (
-    country: string,
-    city: string,
-  ) => {
+  const createSearchObject = (country: string, city: string) => {
     return {
       index: 'services',
       body: {
@@ -21,15 +18,18 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
           },
         },
       },
-    }
-  }
-  
+    };
+  };
+
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ServiceService,
-        { provide: ElasticsearchService, useFactory: elasticsearchServiceMockFactory }
+        {
+          provide: ElasticsearchService,
+          useFactory: elasticsearchServiceMockFactory,
+        },
       ],
     }).compile();
 
@@ -44,25 +44,23 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
 
   it('should find service by country, city, and category', () => {
     // Arrange
-    const CALLED_WITH = createSearchObject(
-        "XX",
-        "XX",
-    );
+    const CALLED_WITH = createSearchObject('XX', 'XX');
     const RESULT = [1];
     const ES_RESULT = {
       body: {
         hits: {
-          hits: RESULT
-        }
-      }
+          hits: RESULT,
+        },
+      },
     };
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
+    when(elasticsearchServiceMock.search)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-        "XX",
-        "XX"
-    )).resolves.toEqual(RESULT);
+    expect(serviceServiceMock.getByCountryCity('XX', 'XX')).resolves.toEqual(
+      RESULT,
+    );
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -70,38 +68,40 @@ describe('Substrate Indexer Service Service Unit Tests', () => {
     // Arrange
     const RESULT = [];
     const ERROR_RESULT = {
-      body : {
+      body: {
         error: {
-          type: 'index_not_found_exception'
-        }
-      }
+          type: 'index_not_found_exception',
+        },
+      },
     };
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
+    elasticsearchServiceMock.search.mockImplementationOnce(() =>
+      Promise.reject(ERROR_RESULT),
+    );
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-        "XX",
-        "XX"
-    )).resolves.toEqual(RESULT);
+    expect(serviceServiceMock.getByCountryCity('XX', 'XX')).resolves.toEqual(
+      RESULT,
+    );
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
     // Arrange
     const ERROR_RESULT = {
-      body : {
+      body: {
         error: {
-          type: 'failed'
-        }
-      }
+          type: 'failed',
+        },
+      },
     };
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
+    elasticsearchServiceMock.search.mockImplementationOnce(() =>
+      Promise.reject(ERROR_RESULT),
+    );
 
     // Assert
-    expect(serviceServiceMock.getByCountryCity(
-      "XX",
-      "XX"
-    )).rejects.toMatchObject(ERROR_RESULT);
+    expect(
+      serviceServiceMock.getByCountryCity('XX', 'XX'),
+    ).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });

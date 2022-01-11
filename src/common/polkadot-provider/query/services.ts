@@ -26,7 +26,7 @@ export async function queryServicesByMultipleIdsArray(
 ): Promise<Array<Service>> {
   const services: Array<Service> = new Array<Service>();
   for (const id in serviceIds) {
-    services.push(await queryServiceById(api, serviceIds[id]))
+    services.push(await queryServiceById(api, serviceIds[id]));
   }
   return services;
 }

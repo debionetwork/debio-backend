@@ -7,12 +7,7 @@ import { VerificationController } from './verification.controller';
 import { VerificationService } from './verification.service';
 
 @Module({
-  imports: [
-    SubstrateModule, 
-    RewardModule, 
-    DateTimeModule, 
-    ProcessEnvModule
-  ],
+  imports: [SubstrateModule, RewardModule, DateTimeModule, ProcessEnvModule],
   controllers: [VerificationController],
   providers: [VerificationService],
   exports: [VerificationService],

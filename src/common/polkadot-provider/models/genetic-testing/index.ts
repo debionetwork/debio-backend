@@ -1,1 +1,1 @@
-export * from "./dna-test-result-submission";
+export * from './dna-test-result-submission';

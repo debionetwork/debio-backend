@@ -17,8 +17,8 @@ export class StateService extends TypeOrmQueryService<State> {
     return await this.stateRepository.find({
       where: { country_code },
       order: {
-        'name' : 'ASC'
-      }
+        name: 'ASC',
+      },
     });
   }
 

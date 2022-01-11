@@ -1,9 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { convertToDbioUnitString, DebioConversionService, RewardService, sendRewards, SubstrateService } from "../../../../../common";
-import { DataStakedCommand } from "./data-staked.command";
+import { Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import {
+  convertToDbioUnitString,
+  DebioConversionService,
+  RewardService,
+  sendRewards,
+  SubstrateService,
+} from '../../../../../common';
+import { DataStakedCommand } from './data-staked.command';
 import { ethers } from 'ethers';
-import { RewardDto } from "../../../../../common/modules/reward/dto/reward.dto";
+import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
 @Injectable()
 @CommandHandler(DataStakedCommand)
@@ -16,7 +22,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
 
   async execute(command: DataStakedCommand) {
     const dataStaked = command.dataStaked[0].toJSON();
-    dataStaked.trackingId = ethers.utils.toUtf8String(dataStaked.trackingId)
+    dataStaked.trackingId = ethers.utils.toUtf8String(dataStaked.trackingId);
     const dataOrder = await (
       await this.substrateService.api.query.orders.orders(dataStaked.order_id)
     ).toJSON();

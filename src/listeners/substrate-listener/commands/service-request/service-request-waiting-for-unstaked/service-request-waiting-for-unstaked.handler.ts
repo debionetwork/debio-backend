@@ -1,19 +1,21 @@
-import { Logger, Injectable } from "@nestjs/common";
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { TransactionLoggingService } from "../../../../../common";
-import { TransactionLoggingDto } from "../../../../../common/modules/transaction-logging/dto/transaction-logging.dto";
-import { ServiceRequestWaitingForUnstakedCommand } from "./service-request-waiting-for-unstaked.command";
+import { Logger, Injectable } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { TransactionLoggingService } from '../../../../../common';
+import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiting-for-unstaked.command';
 
 @Injectable()
 @CommandHandler(ServiceRequestWaitingForUnstakedCommand)
-export class ServiceRequestWaitingForUnstakedHandler implements ICommandHandler<ServiceRequestWaitingForUnstakedCommand> {
+export class ServiceRequestWaitingForUnstakedHandler
+  implements ICommandHandler<ServiceRequestWaitingForUnstakedCommand>
+{
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly logger: Logger,
   ) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
-    const serviceRequest = command.request
+    const serviceRequest = command.request;
 
     try {
       const serviceRequestParent =

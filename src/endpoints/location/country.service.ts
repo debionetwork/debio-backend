@@ -17,8 +17,8 @@ export class CountryService extends TypeOrmQueryService<Country> {
   async getAll() {
     return await this.countryRepository.find({
       order: {
-        'name' : 'ASC'
-      }
+        name: 'ASC',
+      },
     });
   }
 

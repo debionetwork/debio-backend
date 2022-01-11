@@ -15,7 +15,6 @@ export class OrderCreatedHandler
     private readonly logger: Logger,
   ) {}
 
-
   async execute(command: OrderCreatedCommand) {
     await this.logger.log('OrderCreated!');
 

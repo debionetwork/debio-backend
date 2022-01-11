@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class WalletBindingDTO {
-    @ApiProperty({ type: String })
-    accountId: string;
-  
-    @ApiProperty({ type: String })
-    ethAddress: string;
+  @ApiProperty({ type: String })
+  accountId: string;
+
+  @ApiProperty({ type: String })
+  ethAddress: string;
 }
