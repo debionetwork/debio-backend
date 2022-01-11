@@ -1,7 +1,7 @@
 import { ApiPromise } from "@polkadot/api";
 import { LabInfo, LabVerificationStatus } from "..";
 
-export async function registerLab(api: ApiPromise, pair: any, data: LabInfo, callback: Function = () => {}){
+export async function registerLab(api: ApiPromise, pair: any, data: LabInfo, callback: Function = () => {}){ // eslint-disable-line
     const unsub = await api.tx.labs
         .registerLab(data)
         .signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
@@ -9,7 +9,7 @@ export async function registerLab(api: ApiPromise, pair: any, data: LabInfo, cal
         })
 }
 
-export async function updateLab(api: ApiPromise, pair: any, data: LabInfo, callback: Function = () => {}){
+export async function updateLab(api: ApiPromise, pair: any, data: LabInfo, callback: Function = () => {}){ // eslint-disable-line
     const unsub = await api.tx.labs
         .updateLab(data)
         .signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
@@ -17,7 +17,7 @@ export async function updateLab(api: ApiPromise, pair: any, data: LabInfo, callb
         })
 }
 
-export async function updateLabVerificationStatus(api: ApiPromise, pair: any, substrateAddress: string, labVerificationStatus: LabVerificationStatus, callback: Function = () => {}){
+export async function updateLabVerificationStatus(api: ApiPromise, pair: any, substrateAddress: string, labVerificationStatus: LabVerificationStatus, callback: Function = () => {}){ // eslint-disable-line
     const unsub = await api.tx.labs
         .updateLabVerificationStatus(substrateAddress, labVerificationStatus.toString())
         .signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
