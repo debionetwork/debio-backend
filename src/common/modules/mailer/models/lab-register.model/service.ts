@@ -16,7 +16,7 @@ export class LabRegisterService {
   long_description: string;
   supporting_document: string;
   test_result_sample: string;
-  expected_duration: LabRegisterExpectedDuration;
+  expected_duration: LabRegisterExpectedDuration = new LabRegisterExpectedDuration();
 }
 
 export async function getLabRegisterService(api: ApiPromise, ids: string[]): Promise<Array<LabRegisterService>> {
@@ -33,7 +33,6 @@ export async function getLabRegisterService(api: ApiPromise, ids: string[]): Pro
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;
-    lrs.expected_duration = new LabRegisterExpectedDuration();
     lrs.expected_duration.duration = val.info.expectedDuration.duration;
     lrs.expected_duration.duration_type = val.info.expectedDuration.durationType;
     labRegisterServices.push(lrs);
