@@ -1,23 +1,15 @@
 import { Controller, OnModuleInit, Param, Post, Res } from "@nestjs/common";
 import { ApiParam } from "@nestjs/swagger";
-import { LabRegister, MailerManager } from "../../common/modules/mailer";
+import { LabRegister, labToLabRegister, MailerManager } from "../../common/modules/mailer";
 import { Response } from 'express';
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { queryLabById } from "../../common";
+import { queryLabById, SubstrateService } from "../../common";
 
 @Controller('email')
-export class EmailEndpointController implements OnModuleInit {
-  private api: ApiPromise
+export class EmailEndpointController {
   constructor(
-    private mailerManager: MailerManager
+    private readonly mailerManager: MailerManager,
+    private readonly substrateService: SubstrateService,
   ) {}
-
-  async onModuleInit(){
-    const wsProvider = new WsProvider(process.env.SUBSTRATE_URL)
-    this.api = await ApiPromise.create({
-      provider: wsProvider
-    })
-  }
 
   @Post('registered-lab/:lab_id')
   @ApiParam({ name: 'lab_id'})
@@ -25,9 +17,12 @@ export class EmailEndpointController implements OnModuleInit {
     @Param('lab_id') lab_id: string,
     @Res() response: Response
   ) {    
-    const contextLab = await queryLabById(this.api, lab_id)
+    const contextLab = await queryLabById(this.substrateService.api, lab_id)
 
-    const labRegister: LabRegister = await this.mailerManager.labToLabRegister(contextLab);
+    const labRegister: LabRegister = await labToLabRegister(
+      this.substrateService.api,
+      contextLab,
+    );
     
     await this.mailerManager.sendLabRegistrationEmail(
       process.env.EMAILS.split(','),
