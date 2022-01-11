@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
 
+require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     MailerModule.forRoot({
@@ -17,7 +18,7 @@ import { MailerManager } from './mailer.manager';
       },
       template: {
         dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        adapter: new HandlebarsAdapter({ colNum: (value) => parseInt(value) + 1}), // or new PugAdapter() or new EjsAdapter()
         options: {
           strict: true,
         },
