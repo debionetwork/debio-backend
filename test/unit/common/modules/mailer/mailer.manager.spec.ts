@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { mailerServiceMockFactory, MockType } from '../../mock';
+import { mailerServiceMockFactory, MockType } from '../../../mock';
 import { MailerService } from '@nestjs-modules/mailer';
-import { MailerManager } from '../../../../src/common';
+import { MailerManager } from '../../../../../src/common';
 import { customerStakingRequestService, labRegister } from './mailer.mock.data';
 
 describe('Mailer Manager Unit Tests', () => {

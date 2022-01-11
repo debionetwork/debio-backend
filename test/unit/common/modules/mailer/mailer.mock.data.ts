@@ -3,7 +3,7 @@ import {
   LabRegister,
   LabRegisterCertification,
   LabRegisterService,
-} from '../../../../src/common';
+} from '../../../../../src/common';
 
 export const certification: LabRegisterCertification = {
   title: 'string',
