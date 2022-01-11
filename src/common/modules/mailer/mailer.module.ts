@@ -18,7 +18,7 @@ require('dotenv').config(); // eslint-disable-line
       },
       template: {
         dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        adapter: new HandlebarsAdapter({ colNum: (value) => parseInt(value) + 1}), // or new PugAdapter() or new EjsAdapter()
         options: {
           strict: true,
         },
