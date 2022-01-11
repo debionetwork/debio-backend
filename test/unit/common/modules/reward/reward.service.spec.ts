@@ -3,7 +3,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { RewardService } from '../../../../../src/common';
 import { MockType, repositoryMockFactory } from '../../../mock';
 import { Repository } from 'typeorm';
-import { when } from 'jest-when';
 import { Reward } from '../../../../../src/common/modules/reward/models/reward.entity';
 import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
 
