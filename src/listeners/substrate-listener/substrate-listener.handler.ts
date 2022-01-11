@@ -9,10 +9,19 @@ import { CommandBus } from '@nestjs/cqrs';
 import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
+import { OrderCancelledCommand, OrderCreatedCommand, OrderFailedCommand, OrderFulfilledCommand, OrderPaidCommand, OrderRefundedCommand } from './commands/orders';
 
 const eventRoutes = {
   services: {
     ServiceCreated: ServiceCreatedCommand,
+  },
+  orders: {
+    OrderCreated: OrderCreatedCommand,
+    OrderPaid: OrderPaidCommand,
+    OrderFulfilled: OrderFulfilledCommand,
+    OrderRefunded: OrderRefundedCommand,
+    OrderCancelled: OrderCancelledCommand,
+    OrderFailed: OrderFailedCommand,
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
