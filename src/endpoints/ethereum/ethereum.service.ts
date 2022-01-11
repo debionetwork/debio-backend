@@ -22,10 +22,6 @@ export class EthereumService {
     private readonly ethersSigner: EthersSigner,
   ) {}
 
-  async onModuleInit() {
-    console.log('Di EthereumService');
-  }
-
   async getLastBlock(): Promise<number> {
     let lastBlock = 0;
     const filePath = 'file/lastblock.txt';

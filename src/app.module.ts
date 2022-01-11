@@ -21,6 +21,7 @@ import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
+import { EmailEndpointModule } from './endpoints/email/email.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -50,6 +51,7 @@ require('dotenv').config(); // eslint-disable-line
     }),
     CloudStorageModule,
     LocationModule,
+    EmailEndpointModule,
     RewardModule,
     RatingModule,
     EmrModule,
