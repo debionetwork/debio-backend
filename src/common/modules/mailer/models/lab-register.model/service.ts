@@ -33,10 +33,11 @@ export async function getLabRegisterService(api: ApiPromise, ids: string[]): Pro
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;
+    lrs.expected_duration = new LabRegisterExpectedDuration();
     lrs.expected_duration.duration = val.info.expectedDuration.duration;
     lrs.expected_duration.duration_type = val.info.expectedDuration.durationType;
     labRegisterServices.push(lrs);
   });
 
   return labRegisterServices;
-}
+32}

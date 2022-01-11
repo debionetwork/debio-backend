@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
 
+require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     MailerModule.forRoot({
