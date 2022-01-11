@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { TransactionLoggingService } from 'src/common/utilities/transaction-logging';
+import { TransactionLoggingService } from 'src/common/modules/transaction-logging';
 
 @Injectable()
 export class TransactionService {
