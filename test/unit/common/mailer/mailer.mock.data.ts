@@ -13,6 +13,7 @@ export const service: LabRegisterService = {
     category: "string",
     name: "string",
     price: "string",
+    currency: "string",
     qc_price: "string",
     description: "string",
     long_description: "string",
