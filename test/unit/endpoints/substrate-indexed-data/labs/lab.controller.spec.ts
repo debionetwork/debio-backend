@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { LabService } from '../../../../../src/endpoints/substrate-indexed-data/labs/lab.service';
-import { LabController } from '../../../../../src/endpoints/substrate-indexed-data/labs/lab.controller';
+import { LabService } from '../../../../../src/endpoints/substrate-endpoint/services/lab.service';
+import { LabController } from '../../../../../src/endpoints/substrate-endpoint/labs/lab.controller';
 import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
 
 describe('Substrate Indexer Lab Controller Unit Tests', () => {
@@ -20,42 +20,45 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
     size: number,
   ) => {
     return {
-        index: 'labs',
-        body: {
-          query: {
-            bool: {
-              must: [
-                {
-                  match_phrase_prefix: { 'services.country': { query: country } },
+      index: 'labs',
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                match_phrase_prefix: { 'services.country': { query: country } },
+              },
+              { match_phrase_prefix: { 'services.region': { query: region } } },
+              { match_phrase_prefix: { 'services.city': { query: city } } },
+              {
+                match_phrase_prefix: {
+                  'services.info.category': { query: category },
                 },
-                { match_phrase_prefix: { 'services.region': { query: region } } },
-                { match_phrase_prefix: { 'services.city': { query: city } } },
-                {
-                  match_phrase_prefix: {
-                    'services.info.category': { query: category },
-                  },
+              },
+              {
+                match_phrase_prefix: {
+                  'services.service_flow': { query: service_flow },
                 },
-                {
-                  match_phrase_prefix: {
-                    'services.service_flow': { query: service_flow },
-                  },
-                },
-              ],
-            },
+              },
+            ],
           },
         },
-        from: (size * page - size) | 0,
-        size: size | 10,
+      },
+      from: (size * page - size) | 0,
+      size: size | 10,
     };
-  }
-  
-    // Arrange before each iteration
+  };
+
+  // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LabController,
         LabService,
-        { provide: ElasticsearchService, useFactory: elasticsearchServiceMockFactory }
+        {
+          provide: ElasticsearchService,
+          useFactory: elasticsearchServiceMockFactory,
+        },
       ],
     }).compile();
 
@@ -71,15 +74,18 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
 
   it('should find lab by country, city, and category', () => {
     // Arrange
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
+    const labServiceSpy = jest.spyOn(
+      labServiceMock,
+      'getByCountryCityCategory',
+    );
     const CALLED_WITH = createSearchObject(
-        "XX",
-        "XX",
-        "XX",
-        "XX",
-        false,
-        1,
-        10
+      'XX',
+      'XX',
+      'XX',
+      'XX',
+      false,
+      1,
+      10,
     );
     const ES_RESULT = {
       body: {
@@ -87,57 +93,61 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
           hits: [
             {
               _source: {
-                certifications: "cert",
+                certifications: 'cert',
                 verification_status: false,
                 blockMetaData: 1,
-                account_id: "ID",
+                account_id: 'ID',
                 info: {
-                  category: "XX",
+                  category: 'XX',
                 },
                 services: [
                   {
                     info: {
-                      category: "XX",
+                      category: 'XX',
                     },
-                    service_flow: false
-                  }
+                    service_flow: false,
+                  },
                 ],
-              }
-            }
-          ]
-        }
-      }
+              },
+            },
+          ],
+        },
+      },
     };
-    when(elasticsearchServiceMock.search).calledWith(CALLED_WITH).mockReturnValue(ES_RESULT);
-    
+    when(elasticsearchServiceMock.search)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
+
     const RESULT = {
       result: [
         {
-          lab_id: "ID",
+          lab_id: 'ID',
           info: {
-            category: "XX",
+            category: 'XX',
           },
           lab_detail: {
-            category: "XX",
+            category: 'XX',
           },
-          certifications: "cert",
+          certifications: 'cert',
           verification_status: false,
           service_flow: false,
           blockMetaData: 1,
-        }
-      ]
-    }
+        },
+      ],
+    };
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
-        "XX",
-        "XX",
-        "XX",
-        "XX",
+    expect(
+      labControllerMock.findByCountryCityCategory(
+        'XX',
+        'XX',
+        'XX',
+        'XX',
         false,
         1,
-        10
-    )).resolves.toEqual(RESULT);
+        10,
+      ),
+    ).resolves.toEqual(RESULT);
     expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
@@ -146,26 +156,33 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
     // Arrange
     const RESULT = [];
     const ERROR_RESULT = {
-      body : {
+      body: {
         error: {
-          type: 'index_not_found_exception'
-        }
-      }
+          type: 'index_not_found_exception',
+        },
+      },
     };
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT));
+    const labServiceSpy = jest.spyOn(
+      labServiceMock,
+      'getByCountryCityCategory',
+    );
+    elasticsearchServiceMock.search.mockImplementationOnce(() =>
+      Promise.reject(ERROR_RESULT),
+    );
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
-      "XX",
-      "XX",
-      "XX",
-      "XX",
-      false,
-      1,
-      10
-    )).resolves.toEqual({
-      result: RESULT
+    expect(
+      labControllerMock.findByCountryCityCategory(
+        'XX',
+        'XX',
+        'XX',
+        'XX',
+        false,
+        1,
+        10,
+      ),
+    ).resolves.toEqual({
+      result: RESULT,
     });
     expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
@@ -174,25 +191,32 @@ describe('Substrate Indexer Lab Controller Unit Tests', () => {
   it('should throw error', () => {
     // Arrange
     const ERROR_RESULT = {
-      body : {
+      body: {
         error: {
-          type: 'failed'
-        }
-      }
+          type: 'failed',
+        },
+      },
     };
-    const labServiceSpy = jest.spyOn(labServiceMock, 'getByCountryCityCategory');
-    elasticsearchServiceMock.search.mockImplementationOnce(() => Promise.reject(ERROR_RESULT))
+    const labServiceSpy = jest.spyOn(
+      labServiceMock,
+      'getByCountryCityCategory',
+    );
+    elasticsearchServiceMock.search.mockImplementationOnce(() =>
+      Promise.reject(ERROR_RESULT),
+    );
 
     // Assert
-    expect(labControllerMock.findByCountryCityCategory(
-      "XX",
-      "XX",
-      "XX",
-      "XX",
-      false,
-      1,
-      10
-    )).rejects.toMatchObject(ERROR_RESULT);
+    expect(
+      labControllerMock.findByCountryCityCategory(
+        'XX',
+        'XX',
+        'XX',
+        'XX',
+        false,
+        1,
+        10,
+      ),
+    ).rejects.toMatchObject(ERROR_RESULT);
     expect(labServiceSpy).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });

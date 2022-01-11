@@ -3,7 +3,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { StateService } from '../../../endpoints/location/state.service';
 import { EthereumService } from '../../../endpoints/ethereum/ethereum.service';
 import { CountryService } from '../../../endpoints/location/country.service';
-import { DebioConversionService } from '../../../common/utilities/debio-conversion/debio-conversion.service';
+import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
 
 interface RequestsByCountry {
   country: string;
@@ -13,7 +13,7 @@ interface RequestsByCountry {
 
 @Injectable()
 export class ServiceRequestService {
-  private logger : Logger = new Logger(ServiceRequestService.name)
+  private logger: Logger = new Logger(ServiceRequestService.name);
   constructor(
     @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
@@ -26,10 +26,9 @@ export class ServiceRequestService {
   ) {}
 
   async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
-
     const requestByCountryList: Array<RequestsByCountry> = [];
     try {
-      const exchangeBalance = await this.exchangeCacheService.getExchange()      
+      const exchangeBalance = await this.exchangeCacheService.getExchange();
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
         body: { from: 0, size: 1000 },
@@ -39,8 +38,8 @@ export class ServiceRequestService {
           hits: { hits },
         },
       } = serviceRequests;
-      const oneDbioEqualToDai = exchangeBalance['dbioToDai']
-      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd']
+      const oneDbioEqualToDai = exchangeBalance['dbioToDai'];
+      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd'];
 
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
@@ -48,11 +47,11 @@ export class ServiceRequestService {
         const {
           _source: { request },
         } = req;
-  
-        if (request.status !== 'Open'){
-          continue
+
+        if (request.status !== 'Open') {
+          continue;
         }
-  
+
         if (!requestByCountryDict[request.country]) {
           requestByCountryDict[request.country] = {
             totalRequests: 0,
@@ -60,19 +59,20 @@ export class ServiceRequestService {
             services: {},
           };
         }
-  
-        const value = Number(request.staking_amount.split(',').join('')) / 10 ** 18;
+
+        const value =
+          Number(request.staking_amount.split(',').join('')) / 10 ** 18;
         requestByCountryDict[request.country].totalRequests += 1;
         const currValueByCountry = Number(
           requestByCountryDict[request.country].totalValue,
         );
         requestByCountryDict[request.country].totalValue =
           currValueByCountry + value;
-  
+
         if (
           !requestByCountryDict[request.country]['services'][
             request.region + '-' + request.city + '-' + request.service_category
-          ]        
+          ]
         ) {
           requestByCountryDict[request.country]['services'][
             request.region + '-' + request.city + '-' + request.service_category
@@ -88,7 +88,7 @@ export class ServiceRequestService {
             },
           };
         }
-  
+
         requestByCountryDict[request.country]['services'][
           request.region + '-' + request.city + '-' + request.service_category
         ].totalRequests += 1;
@@ -97,14 +97,14 @@ export class ServiceRequestService {
             request.region + '-' + request.city + '-' + request.service_category
           ].totalValue.dbio,
         );
-  
+
         requestByCountryDict[request.country]['services'][
           request.region + '-' + request.city + '-' + request.service_category
         ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
       }
-  
+
       // Restructure data into array
-  
+
       for (const countryCode in requestByCountryDict) {
         const countryObj = await this.countryService.getByIso2Code(countryCode);
         if (!countryObj) {
@@ -112,22 +112,24 @@ export class ServiceRequestService {
         }
         requestByCountryDict[countryCode]['totalValue'] = {
           dbio: requestByCountryDict[countryCode]['totalValue'],
-          dai: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
-          usd: requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd
-        }
+          dai:
+            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
+          usd:
+            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd,
+        };
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
-        let { totalValue } = requestByCountryDict[countryCode];
-  
+        const { totalValue } = requestByCountryDict[countryCode];
+
         const servicesArr = Object.values(services).map((s: any) => ({
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
             dai: s.totalValue.dbio * oneDbioEqualToDai,
-            usd: s.totalValue.dbio * oneDbioEqualToUsd
+            usd: s.totalValue.dbio * oneDbioEqualToUsd,
           },
         }));
-  
+
         const requestByCountry = {
           countryId: countryCode,
           country: name,
@@ -135,14 +137,16 @@ export class ServiceRequestService {
           totalValue,
           services: servicesArr,
         };
-  
+
         requestByCountryList.push(requestByCountry);
       }
     } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(`API "service-requests/countries": ${error.body.error.reason}`)
+        await this.logger.log(
+          `API "service-requests/countries": ${error.body.error.reason}`,
+        );
       } else {
-        throw error
+        throw error;
       }
     }
     return requestByCountryList;
@@ -164,24 +168,26 @@ export class ServiceRequestService {
           },
         },
       },
-      from: (size * page - size) || 0,
+      from: size * page - size || 0,
       size: size || 10,
     };
-    
+
     const result = [];
     try {
       const requestServiceByCustomers = await this.elasticsearchService.search(
         searchObj,
       );
-  
+
       requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
         result.push(requestService._source);
       });
-    } catch (error) { 
+    } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(`API "service-requests/customer/{customerId}": ${error.body.error.reason}`)   
+        await this.logger.log(
+          `API "service-requests/customer/{customerId}": ${error.body.error.reason}`,
+        );
       } else {
-        throw error        
+        throw error;
       }
     }
     return result;
@@ -221,15 +227,17 @@ export class ServiceRequestService {
       const requestServiceByCustomers = await this.elasticsearchService.search(
         searchObj,
       );
-  
+
       requestServiceByCustomers.body.hits.hits.forEach((requestService) => {
         result.push(requestService._source);
       });
-    } catch (error) {  
+    } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(`API "service-requests/provideRequestService": ${error.body.error.reason}`)
+        await this.logger.log(
+          `API "service-requests/provideRequestService": ${error.body.error.reason}`,
+        );
       } else {
-        throw error        
+        throw error;
       }
     }
     return result;

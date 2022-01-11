@@ -11,8 +11,8 @@
     ],
     "coverageDirectory": "../coverage",
     "moduleNameMapper": {
-      "@polkadot/api(.*)$": "<rootDir>../../src/substrate/substrate.service.ts",
-      "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../../src/substrate/substrate.service.ts"
+      "@polkadot/api(.*)$": "<rootDir>../../src/common/modules/substrate/substrate.service.ts",
+      "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../../src/common/modules/substrate/substrate.service.ts"
     },
     "setupFiles": ["dotenv/config"]
   }

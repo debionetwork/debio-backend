@@ -4,7 +4,7 @@ import { ServiceRequestController } from './service-request/service-request.cont
 import { ServiceRequestService } from './service-request/service-request.service';
 import { LocationModule } from '../../endpoints/location/location.module';
 import { EthereumModule } from '../../endpoints/ethereum/ethereum.module';
-import { DebioConversionModule } from '../../common/utilities/debio-conversion/debio-conversion.module';
+import { DebioConversionModule } from '../../common/modules/debio-conversion/debio-conversion.module';
 
 @Module({
   imports: [
@@ -16,8 +16,8 @@ import { DebioConversionModule } from '../../common/utilities/debio-conversion/d
         node: process.env.ELASTICSEARCH_NODE,
         auth: {
           username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD
-        }
+          password: process.env.ELASTICSEARCH_PASSWORD,
+        },
       }),
     }),
   ],

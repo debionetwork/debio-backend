@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EthereumService } from './ethereum.service';
 
+/* eslint-disable */
+
 class EtheretumServiceMock {
   getLastBlock(): number {
     return 5484746;

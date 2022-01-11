@@ -1,21 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { formatEther, WalletSigner } from 'nestjs-ethers';
+import { WalletSigner } from 'nestjs-ethers';
 import { EthereumService } from '../ethereum/ethereum.service';
-import { SubstrateService } from '../../substrate/substrate.service';
-import { Utils } from './utils/utils';
+import { setOrderPaid, SubstrateService } from '../../common';
 import { ethers } from 'ethers';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class EscrowService {
-  private utils: Utils;
   constructor(
     private substrateService: SubstrateService,
     private ethereumService: EthereumService,
-    private readonly elasticsearchService: ElasticsearchService,
-  ) {
-    this.utils = new Utils();
-  }
+  ) {}
 
   async createOrder(request) {
     console.log('[createOrder] request: ', request);
@@ -36,7 +30,7 @@ export class EscrowService {
       console.log('balance', balance.toString());
       const tokenContractWithSigner = tokenContract.connect(wallet);
       try {
-        const tx = await tokenContractWithSigner.refundOrder(order.id);
+        await tokenContractWithSigner.refundOrder(order.id);
       } catch (err) {
         console.log('err', err);
       }
@@ -51,9 +45,7 @@ export class EscrowService {
 
   async orderFulfilled(order) {
     try {
-      const provider = await new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
-      );
+      await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
       const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
@@ -66,9 +58,13 @@ export class EscrowService {
     }
   }
 
-  async setOrderPaidWithSubstrate(orderID: string) {
+  async setOrderPaidWithSubstrate(orderId: string) {
     try {
-      await this.substrateService.setOrderPaid(orderID);
+      await setOrderPaid(
+        this.substrateService.api,
+        this.substrateService.pair,
+        orderId,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -97,13 +93,4 @@ export class EscrowService {
       console.log(error);
     }
   }
-
-  /**
-   * Get refund gas estimation:
-   * Refund is done by calling the transferFrom function of ERC20 token
-   * The transfer is done from escrow's address to the customer address
-   * @param customerAddress : customer address
-   * @param amount : amount of erc20 being transferred to customer
-   * @returns string
-   */
 }

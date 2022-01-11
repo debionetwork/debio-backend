@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SubstrateModule } from '../substrate/substrate.module';
+import { SubstrateModule } from '../common';
 import { UnstakedService } from './unstaked/unstaked.service';
 
 @Module({
@@ -10,13 +10,13 @@ import { UnstakedService } from './unstaked/unstaked.service';
         node: process.env.ELASTICSEARCH_NODE,
         auth: {
           username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD
-        }
+          password: process.env.ELASTICSEARCH_PASSWORD,
+        },
       }),
     }),
-    SubstrateModule
+    SubstrateModule,
   ],
   exports: [ElasticsearchModule],
-  providers: [UnstakedService]
+  providers: [UnstakedService],
 })
 export class SchedulersModule {}

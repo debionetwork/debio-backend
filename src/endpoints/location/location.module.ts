@@ -9,22 +9,9 @@ import { State } from './models/state.entity';
 import { StateService } from './state.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Country, State, City], 'dbLocation')
-  ],
-  controllers: [
-    LocationController
-  ],
-  providers: [
-    CountryService, 
-    StateService, 
-    CityService
-  ],
-  exports: [
-    TypeOrmModule,
-    CountryService, 
-    StateService, 
-    CityService
-  ],
+  imports: [TypeOrmModule.forFeature([Country, State, City], 'dbLocation')],
+  controllers: [LocationController],
+  providers: [CountryService, StateService, CityService],
+  exports: [TypeOrmModule, CountryService, StateService, CityService],
 })
 export class LocationModule {}

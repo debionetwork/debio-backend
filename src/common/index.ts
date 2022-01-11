@@ -1,4 +1,4 @@
-export * from './utilities';
+export * from './modules';
 export * from './proxies';
 export * from './polkadot-provider';
 export * from './interceptors';

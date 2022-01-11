@@ -14,7 +14,10 @@ describe('Emr Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmrService,
-        { provide: getRepositoryToken(EmrCategory), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(EmrCategory),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     emrService = module.get(EmrService);
@@ -29,12 +32,12 @@ describe('Emr Service Unit Tests', () => {
   it('should find all categories', () => {
     // Arrange
     const categories = [
-        {
-            category: "Example 1"
-        },
-        {
-            category: "Example 2"
-        }
+      {
+        category: 'Example 1',
+      },
+      {
+        category: 'Example 2',
+      },
     ];
     repositoryMock.find.mockReturnValue(categories);
 

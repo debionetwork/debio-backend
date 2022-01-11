@@ -9,11 +9,10 @@ import {
   getFile,
   createFile,
   checkIfFileOrDirectoryExists,
-} from '../../common/utilities/helper/storage.helper';
+} from '../../common/modules/helper/storage.helper';
 import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
-import serviceRequestContract from './utils/ServiceRequest.json';
 import { ethers } from 'ethers';
 
 @Injectable()
@@ -22,10 +21,6 @@ export class EthereumService {
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
   ) {}
-
-  async onModuleInit() {
-    console.log('Di EthereumService');
-  }
 
   async getLastBlock(): Promise<number> {
     let lastBlock = 0;

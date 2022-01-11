@@ -2,19 +2,11 @@ import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { SubstrateModule } from '../../../common';
 import { SubstrateHealthIndicator } from './substrate.health.indicator';
- 
+
 @Module({
-  imports: [
-    TerminusModule,
-    SubstrateModule
-  ],
-  exports: [
-    SubstrateModule,
-    SubstrateHealthIndicator
-  ],
-  providers: [
-    SubstrateHealthIndicator
-  ],
+  imports: [TerminusModule, SubstrateModule],
+  exports: [SubstrateModule, SubstrateHealthIndicator],
+  providers: [SubstrateHealthIndicator],
 })
 export class SubstrateHealthModule {}
 

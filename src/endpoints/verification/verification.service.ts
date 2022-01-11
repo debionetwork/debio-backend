@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { DateTimeProxy } from '../../common/proxies/date-time';
-import { RewardDto } from '../../common/utilities/reward/dto/reward.dto';
-import { RewardService } from '../../common/utilities/reward/reward.service';
-import { SubstrateService } from '../../substrate/substrate.service';
+import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
+import { RewardService } from '../../common/modules/reward/reward.service';
+import {
+  convertToDbioUnitString,
+  LabVerificationStatus,
+  sendRewards,
+  SubstrateService,
+  updateLabVerificationStatus,
+} from '../../common';
 
 @Injectable()
 export class VerificationService {
@@ -12,21 +18,29 @@ export class VerificationService {
     private readonly rewardService: RewardService,
   ) {}
 
-  async vericationLab(acountId: string, verificationStatus: string) {
+  async vericationLab(substrateAddress: string, verificationStatus: string) {
     // Update Status Lab to Verified
-    await this.subtrateService.verificationLabWithSubstrate(
-      acountId,
-      verificationStatus,
+    await updateLabVerificationStatus(
+      this.subtrateService.api,
+      this.subtrateService.pair,
+      substrateAddress,
+      <LabVerificationStatus>verificationStatus,
     );
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
-      await this.subtrateService.sendReward(acountId, 2);
+      const reward = 2;
+      await sendRewards(
+        this.subtrateService.api,
+        this.subtrateService.pair,
+        substrateAddress,
+        convertToDbioUnitString(reward),
+      );
     }
 
     //Write to Reward Logging
     const dataInput: RewardDto = {
-      address: acountId,
+      address: substrateAddress,
       ref_number: '-',
       reward_amount: 2,
       reward_type: 'Lab Verified',
