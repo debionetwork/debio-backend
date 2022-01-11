@@ -10,6 +10,7 @@ import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
 import { ServiceRequestCreatedCommand, ServiceRequestProcessedCommand, ServiceRequestUnstakedCommand, ServiceRequestWaitingForUnstakedCommand } from './commands/service-request';
+import { OrderCancelledCommand, OrderCreatedCommand, OrderFailedCommand, OrderFulfilledCommand, OrderPaidCommand, OrderRefundedCommand } from './commands/orders';
 
 const eventRoutes = {
   services: {
@@ -20,6 +21,14 @@ const eventRoutes = {
     ServiceRequestProcessed: ServiceRequestProcessedCommand,
     ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
     ServiceRequestWaitingForUnstaked: ServiceRequestWaitingForUnstakedCommand
+  },
+  orders: {
+    OrderCreated: OrderCreatedCommand,
+    OrderPaid: OrderPaidCommand,
+    OrderFulfilled: OrderFulfilledCommand,
+    OrderRefunded: OrderRefundedCommand,
+    OrderCancelled: OrderCancelledCommand,
+    OrderFailed: OrderFailedCommand,
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
