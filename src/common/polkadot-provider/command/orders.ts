@@ -6,7 +6,7 @@ export async function createOrder(api: ApiPromise, pair: any, serviceId: string,
         .signAndSend(pair, { nonce: -1 })
 }
 
-export async function fulfillOrder(api: ApiPromise, pair: any, orderId: string, callback: Function = ()=>{}): Promise<void> {
+export async function fulfillOrder(api: ApiPromise, pair: any, orderId: string, callback: Function = ()=>{}): Promise<void> { // eslint-disable-line
     const unsub = await api.tx.orders
         .fulfillOrder(orderId)
         .signAndSend(pair, { nonce: -1 }, ({ events, status }) => 

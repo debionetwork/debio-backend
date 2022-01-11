@@ -157,7 +157,10 @@ export class SubstrateController {
       created_at: new Date(),
     };
     let reward = null;
-    let isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(this.substrateService.api, ethAddress);
+    let isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
+      this.substrateService.api, 
+      ethAddress
+    );
       
     const bindingEth = await setEthAddress(
       this.substrateService.api,
