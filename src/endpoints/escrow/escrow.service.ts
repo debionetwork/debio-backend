@@ -62,7 +62,11 @@ export class EscrowService {
 
   async setOrderPaidWithSubstrate(orderId: string) {
     try {
-      await setOrderPaid(this.substrateService.api, this.substrateService.pair, orderId);
+      await setOrderPaid(
+        this.substrateService.api,
+        this.substrateService.pair,
+        orderId,
+      );
     } catch (error) {
       console.log(error);
     }
