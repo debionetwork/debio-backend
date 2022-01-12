@@ -24,12 +24,9 @@ export class TransactionLoggingService {
     return this.transactionRequestRepository.save(logging);
   }
 
-  async updateHash(order_id: string, transaction_hash: string) {
-    const logging = await this.getLoggingByOrderId(order_id);
-    if (logging.id) {
-      logging.transaction_hash = transaction_hash;
-      await this.transactionRequestRepository.update(logging.id, logging);
-    }
+  updateHash(transaction: TransactionRequest, transaction_hash: string) {
+    transaction.transaction_hash = transaction_hash;
+    return this.transactionRequestRepository.update(transaction.id.toString(), transaction);
   } 
 
   getLoggingByOrderId(ref_number: string) {
