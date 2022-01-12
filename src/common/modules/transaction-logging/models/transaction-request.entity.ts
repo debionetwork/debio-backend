@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'transaction_logs' })
 export class TransactionRequest {
   @PrimaryGeneratedColumn({ type: 'bigint' })
-  id: string;
+  id: bigint;
 
   @Column()
   address: string;
