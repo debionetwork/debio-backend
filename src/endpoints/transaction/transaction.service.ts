@@ -10,17 +10,20 @@ export class TransactionService {
   ) {}
 
   async submitTransactionHash(order_id: string, transaction_hash: string) {
-    await this.transactionLoggingService.updateHash(order_id, transaction_hash);
-
-    await this.elasticsearchService.update({
-      index: 'orders',
-      id: order_id,
-      body: {
-        doc: {
-          transaction_hash: transaction_hash
+    const transaction_logging = await this.transactionLoggingService.getLoggingByOrderId(order_id);
+    if (transaction_logging) {
+      await this.transactionLoggingService.updateHash(transaction_logging, transaction_hash);
+  
+      await this.elasticsearchService.update({
+        index: 'orders',
+        id: order_id,
+        body: {
+          doc: {
+            transaction_hash: transaction_hash
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   async getTransactionHashFromES(order_id: string) {
