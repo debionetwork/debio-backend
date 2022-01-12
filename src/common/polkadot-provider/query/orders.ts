@@ -6,7 +6,7 @@ export async function queryLastOrderHashByCustomer(
   substrateAddress: string,
 ): Promise<string> {
   return (
-    await api.query.orders.lastOrderByCustomer(substrateAddress)
+    await api?.query?.orders.lastOrderByCustomer(substrateAddress)
   ).toString();
 }
 
@@ -14,6 +14,6 @@ export async function queryOrderDetailByOrderID(
   api: ApiPromise,
   orderID: string,
 ): Promise<Order> {
-  const res = (await api.query.orders.orders(orderID)).toHuman();
+  const res = (await api?.query?.orders.orders(orderID)).toHuman();
   return new Order(res);
 }

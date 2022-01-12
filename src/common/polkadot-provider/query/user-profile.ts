@@ -5,7 +5,7 @@ export async function queryAccountIdByEthAddress(
   ethAddress: string,
 ): Promise<string> {
   return (
-    await api.query.userProfile.accountIdByEthAddress(ethAddress)
+    await api?.query?.userProfile.accountIdByEthAddress(ethAddress)
   ).toString();
 }
 
@@ -14,6 +14,6 @@ export async function queryEthAdressByAccountId(
   accountId: string,
 ): Promise<string> {
   return (
-    await api.query.userProfile.ethAddressByAccountId(accountId)
+    await api?.query?.userProfile.ethAddressByAccountId(accountId)
   ).toString();
 }

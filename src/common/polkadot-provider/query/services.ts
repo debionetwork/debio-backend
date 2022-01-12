@@ -5,7 +5,7 @@ export async function queryServiceById(
   api: ApiPromise,
   serviceId: string,
 ): Promise<Service> {
-  const res = (await api.query.services.services(serviceId)).toHuman();
+  const res = (await api?.query?.services.services(serviceId)).toHuman();
   return new Service(res);
 }
 
@@ -32,7 +32,7 @@ export async function queryServicesByMultipleIdsArray(
 }
 
 export async function queryServicesCount(api: ApiPromise): Promise<number> {
-  const res: any = (await api.query.services.servicesCount()).toHuman();
+  const res: any = (await api?.query?.services.servicesCount()).toHuman();
   return parseInt(res);
 }
 
@@ -41,7 +41,7 @@ export async function queryServicesCountByOwnerId(
   accoutId: string,
 ): Promise<number> {
   const res: any = (
-    await api.query.services.servicesCountByOwner(accoutId)
+    await api?.query?.services.servicesCountByOwner(accoutId)
   ).toHuman();
   return parseInt(res);
 }
