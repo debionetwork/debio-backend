@@ -3,6 +3,7 @@ import { MockType } from "test/unit/mock"
 import { TransactionService } from "../../../../src/endpoints/transaction/transaction.service";
 import { Test, TestingModule } from "@nestjs/testing";
 import { TransactionLoggingService } from "src/common";
+import { TransactionRequest } from "../../../../src/common/modules/transaction-logging/models/transaction-request.entity";
 
 describe('Transaction Controller Unit Test', () => {
   let transactionController: MockType<TransactionController>;
@@ -40,8 +41,20 @@ describe('Transaction Controller Unit Test', () => {
   });
 
   it('should update transaction', () => {
-    // Assert
-    
+    // Assert    
+    const EXPECTED_PARAM = new TransactionRequest();
+    EXPECTED_PARAM.id = BigInt(0);
+    EXPECTED_PARAM.address = "string";
+    EXPECTED_PARAM.amount = 0;
+    EXPECTED_PARAM.created_at = new Date();
+    EXPECTED_PARAM.currency = "string";
+    EXPECTED_PARAM.parent_id = BigInt(0);
+    EXPECTED_PARAM.ref_number = "string";
+    EXPECTED_PARAM.transaction_type = 0;
+    EXPECTED_PARAM.transaction_status = 0;
+    EXPECTED_PARAM.transaction_hash = "string";
+
+    transactionLoggingService.getLoggingByOrderId.mockReturnValue(EXPECTED_PARAM);
   });
 
   it('should get transaction hash from elasticsearch', () => {

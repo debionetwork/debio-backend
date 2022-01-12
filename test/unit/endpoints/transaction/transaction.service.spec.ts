@@ -2,10 +2,11 @@ import { TransactionLoggingService } from "../../../../src/common/modules/transa
 import { TransactionService } from "../../../../src/endpoints/transaction/transaction.service";
 import { MockType } from "test/unit/mock";
 import { Test, TestingModule } from "@nestjs/testing";
+import { when } from 'jest-when';
 
 describe('Transaction Service Unit Test', () => {
   let transactionService: TransactionService;
-  let transactionLoggingService: MockType<TransactionLoggingService>;
+  let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
   const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = jest.fn(() => ({
     updateHash: jest.fn(),
@@ -24,6 +25,23 @@ describe('Transaction Service Unit Test', () => {
     }).compile();
 
     transactionService = module.get(TransactionService);
-    transactionLoggingService = module.get(TransactionLoggingService);
+    transactionLoggingServiceMock = module.get(TransactionLoggingService);
+  });
+
+  it('should be defined', () => {
+    // Assert
+    expect(transactionService).toBeDefined();
+  });
+
+  it('should submit transaction hash to transaction logging', () => {
+    when(transactionLoggingServiceMock.getLoggingByOrderId).calledWith()
+  });
+
+  it('should get transaction hash from elasticsearch', () => {
+
+  });
+
+  it('should get transaction hash from postgresql', () => {
+
   });
 });
