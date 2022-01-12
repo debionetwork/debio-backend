@@ -24,6 +24,11 @@ export class TransactionLoggingService {
     return this.transactionRequestRepository.save(logging);
   }
 
+  updateHash(transaction: TransactionRequest, transaction_hash: string) {
+    transaction.transaction_hash = transaction_hash;
+    return this.transactionRequestRepository.update(transaction.id.toString(), transaction);
+  } 
+
   getLoggingByOrderId(ref_number: string) {
     return this.transactionRequestRepository.findOne({
       where: {

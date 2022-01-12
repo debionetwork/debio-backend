@@ -93,4 +93,28 @@ describe('Transaction Logging Service Unit Tests', () => {
     expect(repositoryMock.findOne).toHaveBeenCalled();
     expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAM);
   });
+
+  it('should update transaction hash', () => {
+    // Arrange
+    const transaction_hash = "string";
+
+    const RESULT = 0;
+    const EXPECTED_PARAM = new TransactionRequest();
+    EXPECTED_PARAM.id = BigInt(0);
+    EXPECTED_PARAM.address = "string";
+    EXPECTED_PARAM.amount = 0;
+    EXPECTED_PARAM.created_at = new Date();
+    EXPECTED_PARAM.currency = "string";
+    EXPECTED_PARAM.parent_id = BigInt(0);
+    EXPECTED_PARAM.ref_number = "string";
+    EXPECTED_PARAM.transaction_type = 0;
+    EXPECTED_PARAM.transaction_status = 0;
+    EXPECTED_PARAM.transaction_hash = "string";
+    repositoryMock.update.mockReturnValue(RESULT);
+
+    // Asserts
+    transactionLoggingService.updateHash(EXPECTED_PARAM, transaction_hash);
+    expect(repositoryMock.update).toHaveBeenCalled();
+    expect(repositoryMock.update).toHaveBeenCalledWith(EXPECTED_PARAM.id.toString(), EXPECTED_PARAM);
+  });
 });
