@@ -38,8 +38,8 @@ export class ServiceRequestService {
           hits: { hits },
         },
       } = serviceRequests;
-      const oneDbioEqualToDai = exchangeBalance['dbioToDai'];
-      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd'];
+      const oneDbioEqualToDai = exchangeBalance?.dbioToDai || undefined;
+      const oneDbioEqualToUsd = exchangeBalance?.dbioToUsd || undefined;
 
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
