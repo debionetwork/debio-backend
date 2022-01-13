@@ -113,9 +113,9 @@ export class ServiceRequestService {
         requestByCountryDict[countryCode]['totalValue'] = {
           dbio: requestByCountryDict[countryCode]['totalValue'],
           dai:
-            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
+            (requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai) || "Conversion Error",
           usd:
-            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd,
+            (requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd) || "Conversion Error",
         };
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
@@ -125,8 +125,8 @@ export class ServiceRequestService {
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
-            dai: s.totalValue.dbio * oneDbioEqualToDai,
-            usd: s.totalValue.dbio * oneDbioEqualToUsd,
+            dai: (s.totalValue.dbio * oneDbioEqualToDai) || "Conversion Error",
+            usd: (s.totalValue.dbio * oneDbioEqualToUsd) || "Conversion Error",
           },
         }));
 
