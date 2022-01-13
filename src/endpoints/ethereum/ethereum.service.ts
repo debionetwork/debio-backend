@@ -14,28 +14,22 @@ import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
+import { CachesService } from 'src/common/modules/caches';
 
 @Injectable()
 export class EthereumService {
   constructor(
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
+    private readonly cachesService: CachesService
   ) {}
 
   async getLastBlock(): Promise<number> {
-    let lastBlock = 0;
-    const filePath = 'file/lastblock.txt';
-    if (!checkIfFileOrDirectoryExists(filePath)) {
-      await createFile('file', 'lastblock.txt', '0');
-    } else {
-      const strLastBlock = await getFile(filePath, 'utf8');
-      lastBlock = parseInt(strLastBlock.toString(), 10);
-    }
-    return lastBlock;
+    return await this.cachesService.getLastBlock();
   }
 
   async setLastBlock(blockNumber) {
-    await createFile('file', 'lastblock.txt', blockNumber.toString());
+    await this.cachesService.setLastBlock(blockNumber);
   }
 
   async getContract(): Promise<any> {

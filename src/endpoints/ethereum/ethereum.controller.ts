@@ -19,7 +19,7 @@ export class EthereumController {
     this.syncBlock(lastBlock, currentBlock, contract);
 
     contract.provider.on('block', async (blockNum) => {
-      this.ethereumService.setLastBlock(blockNum);
+      await this.ethereumService.setLastBlock(blockNum);
     });
 
     escrowContract.on('OrderPaid', async (order) => {
