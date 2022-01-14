@@ -23,11 +23,21 @@ export class StateService extends TypeOrmQueryService<State> {
   }
 
   async getState(country_code: string, state_code: string) {
-    return await this.stateRepository.findOne({
+    const res = await this.stateRepository.findOne({
       where: {
         country_code,
         state_code,
       },
     });
+    
+    if(!res){
+      return {
+        country_code,
+        state_code,
+        name: state_code
+      }
+    }
+    
+    return res
   }
 }
