@@ -65,13 +65,13 @@ export class ServiceRequestCreatedHandler
 
     const countryName = await (
       await this.countryService.getByIso2Code(serviceRequest.country)
-    )?.name;
+    ).name;
     const regionName = await (
       await this.stateService.getState(
         serviceRequest.country,
         serviceRequest.region,
       )
-    )?.name;
+    ).name;
 
     const context = {
       service_name: serviceRequest.serviceCategory,

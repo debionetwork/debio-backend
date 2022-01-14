@@ -6,7 +6,7 @@ export async function queryServiceRequestById(
   requestId: string,
 ): Promise<ServiceRequest> {
   const resp = (
-    await api?.query?.serviceRequest.requestById(requestId)
+    await api.query.serviceRequest.requestById(requestId)
   ).toHuman();
   return new ServiceRequest(resp);
 }
@@ -16,7 +16,7 @@ export async function queryServiceInvoiceById(
   serviceHash: string,
 ): Promise<ServiceInvoice> {
   const resp = (
-    await api?.query?.serviceRequest.serviceInvoiceById(serviceHash)
+    await api.query.serviceRequest.serviceInvoiceById(serviceHash)
   ).toHuman();
   return new ServiceInvoice(resp);
 }
@@ -26,7 +26,7 @@ export async function queryServiceInvoiceByOrderId(
   orderId: string,
 ): Promise<ServiceInvoice> {
   const resp = (
-    await api?.query?.serviceRequest.serviceInvoiceByOrderId(orderId)
+    await api.query.serviceRequest.serviceInvoiceByOrderId(orderId)
   ).toHuman();
   return new ServiceInvoice(resp);
 }
