@@ -177,8 +177,8 @@ export class SubstrateController {
     const bindingEth = await setEthAddress(
       this.substrateService.api,
       this.substrateService.pair,
-      ethAddress,
       accountId,
+      ethAddress,
     );
 
     if (!bindingEth) {

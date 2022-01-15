@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { TransactionLoggingService } from 'src/common/modules/transaction-logging';
+import { TransactionLoggingService } from '../../common/modules/transaction-logging';
 
 @Injectable()
 export class TransactionService {
@@ -23,6 +23,8 @@ export class TransactionService {
           }
         }
       });
+    } else {
+      throw new HttpException('Cannot find transaction', 400);
     }
   }
 
@@ -36,6 +38,10 @@ export class TransactionService {
       }
     });
 
+    if (orders.body.hits.hits.length <= 0) {
+      throw new HttpException('Cannot find transaction hash', 400);
+    }
+    
     const { _source } = orders.body.hits.hits[0];
     return _source['transaction_hash'];
   }
@@ -43,6 +49,10 @@ export class TransactionService {
   async getTransactionHashFromPG(order_id: string) {
     const transaction = await this.transactionLoggingService.getLoggingByOrderId(order_id);
     
+    if (!transaction) {
+      throw new HttpException('Cannot find transaction hash', 400);
+    }
+
     return transaction.transaction_hash;
   }
 }
