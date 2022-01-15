@@ -5,11 +5,6 @@ import {
   SmartContract,
   WalletSigner,
 } from 'nestjs-ethers';
-import {
-  getFile,
-  createFile,
-  checkIfFileOrDirectoryExists,
-} from '../../common/modules/helper/storage.helper';
 import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
