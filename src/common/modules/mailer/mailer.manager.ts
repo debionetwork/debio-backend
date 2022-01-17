@@ -1,10 +1,17 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { CustomerStakingRequestService, LabRegister } from './models';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { EmailNotificationDto } from './dto/email-notification.dto';
+import { CustomerStakingRequestService, LabRegister, EmailNotification } from './models';
 
 @Injectable()
 export class MailerManager {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    @InjectRepository(EmailNotification)
+    private readonly emailNotificationRepository: Repository<EmailNotification>,
+    ) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
@@ -51,5 +58,52 @@ export class MailerManager {
       },
       attachments: files,
     });
+  }
+
+  async insertEmailNotification(data: EmailNotificationDto) {
+    try {
+      return this.emailNotificationRepository.save(data)
+    } catch (error) {
+      return error
+    }
+  }
+
+  async getPendingLabRegisterNotification(ref_num) {
+    try {
+      return this.emailNotificationRepository.find({
+        where: {
+          is_email_sent: false,
+          notification_type: 'LabRegister'
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async getPendingCustomerRequestServiceNotification(ref_num) {
+    try {
+      return this.emailNotificationRepository.find({
+        where: {
+          is_email_sent: false,
+          notification_type: 'Customer Staking Request Service'
+        },
+      });
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async setEmailNotificationSent(ref_number) {
+    try {
+      return this.emailNotificationRepository.update(
+        { ref_number },
+        { 
+          sent_at: new Date(),
+          is_email_sent: true,
+        })
+    } catch (error) {
+      return error;
+    }
   }
 }

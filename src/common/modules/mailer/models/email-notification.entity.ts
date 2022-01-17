@@ -12,7 +12,7 @@ export class EmailNotification {
 	notification_type: string;
 
 	@Column()
-	status: string;
+	is_email_sent: boolean;
 
 	@Column()
 	created_at: Date;
