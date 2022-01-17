@@ -75,12 +75,12 @@ describe('Rating Service Unit Tests', () => {
   it('should get rating by lab Id', () => {
     // Arrange
     const EXPECTED_RESULTS = 0;
-    const LAB_ID = "LAB_ID"
+    const LAB_ID = "LAB_ID";
     const EXPECTED_PARAM = {
-        where: {
-            lab_id: LAB_ID
-        }
-    }
+      where: {
+        lab_id: LAB_ID
+      }
+    };
 
     repositoryMock.find.mockReturnValue(EXPECTED_RESULTS);
 
@@ -96,12 +96,12 @@ describe('Rating Service Unit Tests', () => {
   it('should get rating by order Id', () => {
     // Arrange
     const EXPECTED_RESULTS = 0;
-    const ORDER_ID = "ORDER_ID"
+    const ORDER_ID = "ORDER_ID";
     const EXPECTED_PARAM = {
-        where: {
-            order_id: ORDER_ID
-        }
-    }
+      where: {
+        order_id: ORDER_ID
+      }
+  };
 
     repositoryMock.findOne.mockReturnValue(EXPECTED_RESULTS);
 
@@ -117,9 +117,9 @@ describe('Rating Service Unit Tests', () => {
   it('should get rating by service Id from cache', async () => {
     // Arrange
     const MOCK_RESULTS = [
-        {
-           rating: 5,
-        }
+      {
+        rating: 5,
+      }
     ];
     const SERVICE_ID = "SERVICE_ID";
     const EXPECTED_RESULTS = {
@@ -146,9 +146,9 @@ describe('Rating Service Unit Tests', () => {
   it('should get rating by service Id', async () => {
     // Arrange
     const MOCK_RESULTS = [
-        {
-           rating: 5,
-        }
+      {
+        rating: 5,
+      }
     ];
     const SERVICE_ID = "SERVICE_ID";
     const EXPECTED_RESULTS = {
@@ -186,11 +186,11 @@ describe('Rating Service Unit Tests', () => {
     const LAB_ID = "LAB_ID";
     const SERVICE_ID = "SERVICE_ID";
     const MOCK_RESULTS = [
-        {
-            lab_id: LAB_ID,
-            service_id: SERVICE_ID,
-            rating: 5,
-        }
+      {
+        lab_id: LAB_ID,
+        service_id: SERVICE_ID,
+        rating: 5,
+      }
     ];
 
     const EXPECTED_RESULTS = [
@@ -228,11 +228,11 @@ describe('Rating Service Unit Tests', () => {
     const LAB_ID = "LAB_ID";
     const SERVICE_ID = "SERVICE_ID";
     const MOCK_RESULTS = [
-        {
-            lab_id: LAB_ID,
-            service_id: SERVICE_ID,
-            rating: 5,
-        }
+      {
+        lab_id: LAB_ID,
+        service_id: SERVICE_ID,
+        rating: 5,
+      }
     ];
 
     const EXPECTED_RESULTS = [
