@@ -21,6 +21,7 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
 
 export const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(
   () => ({
+    new: jest.fn((entity) => entity),
     now: jest.fn((entity) => entity),
     nowAndAdd: jest.fn((entity) => entity),
   }),
