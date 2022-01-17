@@ -1,5 +1,6 @@
 import { DateTimeProxy } from 'src/common/proxies/date-time/date-time.proxy';
 import { Repository } from 'typeorm';
+import { Cache as CacheManager } from "cache-manager";
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -50,4 +51,12 @@ export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
   () => ({
     sendMail: jest.fn((entity) => entity),
   }),
+);
+
+export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(
+  () => ({
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+  })
 );
