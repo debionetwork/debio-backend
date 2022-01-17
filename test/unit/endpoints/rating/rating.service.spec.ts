@@ -71,4 +71,199 @@ describe('Rating Service Unit Tests', () => {
     expect(repositoryMock.save).toHaveBeenCalled();
     expect(repositoryMock.save).toHaveBeenCalledWith(EXPECTED_PARAM);
   });
+
+  it('should get rating by lab Id', () => {
+    // Arrange
+    const EXPECTED_RESULTS = 0;
+    const LAB_ID = "LAB_ID"
+    const EXPECTED_PARAM = {
+        where: {
+            lab_id: LAB_ID
+        }
+    }
+
+    repositoryMock.find.mockReturnValue(EXPECTED_RESULTS);
+
+    // Act
+    const RESULTS = ratingService.getRatingByLabId(LAB_ID);
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(repositoryMock.find).toHaveBeenCalled();
+    expect(repositoryMock.find).toHaveBeenCalledWith(EXPECTED_PARAM);
+  });
+
+  it('should get rating by order Id', () => {
+    // Arrange
+    const EXPECTED_RESULTS = 0;
+    const ORDER_ID = "ORDER_ID"
+    const EXPECTED_PARAM = {
+        where: {
+            order_id: ORDER_ID
+        }
+    }
+
+    repositoryMock.findOne.mockReturnValue(EXPECTED_RESULTS);
+
+    // Act
+    const RESULTS = ratingService.getRatingByOrderId(ORDER_ID);
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(repositoryMock.findOne).toHaveBeenCalled();
+    expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAM);
+  });
+
+  it('should get rating by service Id from cache', async () => {
+    // Arrange
+    const MOCK_RESULTS = [
+        {
+           rating: 5,
+        }
+    ];
+    const SERVICE_ID = "SERVICE_ID";
+    const EXPECTED_RESULTS = {
+        service_id: SERVICE_ID,
+        rating_service: null,
+        sum_rating_service: MOCK_RESULTS[0].rating,
+        count_rating_service: MOCK_RESULTS.length,
+    };
+    EXPECTED_RESULTS.rating_service = EXPECTED_RESULTS.sum_rating_service / EXPECTED_RESULTS.count_rating_service;
+
+    cacheMock.get.mockReturnValue(MOCK_RESULTS);
+
+    // Act
+    const RESULTS = await ratingService.getRatingByServiceId(SERVICE_ID);
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith(SERVICE_ID);
+    expect(cacheMock.set).toHaveBeenCalledTimes(0);
+    expect(repositoryMock.find).toHaveBeenCalledTimes(0);
+  });
+
+  it('should get rating by service Id', async () => {
+    // Arrange
+    const MOCK_RESULTS = [
+        {
+           rating: 5,
+        }
+    ];
+    const SERVICE_ID = "SERVICE_ID";
+    const EXPECTED_RESULTS = {
+        service_id: SERVICE_ID,
+        rating_service: null,
+        sum_rating_service: MOCK_RESULTS[0].rating,
+        count_rating_service: MOCK_RESULTS.length,
+    };
+    EXPECTED_RESULTS.rating_service = EXPECTED_RESULTS.sum_rating_service / EXPECTED_RESULTS.count_rating_service;
+
+    const EXPECTED_PARAM = {
+        where: {
+            service_id: SERVICE_ID
+        }
+    }
+
+    cacheMock.get.mockReturnValue(false);
+    repositoryMock.find.mockReturnValue(MOCK_RESULTS);
+
+    // Act
+    const RESULTS = await ratingService.getRatingByServiceId(SERVICE_ID);
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith(SERVICE_ID);
+    expect(repositoryMock.find).toHaveBeenCalled();
+    expect(repositoryMock.find).toHaveBeenCalledWith(EXPECTED_PARAM);
+    expect(cacheMock.set).toHaveBeenCalled();
+    expect(cacheMock.set).toHaveBeenCalledWith(SERVICE_ID, MOCK_RESULTS, { ttl: 3600 });
+  });
+
+  it('should get all ratings by service Id', async () => {
+    // Arrange
+    const LAB_ID = "LAB_ID";
+    const SERVICE_ID = "SERVICE_ID";
+    const MOCK_RESULTS = [
+        {
+            lab_id: LAB_ID,
+            service_id: SERVICE_ID,
+            rating: 5,
+        }
+    ];
+
+    const EXPECTED_RESULTS = [
+        {
+           count_rating_lab: MOCK_RESULTS.length,
+           lab_id: LAB_ID,
+           rating_lab: MOCK_RESULTS[0].rating,
+           services: [
+              {
+                 count_rating_service: MOCK_RESULTS.length,
+                 rating_service: MOCK_RESULTS[0].rating,
+                 service_id: SERVICE_ID,
+                 sum_rating_service: MOCK_RESULTS[0].rating
+              }
+           ],
+           sum_rating_lab: MOCK_RESULTS[0].rating
+        }
+    ];
+
+    cacheMock.get.mockReturnValue(MOCK_RESULTS);
+
+    // Act
+    const RESULTS = await ratingService.getAllByServiceId();
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith('getAllRating');
+    expect(cacheMock.set).toHaveBeenCalledTimes(0);
+    expect(repositoryMock.find).toHaveBeenCalledTimes(0);
+  });
+
+  it('should get all ratings by service Id', async () => {
+    // Arrange
+    const LAB_ID = "LAB_ID";
+    const SERVICE_ID = "SERVICE_ID";
+    const MOCK_RESULTS = [
+        {
+            lab_id: LAB_ID,
+            service_id: SERVICE_ID,
+            rating: 5,
+        }
+    ];
+
+    const EXPECTED_RESULTS = [
+        {
+           count_rating_lab: MOCK_RESULTS.length,
+           lab_id: LAB_ID,
+           rating_lab: MOCK_RESULTS[0].rating,
+           services: [
+              {
+                 count_rating_service: MOCK_RESULTS.length,
+                 rating_service: MOCK_RESULTS[0].rating,
+                 service_id: SERVICE_ID,
+                 sum_rating_service: MOCK_RESULTS[0].rating
+              }
+           ],
+           sum_rating_lab: MOCK_RESULTS[0].rating
+        }
+    ];
+
+    cacheMock.get.mockReturnValue(false);
+    repositoryMock.find.mockReturnValue(MOCK_RESULTS);
+
+    // Act
+    const RESULTS = await ratingService.getAllByServiceId();
+
+    // Assert
+    expect(RESULTS).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith('getAllRating');
+    expect(repositoryMock.find).toHaveBeenCalled();
+    expect(cacheMock.set).toHaveBeenCalled();
+    expect(cacheMock.set).toHaveBeenCalledWith('getAllRating', MOCK_RESULTS, { ttl: 3600 });
+  });
 });
