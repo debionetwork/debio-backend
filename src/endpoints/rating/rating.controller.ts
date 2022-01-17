@@ -47,18 +47,18 @@ export class RatingController {
     await this.cacheManager.del('ratings');
     await this.cacheManager.del(data.service_id);
     try {
-      response.status(201).send(await this.ratingService.insert(data));
+      return response.status(201).send(await this.ratingService.insert(data));
     } catch (error) {
-      response.status(500).send(error);
+      return response.status(500).send(error);
     }
   }
 
   @Get('service')
   async getAllService(@Res() response: Response) {
     try {
-      response.status(200).send(await this.ratingService.getAllByServiceId());
+      return response.status(200).send(await this.ratingService.getAllByServiceId());
     } catch (error) {
-      response.status(500).send(error);
+      return response.status(500).send(error);
     }
   }
 
@@ -68,7 +68,7 @@ export class RatingController {
     @Param('service_id') service_id: string,
     @Res() response: Response,
   ) {
-    response
+    return response
       .status(200)
       .send(await this.ratingService.getRatingByServiceId(service_id));
   }
@@ -89,7 +89,7 @@ export class RatingController {
       );
 
       if (isCacheReady) {
-        response.status(200).send(isCacheReady);
+        return response.status(200).send(isCacheReady);
       }
     }
     const labRatings = await this.ratingService.getRatingByLabId(labor_id);
@@ -110,6 +110,6 @@ export class RatingController {
     }
     cachingData.push(result);
     await this.cacheManager.set('ratings', cachingData, { ttl: 1800 });
-    response.status(200).send(result);
+    return response.status(200).send(result);
   }
 }
