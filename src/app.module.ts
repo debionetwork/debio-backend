@@ -22,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
+import { CachesModule } from './common';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -67,6 +68,7 @@ require('dotenv').config(); // eslint-disable-line
     BountyModule,
     SchedulersModule,
     HealthModule,
+    CachesModule
   ],
 })
 export class AppModule {}

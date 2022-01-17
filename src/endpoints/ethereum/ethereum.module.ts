@@ -3,6 +3,7 @@ import { EthersModule } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 import { EthereumController } from './ethereum.controller';
 import { EscrowModule } from '../escrow/escrow.module';
+import { CachesModule } from '../../common/modules/caches';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { EscrowModule } from '../escrow/escrow.module';
       useDefaultProvider: true,
     }),
     forwardRef(() => EscrowModule),
+    CachesModule
   ],
   controllers: [EthereumController],
   providers: [EthereumService],
