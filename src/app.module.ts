@@ -22,8 +22,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
-import { CachesModule } from './common';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
+import { CachesModule, MailModule } from './common';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -54,6 +54,7 @@ require('dotenv').config(); // eslint-disable-line
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,
+    MailModule,
     RewardModule,
     RatingModule,
     EmrModule,
