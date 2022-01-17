@@ -8,7 +8,6 @@ import { RatingController } from '../../../../src/endpoints/rating/rating.contro
 import { RatingService } from '../../../../src/endpoints/rating/rating.service';
 import { cacheMockFactory, dateTimeProxyMockFactory, MockType, repositoryMockFactory } from '../../mock';
 import { DateTimeProxy } from '../../../../src/common';
-import { Repository } from 'typeorm';
 import { CreateRatingDto } from '../../../../src/endpoints/rating/dto/create-rating.dto';
 
 describe('Rating Controller', () => {
@@ -195,5 +194,84 @@ describe('Rating Controller', () => {
     expect(cacheMock.del).toHaveBeenCalledWith(PARAM.service_id);
     expect(ratingServiceMock.insert).toHaveBeenCalled();
     expect(ratingServiceMock.insert).toHaveBeenCalledWith(PARAM);
+  });
+
+  it('should get lab rating from cache', async () => {
+    // Arrange
+    const LAB_ID = "LAB_ID";
+    const EXPECTED_RESULTS = {
+      data: 1,
+      lab_id: LAB_ID,
+    };
+    const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS,
+      status: (code: number) => RESPONSE,
+    } as Response;
+    cacheMock.get.mockReturnValue(EXPECTED_RESULTS);
+
+    // Assert
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith('ratings');
+  });
+
+  it('should get lab rating', async () => {
+    // Arrange
+    const MOCK_RESULT = [
+      {
+        rating: 5,
+      }
+    ];
+    ratingServiceMock.getRatingByLabId.mockReturnValue(MOCK_RESULT);
+
+    const LAB_ID = "LAB_ID";
+    const EXPECTED_RESULTS = {
+      lab_id: LAB_ID,
+      rating: MOCK_RESULT[0].rating,
+      sum: MOCK_RESULT[0].rating,
+      count: MOCK_RESULT.length,
+    };
+    const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS,
+      status: (code: number) => RESPONSE,
+    } as Response;
+    cacheMock.get.mockReturnValue(false);
+
+    // Assert
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith('ratings');
+    expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalled();
+    expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalledWith(LAB_ID);
+    expect(cacheMock.set).toHaveBeenCalled();
+    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], { ttl: 1800 });
+  });
+
+  it('should get null lab rating', async () => {
+    // Arrange
+    const MOCK_RESULT = [];
+    ratingServiceMock.getRatingByLabId.mockReturnValue(MOCK_RESULT);
+
+    const LAB_ID = "LAB_ID";
+    const EXPECTED_RESULTS = {
+      lab_id: LAB_ID,
+      rating: null,
+      sum: null,
+      count: MOCK_RESULT.length,
+    };
+    const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS,
+      status: (code: number) => RESPONSE,
+    } as Response;
+    cacheMock.get.mockReturnValue(false);
+
+    // Assert
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(cacheMock.get).toHaveBeenCalled();
+    expect(cacheMock.get).toHaveBeenCalledWith('ratings');
+    expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalled();
+    expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalledWith(LAB_ID);
+    expect(cacheMock.set).toHaveBeenCalled();
+    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], { ttl: 1800 });
   });
 });
