@@ -5,11 +5,8 @@ import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
 
 @Module({
-  imports: [
-    TransactionLoggingModule,
-    ElasticsearchModule
-  ],
+  imports: [TransactionLoggingModule, ElasticsearchModule],
   controllers: [TransactionController],
-  providers: [TransactionService]
+  providers: [TransactionService],
 })
 export class TransactionModule {}

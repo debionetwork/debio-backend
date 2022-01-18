@@ -12,7 +12,7 @@ import { CachesModule } from '../../common/modules/caches';
       useDefaultProvider: true,
     }),
     forwardRef(() => EscrowModule),
-    CachesModule
+    CachesModule,
   ],
   controllers: [EthereumController],
   providers: [EthereumService],

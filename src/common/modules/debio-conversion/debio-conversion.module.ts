@@ -3,9 +3,7 @@ import { ProcessEnvModule } from '../../proxies/process-env';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({
-  imports: [
-    ProcessEnvModule,
-  ],
+  imports: [ProcessEnvModule],
   providers: [DebioConversionService],
   exports: [DebioConversionService],
 })

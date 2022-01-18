@@ -56,7 +56,9 @@ export class RatingController {
   @Get('service')
   async getAllService(@Res() response: Response) {
     try {
-      return response.status(200).send(await this.ratingService.getAllByServiceId());
+      return response
+        .status(200)
+        .send(await this.ratingService.getAllByServiceId());
     } catch (error) {
       return response.status(500).send(error);
     }

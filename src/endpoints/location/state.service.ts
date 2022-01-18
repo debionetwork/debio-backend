@@ -29,15 +29,15 @@ export class StateService extends TypeOrmQueryService<State> {
         state_code,
       },
     });
-    
-    if(!res){
+
+    if (!res) {
       return {
         country_code,
         state_code,
-        name: state_code
-      }
+        name: state_code,
+      };
     }
-    
-    return res
+
+    return res;
   }
 }

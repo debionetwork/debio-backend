@@ -31,8 +31,8 @@ describe('City Service Unit Tests', () => {
 
   it('should find all cities', () => {
     // Arrange
-    const COUNTRY_CODE = "CODE";
-    const STATE_CODE = "CODE";
+    const COUNTRY_CODE = 'CODE';
+    const STATE_CODE = 'CODE';
     const RESULTS = [
       {
         city: 'City 1',
@@ -42,13 +42,13 @@ describe('City Service Unit Tests', () => {
       },
     ];
     const PARAM = {
-        where: { 
-            country_code: COUNTRY_CODE, 
-            state_code: STATE_CODE 
-        },
-        order: {
-            name: 'ASC',
-        },
+      where: {
+        country_code: COUNTRY_CODE,
+        state_code: STATE_CODE,
+      },
+      order: {
+        name: 'ASC',
+      },
     };
     repositoryMock.find.mockReturnValue(RESULTS);
 

@@ -12,7 +12,7 @@ require('dotenv').config(); // eslint-disable-line
       store: redisStore,
       host: process.env.HOST_REDIS,
       port: process.env.PORT_REDIS,
-      auth_pass: process.env.REDIS_PASSWORD
+      auth_pass: process.env.REDIS_PASSWORD,
     }),
   ],
   providers: [CachesService],

@@ -16,7 +16,7 @@ export class EthereumService {
   constructor(
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
-    private readonly cachesService: CachesService
+    private readonly cachesService: CachesService,
   ) {}
 
   async getLastBlock(): Promise<number> {

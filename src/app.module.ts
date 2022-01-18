@@ -68,7 +68,7 @@ require('dotenv').config(); // eslint-disable-line
     BountyModule,
     SchedulersModule,
     HealthModule,
-    CachesModule
+    CachesModule,
   ],
 })
 export class AppModule {}

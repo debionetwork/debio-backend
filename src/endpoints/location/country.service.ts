@@ -23,16 +23,16 @@ export class CountryService extends TypeOrmQueryService<Country> {
   }
 
   async getByIso2Code(iso2: string) {
-    const res =  await this.countryRepository.findOne({
+    const res = await this.countryRepository.findOne({
       where: { iso2 },
     });
-  
-    if(!res){
+
+    if (!res) {
       return {
         iso2,
-        name: iso2
-      }
+        name: iso2,
+      };
     }
-    return res
+    return res;
   }
 }
