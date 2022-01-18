@@ -137,7 +137,7 @@ jobs:
               --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
               --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
-              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.port=${{ steps.secrets.outputs.REDIS_PORT }} \
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
@@ -280,7 +280,7 @@ jobs:
               --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
               --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
-              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.port=${{ steps.secrets.outputs.REDIS_PORT }} \
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
@@ -423,7 +423,7 @@ jobs:
               --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
               --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
-              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.port=${{ steps.secrets.outputs.REDIS_PORT }} \
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
@@ -566,7 +566,7 @@ jobs:
               --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
               --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
-              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.port=${{ steps.secrets.outputs.REDIS_PORT }} \
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
@@ -709,7 +709,7 @@ jobs:
               --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
               --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
               --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
-              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.port=${{ steps.secrets.outputs.REDIS_PORT }} \
               --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
