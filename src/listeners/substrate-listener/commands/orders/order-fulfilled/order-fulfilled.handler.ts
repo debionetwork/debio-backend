@@ -24,13 +24,14 @@ import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
 export class OrderFulfilledHandler
   implements ICommandHandler<OrderFulfilledCommand>
 {
+  private readonly logger: Logger = new Logger(OrderFulfilledCommand.name);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
     private readonly rewardService: RewardService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderFulfilledCommand) {

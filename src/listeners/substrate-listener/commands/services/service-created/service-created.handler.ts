@@ -22,7 +22,7 @@ export class ServiceCreatedHandler
   ) {}
 
   async execute(command: ServiceCreatedCommand) {
-    const service: Service = command.services[0].toHuman();
+    const service: Service = command.services;
     const lab: Lab = await queryLabById(
       this.substrateService.api,
       service.owner_id,
