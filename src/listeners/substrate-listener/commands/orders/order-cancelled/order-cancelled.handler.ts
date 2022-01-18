@@ -11,10 +11,11 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 export class OrderCancelledHandler
   implements ICommandHandler<OrderCancelledCommand>
 {
+  private readonly logger: Logger = new Logger(OrderCancelledCommand.name);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly escrowService: EscrowService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderCancelledCommand) {

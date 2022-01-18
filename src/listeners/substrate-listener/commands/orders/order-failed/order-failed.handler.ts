@@ -8,10 +8,11 @@ import { refundOrder, SubstrateService } from '../../../../../common';
 @Injectable()
 @CommandHandler(OrderFailedCommand)
 export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
+  private readonly logger: Logger = new Logger(OrderFailedCommand.name);
+
   constructor(
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderFailedCommand) {

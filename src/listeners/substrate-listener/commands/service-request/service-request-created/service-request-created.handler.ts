@@ -16,12 +16,13 @@ import { StateService } from '../../../../../endpoints/location/state.service';
 export class ServiceRequestCreatedHandler
   implements ICommandHandler<ServiceRequestCreatedCommand>
 {
+  private readonly logger: Logger = new Logger(ServiceRequestCreatedCommand.name);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
     private readonly mailerManager: MailerManager,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
