@@ -54,7 +54,6 @@ require('dotenv').config(); // eslint-disable-line
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,
-    MailModule,
     RewardModule,
     RatingModule,
     EmrModule,

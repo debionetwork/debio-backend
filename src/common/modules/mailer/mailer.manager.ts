@@ -68,7 +68,7 @@ export class MailerManager {
     }
   }
 
-  async getPendingLabRegisterNotification(ref_num) {
+  async getPendingLabRegisterNotification() {
     try {
       return this.emailNotificationRepository.find({
         where: {

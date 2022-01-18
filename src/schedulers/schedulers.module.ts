@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SubstrateModule } from '../common';
+import { SubstrateModule, SubstrateService } from '../common';
 import { UnstakedService } from './unstaked/unstaked.service';
 
 @Module({
@@ -17,6 +17,6 @@ import { UnstakedService } from './unstaked/unstaked.service';
     SubstrateModule,
   ],
   exports: [ElasticsearchModule],
-  providers: [UnstakedService],
+  providers: [UnstakedService, SubstrateService],
 })
 export class SchedulersModule {}
