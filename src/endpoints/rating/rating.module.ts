@@ -7,7 +7,7 @@ import { RatingService } from './rating.service';
 // import dotenv from 'dotenv';
 @Module({
   imports: [
-    CacheModule.register(), 
+    CacheModule.register(),
     TypeOrmModule.forFeature([LabRating]),
     DateTimeModule,
   ],

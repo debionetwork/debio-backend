@@ -1,12 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Cache as CacheManager } from "cache-manager";
+import { Cache as CacheManager } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { Response } from 'express';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { LabRating } from '../../../../src/endpoints/rating/models/rating.entity';
 import { RatingController } from '../../../../src/endpoints/rating/rating.controller';
 import { RatingService } from '../../../../src/endpoints/rating/rating.service';
-import { cacheMockFactory, dateTimeProxyMockFactory, MockType, repositoryMockFactory } from '../../mock';
+import {
+  cacheMockFactory,
+  dateTimeProxyMockFactory,
+  MockType,
+  repositoryMockFactory,
+} from '../../mock';
 import { DateTimeProxy } from '../../../../src/common';
 import { CreateRatingDto } from '../../../../src/endpoints/rating/dto/create-rating.dto';
 
@@ -30,7 +35,10 @@ describe('Rating Controller', () => {
       providers: [
         RatingController,
         { provide: RatingService, useFactory: ratingServiceMockFactory },
-        { provide: getRepositoryToken(LabRating), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(LabRating),
+          useFactory: repositoryMockFactory,
+        },
         { provide: CACHE_MANAGER, useFactory: cacheMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
       ],
@@ -48,7 +56,7 @@ describe('Rating Controller', () => {
   it('should get rating by order Id', async () => {
     // Arrange
     const MOCK_RESULT = 0;
-    const ORDER_ID = "ORDER_ID";
+    const ORDER_ID = 'ORDER_ID';
     const EXPECTED_RESULTS = {
       data: MOCK_RESULT,
     };
@@ -67,21 +75,25 @@ describe('Rating Controller', () => {
   it('should get rating by service Id', async () => {
     // Arrange
     const MOCK_RESULT = 0;
-    const SERVICE_ID = "SERVICE_ID";
+    const SERVICE_ID = 'SERVICE_ID';
     const EXPECTED_RESULTS = {
       data: MOCK_RESULT,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
 
     ratingServiceMock.getRatingByServiceId.mockReturnValue(MOCK_RESULT);
 
     // Assert
-    expect(await ratingController.getByServiceId(SERVICE_ID, RESPONSE)).toBe(EXPECTED_RESULTS);
+    expect(await ratingController.getByServiceId(SERVICE_ID, RESPONSE)).toBe(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getRatingByServiceId).toHaveBeenCalled();
-    expect(ratingServiceMock.getRatingByServiceId).toHaveBeenCalledWith(SERVICE_ID);
+    expect(ratingServiceMock.getRatingByServiceId).toHaveBeenCalledWith(
+      SERVICE_ID,
+    );
   });
 
   it('should get all rating by service Id', async () => {
@@ -91,14 +103,16 @@ describe('Rating Controller', () => {
       data: MOCK_RESULT,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
 
     ratingServiceMock.getAllByServiceId.mockReturnValue(MOCK_RESULT);
 
     // Assert
-    expect(await ratingController.getAllService(RESPONSE)).toBe(EXPECTED_RESULTS);
+    expect(await ratingController.getAllService(RESPONSE)).toBe(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getAllByServiceId).toHaveBeenCalled();
   });
 
@@ -106,8 +120,8 @@ describe('Rating Controller', () => {
     // Arrange
     const EXPECTED_RESULTS = 0;
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
 
     ratingServiceMock.getAllByServiceId.mockImplementationOnce(() =>
@@ -115,26 +129,30 @@ describe('Rating Controller', () => {
     );
 
     // Assert
-    expect(await ratingController.getAllService(RESPONSE)).toBe(EXPECTED_RESULTS);
+    expect(await ratingController.getAllService(RESPONSE)).toBe(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getAllByServiceId).toHaveBeenCalled();
   });
 
   it('should send message and not create', async () => {
     // Arrange
     const PARAM = new CreateRatingDto();
-    PARAM.order_id = "ORDER_ID";
+    PARAM.order_id = 'ORDER_ID';
     const MOCK_RESULT = 1;
     const EXPECTED_RESULTS = {
       message: "You've Rated Before",
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     ratingServiceMock.getRatingByOrderId.mockReturnValue(MOCK_RESULT);
 
     // Assert
-    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getRatingByOrderId).toHaveBeenCalled();
     expect(cacheMock.del).toHaveBeenCalledTimes(0);
     expect(ratingServiceMock.insert).toHaveBeenCalledTimes(0);
@@ -143,22 +161,26 @@ describe('Rating Controller', () => {
   it('should insert', async () => {
     // Arrange
     const PARAM = new CreateRatingDto();
-    PARAM.service_id = "SERVICE_ID";
-    PARAM.order_id = "ORDER_ID";
+    PARAM.service_id = 'SERVICE_ID';
+    PARAM.order_id = 'ORDER_ID';
     const EXPECTED_RESULTS = {
       data: 0,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     ratingServiceMock.getRatingByOrderId.mockReturnValue(false);
     ratingServiceMock.insert.mockReturnValue(EXPECTED_RESULTS);
 
     // Assert
-    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getRatingByOrderId).toHaveBeenCalled();
-    expect(ratingServiceMock.getRatingByOrderId).toHaveBeenLastCalledWith(PARAM.order_id);
+    expect(ratingServiceMock.getRatingByOrderId).toHaveBeenLastCalledWith(
+      PARAM.order_id,
+    );
     expect(cacheMock.del).toHaveBeenCalledTimes(3);
     expect(cacheMock.del).toHaveBeenCalledWith('getAllRating');
     expect(cacheMock.del).toHaveBeenCalledWith('ratings');
@@ -170,14 +192,14 @@ describe('Rating Controller', () => {
   it('should throw and not insert', async () => {
     // Arrange
     const PARAM = new CreateRatingDto();
-    PARAM.service_id = "SERVICE_ID";
-    PARAM.order_id = "ORDER_ID";
+    PARAM.service_id = 'SERVICE_ID';
+    PARAM.order_id = 'ORDER_ID';
     const EXPECTED_RESULTS = {
       data: 0,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     ratingServiceMock.getRatingByOrderId.mockReturnValue(false);
     ratingServiceMock.insert.mockImplementationOnce(() =>
@@ -185,9 +207,13 @@ describe('Rating Controller', () => {
     );
 
     // Assert
-    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.create(PARAM, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(ratingServiceMock.getRatingByOrderId).toHaveBeenCalled();
-    expect(ratingServiceMock.getRatingByOrderId).toHaveBeenLastCalledWith(PARAM.order_id);
+    expect(ratingServiceMock.getRatingByOrderId).toHaveBeenLastCalledWith(
+      PARAM.order_id,
+    );
     expect(cacheMock.del).toHaveBeenCalledTimes(3);
     expect(cacheMock.del).toHaveBeenCalledWith('getAllRating');
     expect(cacheMock.del).toHaveBeenCalledWith('ratings');
@@ -198,19 +224,21 @@ describe('Rating Controller', () => {
 
   it('should get lab rating from cache', async () => {
     // Arrange
-    const LAB_ID = "LAB_ID";
+    const LAB_ID = 'LAB_ID';
     const EXPECTED_RESULTS = {
       data: 1,
       lab_id: LAB_ID,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     cacheMock.get.mockReturnValue(EXPECTED_RESULTS);
 
     // Assert
-    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(cacheMock.get).toHaveBeenCalled();
     expect(cacheMock.get).toHaveBeenCalledWith('ratings');
   });
@@ -220,11 +248,11 @@ describe('Rating Controller', () => {
     const MOCK_RESULT = [
       {
         rating: 5,
-      }
+      },
     ];
     ratingServiceMock.getRatingByLabId.mockReturnValue(MOCK_RESULT);
 
-    const LAB_ID = "LAB_ID";
+    const LAB_ID = 'LAB_ID';
     const EXPECTED_RESULTS = {
       lab_id: LAB_ID,
       rating: MOCK_RESULT[0].rating,
@@ -232,19 +260,23 @@ describe('Rating Controller', () => {
       count: MOCK_RESULT.length,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     cacheMock.get.mockReturnValue(false);
 
     // Assert
-    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(cacheMock.get).toHaveBeenCalled();
     expect(cacheMock.get).toHaveBeenCalledWith('ratings');
     expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalled();
     expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalledWith(LAB_ID);
     expect(cacheMock.set).toHaveBeenCalled();
-    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], { ttl: 1800 });
+    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], {
+      ttl: 1800,
+    });
   });
 
   it('should get null lab rating', async () => {
@@ -252,7 +284,7 @@ describe('Rating Controller', () => {
     const MOCK_RESULT = [];
     ratingServiceMock.getRatingByLabId.mockReturnValue(MOCK_RESULT);
 
-    const LAB_ID = "LAB_ID";
+    const LAB_ID = 'LAB_ID';
     const EXPECTED_RESULTS = {
       lab_id: LAB_ID,
       rating: null,
@@ -260,18 +292,22 @@ describe('Rating Controller', () => {
       count: MOCK_RESULT.length,
     };
     const RESPONSE: Response = {
-      send: (body?: any): any => EXPECTED_RESULTS,
-      status: (code: number) => RESPONSE,
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     cacheMock.get.mockReturnValue(false);
 
     // Assert
-    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await ratingController.getLabRating(LAB_ID, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
     expect(cacheMock.get).toHaveBeenCalled();
     expect(cacheMock.get).toHaveBeenCalledWith('ratings');
     expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalled();
     expect(ratingServiceMock.getRatingByLabId).toHaveBeenCalledWith(LAB_ID);
     expect(cacheMock.set).toHaveBeenCalled();
-    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], { ttl: 1800 });
+    expect(cacheMock.set).toHaveBeenCalledWith('ratings', [EXPECTED_RESULTS], {
+      ttl: 1800,
+    });
   });
 });

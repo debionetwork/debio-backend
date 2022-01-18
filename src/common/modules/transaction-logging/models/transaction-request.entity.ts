@@ -30,5 +30,5 @@ export class TransactionRequest {
   parent_id: bigint;
 
   @Column()
-  transaction_hash: string
+  transaction_hash: string;
 }

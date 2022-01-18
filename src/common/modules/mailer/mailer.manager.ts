@@ -47,7 +47,7 @@ export class MailerManager {
         city: context.city,
         address: context.address,
         certifications: context.certifications,
-        services: context.services
+        services: context.services,
       },
       attachments: files,
     });

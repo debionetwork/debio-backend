@@ -1,9 +1,9 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { Cache as CacheManager } from "cache-manager";
-import { CachesService } from "../../../../../src/common/modules/caches";
-import { cacheMockFactory, MockType } from "../../../mock";
+import { Test, TestingModule } from '@nestjs/testing';
+import { Cache as CacheManager } from 'cache-manager';
+import { CachesService } from '../../../../../src/common/modules/caches';
+import { cacheMockFactory, MockType } from '../../../mock';
 import { when } from 'jest-when';
-import { CACHE_MANAGER } from "@nestjs/common";
+import { CACHE_MANAGER } from '@nestjs/common';
 
 describe('Caches Service Unit Test', () => {
   let cachesServiceMock: CachesService;
@@ -41,7 +41,9 @@ describe('Caches Service Unit Test', () => {
     const PARAM = 'last-block';
     const RESULT = 1;
 
-    when(cacheManagerMock.set).calledWith(PARAM, RESULT).mockReturnValue(RESULT);
+    when(cacheManagerMock.set)
+      .calledWith(PARAM, RESULT)
+      .mockReturnValue(RESULT);
 
     expect(cachesServiceMock.setLastBlock(RESULT)).resolves.toEqual(RESULT);
     expect(cacheManagerMock.set).toHaveBeenCalled();
