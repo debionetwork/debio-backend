@@ -4,6 +4,7 @@ import { Cache } from 'cache-manager';
 import { CreateRatingDto } from '../rating/dto/create-rating.dto';
 import { LabRating } from './models/rating.entity';
 import { Repository } from 'typeorm';
+import { DateTimeProxy } from '../../common';
 
 @Injectable()
 export class RatingService {
@@ -11,6 +12,7 @@ export class RatingService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     @InjectRepository(LabRating)
     private readonly ratingRepository: Repository<LabRating>,
+    private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
   async insert(data: CreateRatingDto) {
@@ -20,7 +22,7 @@ export class RatingService {
     rating.order_id = data.order_id;
     rating.rating_by = data.rating_by;
     rating.rating = data.rating;
-    rating.created = new Date();
+    rating.created = this.dateTimeProxy.new();
 
     await this.cacheManager.del('getAllRating');
     await this.cacheManager.del(data.service_id);

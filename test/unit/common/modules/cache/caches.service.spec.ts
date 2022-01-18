@@ -1,20 +1,13 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { Cache as CacheManager } from "cache-manager";
 import { CachesService } from "../../../../../src/common/modules/caches";
-import { MockType } from "test/unit/mock";
+import { cacheMockFactory, MockType } from "../../../mock";
 import { when } from 'jest-when';
 import { CACHE_MANAGER } from "@nestjs/common";
 
 describe('Caches Service Unit Test', () => {
   let cachesServiceMock: CachesService;
   let cacheManagerMock: MockType<CacheManager>;
-
-  const cacheMockFactory: () => MockType<CacheManager> = jest.fn(
-    () => ({
-      get: jest.fn(),
-      set: jest.fn()
-    })
-  );
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
