@@ -29,19 +29,19 @@ export class MailerService {
   async handlePendingLabRegister() {
     const labRegisterPending = await this.mailerManager.getPendingLabRegisterNotification()
 
-    for (const labRegister of labRegisterPending) {
+    labRegisterPending.forEach(async (data) => {
       const contextLab = await queryLabById(this.substrateService.api, labRegisterPending.ref_number);
 
-      const labRegister: LabRegister =await labToLabRegister(
-        this.substrateService.api,
-        contextLab,
-      );
-  
-      await this.mailerManager.sendLabRegistrationEmail(
-        process.env.EMAILS.split(','),
-        labRegister,
-      );
-    }
+    const labRegister: LabRegister = await labToLabRegister(
+      this.substrateService.api,
+      contextLab,
+    );
+
+    await this.mailerManager.sendLabRegistrationEmail(
+      process.env.EMAILS.split(','),
+      labRegister,
+    );
+    });
   }
 
 }
