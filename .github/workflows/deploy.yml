@@ -83,9 +83,9 @@ jobs:
             REDIS_STORE_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_URL
             REDIS_STORE_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
             REDIS_STORE_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
-            REDIS_SERVER_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_SERVER_HOST
-            REDIS_SERVER_PORT:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_SERVER_PORT
-            REDIS_SERVER_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_SERVER_PASSWORD
+            REDIS_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_HOST
+            REDIS_PORT:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_PORT
+            REDIS_PASSWORD:${{ secrets.DEV_GCP_PROJECT_ID }}/REDIS_PASSWORD
             EMAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAILS
@@ -133,12 +133,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
-              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
-              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
-              --set-string config.redisServer.host=${{ steps.secrets.outputs.REDIS_SERVER_HOST }} \
-              --set-string config.redisServer.post=${{ steps.secrets.outputs.REDIS_SERVER_PORT }} \
-              --set-string config.redisServer.password=${{ steps.secrets.outputs.REDIS_SERVER_PASSWORD }} \
+              --set-string config.redisStore.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
+              --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
+              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
@@ -226,9 +226,9 @@ jobs:
             REDIS_STORE_URL:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_STORE_URL
             REDIS_STORE_USERNAME:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
             REDIS_STORE_PASSWORD:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
-            REDIS_SERVER_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_SERVER_HOST
-            REDIS_SERVER_PORT:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_SERVER_PORT
-            REDIS_SERVER_PASSWORD:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_SERVER_PASSWORD
+            REDIS_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_HOST
+            REDIS_PORT:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_PORT
+            REDIS_PASSWORD:${{ secrets.STG_GCP_PROJECT_ID }}/REDIS_PASSWORD
             EMAIL:${{ secrets.STG_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.STG_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.STG_GCP_PROJECT_ID }}/EMAILS
@@ -276,12 +276,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
-              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
-              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
-              --set-string config.redisServer.host=${{ steps.secrets.outputs.REDIS_SERVER_HOST }} \
-              --set-string config.redisServer.post=${{ steps.secrets.outputs.REDIS_SERVER_PORT }} \
-              --set-string config.redisServer.password=${{ steps.secrets.outputs.REDIS_SERVER_PASSWORD }} \
+              --set-string config.redisStore.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
+              --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
+              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
@@ -369,9 +369,9 @@ jobs:
             REDIS_STORE_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
             REDIS_STORE_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
             REDIS_STORE_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
-            REDIS_SERVER_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_SERVER_HOST
-            REDIS_SERVER_PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_SERVER_PORT
-            REDIS_SERVER_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_SERVER_PASSWORD
+            REDIS_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_HOST
+            REDIS_PORT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_PORT
+            REDIS_PASSWORD:${{ secrets.TESTNET_GCP_PROJECT_ID }}/REDIS_PASSWORD
             EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
@@ -419,12 +419,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
-              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
-              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
-              --set-string config.redisServer.host=${{ steps.secrets.outputs.REDIS_SERVER_HOST }} \
-              --set-string config.redisServer.post=${{ steps.secrets.outputs.REDIS_SERVER_PORT }} \
-              --set-string config.redisServer.password=${{ steps.secrets.outputs.REDIS_SERVER_PASSWORD }} \
+              --set-string config.redisStore.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
+              --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
+              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
@@ -512,9 +512,9 @@ jobs:
             REDIS_STORE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
             REDIS_STORE_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
             REDIS_STORE_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
-            REDIS_SERVER_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_HOST
-            REDIS_SERVER_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_PORT
-            REDIS_SERVER_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_PASSWORD
+            REDIS_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_HOST
+            REDIS_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_PORT
+            REDIS_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_PASSWORD
             EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
@@ -562,12 +562,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
-              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
-              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
-              --set-string config.redisServer.host=${{ steps.secrets.outputs.REDIS_SERVER_HOST }} \
-              --set-string config.redisServer.post=${{ steps.secrets.outputs.REDIS_SERVER_PORT }} \
-              --set-string config.redisServer.password=${{ steps.secrets.outputs.REDIS_SERVER_PASSWORD }} \
+              --set-string config.redisStore.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
+              --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
+              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
@@ -655,9 +655,9 @@ jobs:
             REDIS_STORE_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_URL
             REDIS_STORE_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_USERNAME
             REDIS_STORE_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_STORE_PASSWORD
-            REDIS_SERVER_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_HOST
-            REDIS_SERVER_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_PORT
-            REDIS_SERVER_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_SERVER_PASSWORD
+            REDIS_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_HOST
+            REDIS_PORT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_PORT
+            REDIS_PASSWORD:${{ secrets.MAINNET_GCP_PROJECT_ID }}/REDIS_PASSWORD
             EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAIL
             PASS_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PASS_EMAIL
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
@@ -705,12 +705,12 @@ jobs:
               --set-string config.elastic.node=${{ steps.secrets.outputs.ELASTICSEARCH_NODE }} \
               --set-string config.elastic.username=${{ steps.secrets.outputs.ELASTICSEARCH_USERNAME }} \
               --set-string config.elastic.password=${{ steps.secrets.outputs.ELASTICSEARCH_PASSWORD }} \
-              --set-string config.redis.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
-              --set-string config.redis.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
-              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
-              --set-string config.redisServer.host=${{ steps.secrets.outputs.REDIS_SERVER_HOST }} \
-              --set-string config.redisServer.post=${{ steps.secrets.outputs.REDIS_SERVER_PORT }} \
-              --set-string config.redisServer.password=${{ steps.secrets.outputs.REDIS_SERVER_PASSWORD }} \
+              --set-string config.redisStore.url=${{ steps.secrets.outputs.REDIS_STORE_URL }} \
+              --set-string config.redisStore.username=${{ steps.secrets.outputs.REDIS_STORE_USERNAME }} \
+              --set-string config.redisStore.password=${{ steps.secrets.outputs.REDIS_STORE_PASSWORD }} \
+              --set-string config.redis.host=${{ steps.secrets.outputs.REDIS_HOST }} \
+              --set-string config.redis.post=${{ steps.secrets.outputs.REDIS_PORT }} \
+              --set-string config.redis.password=${{ steps.secrets.outputs.REDIS_PASSWORD }} \
               --set-string config.email.email=${{ steps.secrets.outputs.EMAIL }} \
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
