@@ -6,7 +6,7 @@ import { LabController } from './labs/lab.controller';
 import { LabService } from './services/lab.service';
 import { OrderController } from './orders/order.controller';
 import { OrderService } from './services/order.service';
-import { RewardModule, SubstrateModule } from '../../common';
+import { ProcessEnvModule, RewardModule, SubstrateModule } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 
 @Module({
@@ -22,6 +22,7 @@ import { SubstrateController } from './substrate-endpoint.controller';
     }),
     SubstrateModule,
     RewardModule,
+    ProcessEnvModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [
