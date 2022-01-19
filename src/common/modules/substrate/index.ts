@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../proxies';
+import { forwardRef, Module } from '@nestjs/common';
+import { ProcessEnvModule } from '../..';
 import { SubstrateService } from './substrate.service';
 
 @Module({

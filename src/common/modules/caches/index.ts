@@ -1,5 +1,5 @@
-import { CacheModule, Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../proxies';
+import { CacheModule, forwardRef, Module } from '@nestjs/common';
+import { ProcessEnvModule } from '../..';
 import { CachesService } from './caches.service';
 import * as redisStore from 'cache-manager-redis-store';
 

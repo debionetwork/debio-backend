@@ -6,7 +6,6 @@ import { EmailEndpointController } from './email.controller';
   imports: [
     MailModule, 
     SubstrateModule,
-    ProcessEnvModule,
   ],
   controllers: [EmailEndpointController],
 })

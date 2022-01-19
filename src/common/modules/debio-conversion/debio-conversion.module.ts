@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../proxies/process-env';
+import { forwardRef, Module } from '@nestjs/common';
+import { ProcessEnvModule } from '../..';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({

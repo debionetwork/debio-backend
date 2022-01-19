@@ -5,3 +5,4 @@ export * from './reward';
 export * from './substrate';
 export * from './transaction-logging';
 export * from './caches';
+export * from './proxies';
