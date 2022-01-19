@@ -22,4 +22,3 @@ import { UnstakedService } from './unstaked/unstaked.service';
   providers: [UnstakedService, SubstrateService, MailerService],
 })
 export class SchedulersModule {}
-``
