@@ -17,7 +17,9 @@ import { StateService } from '../../../../../endpoints/location/state.service';
 export class ServiceRequestCreatedHandler
   implements ICommandHandler<ServiceRequestCreatedCommand>
 {
-  private readonly logger: Logger = new Logger(ServiceRequestCreatedCommand.name);
+  private readonly logger: Logger = new Logger(
+    ServiceRequestCreatedCommand.name,
+  );
 
   constructor(
     private readonly process: ProcessEnvProxy,

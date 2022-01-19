@@ -8,7 +8,6 @@ import {
   SubstrateService,
 } from '../../../../../common';
 import { DataStakedCommand } from './data-staked.command';
-import { ethers } from 'ethers';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
 @Injectable()

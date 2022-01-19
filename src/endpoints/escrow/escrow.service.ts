@@ -46,7 +46,9 @@ export class EscrowService {
 
   async orderFulfilled(order) {
     try {
-      await new ethers.providers.JsonRpcProvider(this.process.env.WEB3_RPC_HTTPS);
+      await new ethers.providers.JsonRpcProvider(
+        this.process.env.WEB3_RPC_HTTPS,
+      );
       const tokenContract = await this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
