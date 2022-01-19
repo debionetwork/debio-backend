@@ -5,6 +5,7 @@ import {
   LabRegister,
   labToLabRegister,
   MailerManager,
+  ProcessEnvProxy,
   queryLabById,
   Service,
   SubstrateService,
@@ -17,6 +18,7 @@ export class ServiceCreatedHandler
   implements ICommandHandler<ServiceCreatedCommand>
 {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
   ) {}
@@ -35,7 +37,7 @@ export class ServiceCreatedHandler
         lab,
       );
       this.mailerManager.sendLabRegistrationEmail(
-        process.env.EMAILS.split(','),
+        this.process.env.EMAILS.split(','),
         labRegister,
       );
     }

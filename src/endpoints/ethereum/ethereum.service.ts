@@ -9,11 +9,13 @@ import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
-import { CachesService } from 'src/common/modules/caches';
+import { CachesService } from '../../common/modules/caches';
+import { ProcessEnvProxy } from '../../common';
 
 @Injectable()
 export class EthereumService {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
     private readonly cachesService: CachesService,
@@ -30,7 +32,7 @@ export class EthereumService {
   async getContract(): Promise<any> {
     try {
       const contract: SmartContract = this.ethersContract.create(
-        process.env.ESCROW_CONTRACT_ADDRESS,
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         ABI,
       );
 
@@ -44,10 +46,10 @@ export class EthereumService {
   async getEscrowSmartContract(): Promise<any> {
     try {
       const provider = new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
+        this.process.env.WEB3_RPC_HTTPS,
       );
       const contract = new ethers.Contract(
-        process.env.ESCROW_CONTRACT_ADDRESS,
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         escrowContract.abi,
         provider,
       );
