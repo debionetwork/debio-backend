@@ -15,7 +15,10 @@ describe('Reward Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RewardService,
-        { provide: getRepositoryToken(Reward), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(Reward),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     rewardService = module.get(RewardService);
@@ -30,16 +33,16 @@ describe('Reward Service Unit Tests', () => {
   it('should insert', () => {
     // Arrange
     const REWARD_DTO: RewardDto = {
-        reward_type: "string",
-        address: "string",
-        created_at: new Date(),
-        currency: "string",
-        ref_number: "string",
-        reward_amount: 0,
-    }
+      reward_type: 'string',
+      address: 'string',
+      created_at: new Date(),
+      currency: 'string',
+      ref_number: 'string',
+      reward_amount: 0,
+    };
     const RESULT = 0;
     repositoryMock.save.mockReturnValue(RESULT);
-    
+
     // Assert
     expect(rewardService.insert(REWARD_DTO)).toEqual(RESULT);
     expect(repositoryMock.save).toHaveBeenCalled();
@@ -49,18 +52,18 @@ describe('Reward Service Unit Tests', () => {
   it('should throw', () => {
     // Arrange
     const REWARD_DTO: RewardDto = {
-        reward_type: "string",
-        address: "string",
-        created_at: new Date(),
-        currency: "string",
-        ref_number: "string",
-        reward_amount: 0,
-    }
+      reward_type: 'string',
+      address: 'string',
+      created_at: new Date(),
+      currency: 'string',
+      ref_number: 'string',
+      reward_amount: 0,
+    };
     const ERROR = new Error();
     repositoryMock.save.mockImplementation(() => {
-        throw ERROR;
+      throw ERROR;
     });
-    
+
     // Assert
     expect(rewardService.insert(REWARD_DTO)).toEqual({ error: ERROR });
     expect(repositoryMock.save).toHaveBeenCalled();
@@ -71,16 +74,18 @@ describe('Reward Service Unit Tests', () => {
     // Arrange
     const ACCOUNT_ID = 0;
     const EXPECTED_PARAMS = {
-        where: {
-          reward_type: 'Registered User',
-          address: ACCOUNT_ID,
-        },
+      where: {
+        reward_type: 'Registered User',
+        address: ACCOUNT_ID,
+      },
     };
     const RESULT = 0;
     repositoryMock.findOne.mockReturnValue(RESULT);
-    
+
     // Assert
-    expect(rewardService.getRewardBindingByAccountId(ACCOUNT_ID)).toEqual(RESULT);
+    expect(rewardService.getRewardBindingByAccountId(ACCOUNT_ID)).toEqual(
+      RESULT,
+    );
     expect(repositoryMock.findOne).toHaveBeenCalled();
     expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAMS);
   });
@@ -89,18 +94,20 @@ describe('Reward Service Unit Tests', () => {
     // Arrange
     const ACCOUNT_ID = 0;
     const EXPECTED_PARAMS = {
-        where: {
-          reward_type: 'Registered User',
-          address: ACCOUNT_ID,
-        },
+      where: {
+        reward_type: 'Registered User',
+        address: ACCOUNT_ID,
+      },
     };
     const ERROR = new Error();
     repositoryMock.findOne.mockImplementation(() => {
-        throw ERROR;
+      throw ERROR;
     });
-    
+
     // Assert
-    expect(rewardService.getRewardBindingByAccountId(ACCOUNT_ID)).toEqual(ERROR);
+    expect(rewardService.getRewardBindingByAccountId(ACCOUNT_ID)).toEqual(
+      ERROR,
+    );
     expect(repositoryMock.findOne).toHaveBeenCalled();
     expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAMS);
   });

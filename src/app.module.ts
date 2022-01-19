@@ -22,6 +22,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
+import { CachesModule } from './common';
+import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -60,6 +62,7 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     DebioConversionModule,
     SubstrateEndpointModule,
+    SubstrateListenerModule,
     EthereumIndexedDataModule,
     TransactionLoggingModule,
     VerificationModule,
@@ -67,6 +70,7 @@ require('dotenv').config(); // eslint-disable-line
     BountyModule,
     SchedulersModule,
     HealthModule,
+    CachesModule,
   ],
 })
 export class AppModule {}

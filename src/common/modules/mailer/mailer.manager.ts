@@ -26,6 +26,12 @@ export class MailerManager {
         path: val.supporting_document,
       });
     });
+    context.services.forEach((val, idx) => {
+      files.push({
+        filename: `Services Supporting Document ${idx + 1}`,
+        path: val.supporting_document,
+      });
+    });
 
     this.mailerService.sendMail({
       to: to,
@@ -41,7 +47,7 @@ export class MailerManager {
         city: context.city,
         address: context.address,
         certifications: context.certifications,
-        services: context.services
+        services: context.services,
       },
       attachments: files,
     });

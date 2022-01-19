@@ -12,15 +12,19 @@ import { ServiceRequestCommandHandlers } from './commands/service-request';
 import { ServiceCommandHandlers } from './commands/services';
 import { SubstrateListenerHandler } from './substrate-listener.handler';
 import { OrderCommandHandlers } from './commands/orders';
+import { CqrsModule } from '@nestjs/cqrs';
+import { LocationModule } from '../../endpoints/location/location.module';
 
 @Module({
   imports: [
     EscrowModule,
+    LocationModule,
     TransactionLoggingModule,
     SubstrateModule,
     DebioConversionModule,
     RewardModule,
     MailModule,
+    CqrsModule,
   ],
   providers: [
     SubstrateListenerHandler,

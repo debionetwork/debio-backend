@@ -1,24 +1,24 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import axios from 'axios';
 import { ProcessEnvProxy } from '../../proxies/process-env';
 
 @Injectable()
 export class DebioConversionService {
-  constructor(
-    private readonly httpService: HttpService,
-    private readonly process: ProcessEnvProxy
-  ) {}
+  private readonly logger: Logger = new Logger(DebioConversionService.name);
+  constructor(private readonly process: ProcessEnvProxy) {}
 
   async getExchange() {
-    const ob = await this.httpService.get(`${this.process.env.REDIS_STORE_URL}/cache`, {
-      auth: {
-        username: this.process.env.REDIS_STORE_USERNAME,
-        password: this.process.env.REDIS_STORE_PASSWORD,
-      },
-    });
+    try {
+      const res = await axios.get(`${this.process.env.REDIS_STORE_URL}/cache`, {
+        auth: {
+          username: this.process.env.REDIS_STORE_USERNAME,
+          password: this.process.env.REDIS_STORE_PASSWORD,
+        },
+      });
 
-    let res;
-    ob.subscribe(val => res = val.data);
-    return res;
+      return res.data;
+    } catch (error) {
+      await this.logger.log(`API conversion": ${error.message}`);
+    }
   }
 }

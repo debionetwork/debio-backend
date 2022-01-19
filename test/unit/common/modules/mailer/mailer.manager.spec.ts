@@ -64,6 +64,8 @@ describe('Mailer Manager Unit Tests', () => {
         state: CONTEXT.state,
         city: CONTEXT.city,
         address: CONTEXT.address,
+        certifications: CONTEXT.certifications,
+        services: CONTEXT.services,
       },
       attachments: [
         {

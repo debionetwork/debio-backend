@@ -38,8 +38,8 @@ export class ServiceRequestService {
           hits: { hits },
         },
       } = serviceRequests;
-      const oneDbioEqualToDai = exchangeBalance['dbioToDai'];
-      const oneDbioEqualToUsd = exchangeBalance['dbioToUsd'];
+      const oneDbioEqualToDai = exchangeBalance?.dbioToDai || undefined;
+      const oneDbioEqualToUsd = exchangeBalance?.dbioToUsd || undefined;
 
       // Accumulate totalRequests and totalValue by country
       const requestByCountryDict = {};
@@ -113,9 +113,11 @@ export class ServiceRequestService {
         requestByCountryDict[countryCode]['totalValue'] = {
           dbio: requestByCountryDict[countryCode]['totalValue'],
           dai:
-            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToDai,
+            requestByCountryDict[countryCode]['totalValue'] *
+              oneDbioEqualToDai || 'Conversion Error',
           usd:
-            requestByCountryDict[countryCode]['totalValue'] * oneDbioEqualToUsd,
+            requestByCountryDict[countryCode]['totalValue'] *
+              oneDbioEqualToUsd || 'Conversion Error',
         };
         const { name } = countryObj;
         const { totalRequests, services } = requestByCountryDict[countryCode];
@@ -125,8 +127,8 @@ export class ServiceRequestService {
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
-            dai: s.totalValue.dbio * oneDbioEqualToDai,
-            usd: s.totalValue.dbio * oneDbioEqualToUsd,
+            dai: s.totalValue.dbio * oneDbioEqualToDai || 'Conversion Error',
+            usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
           },
         }));
 

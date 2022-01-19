@@ -47,6 +47,7 @@ const eventRoutes = {
 export class SubstrateListenerHandler implements OnModuleInit {
   private event: any;
   private readonly logger: Logger = new Logger(SubstrateListenerHandler.name);
+  private lastBlock: 0;
 
   constructor(
     private readonly substrate: SubstrateService,
@@ -59,6 +60,10 @@ export class SubstrateListenerHandler implements OnModuleInit {
 
   async handleEvent(blockMetaData: BlockMetaData, event: Event) {
     try {
+      // if currenblock equal to lastblock, skip handler
+      if (this.lastBlock == blockMetaData.blockNumber) {
+        return;
+      }
       const eventSection = eventRoutes[event.section];
 
       if (eventSection && eventSection[event.method]) {
