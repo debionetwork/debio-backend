@@ -50,15 +50,11 @@ export class UnstakedService implements OnModuleInit {
         from: 0,
         size: 10,
       });
-
       const listRequestService = createRequestService.body.hits.hits;
-
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
-        const serviceRequestDetail = await queryServiceRequestById(
-          this.subtrateService.api,
-          requestId,
-        );
+        const serviceRequestDetail = await this.getServiceRequestDetail(requestId);
+
         if (serviceRequestDetail.status === 'Unstaked') {
           await this.elasticsearchService.update({
             index: 'create-service-request',
@@ -92,11 +88,7 @@ export class UnstakedService implements OnModuleInit {
           const diffTime = timeNext6Days - timeNow;
 
           if (diffTime <= 0) {
-            await retrieveUnstakedAmount(
-              this.subtrateService.api,
-              this.subtrateService.pair,
-              requestId,
-            );
+            await this.unstakedServiceRequest(requestId);
           }
         }
       }
@@ -105,5 +97,20 @@ export class UnstakedService implements OnModuleInit {
     } finally {
       this.isRunning = false;
     }
+  }
+
+  async getServiceRequestDetail(requestId: string) {
+    return await queryServiceRequestById(
+      this.subtrateService.api,
+      requestId,
+    );
+  }
+
+  async unstakedServiceRequest(requestId: string) {
+    await retrieveUnstakedAmount(
+      this.subtrateService.api,
+      this.subtrateService.pair,
+      requestId,
+    );
   }
 }
