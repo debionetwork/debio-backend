@@ -5,7 +5,7 @@ import { SubstrateService } from './substrate.service';
 @Module({
   imports: [ProcessEnvModule],
   providers: [SubstrateService],
-  exports: [SubstrateService],
+  exports: [SubstrateService, ProcessEnvModule],
 })
 export class SubstrateModule {}
 
