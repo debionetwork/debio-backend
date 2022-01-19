@@ -9,9 +9,8 @@ require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     TypeOrmModule.forFeature([EscrowAccounts]),
-    forwardRef(() => SubstrateModule),
+    SubstrateModule,
     forwardRef(() => EthereumModule),
-    ProcessEnvModule,
   ],
   providers: [EscrowService],
   exports: [TypeOrmModule, EscrowService],

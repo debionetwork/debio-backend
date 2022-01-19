@@ -1,6 +1,6 @@
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { ProcessEnvProxy } from '../..';
+import { ProcessEnvProxy } from '../proxies';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {

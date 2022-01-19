@@ -8,8 +8,8 @@ import { DebioConversionModule } from '../../common/modules/debio-conversion/deb
 
 @Module({
   imports: [
-    forwardRef(() => LocationModule),
-    forwardRef(() => EthereumModule),
+    LocationModule,
+    EthereumModule,
     DebioConversionModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
