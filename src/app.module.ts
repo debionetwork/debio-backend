@@ -68,9 +68,9 @@ require('dotenv').config(); // eslint-disable-line
     VerificationModule,
     RecaptchaModule,
     BountyModule,
-    SchedulersModule,
     HealthModule,
     CachesModule,
+    SchedulersModule,
   ],
 })
 export class AppModule {}

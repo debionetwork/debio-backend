@@ -9,6 +9,12 @@ export class EmailNotificationDto {
 
 	@ApiProperty({
 		type: String,
+		description: 'notification_type',
+	})
+	notification_type: string;
+
+	@ApiProperty({
+		type: String,
 		description: 'is_email_sent',
 	})
 	is_email_sent: boolean;

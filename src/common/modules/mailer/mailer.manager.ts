@@ -1,5 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailNotificationDto } from './dto/email-notification.dto';
@@ -7,6 +7,7 @@ import { CustomerStakingRequestService, LabRegister, EmailNotification } from '.
 
 @Injectable()
 export class MailerManager {
+  private readonly _logger: Logger = new Logger(MailerManager.name);
   constructor(
     private readonly mailerService: MailerService,
     @InjectRepository(EmailNotification)
@@ -40,24 +41,29 @@ export class MailerManager {
       });
     });
 
-    this.mailerService.sendMail({
-      to: to,
-      subject: `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`,
-      template: './lab-register',
-      context: {
-        profile_image: context.profile_image,
-        email: context.email,
-        lab_name: context.lab_name,
-        phone_number: context.phone_number,
-        country: context.country,
-        state: context.state,
-        city: context.city,
-        address: context.address,
-        certifications: context.certifications,
-        services: context.services,
-      },
-      attachments: files,
-    });
+    try {
+      this.mailerService.sendMail({
+        to: to,
+        subject: `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`,
+        template: './lab-register',
+        context: {
+          profile_image: context.profile_image,
+          email: context.email,
+          lab_name: context.lab_name,
+          phone_number: context.phone_number,
+          country: context.country,
+          state: context.state,
+          city: context.city,
+          address: context.address,
+          certifications: context.certifications,
+          services: context.services,
+        },
+        attachments: files,
+      });
+      return true
+    } catch (error) {
+      await this._logger.log(`Send Email Failed: ${error}`)
+    }
   }
 
   async insertEmailNotification(data: EmailNotificationDto) {
@@ -81,7 +87,7 @@ export class MailerManager {
     }
   }
 
-  async getPendingCustomerRequestServiceNotification(ref_num) {
+  async getPendingCustomerRequestServiceNotification() {
     try {
       return this.emailNotificationRepository.find({
         where: {
