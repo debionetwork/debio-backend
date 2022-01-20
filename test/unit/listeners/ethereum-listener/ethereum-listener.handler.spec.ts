@@ -3,10 +3,16 @@ import { EscrowService } from '../../../../src/endpoints/escrow/escrow.service';
 import { EthereumListenerHandler } from '../../../../src/listeners/ethereum-listener/ethereum-listener.handler';
 import { EthereumService } from '../../../../src/common';
 
-describe('EthereumListenerHandler', () => {
+describe('Ethereum Listener Handler Unit Test', () => {
   let ethereumListenerHandler: EthereumListenerHandler;
   let ethereumService: EthereumService;
   let escrowService: EscrowService;
+
+  let providerOnEventType = "";
+  let smartContractOnEventType = "";
+
+  const ORDER_ID = 1;
+  const BLOCK_NUM = 1;
 
   const escrowServiceProvider = {
     provide: EscrowService,
@@ -17,12 +23,15 @@ describe('EthereumListenerHandler', () => {
       cancelOrder: jest.fn(),
       orderFulfilled: jest.fn(),
       forwardPaymentToSeller: jest.fn(),
+      setOrderPaidWithSubstrate: jest.fn(),
       getRefundGasEstimationFee: jest.fn(() => ''),
     }),
   };
 
-  const escrowContractMock = {
-    on: jest.fn(),
+  const contractMock = {
+    filters: {
+      Transfer: jest.fn(),
+    },
   };
 
   const ethereumServiceProvider = {
@@ -33,7 +42,10 @@ describe('EthereumListenerHandler', () => {
       getContract: jest.fn(() => ({
         provider: {
           getBlockNumber: () => 5484751,
-          on: () => null,
+          on: (type, fn) => {
+            providerOnEventType = type;
+            fn(BLOCK_NUM);
+          },
           emit: jest.fn(),
         },
         on: () => null,
@@ -42,7 +54,15 @@ describe('EthereumListenerHandler', () => {
         },
         emit: jest.fn(),
       })),
-      getEscrowSmartContract: jest.fn(() => escrowContractMock),
+      getEscrowSmartContract: jest.fn(() => ({
+        on: (type, fn) => {
+          smartContractOnEventType = type;
+          const orderEventMock = {
+            orderId: ORDER_ID
+          };
+          fn(orderEventMock);
+        },
+      })),
       createWallet: jest.fn(),
       getGasEstimationFee: jest.fn(() => ''),
       convertCurrency: jest.fn(),
@@ -63,42 +83,60 @@ describe('EthereumListenerHandler', () => {
     ethereumListenerHandler = module.get<EthereumListenerHandler>(EthereumListenerHandler);
     ethereumService = module.get<EthereumService>(EthereumService);
     escrowService = module.get<EscrowService>(EscrowService);
+    
+    providerOnEventType = "";    
+    smartContractOnEventType = "";
   });
 
-  it('EthereumListenerHandler must defined', () => {
+  it('should be defined', () => {
     expect(ethereumListenerHandler).toBeDefined();
   });
 
-  it('EthereumService must defined', () => {
+  it('should be defined', () => {
     expect(ethereumService).toBeDefined();
   });
 
-  it('EscrowService must defined', () => {
+  it('should be defined', () => {
     expect(escrowService).toBeDefined();
   });
 
-  describe('EthereumListenerHandler when method listenToEvents called', () => {
-    it('getContract is called when listenToEvents called', async () => {
-      await ethereumListenerHandler.listenToEvents();
+  it('should start listening to events', async () => {
+    // Arrange
 
-      expect(ethereumService.getContract).toBeCalled();
-    });
+    // Act
+    await ethereumListenerHandler.listenToEvents();
 
-    it('getLastBlock is called when listenToEvents called', async () => {
-      await ethereumListenerHandler.listenToEvents();
-      expect(ethereumService.getLastBlock).toBeCalled();
-    });
+    // Assert
+    expect(ethereumService.getContract).toBeCalled();
 
-    it('setLastBlock is called when listenToEvents called', async () => {
-      await ethereumListenerHandler.listenToEvents();
-      expect(ethereumService.setLastBlock).toBeCalled();
-    });
+    expect(ethereumService.getEscrowSmartContract).toBeCalled();
 
-    it('ethereumService.setLastBlock is called when contract provider event block is listen', async () => {
-      await ethereumListenerHandler.listenToEvents();
-      const contract = await ethereumService.getContract();
-      contract.provider.emit('block');
-      expect(ethereumService.setLastBlock).toBeCalled();
-    });
+    expect(ethereumService.getLastBlock).toBeCalled();
+    
+    expect(providerOnEventType).toEqual('block');
+    expect(ethereumService.setLastBlock).toBeCalledTimes(2);
+    expect(ethereumService.setLastBlock).toHaveBeenCalledWith(BLOCK_NUM);
+
+    expect(smartContractOnEventType).toEqual('OrderPaid');
+    expect(escrowService.setOrderPaidWithSubstrate).toBeCalled();
+    expect(escrowService.setOrderPaidWithSubstrate).toHaveBeenCalledWith(ORDER_ID);
+  });
+
+  it('should sync one block', async () => {
+    // Arrange
+    const MIN = 5484745;
+    const CURRENT = MIN + 1;
+
+    // Act
+    await ethereumListenerHandler.syncBlock(MIN, CURRENT, contractMock);
+
+    // Assert
+    expect(contractMock.filters.Transfer).toHaveBeenCalled();
+    expect(contractMock.filters.Transfer).toHaveBeenCalledWith(
+      null,
+      '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
+    );
+    expect(ethereumService.setLastBlock).toBeCalledTimes(1);
+    expect(ethereumService.setLastBlock).toHaveBeenCalledWith(CURRENT);
   });
 });
