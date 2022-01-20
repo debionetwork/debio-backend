@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { ServiceController } from './services/service.controller';
 import { ServiceService } from './services/service.service';
-import { LabController } from './labs/lab.controller';
 import { LabService } from './services/lab.service';
-import { OrderController } from './orders/order.controller';
 import { OrderService } from './services/order.service';
 import { RewardModule, SubstrateModule } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
@@ -26,9 +23,6 @@ import { SubstrateController } from './substrate-endpoint.controller';
   exports: [ElasticsearchModule],
   controllers: [
     SubstrateController,
-    ServiceController,
-    LabController,
-    OrderController,
   ],
   providers: [ServiceService, LabService, OrderService],
 })
