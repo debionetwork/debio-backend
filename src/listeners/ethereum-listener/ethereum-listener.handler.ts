@@ -1,17 +1,19 @@
-import { Controller, UseInterceptors } from '@nestjs/common';
-import { EthereumService } from './ethereum.service';
-import { EscrowService } from '../escrow/escrow.service';
-import { SentryInterceptor } from '../../common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { EthereumService } from '../../common/modules/ethereum/ethereum.service';
+import { EscrowService } from '../../endpoints/escrow/escrow.service';
 
-@UseInterceptors(SentryInterceptor)
-@Controller('ethereum')
-export class EthereumController {
+@Injectable()
+export class EthereumListenerHandler implements OnModuleInit {
   constructor(
     private readonly ethereumService: EthereumService,
     private readonly escrowService: EscrowService,
   ) {}
 
-  async onApplicationBootstrap() {
+  async onModuleInit() {
+    await this.listenToEvents();
+  }
+
+  async listenToEvents() {
     const contract = await this.ethereumService.getContract();
     const escrowContract = await this.ethereumService.getEscrowSmartContract();
     const currentBlock = await contract.provider.getBlockNumber();

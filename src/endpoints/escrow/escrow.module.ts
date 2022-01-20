@@ -2,8 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EscrowAccounts } from './models/deposit.entity';
 import { EscrowService } from './escrow.service';
-import { SubstrateModule } from '../../common';
-import { EthereumModule } from '../ethereum/ethereum.module';
+import { EthereumModule, SubstrateModule } from '../../common';
 
 require('dotenv').config(); // eslint-disable-line
 @Module({

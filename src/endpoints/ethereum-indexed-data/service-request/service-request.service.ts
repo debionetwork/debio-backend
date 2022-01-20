@@ -1,7 +1,5 @@
 import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { StateService } from '../../../endpoints/location/state.service';
-import { EthereumService } from '../../../endpoints/ethereum/ethereum.service';
 import { CountryService } from '../../../endpoints/location/country.service';
 import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
 
@@ -17,11 +15,7 @@ export class ServiceRequestService {
   constructor(
     @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
-    @Inject(forwardRef(() => StateService))
-    private stateService: StateService,
     private readonly elasticsearchService: ElasticsearchService,
-    @Inject(forwardRef(() => EthereumService))
-    private ethereumService: EthereumService,
     private exchangeCacheService: DebioConversionService,
   ) {}
 

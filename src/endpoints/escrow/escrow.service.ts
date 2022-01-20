@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import { EthereumService } from '../ethereum/ethereum.service';
+import { EthereumService } from '../../common';
 import { setOrderPaid, SubstrateService } from '../../common';
 import { ethers } from 'ethers';
 

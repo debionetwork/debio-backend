@@ -9,7 +9,7 @@ import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
-import { CachesService } from 'src/common/modules/caches';
+import { CachesService } from '../caches';
 
 @Injectable()
 export class EthereumService {
@@ -25,6 +25,35 @@ export class EthereumService {
 
   async setLastBlock(blockNumber) {
     await this.cachesService.setLastBlock(blockNumber);
+  }
+
+  async createWallet(privateKey: string): Promise<WalletSigner> {
+    const wallet: WalletSigner = await this.ethersSigner.createWallet(
+      privateKey,
+    );
+    return wallet;
+  }
+
+  async getGasEstimationFee(from, to, data = null) {
+    const res = await axios.post(process.env.ETHEREUM_RPC, {
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'eth_estimateGas',
+      params: [{ from, to, data }],
+    });
+    const gasEstimation = res.data.result;
+    return ethers.BigNumber.from(String(gasEstimation)).toString();
+  }
+
+  getEthersProvider(): ethers.providers.JsonRpcProvider {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(
+        process.env.WEB3_RPC_HTTPS,
+      );
+      return provider;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getContract(): Promise<any> {
@@ -57,32 +86,6 @@ export class EthereumService {
     }
   }
 
-  async createWallet(privateKey: string): Promise<WalletSigner> {
-    const wallet: WalletSigner = await this.ethersSigner.createWallet(
-      privateKey,
-    );
-    return wallet;
-  }
-
-  async getGasEstimationFee(from, to, data = null) {
-    const res = await axios.post(process.env.ETHEREUM_RPC, {
-      jsonrpc: '2.0',
-      id: 1,
-      method: 'eth_estimateGas',
-      params: [{ from, to, data }],
-    });
-    const gasEstimation = res.data.result;
-    return ethers.BigNumber.from(String(gasEstimation)).toString();
-  }
-
-  /**
-   * convertCurrency
-   * If converting from eth make sure that the unit is in ETH (not in wei, gwei, etc)
-   * @param fromCurrency Convert from this currency
-   * @param toCurrency To this currency
-   * @param amount Amount
-   * @returns quote: object
-   */
   async convertCurrency(
     fromCurrency = 'ETH',
     toCurrency = 'DAI',
