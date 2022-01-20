@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceRequestController } from './service-request/service-request.controller';
 import { ServiceRequestService } from './service-request/service-request.service';
-import { LocationModule } from '../../endpoints/location/location.module';
+import { LocationModule } from '../location/location.module';
 import { DebioConversionModule } from '../../common/modules/debio-conversion/debio-conversion.module';
 
 @Module({
@@ -23,4 +23,4 @@ import { DebioConversionModule } from '../../common/modules/debio-conversion/deb
   controllers: [ServiceRequestController],
   providers: [ServiceRequestService],
 })
-export class EthereumIndexedDataModule {}
+export class SubstrateIndexedDataModule {}
