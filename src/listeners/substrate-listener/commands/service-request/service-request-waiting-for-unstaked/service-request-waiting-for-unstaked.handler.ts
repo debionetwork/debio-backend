@@ -9,11 +9,11 @@ import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiti
 export class ServiceRequestWaitingForUnstakedHandler
   implements ICommandHandler<ServiceRequestWaitingForUnstakedCommand>
 {
-  private readonly logger: Logger = new Logger(ServiceRequestWaitingForUnstakedCommand.name);
+  private readonly logger: Logger = new Logger(
+    ServiceRequestWaitingForUnstakedCommand.name,
+  );
 
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-  ) {}
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
     const serviceRequest = command.request;

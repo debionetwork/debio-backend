@@ -1,14 +1,14 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DebioConversionModule } from '../debio-conversion/debio-conversion.module';
 
-import { SubstrateModule } from '../..';
+import { SubstrateModule } from '../substrate';
 import { Reward } from './models/reward.entity';
 import { RewardService } from './reward.service';
 
 @Module({
   imports: [
-    forwardRef(() => SubstrateModule),
+    SubstrateModule,
     DebioConversionModule,
     TypeOrmModule.forFeature([Reward]),
   ],
