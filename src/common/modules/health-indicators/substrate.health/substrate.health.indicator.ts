@@ -18,13 +18,12 @@ export class SubstrateHealthIndicator extends HealthIndicator {
       if (!conn) {
         throw Error('Substrate Node Disconnected');
       }
+      return this.getStatus('substrate-node', true);
     } catch (error) {
       throw new HealthCheckError(
         'SubstrateHealthIndicator failed',
-        this.getStatus('substrate-node', false),
+        error,
       );
     }
-
-    return this.getStatus('substrate-node', true);
   }
 }
