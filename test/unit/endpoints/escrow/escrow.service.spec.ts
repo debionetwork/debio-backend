@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EscrowService } from './escrow.service';
+import { EscrowService } from './src/endpoints/escrow/escrow.service';
 
 /* eslint-disable */
 
