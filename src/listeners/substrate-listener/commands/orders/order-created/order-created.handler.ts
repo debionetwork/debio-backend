@@ -12,9 +12,7 @@ export class OrderCreatedHandler
 {
   private readonly logger: Logger = new Logger(OrderCreatedCommand.name);
 
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-  ) {}
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderCreatedCommand) {
     await this.logger.log('OrderCreated!');
