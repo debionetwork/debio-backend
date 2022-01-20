@@ -56,7 +56,7 @@ export class EthereumService {
     }
   }
 
-  getContract(): any {
+  getContract(): SmartContract {
     try {
       const contract: SmartContract = this.ethersContract.create(
         process.env.ESCROW_CONTRACT_ADDRESS,
@@ -69,11 +69,9 @@ export class EthereumService {
     }
   }
 
-  getEscrowSmartContract(): any {
+  getEscrowSmartContract(): ethers.Contract {
     try {
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
-      );
+      const provider = this.getEthersProvider();
       const contract = new ethers.Contract(
         process.env.ESCROW_CONTRACT_ADDRESS,
         escrowContract.abi,
