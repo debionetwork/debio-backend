@@ -3,8 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { elasticsearchServiceMockFactory, MockType } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
 import {
+  queryServiceRequestById,
+  retrieveUnstakedAmount,
   SubstrateService,
 } from '../../../../src/common';
+
 import { when } from 'jest-when';
 
 describe('UnstakedService', () => {
@@ -12,6 +15,8 @@ describe('UnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   
+  jest.mock('../../../../src/common');
+
   const createSearchObject = () => {
     return {
       index: 'create-service-request',
@@ -73,6 +78,7 @@ describe('UnstakedService', () => {
   });
 
   it('should throw elasticsearch client error', () => {
+    
     const ERROR_RESULT = {
       body: {
         error: {
@@ -89,7 +95,6 @@ describe('UnstakedService', () => {
   });
 
   it('should called elasticsearchservice update', async () => {
-    const queryServiceRequestByIdSpy = jest.spyOn(unstakedService, 'getServiceRequestDetail');
 
     const CALLED_WITH = createSearchObject();
     const REQUEST_ID = 'string';
@@ -114,7 +119,7 @@ describe('UnstakedService', () => {
       unstaked_at: 'string'
     }
 
-    when(queryServiceRequestByIdSpy)
+    when(queryServiceRequestById)
       .calledWith(REQUEST_ID)
       .mockReturnValue(SUBSTRATE_RESULT);
     
@@ -124,16 +129,12 @@ describe('UnstakedService', () => {
     
     unstakedService.handleWaitingUnstaked();
     await Promise.resolve();
-    expect(queryServiceRequestByIdSpy).toHaveBeenCalled();
+    expect(queryServiceRequestById).toHaveBeenCalled();
     await Promise.resolve();
     expect(elasticsearchServiceMock.update).toHaveBeenCalled();
-    queryServiceRequestByIdSpy.mockRestore();
   });
 
-  it('should called unstakedServiceRequest', async () => {
-    const queryServiceRequestByIdSpy = jest.spyOn(unstakedService, 'getServiceRequestDetail');
-    const unstakedServiceRequest = jest.spyOn(unstakedService, 'unstakedServiceRequest');
-
+  it('should called unstakedServiceRequest', () => {
     const CALLED_WITH = createSearchObject();
     const REQUEST_ID = 'string';
     const SIX_DAYS = 6 * 24 * 60 * 60 * 1000;
@@ -157,8 +158,8 @@ describe('UnstakedService', () => {
       status: 'WaitingForUnstaked',
       unstaked_at: 'string'
     }
-
-    when(queryServiceRequestByIdSpy)
+    
+    when(queryServiceRequestById)
       .calledWith(REQUEST_ID)
       .mockReturnValue(SUBSTRATE_RESULT);
     
@@ -167,11 +168,7 @@ describe('UnstakedService', () => {
       .mockReturnValue(ES_RESULT);
     
     unstakedService.handleWaitingUnstaked();
-    await Promise.resolve();
-    expect(queryServiceRequestByIdSpy).toHaveBeenCalled();
-    await Promise.resolve();
-    expect(unstakedServiceRequest).toHaveBeenCalled();
-    queryServiceRequestByIdSpy.mockRestore();
-    unstakedServiceRequest.mockRestore();
+    expect(queryServiceRequestById).toHaveBeenCalled();
+    expect(retrieveUnstakedAmount).toHaveBeenCalled();
   });
 });
