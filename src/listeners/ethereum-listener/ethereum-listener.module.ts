@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
-import { EthereumModule } from '../../../src/common';
-import { EscrowModule } from '../../../src/endpoints/escrow/escrow.module';
-import { SubstrateListenerHandler } from '../substrate-listener/substrate-listener.handler';
+import { EthereumModule } from '../../common/modules/ethereum';
+import { EscrowModule } from '../../endpoints/escrow/escrow.module';
+import { EthereumListenerHandler } from './ethereum-listener.handler';
 
 @Module({
   imports: [
-      EthereumModule,
-      EscrowModule,
+    EthereumModule,
+    EscrowModule,
   ],
   providers: [
-    SubstrateListenerHandler
+    EthereumListenerHandler
   ]
 })
 export class EthereumListenerModule {}
