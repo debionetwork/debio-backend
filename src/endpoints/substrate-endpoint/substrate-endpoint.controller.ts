@@ -21,12 +21,13 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
 } from '../../common/polkadot-provider';
-import { SubstrateService } from '../../common';
+import { ProcessEnvProxy, SubstrateService } from '../../common';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('substrate')
 export class SubstrateController {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
     private readonly rewardService: RewardService,
     private readonly labService: LabService,
@@ -154,7 +155,7 @@ export class SubstrateController {
     @Res() response: Response,
     @Headers('debio-api-key') debioApiKey: string,
   ) {
-    if (debioApiKey != process.env.DEBIO_API_KEY) {
+    if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;

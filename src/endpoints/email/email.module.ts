@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MailModule, SubstrateModule } from 'src/common';
+import { MailModule, SubstrateModule } from '../../common';
 import { EmailEndpointController } from './email.controller';
 
 @Module({
