@@ -56,21 +56,20 @@ export class EthereumService {
     }
   }
 
-  async getContract(): Promise<any> {
+  getContract(): any {
     try {
       const contract: SmartContract = this.ethersContract.create(
         process.env.ESCROW_CONTRACT_ADDRESS,
         ABI,
       );
 
-      console.log('block number: ', await contract.provider.getBlockNumber());
       return contract;
     } catch (error) {
       console.log(error);
     }
   }
 
-  async getEscrowSmartContract(): Promise<any> {
+  getEscrowSmartContract(): any {
     try {
       const provider = new ethers.providers.JsonRpcProvider(
         process.env.WEB3_RPC_HTTPS,
@@ -80,6 +79,7 @@ export class EthereumService {
         escrowContract.abi,
         provider,
       );
+
       return contract;
     } catch (error) {
       console.log(error);

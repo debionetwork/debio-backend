@@ -21,7 +21,7 @@ export class EscrowService {
       const provider = await new ethers.providers.JsonRpcProvider(
         process.env.WEB3_RPC_HTTPS,
       );
-      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet = await new ethers.Wallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
         provider,
@@ -46,7 +46,7 @@ export class EscrowService {
   async orderFulfilled(order) {
     try {
       await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
-      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
@@ -73,7 +73,7 @@ export class EscrowService {
   async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
-      const tokenContract = await this.ethereumService.getContract();
+      const tokenContract = this.ethereumService.getContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );

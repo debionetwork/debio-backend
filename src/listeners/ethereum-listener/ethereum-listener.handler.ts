@@ -14,8 +14,8 @@ export class EthereumListenerHandler implements OnModuleInit {
   }
 
   async listenToEvents() {
-    const contract = await this.ethereumService.getContract();
-    const escrowContract = await this.ethereumService.getEscrowSmartContract();
+    const contract = this.ethereumService.getContract();
+    const escrowContract = this.ethereumService.getEscrowSmartContract();
     const currentBlock = await contract.provider.getBlockNumber();
     const lastBlock = await this.ethereumService.getLastBlock();
     this.syncBlock(lastBlock, currentBlock, contract);
@@ -30,7 +30,6 @@ export class EthereumListenerHandler implements OnModuleInit {
   }
 
   async syncBlock(lastBlock, currentBlock, contract) {
-    console.log('Syncing block from ' + lastBlock + ' to ' + currentBlock);
     const MIN_STARTING_BLOCK = 5484745;
     // Block paling jauh adalah MIN_STARTING_BLOCK
     const startBlock =
@@ -48,8 +47,6 @@ export class EthereumListenerHandler implements OnModuleInit {
     }
 
     while (iStart < endBlock) {
-      console.log(`Syncing ${iStart} - ${iEnd}`);
-
       contract.filters.Transfer(
         null,
         '0x42D57aAA086Ee6575Ddd3b502af1b07aEa91E495',
