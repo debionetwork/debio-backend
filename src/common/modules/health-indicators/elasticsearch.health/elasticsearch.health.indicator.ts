@@ -12,14 +12,14 @@ export class ElasticsearchHealthIndicator extends HealthIndicator {
     super();
   }
 
-  async isHealthy(key: string): Promise<HealthIndicatorResult> {
+  async isHealthy(): Promise<HealthIndicatorResult> {
     try {
       await this.elasticsearchService.ping();
-      return this.getStatus(key, true);
+      return this.getStatus('elasticsearch', true);
     } catch (error) {
       throw new HealthCheckError(
         'ElasticsearchHealthIndicator failed',
-        this.getStatus(key, false),
+        error,
       );
     }
   }
