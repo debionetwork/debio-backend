@@ -21,18 +21,19 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
 } from '../../common/polkadot-provider';
-import { ProcessEnvProxy, SubstrateService } from '../../common';
+import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 
-@UseInterceptors(SentryInterceptor)
 @Controller('substrate')
+@UseInterceptors(SentryInterceptor)
 export class SubstrateController {
   constructor(
-    private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
-    private readonly rewardService: RewardService,
     private readonly labService: LabService,
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
+    private readonly rewardService: RewardService,
+    private readonly process: ProcessEnvProxy,
+    private readonly dateTime: DateTimeProxy,
   ) {}
 
   @Get('/labs')
@@ -167,7 +168,7 @@ export class SubstrateController {
       reward_amount: rewardAmount,
       reward_type: 'Registered User',
       currency: 'DBIO',
-      created_at: new Date(),
+      created_at: this.dateTime.new(),
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
@@ -183,7 +184,7 @@ export class SubstrateController {
     );
 
     if (!bindingEth) {
-      response.status(401).send('Binding Error');
+      return response.status(401).send('Binding Error');
     }
 
     const isRewardHasBeenSend =
