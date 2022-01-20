@@ -16,7 +16,7 @@ export async function sendRewards(
   substrateAddress: string,
   rewardAmount: string,
 ) {
-  await api.tx.userProfile
+  await api.tx.rewards
     .rewardFunds(substrateAddress, rewardAmount)
     .signAndSend(pair, { nonce: -1 });
 }
