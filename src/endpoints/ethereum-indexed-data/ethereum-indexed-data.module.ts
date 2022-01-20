@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceRequestController } from './service-request/service-request.controller';
 import { ServiceRequestService } from './service-request/service-request.service';
@@ -8,8 +8,8 @@ import { DebioConversionModule } from '../../common/modules/debio-conversion/deb
 
 @Module({
   imports: [
-    forwardRef(() => LocationModule),
-    forwardRef(() => EthereumModule),
+    LocationModule,
+    EthereumModule,
     DebioConversionModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({

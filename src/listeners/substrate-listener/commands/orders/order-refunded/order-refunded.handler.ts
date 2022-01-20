@@ -12,9 +12,7 @@ export class OrderRefundedHandler
 {
   private readonly logger: Logger = new Logger(OrderRefundedCommand.name);
 
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-  ) {}
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderRefundedCommand) {
     await this.logger.log('OrderRefunded!');

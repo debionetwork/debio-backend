@@ -4,6 +4,7 @@ import { EthereumService } from './ethereum.service';
 import { EthereumController } from './ethereum.controller';
 import { EscrowModule } from '../escrow/escrow.module';
 import { CachesModule } from '../../common/modules/caches';
+import { ProcessEnvModule } from 'src/common';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CachesModule } from '../../common/modules/caches';
     }),
     forwardRef(() => EscrowModule),
     CachesModule,
+    ProcessEnvModule,
   ],
   controllers: [EthereumController],
   providers: [EthereumService],
