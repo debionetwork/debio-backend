@@ -9,8 +9,8 @@ import ABI from './utils/ABI.json';
 import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
-import { CachesService } from '../../common/modules/caches';
-import { ProcessEnvProxy } from '../../common';
+import { CachesService } from '../caches';
+import { ProcessEnvProxy } from '../proxies';
 
 @Injectable()
 export class EthereumService {
@@ -27,36 +27,6 @@ export class EthereumService {
 
   async setLastBlock(blockNumber) {
     await this.cachesService.setLastBlock(blockNumber);
-  }
-
-  async getContract(): Promise<any> {
-    try {
-      const contract: SmartContract = this.ethersContract.create(
-        this.process.env.ESCROW_CONTRACT_ADDRESS,
-        ABI,
-      );
-
-      console.log('block number: ', await contract.provider.getBlockNumber());
-      return contract;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async getEscrowSmartContract(): Promise<any> {
-    try {
-      const provider = new ethers.providers.JsonRpcProvider(
-        this.process.env.WEB3_RPC_HTTPS,
-      );
-      const contract = new ethers.Contract(
-        this.process.env.ESCROW_CONTRACT_ADDRESS,
-        escrowContract.abi,
-        provider,
-      );
-      return contract;
-    } catch (error) {
-      console.log(error);
-    }
   }
 
   async createWallet(privateKey: string): Promise<WalletSigner> {
@@ -77,14 +47,45 @@ export class EthereumService {
     return ethers.BigNumber.from(String(gasEstimation)).toString();
   }
 
-  /**
-   * convertCurrency
-   * If converting from eth make sure that the unit is in ETH (not in wei, gwei, etc)
-   * @param fromCurrency Convert from this currency
-   * @param toCurrency To this currency
-   * @param amount Amount
-   * @returns quote: object
-   */
+  getEthersProvider(): ethers.providers.JsonRpcProvider {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(
+        process.env.WEB3_RPC_HTTPS,
+      );
+      return provider;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getContract(): SmartContract {
+    try {
+      const contract: SmartContract = this.ethersContract.create(
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
+        ABI,
+      );
+
+      return contract;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getEscrowSmartContract(): ethers.Contract {
+    try {
+      const provider = this.getEthersProvider();
+      const contract = new ethers.Contract(
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
+        escrowContract.abi,
+        provider,
+      );
+
+      return contract;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async convertCurrency(
     fromCurrency = 'ETH',
     toCurrency = 'DAI',
