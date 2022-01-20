@@ -22,7 +22,6 @@ describe('Debio Conversion Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DebioConversionService,
-        ProcessEnvProxy,
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
       ],
     }).compile();

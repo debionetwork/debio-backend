@@ -10,10 +10,12 @@ import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
+import { ProcessEnvProxy } from '../proxies';
 
 @Injectable()
 export class EthereumService {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
     private readonly cachesService: CachesService,
@@ -59,7 +61,7 @@ export class EthereumService {
   getContract(): SmartContract {
     try {
       const contract: SmartContract = this.ethersContract.create(
-        process.env.ESCROW_CONTRACT_ADDRESS,
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         ABI,
       );
 
@@ -73,7 +75,7 @@ export class EthereumService {
     try {
       const provider = this.getEthersProvider();
       const contract = new ethers.Contract(
-        process.env.ESCROW_CONTRACT_ADDRESS,
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         escrowContract.abi,
         provider,
       );

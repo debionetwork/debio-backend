@@ -1,4 +1,4 @@
-import { DateTimeProxy } from 'src/common/proxies/date-time/date-time.proxy';
+import { DateTimeProxy } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';

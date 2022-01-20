@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import { EthereumService } from '../../common';
-import { setOrderPaid, SubstrateService } from '../../common';
+import { EthereumService, ProcessEnvProxy, setOrderPaid, SubstrateService } from '../../common';
 import { ethers } from 'ethers';
 
 @Injectable()
 export class EscrowService {
   constructor(
-    private substrateService: SubstrateService,
-    private ethereumService: EthereumService,
+    private readonly process: ProcessEnvProxy,
+    private readonly substrateService: SubstrateService,
+    private readonly ethereumService: EthereumService,
   ) {}
 
   async createOrder(request) {
@@ -19,11 +19,11 @@ export class EscrowService {
     console.log('[refundOrder] order: ', order);
     try {
       const provider = await new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
+        this.process.env.WEB3_RPC_HTTPS,
       );
       const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet = await new ethers.Wallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
         provider,
       );
       const balance = await provider.getBalance(wallet.address);
@@ -48,7 +48,7 @@ export class EscrowService {
       await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
       const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
       const tx = await tokenContractWithSigner.fulfillOrder(order.id);
@@ -75,7 +75,7 @@ export class EscrowService {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
       const tokenContract = this.ethereumService.getContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
       const options = {
