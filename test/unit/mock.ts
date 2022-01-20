@@ -1,4 +1,4 @@
-import { DateTimeProxy } from '../../src/common';
+import { CachesService, DateTimeProxy } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
@@ -58,4 +58,9 @@ export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
   get: jest.fn(),
   set: jest.fn(),
   del: jest.fn(),
+}));
+
+export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(() => ({
+  getLastBlock: jest.fn(),
+  setLastBlock: jest.fn(),
 }));
