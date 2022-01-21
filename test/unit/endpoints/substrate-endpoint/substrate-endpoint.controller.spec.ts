@@ -4,7 +4,7 @@ import { LabService } from '../../../../src/endpoints/substrate-endpoint/service
 import { ServiceService } from '../../../../src/endpoints/substrate-endpoint/services/service.service';
 import { dateTimeProxyMockFactory, MockType } from '../../mock';
 import { SubstrateController } from '../../../../src/endpoints/substrate-endpoint/substrate-endpoint.controller';
-import { OrderService } from '../../../../src/endpoints/substrate-endpoint/services';
+import { OrderService, ServiceRequestService } from '../../../../src/endpoints/substrate-endpoint/services';
 import { DateTimeProxy, ProcessEnvProxy, RewardService, SubstrateService } from '../../../../src/common';
 import { WalletBindingDTO } from 'src/endpoints/substrate-endpoint/dto';
 import {
@@ -44,6 +44,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     getOrderList: jest.fn(),
   }));
 
+  const serviceRequestServiceMockFactory: () => MockType<ServiceRequestService> = jest.fn(() => ({
+    getAggregatedByCountries: jest.fn(),
+    getByCustomerId: jest.fn(),
+    provideRequestService: jest.fn(),
+  }));
+
   const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(() => ({
     getRewardBindingByAccountId: jest.fn(),
     insert: jest.fn(),
@@ -69,6 +75,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         { provide: LabService, useFactory: labServiceMockFactory },
         { provide: ServiceService, useFactory: serviceServiceMockFactory },
         { provide: OrderService, useFactory: orderServiceMockFactory },
+        { provide: ServiceRequestService, useFactory: serviceRequestServiceMockFactory },
         { provide: RewardService, useFactory: rewardServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
