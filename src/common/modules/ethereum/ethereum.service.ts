@@ -6,7 +6,6 @@ import {
   WalletSigner,
 } from 'nestjs-ethers';
 import ABI from './utils/ABI.json';
-import axios from 'axios';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
@@ -36,26 +35,11 @@ export class EthereumService {
     return wallet;
   }
 
-  async getGasEstimationFee(from, to, data = null) {
-    const res = await axios.post(process.env.ETHEREUM_RPC, {
-      jsonrpc: '2.0',
-      id: 1,
-      method: 'eth_estimateGas',
-      params: [{ from, to, data }],
-    });
-    const gasEstimation = res.data.result;
-    return ethers.BigNumber.from(String(gasEstimation)).toString();
-  }
-
   getEthersProvider(): ethers.providers.JsonRpcProvider {
-    try {
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
-      );
-      return provider;
-    } catch (error) {
-      console.log(error);
-    }
+    const provider = new ethers.providers.JsonRpcProvider(
+      this.process.env.WEB3_RPC_HTTPS,
+    );
+    return provider;
   }
 
   getContract(): SmartContract {
@@ -84,27 +68,5 @@ export class EthereumService {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async convertCurrency(
-    fromCurrency = 'ETH',
-    toCurrency = 'DAI',
-    amount: number | string,
-  ) {
-    const res = await axios.get(
-      'https://pro-api.coinmarketcap.com/v1/tools/price-conversion',
-      {
-        params: {
-          amount,
-          symbol: fromCurrency,
-          convert: toCurrency,
-        },
-        headers: {
-          'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
-        },
-      },
-    );
-
-    return res.data.data.quote[toCurrency];
   }
 }
