@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import { EthereumService, ProcessEnvProxy, setOrderPaid, SubstrateService } from '../../common';
+import {
+  EthereumService,
+  ProcessEnvProxy,
+  setOrderPaid,
+  SubstrateService,
+} from '../../common';
 import { ethers } from 'ethers';
 
 @Injectable()
@@ -67,7 +72,10 @@ export class EscrowService {
     }
   }
 
-  async forwardPaymentToSeller(sellerAddress: string, amount: number | string): Promise<void> {
+  async forwardPaymentToSeller(
+    sellerAddress: string,
+    amount: number | string,
+  ): Promise<void> {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
       const tokenContract = this.ethereumService.getContract();

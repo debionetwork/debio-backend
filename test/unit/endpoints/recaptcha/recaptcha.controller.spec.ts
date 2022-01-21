@@ -9,21 +9,17 @@ describe('Recaptcha Controller Unit Tests', () => {
   let recaptchaController: RecaptchaController;
   const axiosMock = new MockAdapter(axios);
 
-  const RECAPTCHA_SECRET_KEY = "KEY";
-  class ProcessEnvProxyMock { 
+  const RECAPTCHA_SECRET_KEY = 'KEY';
+  class ProcessEnvProxyMock {
     env = {
-      RECAPTCHA_SECRET_KEY
-    }
-   };
+      RECAPTCHA_SECRET_KEY,
+    };
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [
-        RecaptchaController,
-      ],
-      providers: [
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
-      ],
+      controllers: [RecaptchaController],
+      providers: [{ provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock }],
     }).compile();
 
     recaptchaController = module.get<RecaptchaController>(RecaptchaController);
@@ -38,22 +34,26 @@ describe('Recaptcha Controller Unit Tests', () => {
   it('should get exchange', async () => {
     // Arrange
     const PAYLOAD = {
-      response: "RESPONSE"
+      response: 'RESPONSE',
     };
     const EXPECTED_RESULTS = 1;
-    axiosMock.onPost(
-      'https://www.google.com/recaptcha/api/siteverify' +
-      '?secret=' +
-      RECAPTCHA_SECRET_KEY +
-      '&response=' +
-      PAYLOAD.response
-    ).reply(200, EXPECTED_RESULTS);
+    axiosMock
+      .onPost(
+        'https://www.google.com/recaptcha/api/siteverify' +
+          '?secret=' +
+          RECAPTCHA_SECRET_KEY +
+          '&response=' +
+          PAYLOAD.response,
+      )
+      .reply(200, EXPECTED_RESULTS);
     const RESPONSE: Response = {
       json: (body: any): any => body, // eslint-disable-line
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
 
     // Assert
-    expect(await recaptchaController.recaptcha(PAYLOAD, RESPONSE)).toEqual(EXPECTED_RESULTS);
+    expect(await recaptchaController.recaptcha(PAYLOAD, RESPONSE)).toEqual(
+      EXPECTED_RESULTS,
+    );
   });
 });
