@@ -73,19 +73,17 @@ export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(
   }),
 );
 
-export const substrateServiceMockFactory: () => MockType<SubstrateService> =
-  jest.fn(() => ({
+export const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(() => ({
     onModuleInit: jest.fn(),
     startListen: jest.fn(),
     stopListen: jest.fn(),
-  }));
+}));
 
-export const ethereumServiceMockFactory: () => MockType<EthereumService> =
-  jest.fn(() => ({
-    getLastBlock: jest.fn(),
-    setLastBlock: jest.fn(),
-    createWallet: jest.fn(),
-    getEthersProvider: jest.fn(),
-    getContract: jest.fn(),
-    getEscrowSmartContract: jest.fn(),
-  }));
+export const ethereumServiceMockFactory: () => MockType<EthereumService> = jest.fn(() => ({
+  getLastBlock: jest.fn(),
+  setLastBlock: jest.fn(),
+  createWallet: jest.fn(),
+  getEthersProvider: jest.fn(),
+  getContract: jest.fn(),
+  getEscrowSmartContract: jest.fn(),
+}));

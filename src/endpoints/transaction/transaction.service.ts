@@ -45,7 +45,6 @@ export class TransactionService {
     if (orders.body.hits.hits.length <= 0) {
       throw new HttpException('Cannot find transaction hash', 400);
     }
-
     const { _source } = orders.body.hits.hits[0];
     return _source['transaction_hash'];
   }
