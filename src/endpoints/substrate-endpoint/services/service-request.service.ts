@@ -1,6 +1,6 @@
 import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { CountryService } from '../../../endpoints/location/country.service';
+import { CountryService } from '../../location/country.service';
 import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
 
 interface RequestsByCountry {
