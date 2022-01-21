@@ -15,25 +15,25 @@ import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { SentryInterceptor } from '../../common/interceptors';
 import { WalletBindingDTO } from './dto/wallet-binding.dto';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
-import { LabService, OrderService, ServiceService } from './services';
+import { ServiceRequestService, LabService, OrderService, ServiceService } from './services';
 import {
   sendRewards,
   queryAccountIdByEthAddress,
   setEthAddress,
 } from '../../common/polkadot-provider';
-import { ProcessEnvProxy, SubstrateService } from '../../common';
-import { ServiceRequestService } from './services/service-request.service';
+import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 
-@UseInterceptors(SentryInterceptor)
 @Controller('substrate')
+@UseInterceptors(SentryInterceptor)
 export class SubstrateController {
   constructor(
-    private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
-    private readonly rewardService: RewardService,
     private readonly labService: LabService,
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
+    private readonly rewardService: RewardService,
+    private readonly process: ProcessEnvProxy,
+    private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
   ) {}
 
@@ -215,7 +215,7 @@ export class SubstrateController {
       reward_amount: rewardAmount,
       reward_type: 'Registered User',
       currency: 'DBIO',
-      created_at: new Date(),
+      created_at: this.dateTime.new(),
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
@@ -231,7 +231,7 @@ export class SubstrateController {
     );
 
     if (!bindingEth) {
-      response.status(401).send('Binding Error');
+      return response.status(401).send('Binding Error');
     }
 
     const isRewardHasBeenSend =
