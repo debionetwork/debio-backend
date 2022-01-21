@@ -1,4 +1,4 @@
-import { DateTimeProxy } from '../../src/common';
+import { CachesService, DateTimeProxy, SubstrateService } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
@@ -46,6 +46,7 @@ export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchServic
     update: jest.fn((entity) => entity),
     updateByQuery: jest.fn((entity) => entity),
     search: jest.fn((entity) => entity),
+    ping: jest.fn(),
   }));
 
 export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
@@ -58,4 +59,15 @@ export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
   get: jest.fn(),
   set: jest.fn(),
   del: jest.fn(),
+}));
+
+export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(() => ({
+  getLastBlock: jest.fn(),
+  setLastBlock: jest.fn(),
+}));
+
+export const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(() => ({
+  onModuleInit: jest.fn(),
+  startListen: jest.fn(),
+  stopListen: jest.fn(),
 }));

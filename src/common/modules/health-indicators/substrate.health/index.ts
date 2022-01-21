@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
-import { SubstrateModule } from '../../../common';
+import { SubstrateModule } from '../../substrate';
 import { SubstrateHealthIndicator } from './substrate.health.indicator';
 
 @Module({

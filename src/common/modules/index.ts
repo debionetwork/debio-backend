@@ -6,3 +6,4 @@ export * from './transaction-logging';
 export * from './caches';
 export * from './ethereum';
 export * from './proxies';
+export * from './health-indicators';
