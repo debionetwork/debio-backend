@@ -15,12 +15,10 @@ export class EscrowService {
     console.log('[createOrder] request: ', request);
   }
 
-  async refundOrder(order) {
+  async refundOrder(order): Promise<void> {
     console.log('[refundOrder] order: ', order);
     try {
-      const provider = await new ethers.providers.JsonRpcProvider(
-        this.process.env.WEB3_RPC_HTTPS,
-      );
+      const provider = await this.ethereumService.getEthersProvider();
       const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet = await new ethers.Wallet(
         this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
@@ -43,9 +41,8 @@ export class EscrowService {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderFulfilled(order) {
+  async orderFulfilled(order): Promise<void> {
     try {
-      await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
       const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
         this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
@@ -58,7 +55,7 @@ export class EscrowService {
     }
   }
 
-  async setOrderPaidWithSubstrate(orderId: string) {
+  async setOrderPaidWithSubstrate(orderId: string): Promise<void> {
     try {
       await setOrderPaid(
         this.substrateService.api,
@@ -70,7 +67,7 @@ export class EscrowService {
     }
   }
 
-  async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
+  async forwardPaymentToSeller(sellerAddress: string, amount: number | string): Promise<void> {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
       const tokenContract = this.ethereumService.getContract();
