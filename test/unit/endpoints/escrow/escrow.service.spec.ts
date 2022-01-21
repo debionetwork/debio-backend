@@ -1,127 +1,118 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EscrowService } from './src/endpoints/escrow/escrow.service';
+import { EthereumService, ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import { ethereumServiceMockFactory, MockType, substrateServiceMockFactory } from '../../mock';
+import { EscrowService } from '../../../../src/endpoints/escrow/escrow.service';
+import { ethers } from 'ethers';
 
-/* eslint-disable */
+const WALLET_ADDRESS = "ADDR"
+jest.mock('ethers', () => ({
+  ethers: {
+    Wallet: jest.fn(() => {
+      return {
+        address: WALLET_ADDRESS
+      };
+    }),
+  },
+}));
 
-class EscrowServiceMock {
-  handlePaymentToEscrow(from, amount): void {
-    return;
-  }
-
-  createOrder(request): void {
-    return;
-  }
-
-  refundOrder(request): any {
-    return;
-  }
-
-  cancelOrder(request) {
-    return {};
-  }
-
-  orderFulfilled(request) {
-    return '';
-  }
-
-  forwardPaymentToSeller(sellerAddress: string, amount: number | string): void {
-    return;
-  }
-
-  getRefundGasEstimationFee(
-    customerAddress: string,
-    amount: number | string,
-  ): string {
-    return '';
-  }
-}
-
-describe('EscrowService', () => {
+describe('Escrow Service Unit Tests', () => {
   let escrowService: EscrowService;
+  let substrateServiceMock: MockType<SubstrateService>;
+  let ethereumServiceMock: MockType<EthereumService>;
 
-  const escrowServiceProvider = {
-    provide: EscrowService,
-    useClass: EscrowServiceMock,
-  };
+  const DEBIO_ESCROW_PRIVATE_KEY = "PRIVKEY";
+  class ProcessEnvProxyMock {
+    env = { DEBIO_ESCROW_PRIVATE_KEY };
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EscrowService, escrowServiceProvider],
+      providers: [
+        EscrowService,
+        { provide: SubstrateService, useFactory: substrateServiceMockFactory },
+        { provide: EthereumService, useFactory: ethereumServiceMockFactory },
+        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+      ],
     }).compile();
 
     escrowService = module.get<EscrowService>(EscrowService);
+    substrateServiceMock = module.get(SubstrateService);
+    ethereumServiceMock = module.get(EthereumService);
   });
 
-  describe('Ethereum EscrowService', () => {
-    it('EscrowService must defined', () => {
-      expect(EscrowService).toBeDefined();
+  it('should be defined', () => {
+    // Assert
+    expect(escrowService).toBeDefined();
+  });
+
+  it('should refund order', async () => {
+    // Arrange
+    const ORDER_ID = "ID";
+    const ORDER = {
+      id: ORDER_ID
+    };
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      refundOrder: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    const PROVIDER_MOCK = {
+      getBalance: jest.fn(),
+    };
+    ethereumServiceMock.getEthersProvider.mockReturnValue(PROVIDER_MOCK);
+    ethereumServiceMock.getEscrowSmartContract.mockReturnValue(SMART_CONTRACT_MOCK);
+    PROVIDER_MOCK.getBalance.mockReturnValue("BALANCE");
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    const ethersWalletSpy = jest.spyOn(ethers, 'Wallet');
+
+    // Act
+    await escrowService.refundOrder(ORDER);
+
+    // Assert
+    expect(ethereumServiceMock.getEthersProvider).toHaveBeenCalledTimes(1);
+    expect(ethereumServiceMock.getEscrowSmartContract).toHaveBeenCalledTimes(1);
+    expect(ethersWalletSpy).toHaveBeenCalledWith(DEBIO_ESCROW_PRIVATE_KEY, PROVIDER_MOCK);
+    expect(PROVIDER_MOCK.getBalance).toHaveBeenCalledTimes(1);
+    expect(PROVIDER_MOCK.getBalance).toHaveBeenCalledWith(WALLET_ADDRESS);
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledTimes(1);
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledWith({
+      address: WALLET_ADDRESS
     });
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.refundOrder).toHaveBeenCalledTimes(1);
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.refundOrder).toHaveBeenCalledWith(ORDER_ID);
   });
 
-  it('should call handlePaymentToEscrow method with expected params ', async () => {
-    const handlePaymentToEscrowSpy = jest.spyOn(
-      escrowService,
-      'handlePaymentToEscrow',
-    );
-    const from = '';
-    const amount = '';
-    escrowService.handlePaymentToEscrow(from, amount);
-    expect(handlePaymentToEscrowSpy).toHaveBeenCalledWith(from, amount);
-  });
+  it('should fulfill order', async () => {
+    // Arrange
+    const ORDER_ID = "ID";
+    const CUSTOMER_ID = "ID";
+    const ORDER = {
+      id: ORDER_ID,
+      customerId: CUSTOMER_ID,
+    };
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      fulfillOrder: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    const WALLET_MOCK = "WALLET";
+    ethereumServiceMock.getEscrowSmartContract.mockReturnValue(SMART_CONTRACT_MOCK);
+    ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder.mockReturnValue("BALANCE");
 
-  it('should call createOrder method with expected params', async () => {
-    const createOrderSpy = jest.spyOn(escrowService, 'createOrder');
-    const request = {};
-    escrowService.createOrder(request);
-    expect(createOrderSpy).toHaveBeenCalledWith(request);
-  });
+    // Act
+    await escrowService.orderFulfilled(ORDER);
 
-  it('should call refundOrder method with expected params', async () => {
-    const refundOrderSpy = jest.spyOn(escrowService, 'refundOrder');
-    const request = {};
-    escrowService.refundOrder(request);
-    expect(refundOrderSpy).toHaveBeenCalledWith(request);
-  });
-
-  it('should call cancelOrder method with expected params', async () => {
-    const cancelOrderSpy = jest.spyOn(escrowService, 'cancelOrder');
-    const request = {};
-    escrowService.cancelOrder(request);
-    expect(cancelOrderSpy).toHaveBeenCalledWith(request);
-  });
-
-  it('should call orderFulfilled method with expected params', async () => {
-    const orderFulfilledSpy = jest.spyOn(escrowService, 'orderFulfilled');
-    const request = {};
-    escrowService.orderFulfilled(request);
-    expect(orderFulfilledSpy).toHaveBeenCalledWith(request);
-  });
-
-  it('should call forwardPaymentToSeller method with expected params', async () => {
-    const forwardPaymentToSellerSpy = jest.spyOn(
-      escrowService,
-      'forwardPaymentToSeller',
-    );
-    const sellerAddress = '';
-    const amount: number | string = 20;
-    await escrowService.forwardPaymentToSeller(sellerAddress, amount);
-    expect(forwardPaymentToSellerSpy).toHaveBeenCalledWith(
-      sellerAddress,
-      amount,
-    );
-  });
-
-  it('should call getRefundGasEstimationFee method with expected params', async () => {
-    const getRefundGasEstimationFeeSpy = jest.spyOn(
-      escrowService,
-      'getRefundGasEstimationFee',
-    );
-    const customerAddress = '';
-    const amount: number | string = 20;
-    await escrowService.getRefundGasEstimationFee(customerAddress, amount);
-    expect(getRefundGasEstimationFeeSpy).toHaveBeenCalledWith(
-      customerAddress,
-      amount,
-    );
+    // Assert
+    expect(ethereumServiceMock.getEscrowSmartContract).toHaveBeenCalledTimes(1);
+    expect(ethereumServiceMock.createWallet).toHaveBeenCalledTimes(1);
+    expect(ethereumServiceMock.createWallet).toHaveBeenCalledWith(DEBIO_ESCROW_PRIVATE_KEY);
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledTimes(1);
+    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledWith(WALLET_MOCK);
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder).toHaveBeenCalledTimes(1);
+    expect(TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder).toHaveBeenCalledWith(ORDER_ID);
   });
 });
