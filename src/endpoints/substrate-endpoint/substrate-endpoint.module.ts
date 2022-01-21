@@ -3,7 +3,7 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ServiceService } from './services/service.service';
 import { LabService } from './services/lab.service';
 import { OrderService } from './services/order.service';
-import { DebioConversionModule, RewardModule, SubstrateModule } from '../../common';
+import { DebioConversionModule, DateTimeModule, RewardModule, SubstrateModule } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
@@ -23,6 +23,7 @@ import { LocationModule } from '../location/location.module';
     }),
     SubstrateModule,
     RewardModule,
+    DateTimeModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [
