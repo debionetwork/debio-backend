@@ -46,7 +46,7 @@ export class HealthController {
           thresholdPercent: 0.5,
           path: '/',
         }),
-      () => this.elasticSearch.isHealthy('elasticsearch'),
+      () => this.elasticSearch.isHealthy(),
       () => this.substrate.isHealthy(),
     ]);
   }
