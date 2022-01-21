@@ -6,7 +6,6 @@ import { LocationModule } from './endpoints/location/location.module';
 import { RatingModule } from './endpoints/rating/rating.module';
 import { EscrowModule } from './endpoints/escrow/escrow.module';
 import { SubstrateEndpointModule } from './endpoints/substrate-endpoint/substrate-endpoint.module';
-import { SubstrateIndexedDataModule } from './endpoints/substrate-indexed-data/substrate-indexed-data.module';
 import { TransactionLoggingModule } from './common/modules/transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './common/modules/transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './endpoints/recaptcha/recaptcha.module';
@@ -63,7 +62,6 @@ require('dotenv').config(); // eslint-disable-line
     DebioConversionModule,
     SubstrateEndpointModule,
     SubstrateListenerModule,
-    SubstrateIndexedDataModule,
     TransactionLoggingModule,
     VerificationModule,
     RecaptchaModule,
