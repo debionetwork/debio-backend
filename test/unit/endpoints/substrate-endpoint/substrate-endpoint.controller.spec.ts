@@ -34,7 +34,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let orderServiceMock: MockType<OrderService>;
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-  let substrateServiceMock: SubstrateService;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -104,7 +103,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     orderServiceMock = module.get(OrderService);
     rewardServiceMock = module.get(RewardService);
     dateTimeProxyMock = module.get(DateTimeProxy);
-    substrateServiceMock = module.get(SubstrateService);
   });
 
   it('should be defined', () => {
