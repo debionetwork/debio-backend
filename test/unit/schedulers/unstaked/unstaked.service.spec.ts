@@ -16,11 +16,6 @@ describe('UnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
 
-  jest.mock('../../../../src/common', () => ({
-    queryServiceRequestById: jest.fn(),
-    retrieveUnstakedAmount: jest.fn()
-  }));
-
   const createSearchObject = () => {
     return {
       index: 'create-service-request',
