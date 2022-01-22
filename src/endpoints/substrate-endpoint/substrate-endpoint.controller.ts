@@ -15,7 +15,12 @@ import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { SentryInterceptor } from '../../common/interceptors';
 import { WalletBindingDTO } from './dto/wallet-binding.dto';
 import { ApiParam, ApiQuery } from '@nestjs/swagger';
-import { ServiceRequestService, LabService, OrderService, ServiceService } from './services';
+import {
+  ServiceRequestService,
+  LabService,
+  OrderService,
+  ServiceService,
+} from './services';
 import {
   sendRewards,
   queryAccountIdByEthAddress,

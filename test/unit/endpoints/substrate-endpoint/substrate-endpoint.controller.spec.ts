@@ -4,8 +4,16 @@ import { LabService } from '../../../../src/endpoints/substrate-endpoint/service
 import { ServiceService } from '../../../../src/endpoints/substrate-endpoint/services/service.service';
 import { dateTimeProxyMockFactory, MockType } from '../../mock';
 import { SubstrateController } from '../../../../src/endpoints/substrate-endpoint/substrate-endpoint.controller';
-import { OrderService, ServiceRequestService } from '../../../../src/endpoints/substrate-endpoint/services';
-import { DateTimeProxy, ProcessEnvProxy, RewardService, SubstrateService } from '../../../../src/common';
+import {
+  OrderService,
+  ServiceRequestService,
+} from '../../../../src/endpoints/substrate-endpoint/services';
+import {
+  DateTimeProxy,
+  ProcessEnvProxy,
+  RewardService,
+  SubstrateService,
+} from '../../../../src/common';
 import { WalletBindingDTO } from 'src/endpoints/substrate-endpoint/dto';
 import {
   queryAccountIdByEthAddress,
@@ -28,15 +36,17 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let substrateServiceMock: SubstrateService;
 
-  const DEBIO_API_KEY = "KEY";
+  const DEBIO_API_KEY = 'KEY';
 
   const labServiceMockFactory: () => MockType<LabService> = jest.fn(() => ({
     getByCountryCityCategory: jest.fn(),
   }));
 
-  const serviceServiceMockFactory: () => MockType<ServiceService> = jest.fn(() => ({
-    getByCountryCity: jest.fn(),
-  }));
+  const serviceServiceMockFactory: () => MockType<ServiceService> = jest.fn(
+    () => ({
+      getByCountryCity: jest.fn(),
+    }),
+  );
 
   const orderServiceMockFactory: () => MockType<OrderService> = jest.fn(() => ({
     getBountyList: jest.fn(),
@@ -44,27 +54,30 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     getOrderList: jest.fn(),
   }));
 
-  const serviceRequestServiceMockFactory: () => MockType<ServiceRequestService> = jest.fn(() => ({
-    getAggregatedByCountries: jest.fn(),
-    getByCustomerId: jest.fn(),
-    provideRequestService: jest.fn(),
-  }));
+  const serviceRequestServiceMockFactory: () => MockType<ServiceRequestService> =
+    jest.fn(() => ({
+      getAggregatedByCountries: jest.fn(),
+      getByCustomerId: jest.fn(),
+      provideRequestService: jest.fn(),
+    }));
 
-  const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(() => ({
-    getRewardBindingByAccountId: jest.fn(),
-    insert: jest.fn(),
-  }));
+  const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
+    () => ({
+      getRewardBindingByAccountId: jest.fn(),
+      insert: jest.fn(),
+    }),
+  );
 
-  class ProcessEnvProxyMock { 
+  class ProcessEnvProxyMock {
     env = {
-      DEBIO_API_KEY
-    }
-   };
+      DEBIO_API_KEY,
+    };
+  }
 
-  class SubstrateServiceMock { 
-    api = "API"
-    pair = "PAIR"
-  };
+  class SubstrateServiceMock {
+    api = 'API';
+    pair = 'PAIR';
+  }
 
   // Arrange before each iteration
   beforeEach(async () => {
@@ -75,7 +88,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         { provide: LabService, useFactory: labServiceMockFactory },
         { provide: ServiceService, useFactory: serviceServiceMockFactory },
         { provide: OrderService, useFactory: orderServiceMockFactory },
-        { provide: ServiceRequestService, useFactory: serviceRequestServiceMockFactory },
+        {
+          provide: ServiceRequestService,
+          useFactory: serviceRequestServiceMockFactory,
+        },
         { provide: RewardService, useFactory: rewardServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
@@ -128,7 +144,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       10,
     );
   });
-  
+
   it('should find service by country, city, and category', () => {
     // Arrange
     const RESULT = 1;
@@ -147,24 +163,20 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'XX',
     );
   });
-  
+
   it('should orders by order Id', () => {
     // Arrange
     const RESULT = 1;
     orderServiceMock.getOrderByHashId.mockReturnValue(RESULT);
 
     // Assert
-    expect(
-      substrateControllerMock.getOrderById(
-        'keyword',
-      ),
-    ).resolves.toEqual(RESULT);
-    expect(orderServiceMock.getOrderByHashId).toHaveBeenCalled();
-    expect(orderServiceMock.getOrderByHashId).toHaveBeenCalledWith(
-      'keyword',
+    expect(substrateControllerMock.getOrderById('keyword')).resolves.toEqual(
+      RESULT,
     );
+    expect(orderServiceMock.getOrderByHashId).toHaveBeenCalled();
+    expect(orderServiceMock.getOrderByHashId).toHaveBeenCalledWith('keyword');
   });
-  
+
   it('should orders list by customer', () => {
     // Arrange
     const RESULT = 1;
@@ -188,7 +200,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       10,
     );
   });
-  
+
   it('should bounty by product name status lab name', () => {
     // Arrange
     const RESULT = 1;
@@ -211,7 +223,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       10,
     );
   });
-  
+
   it('should orders list by lab', () => {
     // Arrange
     const RESULT = 1;
@@ -219,12 +231,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      substrateControllerMock.getOrderByLab(
-        { lab_id: 1 },
-        'keyword',
-        1,
-        10,
-      ),
+      substrateControllerMock.getOrderByLab({ lab_id: 1 }, 'keyword', 1, 10),
     ).resolves.toEqual(RESULT);
     expect(orderServiceMock.getOrderList).toHaveBeenCalled();
     expect(orderServiceMock.getOrderList).toHaveBeenCalledWith(
@@ -235,7 +242,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       10,
     );
   });
-  
+
   it('should not wallet bind with false API key', async () => {
     // Arrange
     const EXPECTED_RESULTS = 'debio-api-key header is required';
@@ -244,24 +251,18 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
-      accountId: "string",
-      ethAddress: "string",
-    }
+      accountId: 'string',
+      ethAddress: 'string',
+    };
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(
-        DTO,
-        RESPONSE,
-        "NOT API KEY",
-      ),
-    ).toEqual(
-      EXPECTED_RESULTS,
-    );
+      await substrateControllerMock.walletBinding(DTO, RESPONSE, 'NOT API KEY'),
+    ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
   });
-  
+
   it('should not wallet bind with binding error', async () => {
     // Arrange
     const EXPECTED_RESULTS = 'Binding Error';
@@ -270,38 +271,35 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
-      accountId: "string",
-      ethAddress: "string",
+      accountId: 'string',
+      ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
     (setEthAddress as jest.Mock).mockReturnValue(false);
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(
-        DTO,
-        RESPONSE,
-        DEBIO_API_KEY,
-      ),
-    ).toEqual(
-      EXPECTED_RESULTS,
-    );
+      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+    ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
-    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith("API", DTO.ethAddress);
+    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
+      'API',
+      DTO.ethAddress,
+    );
     expect(setEthAddress).toHaveBeenCalled();
     expect(setEthAddress).toHaveBeenCalledWith(
-      "API",
-      "PAIR",
+      'API',
+      'PAIR',
       DTO.accountId,
       DTO.ethAddress,
     );
   });
-  
+
   it('should wallet bind', async () => {
     // Arrange
     const DTO: WalletBindingDTO = {
-      accountId: "string",
-      ethAddress: "string",
+      accountId: 'string',
+      ethAddress: 'string',
     };
     const DBIO_UNIT = 10 ** 18;
     const REWARD = 0.2;
@@ -320,27 +318,24 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(
-        DTO,
-        RESPONSE,
-        DEBIO_API_KEY,
-      ),
-    ).toEqual(
-      EXPECTED_RESULTS,
-    );
+      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+    ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
-    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith("API", DTO.ethAddress);
+    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
+      'API',
+      DTO.ethAddress,
+    );
     expect(setEthAddress).toHaveBeenCalled();
     expect(setEthAddress).toHaveBeenCalledWith(
-      "API",
-      "PAIR",
+      'API',
+      'PAIR',
       DTO.accountId,
       DTO.ethAddress,
     );
     expect(sendRewards).toHaveBeenCalled();
     expect(sendRewards).toHaveBeenCalledWith(
-      "API",
-      "PAIR",
+      'API',
+      'PAIR',
       DTO.accountId,
       (REWARD * DBIO_UNIT).toString(),
     );

@@ -1,21 +1,21 @@
-import { mockFunction } from "./mock";
+import { mockFunction } from './mock';
 
 export class WsProvider {
-    constructor(params){
-        mockFunction(params);
-    }
-};
+  constructor(params) {
+    mockFunction(params);
+  }
+}
 export class ApiPromise {
     static create(provider) { // eslint-disable-line
-        return new ApiPromise();
-    }
+    return new ApiPromise();
+  }
     on(ev, func) { // eslint-disable-line
-        mockFunction(ev);
-    }
-};
+    mockFunction(ev);
+  }
+}
 export class Keyring {
-    constructor(params){
-        mockFunction(params);
-    }
+  constructor(params) {
+    mockFunction(params);
+  }
     addFromUri(provider) {} // eslint-disable-line
 }

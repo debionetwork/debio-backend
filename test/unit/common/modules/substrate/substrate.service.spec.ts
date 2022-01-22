@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockFunction } from '../../../mock';
 import { ProcessEnvProxy, SubstrateService } from '../../../../../src/common';
-import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
+import { ApiPromise, Keyring } from '@polkadot/api';
 
 jest.mock('../../../mock', () => ({
-    mockFunction: jest.fn(),
+  mockFunction: jest.fn(),
 }));
 
 const apiPromiseSpy = jest.spyOn(ApiPromise, 'create');
@@ -13,14 +13,14 @@ const keyringSpy = jest.spyOn(Keyring.prototype, 'addFromUri');
 describe.only('Substrate Service Unit Test', () => {
   let substrateService: SubstrateService;
 
-  const SUBSTRATE_URL = "URL";
-  const ADMIN_SUBSTRATE_MNEMONIC = "ADDR";
-  class ProcessEnvProxyMock { 
+  const SUBSTRATE_URL = 'URL';
+  const ADMIN_SUBSTRATE_MNEMONIC = 'ADDR';
+  class ProcessEnvProxyMock {
     env = {
       SUBSTRATE_URL,
       ADMIN_SUBSTRATE_MNEMONIC,
-    }
-   };
+    };
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -44,10 +44,10 @@ describe.only('Substrate Service Unit Test', () => {
     (mockFunction as jest.Mock).mockClear();
     apiPromiseSpy.mockClear();
     keyringSpy.mockClear();
-    
+
     // Act
     await substrateService.onModuleInit();
-    
+
     // Assert
     expect(mockFunction).toHaveBeenCalledTimes(5);
     expect(mockFunction).toHaveBeenCalledWith(SUBSTRATE_URL);
@@ -68,7 +68,7 @@ describe.only('Substrate Service Unit Test', () => {
 
     // Act
     await substrateService.startListen();
-    
+
     // Assert
     expect(apiPromiseSpy).toHaveBeenCalledTimes(1);
     expect(mockFunction).toHaveBeenCalledTimes(3);
@@ -87,7 +87,7 @@ describe.only('Substrate Service Unit Test', () => {
     await substrateService.startListen();
     await substrateService.stopListen();
     await substrateService.startListen();
-    
+
     // Assert
     expect(apiPromiseSpy).toHaveBeenCalledTimes(2);
     expect(mockFunction).toHaveBeenCalledTimes(6);

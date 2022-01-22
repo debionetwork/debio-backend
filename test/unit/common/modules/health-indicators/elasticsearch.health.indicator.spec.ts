@@ -12,7 +12,10 @@ describe('Substrate Health Indicator Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ElasticsearchHealthIndicator,
-        { provide: ElasticsearchService, useFactory: elasticsearchServiceMockFactory },
+        {
+          provide: ElasticsearchService,
+          useFactory: elasticsearchServiceMockFactory,
+        },
       ],
     }).compile();
 
@@ -26,7 +29,7 @@ describe('Substrate Health Indicator Unit Tests', () => {
 
   it('should return healthcheck', async () => {
     // Arrange
-    const EXPECTED_RESULT = { 'elasticsearch': { status: 'up' } };
+    const EXPECTED_RESULT = { elasticsearch: { status: 'up' } };
 
     // Assert
     expect(await healthIndicator.isHealthy()).toEqual(EXPECTED_RESULT);
@@ -35,11 +38,13 @@ describe('Substrate Health Indicator Unit Tests', () => {
   it('should throw error', () => {
     // Arrange
     elasticsearchServiceMock.ping.mockImplementationOnce(() =>
-    Promise.reject("ERROR_RESULT"),
-  );
+      Promise.reject('ERROR_RESULT'),
+    );
 
     // Assert
     expect(healthIndicator.isHealthy).rejects.toThrow(HealthCheckError);
-    expect(healthIndicator.isHealthy).rejects.toThrow('ElasticsearchHealthIndicator failed');
+    expect(healthIndicator.isHealthy).rejects.toThrow(
+      'ElasticsearchHealthIndicator failed',
+    );
   });
 });
