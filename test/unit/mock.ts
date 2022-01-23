@@ -81,3 +81,11 @@ export const ethereumServiceMockFactory: () => MockType<EthereumService> = jest.
   getContract: jest.fn(),
   getEscrowSmartContract: jest.fn(),
 }));
+
+export const MockLogger = {
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+  verbose: jest.fn(),
+}
