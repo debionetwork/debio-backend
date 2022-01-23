@@ -100,7 +100,7 @@ export class UnstakedService implements OnModuleInit {
         }
       }
     } catch (err) {
-      this.logger.log(`unstaked error ${err}`);
+      this.logger.error(`unstaked error ${err}`);
     } finally {
       this.isRunning = false;
     }
