@@ -17,10 +17,7 @@ export class ElasticsearchHealthIndicator extends HealthIndicator {
       await this.elasticsearchService.ping();
       return this.getStatus('elasticsearch', true);
     } catch (error) {
-      throw new HealthCheckError(
-        'ElasticsearchHealthIndicator failed',
-        error,
-      );
+      throw new HealthCheckError('ElasticsearchHealthIndicator failed', error);
     }
   }
 }

@@ -4,12 +4,7 @@ import { EscrowModule } from '../../endpoints/escrow/escrow.module';
 import { EthereumListenerHandler } from './ethereum-listener.handler';
 
 @Module({
-  imports: [
-    EthereumModule,
-    EscrowModule,
-  ],
-  providers: [
-    EthereumListenerHandler
-  ]
+  imports: [EthereumModule, EscrowModule],
+  providers: [EthereumListenerHandler],
 })
 export class EthereumListenerModule {}

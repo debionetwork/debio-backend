@@ -8,8 +8,8 @@ describe('Ethereum Listener Handler Unit Test', () => {
   let ethereumService: EthereumService;
   let escrowService: EscrowService;
 
-  let providerOnEventType = "";
-  let smartContractOnEventType = "";
+  let providerOnEventType = '';
+  let smartContractOnEventType = '';
 
   const ORDER_ID = 1;
   const BLOCK_NUM = 1;
@@ -58,7 +58,7 @@ describe('Ethereum Listener Handler Unit Test', () => {
         on: (type, fn) => {
           smartContractOnEventType = type;
           const orderEventMock = {
-            orderId: ORDER_ID
+            orderId: ORDER_ID,
           };
           fn(orderEventMock);
         },
@@ -80,12 +80,14 @@ describe('Ethereum Listener Handler Unit Test', () => {
       ],
     }).compile();
 
-    ethereumListenerHandler = module.get<EthereumListenerHandler>(EthereumListenerHandler);
+    ethereumListenerHandler = module.get<EthereumListenerHandler>(
+      EthereumListenerHandler,
+    );
     ethereumService = module.get<EthereumService>(EthereumService);
     escrowService = module.get<EscrowService>(EscrowService);
-    
-    providerOnEventType = "";    
-    smartContractOnEventType = "";
+
+    providerOnEventType = '';
+    smartContractOnEventType = '';
   });
 
   it('should be defined', () => {
@@ -112,14 +114,16 @@ describe('Ethereum Listener Handler Unit Test', () => {
     expect(ethereumService.getEscrowSmartContract).toBeCalled();
 
     expect(ethereumService.getLastBlock).toBeCalled();
-    
+
     expect(providerOnEventType).toEqual('block');
     expect(ethereumService.setLastBlock).toBeCalledTimes(2);
     expect(ethereumService.setLastBlock).toHaveBeenCalledWith(BLOCK_NUM);
 
     expect(smartContractOnEventType).toEqual('OrderPaid');
     expect(escrowService.setOrderPaidWithSubstrate).toBeCalled();
-    expect(escrowService.setOrderPaidWithSubstrate).toHaveBeenCalledWith(ORDER_ID);
+    expect(escrowService.setOrderPaidWithSubstrate).toHaveBeenCalledWith(
+      ORDER_ID,
+    );
   });
 
   it('should sync one block', async () => {

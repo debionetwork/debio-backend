@@ -1,10 +1,16 @@
-
-import { DateTimeProxy, EthereumService, CachesService, SubstrateService } from '../../src/common'
+import {
+  DateTimeProxy,
+  EthereumService,
+  CachesService,
+  SubstrateService,
+} from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
+
+export function mockFunction(args){} // eslint-disable-line
 
 export type MockType<T> = {
     [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
@@ -62,16 +68,19 @@ export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
   del: jest.fn(),
 }));
 
-export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(() => ({
-  getLastBlock: jest.fn(),
-  setLastBlock: jest.fn(),
-}));
+export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(
+  () => ({
+    getLastBlock: jest.fn(),
+    setLastBlock: jest.fn(),
+  }),
+);
 
-export const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(() => ({
-  onModuleInit: jest.fn(),
-  startListen: jest.fn(),
-  stopListen: jest.fn(),
-}));
+export const substrateServiceMockFactory: () => MockType<SubstrateService> =
+  jest.fn(() => ({
+    onModuleInit: jest.fn(),
+    startListen: jest.fn(),
+    stopListen: jest.fn(),
+  }));
 
 export const ethereumServiceMockFactory: () => MockType<EthereumService> = jest.fn(() => ({
   getLastBlock: jest.fn(),

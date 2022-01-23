@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CachesService, EthereumService, ProcessEnvProxy } from '../../../../../src/common';
+import {
+  CachesService,
+  EthereumService,
+  ProcessEnvProxy,
+} from '../../../../../src/common';
 import { cachesServiceMockFactory, MockType } from '../../../mock';
 import { EthersContract, EthersSigner } from 'nestjs-ethers';
 import ABI from '../../../../../src/common/modules/ethereum/utils/ABI.json';
@@ -10,16 +14,16 @@ const PROVIDER_RESULT = 1;
 jest.mock('ethers', () => ({
   ethers: {
     providers: {
-      JsonRpcProvider: jest.fn(rpc => {
+      JsonRpcProvider: jest.fn((rpc) => {
         return {
           rpc: rpc,
-          provider: PROVIDER_RESULT
+          provider: PROVIDER_RESULT,
         };
-      })
+      }),
     },
     Contract: jest.fn(() => {
       return {
-        provider: PROVIDER_RESULT
+        provider: PROVIDER_RESULT,
       };
     }),
   },
@@ -31,26 +35,28 @@ describe.only('EthereumService', () => {
   let ethersContractMock: MockType<EthersContract>;
   let ethersSignerMock: MockType<EthersSigner>;
 
-  const ethersContractMockFactory: () => MockType<EthersContract> = jest.fn(() => ({
-    create: jest.fn(),
-  }));
+  const ethersContractMockFactory: () => MockType<EthersContract> = jest.fn(
+    () => ({
+      create: jest.fn(),
+    }),
+  );
 
   const ethersSignerMockFactory: () => MockType<EthersSigner> = jest.fn(() => ({
     createWallet: jest.fn(),
   }));
 
-  const ETHEREUM_RPC = "RPC";
-  const WEB3_RPC_HTTPS = "RPC";
-  const ESCROW_CONTRACT_ADDRESS = "ADDR";
-  const COINMARKETCAP_API_KEY = "KEY";
-  class ProcessEnvProxyMock { 
+  const ETHEREUM_RPC = 'RPC';
+  const WEB3_RPC_HTTPS = 'RPC';
+  const ESCROW_CONTRACT_ADDRESS = 'ADDR';
+  const COINMARKETCAP_API_KEY = 'KEY';
+  class ProcessEnvProxyMock {
     env = {
       ETHEREUM_RPC,
       WEB3_RPC_HTTPS,
       ESCROW_CONTRACT_ADDRESS,
       COINMARKETCAP_API_KEY,
-    }
-   };
+    };
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -77,7 +83,7 @@ describe.only('EthereumService', () => {
   it('should call getLastBlock method with expected params', async () => {
     // Act
     ethereumService.getLastBlock();
-    
+
     // Assert
     expect(cachesServiceMock.getLastBlock).toHaveBeenCalled();
   });
@@ -96,7 +102,7 @@ describe.only('EthereumService', () => {
   it('should call create wallet', async () => {
     // Arrange
     const EXPECTED_RESULT = 1;
-    const PRIVKEY = "KEY";
+    const PRIVKEY = 'KEY';
     ethersSignerMock.createWallet.mockReturnValue(EXPECTED_RESULT);
 
     // Act
@@ -118,7 +124,7 @@ describe.only('EthereumService', () => {
     expect(ethersContractMock.create).toHaveBeenCalled();
     expect(ethersContractMock.create).toHaveBeenCalledWith(
       ESCROW_CONTRACT_ADDRESS,
-      ABI
+      ABI,
     );
   });
 
@@ -140,7 +146,7 @@ describe.only('EthereumService', () => {
     const ethServiceSpy = jest.spyOn(ethereumService, 'getEthersProvider');
     const jsonRpcSpy = jest.spyOn(ethers.providers, 'JsonRpcProvider');
     const contractSpy = jest.spyOn(ethers, 'Contract');
-    
+
     // Assert
     expect(ethereumService.getEscrowSmartContract()).toEqual({
       provider: PROVIDER_RESULT,

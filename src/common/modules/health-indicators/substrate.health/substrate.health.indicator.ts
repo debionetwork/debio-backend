@@ -20,10 +20,7 @@ export class SubstrateHealthIndicator extends HealthIndicator {
       }
       return this.getStatus('substrate-node', true);
     } catch (error) {
-      throw new HealthCheckError(
-        'SubstrateHealthIndicator failed',
-        error,
-      );
+      throw new HealthCheckError('SubstrateHealthIndicator failed', error);
     }
   }
 }
