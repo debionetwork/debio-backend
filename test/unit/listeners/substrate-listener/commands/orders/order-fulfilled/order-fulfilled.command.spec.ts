@@ -1,67 +1,23 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { DebioConversionService, OrderStatus, RewardService, SubstrateService, TransactionLoggingService } from "../../../../../../../src/common";
+import { OrderStatus } from "../../../../../../../src/common";
 import { OrderFulfilledCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, debioConversionServiceMockFactory, escrowServiceMockFactory, mockBlockNumber, rewardServiceMockFactory, substrateServiceMockFactory, transactionLoggingServiceMockFactory } from "../../../../../mock";
-import { OrderFulfilledHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { createMockOrder, mockBlockNumber } from "../../../../../mock";
+import { Order } from "../../../../../../../src/common/polkadot-provider/models/orders";
 
-describe("Order Fulfilled Command Event", () => {
-  let orderFulfilledHandler: OrderFulfilledHandler;
-  let commandBus: CommandBus;
+jest.mock("../../../../../../../src/common/polkadot-provider/models/orders");
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CqrsModule
-      ],
-      providers: [
-        CommandBus,
-				{
-          provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-				{
-          provide: EscrowService,
-          useFactory: escrowServiceMockFactory
-				},
-				{
-          provide: SubstrateService,
-          useFactory: substrateServiceMockFactory
-				},
-        {
-          provide: DebioConversionService,
-          useFactory: debioConversionServiceMockFactory
-        },
-        {
-          provide: RewardService,
-          useFactory: rewardServiceMockFactory
-        },
-        OrderFulfilledHandler
-      ]
-    }).compile();
+describe("Order Cancelled Command Event", () => {
+  it("should called model data and toHuman", () => {
+    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    orderFulfilledHandler = module.get(OrderFulfilledHandler);
-    commandBus = module.get(CommandBus);
-
-    await module.init();
+    const _orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand([ORDER_RESPONSE], mockBlockNumber());
+    expect(Order).toHaveBeenCalled();
+    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman())
+    expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
   });
-
-  it("should defined Order Fulfilled Handler", () => {
-    expect(orderFulfilledHandler).toBeDefined();
-  });
-
-  it("should called order fulfilled handler with command bus", async () => {
-    const ORDER = createMockOrder(OrderStatus.Unpaid);
-
-    const orderFulfilledHandlerSpy = jest.spyOn(orderFulfilledHandler, 'execute').mockImplementation();
-
-    const orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand([ORDER], mockBlockNumber());
-
-    await commandBus.execute(orderFulfilledCommand);
-    expect(orderFulfilledHandlerSpy).toHaveBeenCalled();
-    expect(orderFulfilledHandlerSpy).toHaveBeenCalledWith(orderFulfilledCommand);
-
-    orderFulfilledHandlerSpy.mockClear();
-  });
+  
+  it("should throw error if toHuman not defined", () => {
+    expect(
+      () => { new OrderFulfilledCommand([{}], mockBlockNumber()); }
+    ).toThrowError();
+  })
 });

@@ -1,55 +1,23 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { OrderStatus, SubstrateService } from "../../../../../../../src/common";
+import { OrderStatus } from "../../../../../../../src/common";
 import { OrderFailedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, escrowServiceMockFactory, mockBlockNumber, substrateServiceMockFactory } from "../../../../../mock";
-import { OrderFailedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { createMockOrder, mockBlockNumber } from "../../../../../mock";
+import { Order } from "../../../../../../../src/common/polkadot-provider/models/orders";
 
-describe("Order Failed Command Event", () => {
-  let orderFailedHandler: OrderFailedHandler;
-  let commandBus: CommandBus;
+jest.mock("../../../../../../../src/common/polkadot-provider/models/orders");
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CqrsModule
-      ],
-      providers: [
-        CommandBus,
-				{
-          provide: SubstrateService,
-          useFactory: substrateServiceMockFactory
-				},
-				{
-          provide: EscrowService,
-          useFactory: escrowServiceMockFactory
-				},
-        OrderFailedHandler
-      ]
-    }).compile();
+describe("Order Cancelled Command Event", () => {
+  it("should called model data and toHuman", () => {
+    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    orderFailedHandler = module.get(OrderFailedHandler);
-    commandBus = module.get(CommandBus);
-
-    await module.init();
+    const _orderFailedCommand: OrderFailedCommand = new OrderFailedCommand([ORDER_RESPONSE], mockBlockNumber());
+    expect(Order).toHaveBeenCalled();
+    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman())
+    expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
   });
-
-  it("should defined Order Failed Handler", () => {
-    expect(orderFailedHandler).toBeDefined();
-  });
-
-  it("should called order failed handler with command bus", async () => {
-    const ORDER = createMockOrder(OrderStatus.Unpaid);
-
-    const orderFailedHandlerSpy = jest.spyOn(orderFailedHandler, 'execute').mockImplementation();
-
-    const orderFailedCommand: OrderFailedCommand = new OrderFailedCommand([ORDER], mockBlockNumber());
-
-    await commandBus.execute(orderFailedCommand);
-    expect(orderFailedHandlerSpy).toHaveBeenCalled();
-    expect(orderFailedHandlerSpy).toHaveBeenCalledWith(orderFailedCommand);
-
-    orderFailedHandlerSpy.mockClear();
-  });
+  
+  it("should throw error if toHuman not defined", () => {
+    expect(
+      () => { new OrderFailedCommand([{}], mockBlockNumber()); }
+    ).toThrowError();
+  })
 });

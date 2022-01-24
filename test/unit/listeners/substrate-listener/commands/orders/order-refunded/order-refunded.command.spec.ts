@@ -1,50 +1,23 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { OrderStatus, TransactionLoggingService } from "../../../../../../../src/common";
+import { OrderStatus } from "../../../../../../../src/common";
 import { OrderRefundedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, mockBlockNumber, transactionLoggingServiceMockFactory } from "../../../../../mock";
-import { OrderRefundedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler";
+import { createMockOrder, mockBlockNumber } from "../../../../../mock";
+import { Order } from "../../../../../../../src/common/polkadot-provider/models/orders";
 
-describe("Order Paid Command Event", () => {
-  let orderRefundedHandler: OrderRefundedHandler;
-  let commandBus: CommandBus;
+jest.mock("../../../../../../../src/common/polkadot-provider/models/orders");
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CqrsModule
-      ],
-      providers: [
-        CommandBus,
-				{
-          provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-        OrderRefundedHandler
-      ]
-    }).compile();
+describe("Order Cancelled Command Event", () => {
+  it("should called model data and toHuman", () => {
+    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    orderRefundedHandler = module.get(OrderRefundedHandler);
-    commandBus = module.get(CommandBus);
-
-    await module.init();
+    const _orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([ORDER_RESPONSE], mockBlockNumber());
+    expect(Order).toHaveBeenCalled();
+    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman())
+    expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
   });
-
-  it("should defined Order Paid Handler", () => {
-    expect(orderRefundedHandler).toBeDefined();
-  });
-
-  it("should called order paid handler with command bus", async () => {
-    const ORDER = createMockOrder(OrderStatus.Unpaid);
-
-    const orderRefundedHandlerSpy = jest.spyOn(orderRefundedHandler, 'execute').mockImplementation();
-
-    const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([ORDER], mockBlockNumber());
-
-    await commandBus.execute(orderRefundedCommand);
-    expect(orderRefundedHandlerSpy).toHaveBeenCalled();
-    expect(orderRefundedHandlerSpy).toHaveBeenCalledWith(orderRefundedCommand);
-
-    orderRefundedHandlerSpy.mockClear();
-  });
+  
+  it("should throw error if toHuman not defined", () => {
+    expect(
+      () => { new OrderRefundedCommand([{}], mockBlockNumber()); }
+    ).toThrowError();
+  })
 });

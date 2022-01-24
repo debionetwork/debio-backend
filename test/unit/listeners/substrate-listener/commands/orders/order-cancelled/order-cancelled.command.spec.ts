@@ -11,8 +11,13 @@ describe("Order Cancelled Command Event", () => {
 
     const _orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand([ORDER_RESPONSE], mockBlockNumber());
     expect(Order).toHaveBeenCalled();
-    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman)
+    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman())
     expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
   });
   
+  it("should throw error if toHuman not defined", () => {
+    expect(
+      () => { new OrderCancelledCommand([{}], mockBlockNumber()); }
+    ).toThrowError();
+  })
 });
