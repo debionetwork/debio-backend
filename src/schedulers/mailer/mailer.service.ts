@@ -21,12 +21,10 @@ export class MailerService implements OnModuleInit {
   async handlePendingLabRegister() {
     try {
       if(this.isRunning) return;
+      if(this.substrateService.api === undefined) return;
 
       this.isRunning = true;
       const labRegisterPending = await this.emailNotificationService.getPendingLabRegisterNotification()
-      
-      console.log('---', labRegisterPending);
-      console.log('api', this.substrateService.api);
       
       labRegisterPending.forEach(async (data) => {
         const contextLab = await queryLabById(this.substrateService.api, data.ref_number);
