@@ -1,55 +1,18 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { OrderStatus, TransactionLoggingService } from "../../../../../../../src/common";
+import { OrderStatus } from "../../../../../../../src/common";
 import { OrderCancelledCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { escrowServiceMockFactory, transactionLoggingServiceMockFactory, createMockOrder, mockBlockNumber } from "../../../../../mock";
-import { OrderCancelledHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-cancelled/order-cancelled.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { createMockOrder, mockBlockNumber } from "../../../../../mock";
+import { Order } from "../../../../../../../src/common/polkadot-provider/models/orders";
+
+jest.mock("../../../../../../../src/common/polkadot-provider/models/orders");
 
 describe("Order Cancelled Command Event", () => {
-  let orderCancelledHandler: OrderCancelledHandler;
-  let commandBus: CommandBus;
+  it("should called model data and toHuman", () => {
+    const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CqrsModule
-      ],
-      providers: [
-        CommandBus,
-				{
-          provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-				{
-          provide: EscrowService,
-          useFactory: escrowServiceMockFactory
-				},
-        OrderCancelledHandler
-      ]
-    }).compile();
-
-    orderCancelledHandler = module.get(OrderCancelledHandler);
-    commandBus = module.get(CommandBus);
-
-    await module.init();
+    const _orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand([ORDER_RESPONSE], mockBlockNumber());
+    expect(Order).toHaveBeenCalled();
+    expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman)
+    expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
   });
-
-  it("should defined Order Cancelled Handler", () => {
-    expect(orderCancelledHandler).toBeDefined();
-  });
-
-  it("should called order cancelled handler with command bus", async () => {
-    const ORDER = createMockOrder(OrderStatus.Cancelled);
-
-    const orderCancelledHandlerSpy = jest.spyOn(orderCancelledHandler, 'execute').mockImplementation();
-
-    const orderCancelledCommand: OrderCancelledCommand = new OrderCancelledCommand([ORDER], mockBlockNumber());
-
-    await commandBus.execute(orderCancelledCommand);
-    expect(orderCancelledHandlerSpy).toHaveBeenCalled();
-    expect(orderCancelledHandlerSpy).toHaveBeenCalledWith(orderCancelledCommand);
-
-    orderCancelledHandlerSpy.mockClear();
-  });
+  
 });
