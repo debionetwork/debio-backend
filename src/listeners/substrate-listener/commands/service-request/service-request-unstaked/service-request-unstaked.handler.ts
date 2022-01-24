@@ -2,6 +2,7 @@ import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   convertToDbioUnit,
+  DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
@@ -16,7 +17,10 @@ export class ServiceRequestUnstakedHandler
     ServiceRequestUnstakedCommand.name,
   );
 
-  constructor(private readonly loggingService: TransactionLoggingService) {}
+  constructor(
+    private readonly loggingService: TransactionLoggingService,
+    private readonly dateTimeProxy: DateTimeProxy,
+  ) {}
 
   async execute(command: ServiceRequestUnstakedCommand) {
     const serviceRequest = command.request;
@@ -32,7 +36,7 @@ export class ServiceRequestUnstakedHandler
       const stakingLogging: TransactionLoggingDto = {
         address: serviceRequest.requester_address,
         amount: convertToDbioUnit(serviceRequest.staking_amount),
-        created_at: new Date(),
+        created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),
         ref_number: serviceRequest.hash,
