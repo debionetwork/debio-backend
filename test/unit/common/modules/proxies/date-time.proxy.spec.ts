@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { dateTimeProxyMockFactory, MockType } from "../../../mock";
+import { dateTimeProxyMockFactory } from "../../../mock";
 import { DateTimeProxy, DateTimeModule } from "../../../../../src/common"
 
 describe('Date Time Proxy Unit Tests', () => {
-  let dateTimeProxyMock: MockType<DateTimeProxy>
+  let dateTimeProxyMock: DateTimeProxy
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
