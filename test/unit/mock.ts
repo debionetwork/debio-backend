@@ -10,6 +10,8 @@ import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 
+export function mockFunction(args){} // eslint-disable-line
+
 export type MockType<T> = {
     [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
 };
@@ -79,11 +81,12 @@ export const substrateServiceMockFactory: () => MockType<SubstrateService> = jes
     stopListen: jest.fn(),
 }));
 
-export const ethereumServiceMockFactory: () => MockType<EthereumService> = jest.fn(() => ({
-  getLastBlock: jest.fn(),
-  setLastBlock: jest.fn(),
-  createWallet: jest.fn(),
-  getEthersProvider: jest.fn(),
-  getContract: jest.fn(),
-  getEscrowSmartContract: jest.fn(),
-}));
+export const ethereumServiceMockFactory: () => MockType<EthereumService> =
+  jest.fn(() => ({
+    getLastBlock: jest.fn(),
+    setLastBlock: jest.fn(),
+    createWallet: jest.fn(),
+    getEthersProvider: jest.fn(),
+    getContract: jest.fn(),
+    getEscrowSmartContract: jest.fn(),
+  }));
