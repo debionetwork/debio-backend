@@ -1,6 +1,9 @@
 import { HealthCheckError } from '@nestjs/terminus';
 import { Test, TestingModule } from '@nestjs/testing';
-import { SubstrateHealthIndicator, SubstrateService } from '../../../../../src/common';
+import {
+  SubstrateHealthIndicator,
+  SubstrateService,
+} from '../../../../../src/common';
 import { MockType, substrateServiceMockFactory } from '../../../mock';
 
 describe('Substrate Health Indicator Unit Tests', () => {
@@ -26,8 +29,8 @@ describe('Substrate Health Indicator Unit Tests', () => {
   it('should return healthcheck', async () => {
     // Arrange
     Reflect.set(substrateServiceMock, 'api', {
-      isConnected: true
-    })
+      isConnected: true,
+    });
     const EXPECTED_RESULT = { 'substrate-node': { status: 'up' } };
 
     // Assert
@@ -37,11 +40,13 @@ describe('Substrate Health Indicator Unit Tests', () => {
   it('should throw error', () => {
     // Arrange
     Reflect.set(substrateServiceMock, 'api', {
-      isConnected: false
-    })
+      isConnected: false,
+    });
 
     // Assert
     expect(healthIndicator.isHealthy).rejects.toThrow(HealthCheckError);
-    expect(healthIndicator.isHealthy).rejects.toThrow('SubstrateHealthIndicator failed');
+    expect(healthIndicator.isHealthy).rejects.toThrow(
+      'SubstrateHealthIndicator failed',
+    );
   });
 });
