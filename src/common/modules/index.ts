@@ -7,4 +7,4 @@ export * from './caches';
 export * from './ethereum';
 export * from './proxies';
 export * from './health-indicators';
-export * from "./database";
+export * from './database';

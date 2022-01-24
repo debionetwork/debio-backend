@@ -5,9 +5,7 @@ import { CustomerStakingRequestService, LabRegister } from './models';
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
-  constructor(
-    private readonly mailerService: MailerService,
-    ) {}
+  constructor(private readonly mailerService: MailerService) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
@@ -55,9 +53,9 @@ export class MailerManager {
         },
         attachments: files,
       });
-      return true
+      return true;
     } catch (error) {
-      await this._logger.log(`Send Email Failed: ${error}`)
+      await this._logger.log(`Send Email Failed: ${error}`);
     }
   }
 }

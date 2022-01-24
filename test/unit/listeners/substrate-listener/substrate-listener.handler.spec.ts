@@ -3,7 +3,19 @@ import { SubstrateListenerHandler } from '../../../../src/listeners/substrate-li
 import { SubstrateService } from '../../../../src/common';
 import { MockType, substrateServiceMockFactory } from '../../mock';
 import { CommandBus } from '@nestjs/cqrs';
-import { API_MOCK, API_MOCK_GEN, BLOCK_HASH_MOCK, BLOCK_MOCK, CATCH_MOCK, ERROR_MOCK, EVENT_MOCK, FALSE_EVENT_MOCK, NUMBER, THEN_MOCK, TO_HUMAN_MOCK } from './substrate-listener.mock.data';
+import {
+  API_MOCK,
+  API_MOCK_GEN,
+  BLOCK_HASH_MOCK,
+  BLOCK_MOCK,
+  CATCH_MOCK,
+  ERROR_MOCK,
+  EVENT_MOCK,
+  FALSE_EVENT_MOCK,
+  NUMBER,
+  THEN_MOCK,
+  TO_HUMAN_MOCK,
+} from './substrate-listener.mock.data';
 import { Logger } from '@nestjs/common';
 import { BlockMetaData } from 'src/listeners/substrate-listener/models/block-metadata.event-model';
 
@@ -34,7 +46,9 @@ describe('Substrate Listener Handler Unit Test', () => {
       ],
     }).compile();
 
-    substrateListenerHandler = module.get<SubstrateListenerHandler>(SubstrateListenerHandler);
+    substrateListenerHandler = module.get<SubstrateListenerHandler>(
+      SubstrateListenerHandler,
+    );
     substrateServiceMock = module.get(SubstrateService);
     commandBusMock = module.get(CommandBus);
   });
@@ -75,7 +89,9 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledWith(`Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`);
+    expect(loggerSpy).toHaveBeenCalledWith(
+      `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
+    );
     expect(commandBusMock.execute).toHaveBeenCalledTimes(0);
   });
 
@@ -108,7 +124,9 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledWith(`Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`);
+    expect(loggerSpy).toHaveBeenCalledWith(
+      `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
+    );
     expect(commandBusMock.execute).toHaveBeenCalledTimes(0);
   });
 
@@ -126,9 +144,11 @@ describe('Substrate Listener Handler Unit Test', () => {
     commandBusMock.execute.mockClear();
 
     // Arrange
-    const ARRAY = [{
-      event: EVENT_MOCK
-    }];
+    const ARRAY = [
+      {
+        event: EVENT_MOCK,
+      },
+    ];
     Reflect.set(substrateServiceMock, 'api', API_MOCK_GEN(ARRAY));
 
     // Act
@@ -144,8 +164,12 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
     expect(loggerSpy).toHaveBeenCalledTimes(2);
-    expect(loggerSpy).toHaveBeenCalledWith(`Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`);
-    expect(loggerSpy).toHaveBeenCalledWith(`Handling substrate event: ${EVENT_MOCK.section}.${EVENT_MOCK.method}`);
+    expect(loggerSpy).toHaveBeenCalledWith(
+      `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
+    );
+    expect(loggerSpy).toHaveBeenCalledWith(
+      `Handling substrate event: ${EVENT_MOCK.section}.${EVENT_MOCK.method}`,
+    );
     expect(TO_HUMAN_MOCK.toHuman).toHaveBeenCalledTimes(1);
     expect(commandBusMock.execute).toHaveBeenCalledTimes(1);
   });
@@ -158,17 +182,22 @@ describe('Substrate Listener Handler Unit Test', () => {
 
     // Arrange
     const BLOCKMETADATA: BlockMetaData = {
-      blockHash: "HASH",
+      blockHash: 'HASH',
       blockNumber: 1,
     };
 
     // Act
-    await substrateListenerHandler.handleEvent(BLOCKMETADATA, EVENT_MOCK as any);
+    await substrateListenerHandler.handleEvent(
+      BLOCKMETADATA,
+      EVENT_MOCK as any,
+    );
 
     // Assert
     expect(loggerSpy).toHaveBeenCalledTimes(1);
     expect(TO_HUMAN_MOCK.toHuman).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledWith(`Handling substrate event: ${EVENT_MOCK.section}.${EVENT_MOCK.method}`);
+    expect(loggerSpy).toHaveBeenCalledWith(
+      `Handling substrate event: ${EVENT_MOCK.section}.${EVENT_MOCK.method}`,
+    );
     expect(commandBusMock.execute).toHaveBeenCalledTimes(1);
   });
 
@@ -179,12 +208,15 @@ describe('Substrate Listener Handler Unit Test', () => {
 
     // Arrange
     const BLOCKMETADATA: BlockMetaData = {
-      blockHash: "HASH",
+      blockHash: 'HASH',
       blockNumber: 1,
     };
 
     // Act
-    await substrateListenerHandler.handleEvent(BLOCKMETADATA, FALSE_EVENT_MOCK as any);
+    await substrateListenerHandler.handleEvent(
+      BLOCKMETADATA,
+      FALSE_EVENT_MOCK as any,
+    );
 
     // Assert
     expect(loggerSpy).toHaveBeenCalledTimes(0);

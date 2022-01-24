@@ -22,7 +22,7 @@ describe('Substrate Indexer Order Service Unit Tests', () => {
       },
     };
   };
-  
+
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,13 +59,11 @@ describe('Substrate Indexer Order Service Unit Tests', () => {
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
 
-    //Assert 
-    expect(orderServiceMock.getOrderByHashId('XX')).resolves.toEqual(
-      RESULT,
-    );
+    //Assert
+    expect(orderServiceMock.getOrderByHashId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
-  
+
   it('should return empty', () => {
     //Arrange
     const RESULT = {};
@@ -76,16 +74,14 @@ describe('Substrate Indexer Order Service Unit Tests', () => {
         },
       },
     };
-    elasticsearchServiceMock.search.mockImplementationOnce(() => 
-    Promise.reject(ERROR_RESULT),
+    elasticsearchServiceMock.search.mockImplementationOnce(() =>
+      Promise.reject(ERROR_RESULT),
     );
-    
+
     //Assert
-    expect(orderServiceMock.getOrderByHashId('XX')).resolves.toEqual(
-      RESULT,
-    );
+    expect(orderServiceMock.getOrderByHashId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
-  })
+  });
 
   it('should throw error', () => {
     //Arrange
@@ -97,12 +93,13 @@ describe('Substrate Indexer Order Service Unit Tests', () => {
       },
     };
     elasticsearchServiceMock.search.mockImplementationOnce(() =>
-    Promise.reject(ERROR_RESULT),
+      Promise.reject(ERROR_RESULT),
     );
 
     //Assert
-    expect(orderServiceMock.getOrderByHashId('XX'))
-      .rejects.toMatchObject(ERROR_RESULT);
+    expect(orderServiceMock.getOrderByHashId('XX')).rejects.toMatchObject(
+      ERROR_RESULT,
+    );
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
-  })
-})
+  });
+});

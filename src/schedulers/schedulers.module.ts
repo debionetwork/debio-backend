@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { EmailNotificationModule, MailModule, SubstrateModule, SubstrateService } from '../common';
+import {
+  EmailNotificationModule,
+  MailModule,
+  SubstrateModule,
+  SubstrateService,
+} from '../common';
 import { MailerService } from './mailer/mailer.service';
 import { UnstakedService } from './unstaked/unstaked.service';
 
@@ -17,7 +22,7 @@ import { UnstakedService } from './unstaked/unstaked.service';
     }),
     SubstrateModule,
     MailModule,
-    EmailNotificationModule
+    EmailNotificationModule,
   ],
   exports: [ElasticsearchModule],
   providers: [UnstakedService, SubstrateService, MailerService],
