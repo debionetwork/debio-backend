@@ -4,12 +4,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
-import { EmailNotification} from './models'
 
 require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
-    TypeOrmModule.forFeature([EmailNotification]),
     MailerModule.forRoot({
       transport: {
         host: 'smtp.gmail.com',

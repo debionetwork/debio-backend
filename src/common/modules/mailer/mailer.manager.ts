@@ -1,17 +1,12 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { EmailNotificationDto } from './dto/email-notification.dto';
-import { CustomerStakingRequestService, LabRegister, EmailNotification } from './models';
+import { CustomerStakingRequestService, LabRegister } from './models';
 
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
   constructor(
     private readonly mailerService: MailerService,
-    @InjectRepository(EmailNotification)
-    private readonly emailNotificationRepository: Repository<EmailNotification>,
     ) {}
 
   async sendCustomerStakingRequestServiceEmail(
@@ -63,53 +58,6 @@ export class MailerManager {
       return true
     } catch (error) {
       await this._logger.log(`Send Email Failed: ${error}`)
-    }
-  }
-
-  async insertEmailNotification(data: EmailNotificationDto) {
-    try {
-      return this.emailNotificationRepository.save(data)
-    } catch (error) {
-      return error
-    }
-  }
-
-  async getPendingLabRegisterNotification() {
-    try {
-      return this.emailNotificationRepository.find({
-        where: {
-          is_email_sent: false,
-          notification_type: 'LabRegister'
-        },
-      });
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async getPendingCustomerRequestServiceNotification() {
-    try {
-      return this.emailNotificationRepository.find({
-        where: {
-          is_email_sent: false,
-          notification_type: 'Customer Staking Request Service'
-        },
-      });
-    } catch (error) {
-      return error;
-    }
-  }
-
-  async setEmailNotificationSent(ref_number) {
-    try {
-      return this.emailNotificationRepository.update(
-        { ref_number },
-        { 
-          sent_at: new Date(),
-          is_email_sent: true,
-        })
-    } catch (error) {
-      return error;
     }
   }
 }
