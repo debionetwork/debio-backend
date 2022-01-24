@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
 import { EmailNotificationService } from 'src/common/modules/database';
 import {
@@ -10,7 +10,7 @@ import {
 } from '../../common';
 
 @Injectable()
-export class MailerService implements OnModuleInit {
+export class MailerService {
   private logger: Logger = new Logger(MailerService.name);
   private isRunning = false;
   constructor(
@@ -19,11 +19,7 @@ export class MailerService implements OnModuleInit {
     private readonly substrateService: SubstrateService,
   ) {}
 
-  onModuleInit() {
-    this.handlePendingLabRegister();
-  }
-
-  @Interval(10 * 1000)
+  @Interval(60 * 60 * 1000)
   async handlePendingLabRegister() {
     try {
       if (this.isRunning) return;
