@@ -6,8 +6,7 @@ import {
   MailerManager,
 } from '../../common/modules/mailer';
 import { Response } from 'express';
-import { ProcessEnvProxy, queryLabById, SubstrateService } from '../../common';
-import { EmailNotificationDatabase } from '../../common/modules/mailer/models'
+import { EmailNotification, EmailNotificationService, ProcessEnvProxy, queryLabById, SubstrateService } from '../../common';
 
 @Controller('email')
 export class EmailEndpointController {
@@ -15,6 +14,7 @@ export class EmailEndpointController {
     private readonly process: ProcessEnvProxy,
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
+    private readonly emailNotificationService: EmailNotificationService,
   ) {}
 
   @Post('registered-lab/:lab_id')
@@ -36,7 +36,7 @@ export class EmailEndpointController {
       labRegister,
     );
 
-    const dataInput = new EmailNotificationDatabase()
+    const dataInput = new EmailNotification()
     if(sentEMail){
       isEmailSent = true
       dataInput.sent_at = new Date()
@@ -46,7 +46,7 @@ export class EmailEndpointController {
     dataInput.is_email_sent = isEmailSent
     dataInput.created_at = new Date()
     
-    await this.mailerManager.insertEmailNotification(dataInput)
+    await this.emailNotificationService.insertEmailNotification(dataInput)
 
     response.status(200).send({
       message: 'Sending Email.',
