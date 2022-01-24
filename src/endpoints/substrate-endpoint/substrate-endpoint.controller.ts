@@ -163,7 +163,7 @@ export class SubstrateController {
     return serviceRequests;
   }
 
-  @Get('/customer/:customerId')
+  @Get('/service-request/:customerId')
   @ApiParam({ name: 'customerId' })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })

@@ -23,16 +23,21 @@ describe('Date Time Proxy Unit Tests', () => {
     expect(dateTimeProxyMock).toBeDefined();
   });
 
-  it('should be get new date', () => {
-    expect(dateTimeProxyMock.new()).toEqual(new Date());
+  it('should be get new date', async () => {
+    const ES_RESULT = new Date();
+    const RESULT = await dateTimeProxyMock.new()
+    expect(RESULT).toEqual(ES_RESULT);
   })
 
-  it('should be get now date', () => {
-    expect(dateTimeProxyMock.now()).toEqual(Date.now());
+  it('should be get now date', async () => {
+    const ES_RESULT = Date.now();
+    const RESULT = await dateTimeProxyMock.now()
+    expect(RESULT).toEqual(ES_RESULT);
   })
 
-  it('should be get now and add ', () => {
-    const DATE_WHEN_TEST = Number(new Date())
-    expect(dateTimeProxyMock.nowAndAdd(1)).toEqual(DATE_WHEN_TEST+1);
+  it('should be get now and add ', async () => {
+    const DATE_WHEN_TEST = Number(Date.now())
+    const RESULT = await dateTimeProxyMock.nowAndAdd(1)
+    expect(RESULT).toEqual(DATE_WHEN_TEST+1);
   })
 });
