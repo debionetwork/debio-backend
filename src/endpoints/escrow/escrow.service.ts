@@ -1,29 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import { EthereumService } from '../ethereum/ethereum.service';
-import { setOrderPaid, SubstrateService } from '../../common';
+import {
+  EthereumService,
+  ProcessEnvProxy,
+  setOrderPaid,
+  SubstrateService,
+} from '../../common';
 import { ethers } from 'ethers';
 
 @Injectable()
 export class EscrowService {
   constructor(
-    private substrateService: SubstrateService,
-    private ethereumService: EthereumService,
+    private readonly process: ProcessEnvProxy,
+    private readonly substrateService: SubstrateService,
+    private readonly ethereumService: EthereumService,
   ) {}
 
   async createOrder(request) {
     console.log('[createOrder] request: ', request);
   }
 
-  async refundOrder(order) {
+  async refundOrder(order): Promise<void> {
     console.log('[refundOrder] order: ', order);
     try {
-      const provider = await new ethers.providers.JsonRpcProvider(
-        process.env.WEB3_RPC_HTTPS,
-      );
-      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const provider = await this.ethereumService.getEthersProvider();
+      const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet = await new ethers.Wallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
         provider,
       );
       const balance = await provider.getBalance(wallet.address);
@@ -43,12 +46,11 @@ export class EscrowService {
     console.log('[cancelOrder] request: ', request);
   }
 
-  async orderFulfilled(order) {
+  async orderFulfilled(order): Promise<void> {
     try {
-      await new ethers.providers.JsonRpcProvider(process.env.WEB3_RPC_HTTPS);
-      const tokenContract = await this.ethereumService.getEscrowSmartContract();
+      const tokenContract = this.ethereumService.getEscrowSmartContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
       const tx = await tokenContractWithSigner.fulfillOrder(order.id);
@@ -58,7 +60,7 @@ export class EscrowService {
     }
   }
 
-  async setOrderPaidWithSubstrate(orderId: string) {
+  async setOrderPaidWithSubstrate(orderId: string): Promise<void> {
     try {
       await setOrderPaid(
         this.substrateService.api,
@@ -70,12 +72,15 @@ export class EscrowService {
     }
   }
 
-  async forwardPaymentToSeller(sellerAddress: string, amount: number | string) {
+  async forwardPaymentToSeller(
+    sellerAddress: string,
+    amount: number | string,
+  ): Promise<void> {
     try {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
-      const tokenContract = await this.ethereumService.getContract();
+      const tokenContract = this.ethereumService.getContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
-        process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
       const options = {

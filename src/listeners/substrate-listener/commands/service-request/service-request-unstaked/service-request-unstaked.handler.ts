@@ -12,11 +12,11 @@ import { ServiceRequestUnstakedCommand } from './service-request-unstaked.comman
 export class ServiceRequestUnstakedHandler
   implements ICommandHandler<ServiceRequestUnstakedCommand>
 {
-  private readonly logger: Logger = new Logger(ServiceRequestUnstakedCommand.name);
-  
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-  ) {}
+  private readonly logger: Logger = new Logger(
+    ServiceRequestUnstakedCommand.name,
+  );
+
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: ServiceRequestUnstakedCommand) {
     const serviceRequest = command.request;

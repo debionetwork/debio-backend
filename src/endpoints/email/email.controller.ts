@@ -6,12 +6,13 @@ import {
   MailerManager,
 } from '../../common/modules/mailer';
 import { Response } from 'express';
-import { queryLabById, SubstrateService } from '../../common';
+import { ProcessEnvProxy, queryLabById, SubstrateService } from '../../common';
 import { EmailNotificationDatabase } from '../../common/modules/mailer/models'
 
 @Controller('email')
 export class EmailEndpointController {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
   ) {}
@@ -31,7 +32,7 @@ export class EmailEndpointController {
     );
 
     const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-      process.env.EMAILS.split(','),
+      this.process.env.EMAILS.split(','),
       labRegister,
     );
 

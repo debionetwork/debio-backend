@@ -158,7 +158,6 @@ describe('Transaction Controller Unit Test', () => {
         },
       },
     };
-
     when(elasticsearchServiceMock.search)
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);

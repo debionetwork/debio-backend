@@ -50,15 +50,14 @@ export class UnstakedService implements OnModuleInit {
         from: 0,
         size: 10,
       });
-
       const listRequestService = createRequestService.body.hits.hits;
-
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
         const serviceRequestDetail = await queryServiceRequestById(
           this.subtrateService.api,
           requestId,
         );
+
         if (serviceRequestDetail.status === 'Unstaked') {
           await this.elasticsearchService.update({
             index: 'create-service-request',
