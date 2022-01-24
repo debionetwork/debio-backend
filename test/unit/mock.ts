@@ -3,12 +3,14 @@ import {
   EthereumService,
   CachesService,
   SubstrateService,
+  DebioConversionService,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
+import { CountryService } from '../../src/endpoints/location/country.service';
 
 export function mockFunction(args){} // eslint-disable-line
 
@@ -98,3 +100,12 @@ export const MockLogger = {
   debug: jest.fn(),
   verbose: jest.fn(),
 }
+
+export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> = jest.fn(() => ({
+  getExchange: jest.fn()
+}));
+
+export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
+  getAll: jest.fn(),
+  getByIso2Code: jest.fn()
+}));
