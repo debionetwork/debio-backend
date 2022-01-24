@@ -6,9 +6,7 @@ describe('Substrate Health Indicator Unit Tests', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ProcessEnvProxy,
-      ],
+      providers: [ProcessEnvProxy],
     }).compile();
 
     proxy = module.get(ProcessEnvProxy);
