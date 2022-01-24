@@ -29,6 +29,6 @@ require('dotenv').config(); // eslint-disable-line
     }),
   ],
   providers: [MailerManager],
-  exports: [MailModule, MailerManager, TypeOrmModule],
+  exports: [MailModule, MailerManager],
 })
 export class MailModule {}
