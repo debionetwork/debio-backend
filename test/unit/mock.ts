@@ -163,3 +163,11 @@ export function mockBlockNumber(): BlockMetaData {
     blockNumber: 1,
   }
 }
+
+export const MockLogger = {
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+  verbose: jest.fn(),
+}
