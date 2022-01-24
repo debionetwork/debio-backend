@@ -14,10 +14,10 @@ import {
   sendRewards,
   SubstrateService,
   TransactionLoggingService,
-} from 'src/common';
-import { EscrowService } from 'src/endpoints/escrow/escrow.service';
-import { TransactionLoggingDto } from 'src/common/modules/transaction-logging/dto/transaction-logging.dto';
-import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
+} from '../../../../../common';
+import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)

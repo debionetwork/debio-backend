@@ -11,7 +11,8 @@
     ],
     "coverageDirectory": "../coverage",
     "moduleNameMapper": {
-      "@polkadot/api(.*)$": "<rootDir>@polkadot-api.mock.ts"
+      "@polkadot/api(.*)$": "<rootDir>@polkadot-api.mock.ts",
+      "@polkadot/types/interfaces$": "<rootDir>@polkadot-types-interfaces.mock.ts"
     },
     "setupFiles": ["dotenv/config"]
   }
