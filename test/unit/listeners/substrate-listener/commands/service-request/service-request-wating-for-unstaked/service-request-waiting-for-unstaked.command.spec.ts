@@ -1,81 +1,53 @@
-import { CommandBus, CqrsModule } from "@nestjs/cqrs";
-import { Test, TestingModule } from "@nestjs/testing";
-import { transactionLoggingServiceMockFactory } from "../../../../../mock";
-import { RequestStatus, TransactionLoggingService } from "../../../../../../../src/common";
-import { ServiceRequestWaitingForUnstakedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-waiting-for-unstaked/service-request-waiting-for-unstaked.handler";
-import { ServiceRequestWaitingForUnstakedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/service-request";
-import { BlockMetaData } from "../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model";
+import {
+  RequestStatus
+} from '../../../../../../../src/common';
+import { ServiceRequestWaitingForUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
+import { ServiceRequest } from '../../../../../../../src/common/polkadot-provider/models/service-request';
+import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+
+jest.mock('../../../../../../../src/common/polkadot-provider/models/service-request');
 
 describe('Service Request Waiting For Unstaked Command Event', () => {
-  let serviceRequestWaitingForUnstakedHandler: ServiceRequestWaitingForUnstakedHandler;
-  let commandBus: CommandBus;
-
   const createMockRequest = (requestStatus: RequestStatus) => {
     return [
       {},
       {
-        toHuman: jest.fn(
-          () => ({
-            hash_: "string",
-            requesterAddress: "string",
-            labAddress: "string",
-            country: "XX",
-            region: "XX",
-            city: "XX",
-            serviceCategory: "Test",
-            stakingAmount: "1000000000000",
-            status: requestStatus,
-            createdAt: "1",
-            updatedAt: "1",
-            unstakedAt: "1"
-          })
-        )
-      }
-    ]
+        toHuman: jest.fn(() => ({
+          hash_: 'string',
+          requesterAddress: 'string',
+          labAddress: 'string',
+          country: 'XX',
+          region: 'XX',
+          city: 'XX',
+          serviceCategory: 'Test',
+          stakingAmount: '1000000000000',
+          status: requestStatus,
+          createdAt: '1',
+          updatedAt: '1',
+          unstakedAt: '1',
+        })),
+      },
+    ];
+  };
+
+  function mockBlockNumber(): BlockMetaData {
+    return {
+      blockHash: 'string',
+      blockNumber: 1,
+    };
   }
 
-	function mockBlockNumber(): BlockMetaData {
-		return {
-			blockHash: "string",
-			blockNumber: 1,
-		}
-	}
+  it('should called Model and toHuman()', () => {
+    const MOCK_DATA = createMockRequest(RequestStatus.Processed);
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CqrsModule
-      ],
-      providers: [
-        CommandBus,
-				{
-          provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-        ServiceRequestWaitingForUnstakedHandler
-      ]
-    }).compile();
+    const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand = new ServiceRequestWaitingForUnstakedCommand(MOCK_DATA, mockBlockNumber());
 
-    commandBus = module.get(CommandBus);
-    serviceRequestWaitingForUnstakedHandler = module.get(ServiceRequestWaitingForUnstakedHandler);
-    
-		await module.init();
+    expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
+    expect(ServiceRequest).toHaveBeenCalled();
+    expect(ServiceRequest).toHaveBeenCalledWith(MOCK_DATA[1].toHuman());
   });
 
-  it('ServiceRequestWaitingForUnstakedHandler must defined', () => {
-    expect(serviceRequestWaitingForUnstakedHandler).toBeDefined();
-  });
-
-  it('should called ServiceRequestWaitingForUnstakedHandler from command bus', async () => {
-    const requestData = createMockRequest(RequestStatus.WaitingForUnstaked);
-
-    const serviceRequestWaitingForUnstakedHandlerSpy = jest.spyOn(serviceRequestWaitingForUnstakedHandler, 'execute').mockImplementation();
-
-    const serviceRequestWaitingForUnstakedCommand: ServiceRequestWaitingForUnstakedCommand = new ServiceRequestWaitingForUnstakedCommand(requestData, mockBlockNumber());
-    await commandBus.execute(serviceRequestWaitingForUnstakedCommand);
-    expect(serviceRequestWaitingForUnstakedHandlerSpy).toBeCalled();
-    expect(serviceRequestWaitingForUnstakedHandlerSpy).toBeCalledWith(serviceRequestWaitingForUnstakedCommand);
-
-    serviceRequestWaitingForUnstakedHandlerSpy.mockClear();
+  it('should throw error if cannot called toHuman from array param object', () => {
+    expect(()=> { new ServiceRequestWaitingForUnstakedCommand([{}, {}], mockBlockNumber()) }).toThrow();
   });
 });

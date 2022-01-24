@@ -79,20 +79,22 @@ export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(
   }),
 );
 
-export const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(() => ({
+export const substrateServiceMockFactory: () => MockType<SubstrateService> =
+  jest.fn(() => ({
     onModuleInit: jest.fn(),
     startListen: jest.fn(),
     stopListen: jest.fn(),
-}));
+  }));
 
-export const ethereumServiceMockFactory: () => MockType<EthereumService> = jest.fn(() => ({
-  getLastBlock: jest.fn(),
-  setLastBlock: jest.fn(),
-  createWallet: jest.fn(),
-  getEthersProvider: jest.fn(),
-  getContract: jest.fn(),
-  getEscrowSmartContract: jest.fn(),
-}));
+export const ethereumServiceMockFactory: () => MockType<EthereumService> =
+  jest.fn(() => ({
+    getLastBlock: jest.fn(),
+    setLastBlock: jest.fn(),
+    createWallet: jest.fn(),
+    getEthersProvider: jest.fn(),
+    getContract: jest.fn(),
+    getEscrowSmartContract: jest.fn(),
+  }));
 
 export const MockLogger = {
   log: jest.fn(),
@@ -100,26 +102,32 @@ export const MockLogger = {
   warn: jest.fn(),
   debug: jest.fn(),
   verbose: jest.fn(),
-}
+};
 
-export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = jest.fn(() => ({
-  create: jest.fn(),
-  updateHash: jest.fn(),
-  getLoggingByOrderId: jest.fn(),
-  getLoggingByHashAndStatus: jest.fn()
-}));
+export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
+  jest.fn(() => ({
+    create: jest.fn(),
+    updateHash: jest.fn(),
+    getLoggingByOrderId: jest.fn(),
+    getLoggingByHashAndStatus: jest.fn(),
+  }));
 
-export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
-  getAll: jest.fn(),
-  getByIso2Code: jest.fn()
-}));
+export const countryServiceMockFactory: () => MockType<CountryService> =
+  jest.fn(() => ({
+    getAll: jest.fn(),
+    getByIso2Code: jest.fn(),
+  }));
 
-export const stateServiceMockFactory: () => MockType<StateService> = jest.fn(() => ({
-  getAllRegion: jest.fn(),
-  getState: jest.fn()
-}));
+export const stateServiceMockFactory: () => MockType<StateService> = jest.fn(
+  () => ({
+    getAllRegion: jest.fn(),
+    getState: jest.fn(),
+  }),
+);
 
-export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(() => ({
-  sendCustomerStakingRequestServiceEmail: jest.fn(),
-  sendLabRegistrationEmail: jest.fn()
-}));
+export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(
+  () => ({
+    sendCustomerStakingRequestServiceEmail: jest.fn(),
+    sendLabRegistrationEmail: jest.fn(),
+  }),
+);
