@@ -31,7 +31,7 @@ describe('Date Time Proxy Unit Tests', () => {
     expect(dateTimeProxyMock.now()).toEqual(Date.now());
   })
 
-  it('should be get now and add', () => {
+  it('should be get now and add ', () => {
     const DATE_WHEN_TEST = Number(new Date())
     expect(dateTimeProxyMock.nowAndAdd(1)).toEqual(DATE_WHEN_TEST+1);
   })
