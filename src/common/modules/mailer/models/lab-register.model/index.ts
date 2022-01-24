@@ -46,4 +46,3 @@ export async function labToLabRegister(
 
 export * from './service';
 export * from './certification';
-export * from '../email-notifiaction';

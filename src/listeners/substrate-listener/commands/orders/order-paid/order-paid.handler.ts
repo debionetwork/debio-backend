@@ -10,9 +10,7 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   private readonly logger: Logger = new Logger(OrderPaidCommand.name);
 
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-  ) {}
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderPaidCommand) {
     await this.logger.log('OrderPaid!');

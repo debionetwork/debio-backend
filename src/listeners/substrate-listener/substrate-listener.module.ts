@@ -3,6 +3,7 @@ import { EscrowModule } from '../../endpoints/escrow/escrow.module';
 import {
   DebioConversionModule,
   MailModule,
+  ProcessEnvModule,
   RewardModule,
   SubstrateModule,
   TransactionLoggingModule,
@@ -17,6 +18,7 @@ import { LocationModule } from '../../endpoints/location/location.module';
 
 @Module({
   imports: [
+    ProcessEnvModule,
     EscrowModule,
     LocationModule,
     TransactionLoggingModule,

@@ -8,7 +8,7 @@ import {
   MockType,
 } from '../../mock';
 import { when } from 'jest-when';
-import { DateTimeProxy } from '../../../../src/common/proxies/date-time/date-time.proxy';
+import { DateTimeProxy } from '../../../../src/common';
 
 describe('Cloud Storage Controller Unit Tests', () => {
   const fileMock = fileMockFactory();
