@@ -15,6 +15,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/endpoints/escrow/escrow.service';
 import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { CountryService } from '../../src/endpoints/location/country.service';
 
 export function mockFunction(args){} // eslint-disable-line
 
@@ -171,3 +172,8 @@ export const MockLogger = {
   debug: jest.fn(),
   verbose: jest.fn(),
 }
+
+export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
+  getAll: jest.fn(),
+  getByIso2Code: jest.fn()
+}));
