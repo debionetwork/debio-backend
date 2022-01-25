@@ -34,6 +34,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let orderServiceMock: MockType<OrderService>;
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
+  let serviceRequestMock: MockType<ServiceRequestService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -103,6 +104,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     orderServiceMock = module.get(OrderService);
     rewardServiceMock = module.get(RewardService);
     dateTimeProxyMock = module.get(DateTimeProxy);
+    serviceRequestMock = module.get(ServiceRequestService)
   });
 
   it('should be defined', () => {
@@ -112,6 +114,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(serviceServiceMock).toBeDefined();
     expect(orderServiceMock).toBeDefined();
     expect(rewardServiceMock).toBeDefined();
+    expect(serviceRequestMock).toBeDefined()
   });
 
   it('should find lab by country, city, and category', () => {
@@ -239,6 +242,36 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       1,
       10,
     );
+  });
+
+  it('should service request list by customer_id', () => {
+    // Arrange
+    const RESULT = 1;
+    serviceRequestMock.getByCustomerId.mockReturnValue(RESULT);
+
+    // Assert
+    expect(
+      substrateControllerMock.getServiceRequestByCustomer({ customerId: 1 }, 1, 10),
+    ).resolves.toEqual(RESULT);
+    expect(serviceRequestMock.getByCustomerId).toHaveBeenCalled();
+    expect(serviceRequestMock.getByCustomerId).toHaveBeenCalledWith(
+      {"customerId": 1},
+      1,
+      10,
+    );
+  });
+
+  it('should service request countries', () => {
+    // Arrange
+    const RESULT = 1;
+    serviceRequestMock.getAggregatedByCountries.mockReturnValue(RESULT);
+
+    // Assert
+    expect(
+      substrateControllerMock.getAggregatedByCountries(),
+    ).resolves.toEqual(RESULT);
+    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalled();
+    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith();
   });
 
   it('should not wallet bind with false API key', async () => {
