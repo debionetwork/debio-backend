@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { EthereumService } from '../../common/modules/ethereum/ethereum.service';
-import { EscrowService } from '../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../common/modules/escrow/escrow.service';
 
 @Injectable()
 export class EthereumListenerHandler implements OnModuleInit {

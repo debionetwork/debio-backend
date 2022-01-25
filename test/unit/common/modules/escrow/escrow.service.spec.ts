@@ -3,17 +3,17 @@ import {
   EthereumService,
   ProcessEnvProxy,
   SubstrateService,
-} from '../../../../src/common';
+} from '../../../../../src/common';
 import {
   ethereumServiceMockFactory,
   MockType,
   substrateServiceMockFactory,
-} from '../../mock';
-import { EscrowService } from '../../../../src/endpoints/escrow/escrow.service';
+} from '../../../mock';
+import { EscrowService } from '../../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
-import { setOrderPaid } from '../../../../src/common/polkadot-provider';
+import { setOrderPaid } from '../../../../../src/common/polkadot-provider';
 
-jest.mock('../../../../src/common/polkadot-provider', () => ({
+jest.mock('../../../../../src/common/polkadot-provider', () => ({
   setOrderPaid: jest.fn(),
 }));
 

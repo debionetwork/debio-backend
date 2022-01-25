@@ -5,7 +5,7 @@ import {
   ProcessEnvProxy,
   setOrderPaid,
   SubstrateService,
-} from '../../common';
+} from '../..';
 import { ethers } from 'ethers';
 
 @Injectable()

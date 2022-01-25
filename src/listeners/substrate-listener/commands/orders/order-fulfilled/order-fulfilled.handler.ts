@@ -15,7 +15,7 @@ import {
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
@@ -78,7 +78,7 @@ export class OrderFulfilledHandler
 
       const resp: any = await queryEthAdressByAccountId(
         this.substrateService.api,
-        order['sellerId'],
+        order['seller_id'],
       );
       if ((resp as Option<any>).isNone) {
         return null;
@@ -113,7 +113,7 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = order['price'][0].value * debioToDai;
+        const servicePrice = order['prices'][0].value * debioToDai;
 
         // Send reward to customer
         await sendRewards(

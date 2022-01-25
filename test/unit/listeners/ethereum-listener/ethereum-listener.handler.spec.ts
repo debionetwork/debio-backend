@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EscrowService } from '../../../../src/endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../src/common/modules/escrow/escrow.service';
 import { EthereumListenerHandler } from '../../../../src/listeners/ethereum-listener/ethereum-listener.handler';
 import { EthereumService } from '../../../../src/common';
 
