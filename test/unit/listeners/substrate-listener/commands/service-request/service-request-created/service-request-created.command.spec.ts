@@ -48,6 +48,10 @@ describe('Service Request Created Command Event', () => {
   });
 
   it('should throw error', () => {
-    expect(()=> { new ServiceRequestCreatedCommand([{}, {}], mockBlockNumber()) }).toThrow();
+    expect(
+      ()=> {
+        const _serviceRequestCreatedCommand: ServiceRequestCreatedCommand = new ServiceRequestCreatedCommand([{}, {}], mockBlockNumber()) 
+      }
+    ).toThrow();
   });
 });

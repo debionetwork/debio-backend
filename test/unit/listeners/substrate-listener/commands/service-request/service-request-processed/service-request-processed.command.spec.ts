@@ -42,6 +42,10 @@ describe('Service Request Processed Command Event', () => {
   });
 
   it('should throw error', () => {
-    expect(()=> { new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber()) }).toThrow();
+    expect(
+      ()=> { 
+        const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand = new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber()) 
+      }
+    ).toThrow();
   });
 });

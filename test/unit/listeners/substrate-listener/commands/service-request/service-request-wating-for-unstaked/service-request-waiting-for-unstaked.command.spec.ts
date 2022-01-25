@@ -48,6 +48,10 @@ describe('Service Request Waiting For Unstaked Command Event', () => {
   });
 
   it('should throw error if cannot called toHuman from array param object', () => {
-    expect(()=> { new ServiceRequestWaitingForUnstakedCommand([{}, {}], mockBlockNumber()) }).toThrow();
+    expect(
+      ()=> {
+        const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand = new ServiceRequestWaitingForUnstakedCommand([{}, {}], mockBlockNumber()) 
+      }
+    ).toThrow();
   });
 });

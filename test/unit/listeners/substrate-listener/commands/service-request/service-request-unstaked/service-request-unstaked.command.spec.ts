@@ -48,6 +48,10 @@ describe('Service Request Unstaked Command Event', () => {
   });
 
   it('should throw error', () => {
-    expect(()=> { new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber()) }).toThrow();
+    expect(
+      ()=> {
+        const _serviceRequestProcessedCommand: ServiceRequestUnstakedCommand = new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber()) 
+      }
+    ).toThrow();
   });
 });
