@@ -3,8 +3,9 @@ import {
   EthereumService,
   CachesService,
   SubstrateService,
-  MailerManager,
+  DebioConversionService,
   TransactionLoggingService,
+  MailerManager,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
@@ -112,12 +113,6 @@ export const transactionLoggingServiceMockFactory: () => MockType<TransactionLog
     getLoggingByHashAndStatus: jest.fn(),
   }));
 
-export const countryServiceMockFactory: () => MockType<CountryService> =
-  jest.fn(() => ({
-    getAll: jest.fn(),
-    getByIso2Code: jest.fn(),
-  }));
-
 export const stateServiceMockFactory: () => MockType<StateService> = jest.fn(
   () => ({
     getAllRegion: jest.fn(),
@@ -131,3 +126,12 @@ export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(
     sendLabRegistrationEmail: jest.fn(),
   }),
 );
+
+export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> = jest.fn(() => ({
+  getExchange: jest.fn()
+}));
+
+export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
+  getAll: jest.fn(),
+  getByIso2Code: jest.fn()
+}));
