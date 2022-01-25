@@ -105,7 +105,7 @@ describe('Service Request Unstaked Handler Event', () => {
   });
 
   it('should called transactionLoggingServiceMock.create if status false', async () => {
-    const NOW = 0;
+    const CURRENT_DATE = new Date();
 
     const convertToDbioUnitSpy = jest.spyOn(rewardCommand, 'convertToDbioUnit');
     const requestData = createMockRequest(RequestStatus.Unstaked);
@@ -130,12 +130,12 @@ describe('Service Request Unstaked Handler Event', () => {
       .calledWith(requestData[1].toHuman().stakingAmount)
       .mockReturnValue(CONVERT_RETURN);
 
-    dateTimeProxyMock.now.mockReturnValue(NOW);
+    dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
 
     const STAKING_LOGGIN_CALLED_WITH: TransactionLoggingDto = {
       address: requestData[1].toHuman().requesterAddress,
       amount: CONVERT_RETURN,
-      created_at: new Date(NOW),
+      created_at: CURRENT_DATE,
       currency: 'DBIO',
       parent_id: BigInt(TRANSACTION_SERVICE_RETURN.id),
       ref_number: requestData[1].toHuman().hash,
