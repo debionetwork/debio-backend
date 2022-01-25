@@ -9,7 +9,7 @@ import {
   MockType,
   substrateServiceMockFactory,
 } from '../../mock';
-import { EscrowService } from '../../../../src/endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
 import { setOrderPaid } from '../../../../src/common/polkadot-provider';
 

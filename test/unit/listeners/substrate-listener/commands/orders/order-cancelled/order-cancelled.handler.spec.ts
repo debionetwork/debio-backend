@@ -3,7 +3,7 @@ import { OrderCancelledCommand } from "../../../../../../../src/listeners/substr
 import { Test, TestingModule } from "@nestjs/testing";
 import { createMockOrder, escrowServiceMockFactory, mockBlockNumber, MockType, transactionLoggingServiceMockFactory } from "../../../../../mock";
 import { OrderCancelledHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-cancelled/order-cancelled.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { EscrowService } from "../../../../../../../src/common/modules/escrow/escrow.service";
 import { when } from 'jest-when';
 import { ethers } from 'ethers';
 import { TransactionRequest } from "../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity";

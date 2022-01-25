@@ -3,7 +3,7 @@ import { OrderCreatedCommand } from "../../../../../../../src/listeners/substrat
 import { Test, TestingModule } from "@nestjs/testing";
 import { createMockOrder, escrowServiceMockFactory, mockBlockNumber, MockType, substrateServiceMockFactory } from "../../../../../mock";
 import { OrderFailedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { EscrowService } from "../../../../../../../src/common/modules/escrow/escrow.service";
 import { ethers } from 'ethers';
 
 import * as ordersCommand from "../../../../../../../src/common/polkadot-provider/command/orders";
