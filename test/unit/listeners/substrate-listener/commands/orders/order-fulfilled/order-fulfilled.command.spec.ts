@@ -17,7 +17,9 @@ describe("Order Cancelled Command Event", () => {
   
   it("should throw error if toHuman not defined", () => {
     expect(
-      () => { new OrderFulfilledCommand([{}], mockBlockNumber()); }
+      () => {
+        const _orderFulfilledCommand: OrderFulfilledCommand = new OrderFulfilledCommand([{}], mockBlockNumber()); 
+      }
     ).toThrowError();
   })
 });
