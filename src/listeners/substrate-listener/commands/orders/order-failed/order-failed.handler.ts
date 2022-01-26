@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
 import { ethers } from 'ethers';
-import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { refundOrder, SubstrateService } from '../../../../../common';
 
 @Injectable()

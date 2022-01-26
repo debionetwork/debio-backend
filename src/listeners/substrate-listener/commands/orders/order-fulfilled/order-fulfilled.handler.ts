@@ -15,7 +15,7 @@ import {
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 

@@ -4,7 +4,7 @@ import { LabRating } from './endpoints/rating/models/rating.entity';
 import { LocationEntities } from './endpoints/location/models';
 import { LocationModule } from './endpoints/location/location.module';
 import { RatingModule } from './endpoints/rating/rating.module';
-import { EscrowModule } from './endpoints/escrow/escrow.module';
+import { EscrowModule } from './common/modules/escrow/escrow.module';
 import { SubstrateEndpointModule } from './endpoints/substrate-endpoint/substrate-endpoint.module';
 import { TransactionLoggingModule } from './common/modules/transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './common/modules/transaction-logging/models/transaction-request.entity';
