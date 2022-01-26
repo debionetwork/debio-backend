@@ -1,6 +1,11 @@
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
-import { elasticsearchServiceMockFactory, substrateServiceMockFactory, MockType, MockLogger } from '../../mock';
+import {
+  elasticsearchServiceMockFactory,
+  substrateServiceMockFactory,
+  MockType,
+  MockLogger,
+} from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
 import { ServiceRequest, SubstrateService } from '../../../../src/common';
 
@@ -54,7 +59,7 @@ describe('UnstakedService', () => {
       ],
     }).compile();
     module.useLogger(MockLogger);
-    
+
     unstakedService = module.get(UnstakedService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
@@ -92,8 +97,12 @@ describe('UnstakedService', () => {
   });
 
   it('should update index data in elasticsearch', async () => {
-    const queryServiceRequestMock = jest.spyOn(serviceRequestQuery, 'queryServiceRequestById').mockImplementation();
-    const retrieveUnstakedAmountMock = jest.spyOn(serviceRequestCommand, 'retrieveUnstakedAmount').mockImplementation();
+    const queryServiceRequestMock = jest
+      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
+      .mockImplementation();
+    const retrieveUnstakedAmountMock = jest
+      .spyOn(serviceRequestCommand, 'retrieveUnstakedAmount')
+      .mockImplementation();
 
     const CALLED_WITH = createSearchObject();
     const REQUEST_ID = 'string';
@@ -136,7 +145,7 @@ describe('UnstakedService', () => {
     when(elasticsearchServiceMock.search)
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
-    
+
     await unstakedService.handleWaitingUnstaked();
     expect(queryServiceRequestMock).toHaveBeenCalled();
     expect(elasticsearchServiceMock.update).toHaveBeenCalled();
@@ -198,11 +207,11 @@ describe('UnstakedService', () => {
     when(elasticsearchServiceMock.search.mockReturnValue(ES_RESULT))
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
-    
+
     await unstakedService.handleWaitingUnstaked();
     expect(queryServiceRequestMock).toHaveBeenCalled();
     expect(retrieveUnstakedAmountMock).toHaveBeenCalled();
-    
+
     queryServiceRequestMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();
   });

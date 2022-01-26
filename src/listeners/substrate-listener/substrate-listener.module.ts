@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EscrowModule } from '../../endpoints/escrow/escrow.module';
 import {
+  DateTimeModule,
   DebioConversionModule,
   MailModule,
   ProcessEnvModule,
@@ -27,6 +28,7 @@ import { LocationModule } from '../../endpoints/location/location.module';
     RewardModule,
     MailModule,
     CqrsModule,
+    DateTimeModule,
   ],
   providers: [
     SubstrateListenerHandler,

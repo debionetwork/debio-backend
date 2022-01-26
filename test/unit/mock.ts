@@ -6,6 +6,7 @@ import {
   TransactionLoggingService,
   OrderStatus,
   DebioConversionService,
+  MailerManager,
   RewardService,
 } from '../../src/common';
 import { Repository } from 'typeorm';
@@ -16,6 +17,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/endpoints/escrow/escrow.service';
 import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { CountryService } from '../../src/endpoints/location/country.service';
+import { StateService } from '../../src/endpoints/location/state.service';
 
 export function mockFunction(args){} // eslint-disable-line
 
@@ -82,11 +84,12 @@ export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(
   }),
 );
 
-export const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(() => ({
+export const substrateServiceMockFactory: () => MockType<SubstrateService> =
+  jest.fn(() => ({
     onModuleInit: jest.fn(),
     startListen: jest.fn(),
     stopListen: jest.fn(),
-}));
+  }));
 
 export const ethereumServiceMockFactory: () => MockType<EthereumService> =
   jest.fn(() => ({
@@ -171,7 +174,21 @@ export const MockLogger = {
   warn: jest.fn(),
   debug: jest.fn(),
   verbose: jest.fn(),
-}
+};
+
+export const stateServiceMockFactory: () => MockType<StateService> = jest.fn(
+  () => ({
+    getAllRegion: jest.fn(),
+    getState: jest.fn(),
+  }),
+);
+
+export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(
+  () => ({
+    sendCustomerStakingRequestServiceEmail: jest.fn(),
+    sendLabRegistrationEmail: jest.fn(),
+  }),
+);
 
 export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
   getAll: jest.fn(),
