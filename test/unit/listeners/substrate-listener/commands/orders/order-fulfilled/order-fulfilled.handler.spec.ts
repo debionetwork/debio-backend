@@ -3,7 +3,7 @@ import { OrderCreatedCommand } from "../../../../../../../src/listeners/substrat
 import { Test, TestingModule } from "@nestjs/testing";
 import { createMockOrder, debioConversionServiceMockFactory, escrowServiceMockFactory, mockBlockNumber, MockType, rewardServiceMockFactory, substrateServiceMockFactory, transactionLoggingServiceMockFactory } from "../../../../../mock";
 import { OrderFulfilledHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler";
-import { EscrowService } from "../../../../../../../src/endpoints/escrow/escrow.service";
+import { EscrowService } from "../../../../../../../src/common/modules/escrow/escrow.service";
 import { ethers } from 'ethers';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from "../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto";
