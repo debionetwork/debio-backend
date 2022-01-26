@@ -1,6 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { SubstrateModule } from '../common';
+import {
+  EmailNotificationModule,
+  MailModule,
+  SubstrateModule,
+  SubstrateService,
+} from '../common';
+import { MailerService } from './mailer/mailer.service';
 import { UnstakedService } from './unstaked/unstaked.service';
 
 @Module({
@@ -15,8 +21,10 @@ import { UnstakedService } from './unstaked/unstaked.service';
       }),
     }),
     SubstrateModule,
+    MailModule,
+    EmailNotificationModule,
   ],
   exports: [ElasticsearchModule],
-  providers: [UnstakedService],
+  providers: [UnstakedService, SubstrateService, MailerService],
 })
 export class SchedulersModule {}

@@ -9,7 +9,7 @@ export class CachesService {
     const lastBlock = await this.cacheManager.get<number>('last-block');
 
     if (!lastBlock) {
-      return 0;
+      return 10000317;
     }
 
     return lastBlock;
