@@ -19,7 +19,7 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
   let serviceRequesWaitingForUnstakedHandler: ServiceRequestWaitingForUnstakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-  
+
   const createMockRequest = (requestStatus: RequestStatus) => {
     return [
       {},
@@ -126,7 +126,7 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
       .mockReturnValue(STATUS_RETURN);
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
-    
+
     const STAKING_LOGGIN_CALLED_WITH: TransactionLoggingDto = {
       address: requestData[1].toHuman().requesterAddress,
       amount: 0,

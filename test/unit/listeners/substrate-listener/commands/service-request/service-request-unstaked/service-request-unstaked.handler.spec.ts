@@ -49,7 +49,7 @@ describe('Service Request Unstaked Handler Event', () => {
       blockNumber: 1,
     };
   }
-  
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [

@@ -1,33 +1,41 @@
-import { OrderStatus, TransactionLoggingService } from "../../../../../../../src/common";
-import { OrderCreatedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, mockBlockNumber, MockType, transactionLoggingServiceMockFactory } from "../../../../../mock";
-import { OrderCreatedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-created/order-created.handler";
+import {
+  OrderStatus,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
+import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  createMockOrder,
+  mockBlockNumber,
+  MockType,
+  transactionLoggingServiceMockFactory,
+} from '../../../../../mock';
+import { OrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-created/order-created.handler';
 import { when } from 'jest-when';
 import { ethers } from 'ethers';
-import { TransactionRequest } from "../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity";
+import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 jest.mock('ethers', () => ({
   ethers: {
     utils: {
-      toUtf8String: jest.fn(val=>val)
+      toUtf8String: jest.fn((val) => val),
     },
   },
 }));
 
-describe("Order Created Handler Event", () => {
+describe('Order Created Handler Event', () => {
   let orderCreatedHandler: OrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-				{
+        {
           provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-        OrderCreatedHandler
-      ]
+          useFactory: transactionLoggingServiceMockFactory,
+        },
+        OrderCreatedHandler,
+      ],
     }).compile();
 
     orderCreatedHandler = module.get(OrderCreatedHandler);
@@ -36,11 +44,11 @@ describe("Order Created Handler Event", () => {
     await module.init();
   });
 
-  it("should defined Order Cancelled Handler", () => {
+  it('should defined Order Cancelled Handler', () => {
     expect(orderCreatedHandler).toBeDefined();
   });
 
-  it("should not called logging service create", async () => {
+  it('should not called logging service create', async () => {
     // Arrange
     const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
@@ -62,15 +70,20 @@ describe("Order Created Handler Event", () => {
       .calledWith(ORDER.toHuman().id, 1)
       .mockReturnValue(RESULT_STATUS);
 
-    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand([ORDER], mockBlockNumber());
+    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
+      [ORDER],
+      mockBlockNumber(),
+    );
 
     await orderCreatedHandler.execute(orderCancelledCommand);
-    expect(transactionLoggingServiceMock.getLoggingByHashAndStatus).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByHashAndStatus,
+    ).toHaveBeenCalled();
     expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
   });
 
-  it("should called logging service create", async () => {
+  it('should called logging service create', async () => {
     // Arrange
     const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
@@ -92,10 +105,15 @@ describe("Order Created Handler Event", () => {
       .calledWith(ORDER.toHuman().id, 1)
       .mockReturnValue(RESULT_STATUS);
 
-    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand([ORDER], mockBlockNumber());
+    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
+      [ORDER],
+      mockBlockNumber(),
+    );
 
     await orderCreatedHandler.execute(orderCancelledCommand);
-    expect(transactionLoggingServiceMock.getLoggingByHashAndStatus).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByHashAndStatus,
+    ).toHaveBeenCalled();
     expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
   });

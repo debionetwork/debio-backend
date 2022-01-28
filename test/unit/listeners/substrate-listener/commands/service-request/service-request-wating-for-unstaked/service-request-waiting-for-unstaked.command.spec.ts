@@ -1,11 +1,11 @@
-import {
-  RequestStatus
-} from '../../../../../../../src/common';
+import { RequestStatus } from '../../../../../../../src/common';
 import { ServiceRequestWaitingForUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { ServiceRequest } from '../../../../../../../src/common/polkadot-provider/models/service-request';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/service-request');
+jest.mock(
+  '../../../../../../../src/common/polkadot-provider/models/service-request',
+);
 
 describe('Service Request Waiting For Unstaked Command Event', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -40,7 +40,8 @@ describe('Service Request Waiting For Unstaked Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Processed);
 
-    const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand = new ServiceRequestWaitingForUnstakedCommand(MOCK_DATA, mockBlockNumber());
+    const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand =
+      new ServiceRequestWaitingForUnstakedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceRequest).toHaveBeenCalled();
@@ -48,10 +49,12 @@ describe('Service Request Waiting For Unstaked Command Event', () => {
   });
 
   it('should throw error if cannot called toHuman from array param object', () => {
-    expect(
-      ()=> {
-        const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand = new ServiceRequestWaitingForUnstakedCommand([{}, {}], mockBlockNumber()) 
-      }
-    ).toThrow();
+    expect(() => {
+      const _serviceRequestProcessedCommand: ServiceRequestWaitingForUnstakedCommand =
+        new ServiceRequestWaitingForUnstakedCommand(
+          [{}, {}],
+          mockBlockNumber(),
+        );
+    }).toThrow();
   });
 });
