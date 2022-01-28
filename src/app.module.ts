@@ -23,7 +23,6 @@ import { EmailEndpointModule } from './endpoints/email/email.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 import { CachesModule } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
-import { TransactionModule } from './endpoints/transaction/transaction.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -65,7 +64,6 @@ require('dotenv').config(); // eslint-disable-line
     SubstrateListenerModule,
     TransactionLoggingModule,
     VerificationModule,
-    TransactionModule,
     RecaptchaModule,
     BountyModule,
     HealthModule,
