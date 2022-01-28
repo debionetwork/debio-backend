@@ -10,26 +10,25 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 export class OrderCreatedHandler
   implements ICommandHandler<OrderCreatedCommand>
 {
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-    private readonly logger: Logger,
-  ) {}
+  private readonly logger: Logger = new Logger(OrderCreatedCommand.name);
+
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderCreatedCommand) {
     await this.logger.log('OrderCreated!');
 
-    const order = command.orders[0].toJSON();
+    const order = command.orders;
 
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 1);
-      order.dnaSampleTrackingId = ethers.utils.toUtf8String(
-        order.dnaSampleTrackingId,
+      order.dna_sample_tracking_id = ethers.utils.toUtf8String(
+        order.dna_sample_tracking_id,
       );
-      order.additionalPrices[0].value =
-        Number(order.additionalPrices[0].value) / 10 ** 18;
-      order.additionalPrices[0].component = ethers.utils.toUtf8String(
-        order.additionalPrices[0].component,
+      order.additional_prices[0].value =
+        Number(order.additional_prices[0].value) / 10 ** 18;
+      order.additional_prices[0].component = ethers.utils.toUtf8String(
+        order.additional_prices[0].component,
       );
       order.prices[0].value = Number(order.prices[0].value) / 10 ** 18;
       order.prices[0].component = ethers.utils.toUtf8String(
@@ -38,9 +37,9 @@ export class OrderCreatedHandler
 
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
-        address: order.customerId,
-        amount: order.additionalPrices[0].value + order.prices[0].value,
-        created_at: new Date(parseInt(order.createdAt)),
+        address: order.customer_id,
+        amount: order.additional_prices[0].value + order.prices[0].value,
+        created_at: order.created_at,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(0),
         ref_number: order.id,

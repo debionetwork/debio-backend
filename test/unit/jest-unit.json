@@ -11,8 +11,8 @@
     ],
     "coverageDirectory": "../coverage",
     "moduleNameMapper": {
-      "@polkadot/api(.*)$": "<rootDir>../../src/common/modules/substrate/substrate.service.ts",
-      "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../../src/common/modules/substrate/substrate.service.ts"
+      "@polkadot/api(.*)$": "<rootDir>@polkadot-api.mock.ts",
+      "@polkadot/types/interfaces$": "<rootDir>@polkadot-types-interfaces.mock.ts"
     },
     "setupFiles": ["dotenv/config"]
   }

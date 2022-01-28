@@ -2,16 +2,17 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
 import { ethers } from 'ethers';
-import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { refundOrder, SubstrateService } from '../../../../../common';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
 export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
+  private readonly logger: Logger = new Logger(OrderFailedCommand.name);
+
   constructor(
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderFailedCommand) {

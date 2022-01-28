@@ -1,6 +1,6 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { TransactionLoggingService } from '../../../../../common';
+import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiting-for-unstaked.command';
 
@@ -9,9 +9,13 @@ import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiti
 export class ServiceRequestWaitingForUnstakedHandler
   implements ICommandHandler<ServiceRequestWaitingForUnstakedCommand>
 {
+  private readonly logger: Logger = new Logger(
+    ServiceRequestWaitingForUnstakedCommand.name,
+  );
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly logger: Logger,
+    private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
@@ -28,7 +32,7 @@ export class ServiceRequestWaitingForUnstakedHandler
       const stakingLogging: TransactionLoggingDto = {
         address: serviceRequest.requester_address,
         amount: 0,
-        created_at: new Date(),
+        created_at: this.dateTimeProxy.new(),
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),
         ref_number: serviceRequest.hash,

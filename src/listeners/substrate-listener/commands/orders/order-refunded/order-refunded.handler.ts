@@ -10,10 +10,9 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 export class OrderRefundedHandler
   implements ICommandHandler<OrderRefundedCommand>
 {
-  constructor(
-    private readonly loggingService: TransactionLoggingService,
-    private readonly logger: Logger,
-  ) {}
+  private readonly logger: Logger = new Logger(OrderRefundedCommand.name);
+
+  constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderRefundedCommand) {
     await this.logger.log('OrderRefunded!');

@@ -1,16 +1,22 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { ServiceController } from './services/service.controller';
 import { ServiceService } from './services/service.service';
-import { LabController } from './labs/lab.controller';
 import { LabService } from './services/lab.service';
-import { OrderController } from './orders/order.controller';
 import { OrderService } from './services/order.service';
-import { RewardModule, SubstrateModule } from '../../common';
+import {
+  DebioConversionModule,
+  DateTimeModule,
+  RewardModule,
+  SubstrateModule,
+} from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
+import { ServiceRequestService } from './services/service-request.service';
+import { LocationModule } from '../location/location.module';
 
 @Module({
   imports: [
+    LocationModule,
+    DebioConversionModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,
@@ -22,14 +28,10 @@ import { SubstrateController } from './substrate-endpoint.controller';
     }),
     SubstrateModule,
     RewardModule,
+    DateTimeModule,
   ],
   exports: [ElasticsearchModule],
-  controllers: [
-    SubstrateController,
-    ServiceController,
-    LabController,
-    OrderController,
-  ],
-  providers: [ServiceService, LabService, OrderService],
+  controllers: [SubstrateController],
+  providers: [ServiceService, LabService, OrderService, ServiceRequestService],
 })
 export class SubstrateEndpointModule {}

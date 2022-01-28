@@ -1,14 +1,10 @@
-import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../proxies/process-env';
+import { ProcessEnvModule } from '../proxies';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({
-  imports: [
-    ProcessEnvModule,
-    HttpModule,
-  ],
+  imports: [ProcessEnvModule],
   providers: [DebioConversionService],
-  exports: [DebioConversionService],
+  exports: [ProcessEnvModule, DebioConversionService],
 })
 export class DebioConversionModule {}

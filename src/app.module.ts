@@ -4,10 +4,8 @@ import { LabRating } from './endpoints/rating/models/rating.entity';
 import { LocationEntities } from './endpoints/location/models';
 import { LocationModule } from './endpoints/location/location.module';
 import { RatingModule } from './endpoints/rating/rating.module';
-import { EthereumModule } from './endpoints/ethereum/ethereum.module';
-import { EscrowModule } from './endpoints/escrow/escrow.module';
+import { EscrowModule } from './common/modules/escrow/escrow.module';
 import { SubstrateEndpointModule } from './endpoints/substrate-endpoint/substrate-endpoint.module';
-import { EthereumIndexedDataModule } from './endpoints/ethereum-indexed-data/ethereum-indexed-data.module';
 import { TransactionLoggingModule } from './common/modules/transaction-logging/transaction-logging.module';
 import { TransactionRequest } from './common/modules/transaction-logging/models/transaction-request.entity';
 import { RecaptchaModule } from './endpoints/recaptcha/recaptcha.module';
@@ -22,6 +20,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
+import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
+import { CachesModule } from './common';
+import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -56,17 +57,18 @@ require('dotenv').config(); // eslint-disable-line
     RatingModule,
     EmrModule,
     ServiceCategoryModule,
-    EthereumModule,
+    EthereumListenerModule,
     EscrowModule,
     DebioConversionModule,
     SubstrateEndpointModule,
-    EthereumIndexedDataModule,
+    SubstrateListenerModule,
     TransactionLoggingModule,
     VerificationModule,
     RecaptchaModule,
     BountyModule,
-    SchedulersModule,
     HealthModule,
+    CachesModule,
+    SchedulersModule,
   ],
 })
 export class AppModule {}

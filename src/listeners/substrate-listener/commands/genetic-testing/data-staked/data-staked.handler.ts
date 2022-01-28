@@ -8,7 +8,6 @@ import {
   SubstrateService,
 } from '../../../../../common';
 import { DataStakedCommand } from './data-staked.command';
-import { ethers } from 'ethers';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
 @Injectable()
@@ -21,10 +20,9 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
   ) {}
 
   async execute(command: DataStakedCommand) {
-    const dataStaked = command.dataStaked[0].toJSON();
-    dataStaked.trackingId = ethers.utils.toUtf8String(dataStaked.trackingId);
+    const dataStaked = command.dataStaked;
     const dataOrder = await (
-      await this.substrateService.api.query.orders.orders(dataStaked.order_id)
+      await this.substrateService.api.query.orders.orders(dataStaked.orderId)
     ).toJSON();
 
     const debioToDai = Number(

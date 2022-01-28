@@ -15,7 +15,10 @@ describe('Transaction Logging Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TransactionLoggingService,
-        { provide: getRepositoryToken(TransactionRequest), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(TransactionRequest),
+          useFactory: repositoryMockFactory,
+        },
       ],
     }).compile();
     transactionLoggingService = module.get(TransactionLoggingService);
@@ -30,15 +33,15 @@ describe('Transaction Logging Service Unit Tests', () => {
   it('should create', () => {
     // Arrange
     const TRN_DTO: TransactionLoggingDto = {
-        address: "string",
-        amount: 0,
-        created_at: new Date(),
-        currency: "string",
-        parent_id: BigInt(0),
-        ref_number: "string",
-        transaction_status: 0,
-        transaction_type: 0,
-    }
+      address: 'string',
+      amount: 0,
+      created_at: new Date(),
+      currency: 'string',
+      parent_id: BigInt(0),
+      ref_number: 'string',
+      transaction_status: 0,
+      transaction_type: 0,
+    };
     const EXPECTED_PARAM = new TransactionRequest();
     EXPECTED_PARAM.address = TRN_DTO.address;
     EXPECTED_PARAM.amount = TRN_DTO.amount;
@@ -50,7 +53,7 @@ describe('Transaction Logging Service Unit Tests', () => {
     EXPECTED_PARAM.transaction_status = TRN_DTO.transaction_status;
     const RESULT = 0;
     repositoryMock.save.mockReturnValue(RESULT);
-    
+
     // Assert
     expect(transactionLoggingService.create(TRN_DTO)).toEqual(RESULT);
     expect(repositoryMock.save).toHaveBeenCalled();
@@ -59,18 +62,20 @@ describe('Transaction Logging Service Unit Tests', () => {
 
   it('should get logging by order id', () => {
     // Arrange
-    const REF_NUMBER = "string";
+    const REF_NUMBER = 'string';
     const EXPECTED_PARAM = {
-        where: {
-            ref_number: REF_NUMBER,
-            parent_id: 0,
-        },
-    }
+      where: {
+        ref_number: REF_NUMBER,
+        parent_id: 0,
+      },
+    };
     const RESULT = 0;
     repositoryMock.findOne.mockReturnValue(RESULT);
-    
+
     // Assert
-    expect(transactionLoggingService.getLoggingByOrderId(REF_NUMBER)).toEqual(RESULT);
+    expect(transactionLoggingService.getLoggingByOrderId(REF_NUMBER)).toEqual(
+      RESULT,
+    );
     expect(repositoryMock.findOne).toHaveBeenCalled();
     expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAM);
   });
@@ -78,29 +83,36 @@ describe('Transaction Logging Service Unit Tests', () => {
   it('should get logging by hash and status', () => {
     // Arrange
     const TRN_NUM = 0;
-    const REF_NUMBER = "string";
+    const REF_NUMBER = 'string';
     const EXPECTED_PARAM = {
-        where: {
-            ref_number: REF_NUMBER,
-            transaction_status: TRN_NUM,
-        },
-    }
+      where: {
+        ref_number: REF_NUMBER,
+        transaction_status: TRN_NUM,
+      },
+    };
     const RESULT = 0;
     repositoryMock.findOne.mockReturnValue(RESULT);
-    
+
     // Assert
-    expect(transactionLoggingService.getLoggingByHashAndStatus(REF_NUMBER, TRN_NUM)).toEqual(RESULT);
+    expect(
+      transactionLoggingService.getLoggingByHashAndStatus(REF_NUMBER, TRN_NUM),
+    ).toEqual(RESULT);
     expect(repositoryMock.findOne).toHaveBeenCalled();
     expect(repositoryMock.findOne).toHaveBeenCalledWith(EXPECTED_PARAM);
   });
 
   it('should update transaction hash', () => {
     // Arrange
+<<<<<<< HEAD
     const transaction_hash = "string";
+=======
+    const transaction_hash = 'string';
+>>>>>>> fc85034a3b0ed01c741ec0a26febf01c3115b2dc
 
     const RESULT = 0;
     const EXPECTED_PARAM = new TransactionRequest();
     EXPECTED_PARAM.id = BigInt(0);
+<<<<<<< HEAD
     EXPECTED_PARAM.address = "string";
     EXPECTED_PARAM.amount = 0;
     EXPECTED_PARAM.created_at = new Date();
@@ -110,11 +122,29 @@ describe('Transaction Logging Service Unit Tests', () => {
     EXPECTED_PARAM.transaction_type = 0;
     EXPECTED_PARAM.transaction_status = 0;
     EXPECTED_PARAM.transaction_hash = "string";
+=======
+    EXPECTED_PARAM.address = 'string';
+    EXPECTED_PARAM.amount = 0;
+    EXPECTED_PARAM.created_at = new Date();
+    EXPECTED_PARAM.currency = 'string';
+    EXPECTED_PARAM.parent_id = BigInt(0);
+    EXPECTED_PARAM.ref_number = 'string';
+    EXPECTED_PARAM.transaction_type = 0;
+    EXPECTED_PARAM.transaction_status = 0;
+    EXPECTED_PARAM.transaction_hash = 'string';
+>>>>>>> fc85034a3b0ed01c741ec0a26febf01c3115b2dc
     repositoryMock.update.mockReturnValue(RESULT);
 
     // Asserts
     transactionLoggingService.updateHash(EXPECTED_PARAM, transaction_hash);
     expect(repositoryMock.update).toHaveBeenCalled();
+<<<<<<< HEAD
     expect(repositoryMock.update).toHaveBeenCalledWith(EXPECTED_PARAM.id.toString(), EXPECTED_PARAM);
+=======
+    expect(repositoryMock.update).toHaveBeenCalledWith(
+      EXPECTED_PARAM.id.toString(),
+      EXPECTED_PARAM,
+    );
+>>>>>>> fc85034a3b0ed01c741ec0a26febf01c3115b2dc
   });
 });

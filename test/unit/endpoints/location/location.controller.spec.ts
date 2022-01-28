@@ -11,14 +11,16 @@ describe('Location Controller Unit Tests', () => {
   let stateServiceMock: MockType<StateService>;
   let cityServiceMock: MockType<CityService>;
 
-  const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
-    getAll: jest.fn(),
-  }));
-  
+  const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(
+    () => ({
+      getAll: jest.fn(),
+    }),
+  );
+
   const stateServiceMockFactory: () => MockType<StateService> = jest.fn(() => ({
     getAllRegion: jest.fn(),
   }));
-  
+
   const cityServiceMockFactory: () => MockType<CityService> = jest.fn(() => ({
     getAllCity: jest.fn(),
     getOneCity: jest.fn(),
@@ -54,9 +56,9 @@ describe('Location Controller Unit Tests', () => {
       },
     ];
     const RESULTS = {
-        "data": MOCK_RETURN,
-        "status": "ok",
-    }
+      data: MOCK_RETURN,
+      status: 'ok',
+    };
     countryServiceMock.getAll.mockReturnValue(MOCK_RETURN);
 
     // Assert
@@ -69,20 +71,22 @@ describe('Location Controller Unit Tests', () => {
 
   it('should find all states', () => {
     // Arrange
-    const COUNTRY_CODE = "CODE";
+    const COUNTRY_CODE = 'CODE';
     const MOCK_RETURN = [
       {
         name: 'NAME',
       },
     ];
     const RESULTS = {
-        "data": MOCK_RETURN,
-        "status": "ok",
-    }
+      data: MOCK_RETURN,
+      status: 'ok',
+    };
     stateServiceMock.getAllRegion.mockReturnValue(MOCK_RETURN);
 
     // Assert
-    expect(locationController.getLocation(COUNTRY_CODE)).resolves.toEqual(RESULTS);
+    expect(locationController.getLocation(COUNTRY_CODE)).resolves.toEqual(
+      RESULTS,
+    );
     expect(stateServiceMock.getAllRegion).toHaveBeenCalledWith(COUNTRY_CODE);
     expect(stateServiceMock.getAllRegion).toHaveBeenCalled();
     expect(countryServiceMock.getAll).toHaveBeenCalledTimes(0);
@@ -92,22 +96,27 @@ describe('Location Controller Unit Tests', () => {
 
   it('should find all cities', () => {
     // Arrange
-    const COUNTRY_CODE = "CODE";
-    const STATE_CODE = "CODE";
+    const COUNTRY_CODE = 'CODE';
+    const STATE_CODE = 'CODE';
     const MOCK_RETURN = [
       {
         name: 'NAME',
       },
     ];
     const RESULTS = {
-        "data": MOCK_RETURN,
-        "status": "ok",
-    }
+      data: MOCK_RETURN,
+      status: 'ok',
+    };
     cityServiceMock.getAllCity.mockReturnValue(MOCK_RETURN);
 
     // Assert
-    expect(locationController.getLocation(COUNTRY_CODE, STATE_CODE)).resolves.toEqual(RESULTS);
-    expect(cityServiceMock.getAllCity).toHaveBeenCalledWith(COUNTRY_CODE, STATE_CODE);
+    expect(
+      locationController.getLocation(COUNTRY_CODE, STATE_CODE),
+    ).resolves.toEqual(RESULTS);
+    expect(cityServiceMock.getAllCity).toHaveBeenCalledWith(
+      COUNTRY_CODE,
+      STATE_CODE,
+    );
     expect(cityServiceMock.getAllCity).toHaveBeenCalled();
     expect(countryServiceMock.getAll).toHaveBeenCalledTimes(0);
     expect(stateServiceMock.getAllRegion).toHaveBeenCalledTimes(0);
@@ -116,20 +125,22 @@ describe('Location Controller Unit Tests', () => {
 
   it('should find one city', () => {
     // Arrange
-    const COUNTRY_CODE = "CODE";
-    const STATE_CODE = "CODE";
+    const COUNTRY_CODE = 'CODE';
+    const STATE_CODE = 'CODE';
     const CITY_CODE = 1;
     const MOCK_RETURN = {
       name: 'NAME',
     };
     const RESULTS = {
-        "data": MOCK_RETURN,
-        "status": "ok",
-    }
+      data: MOCK_RETURN,
+      status: 'ok',
+    };
     cityServiceMock.getOneCity.mockReturnValue(MOCK_RETURN);
 
     // Assert
-    expect(locationController.getLocation(COUNTRY_CODE, STATE_CODE, CITY_CODE)).resolves.toEqual(RESULTS);
+    expect(
+      locationController.getLocation(COUNTRY_CODE, STATE_CODE, CITY_CODE),
+    ).resolves.toEqual(RESULTS);
     expect(cityServiceMock.getOneCity).toHaveBeenCalledWith(CITY_CODE);
     expect(cityServiceMock.getOneCity).toHaveBeenCalled();
     expect(countryServiceMock.getAll).toHaveBeenCalledTimes(0);

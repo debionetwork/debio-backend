@@ -1,8 +1,25 @@
-import { DateTimeProxy } from 'src/common/proxies/date-time/date-time.proxy';
+import {
+  DateTimeProxy,
+  EthereumService,
+  CachesService,
+  SubstrateService,
+  TransactionLoggingService,
+  OrderStatus,
+  DebioConversionService,
+  MailerManager,
+  RewardService,
+} from '../../src/common';
 import { Repository } from 'typeorm';
+import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
+import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
+import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { CountryService } from '../../src/endpoints/location/country.service';
+import { StateService } from '../../src/endpoints/location/state.service';
+
+export function mockFunction(args){} // eslint-disable-line
 
 export type MockType<T> = {
     [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
@@ -20,6 +37,7 @@ export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(
 
 export const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(
   () => ({
+    new: jest.fn((entity) => entity),
     now: jest.fn((entity) => entity),
     nowAndAdd: jest.fn((entity) => entity),
   }),
@@ -44,6 +62,7 @@ export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchServic
     update: jest.fn((entity) => entity),
     updateByQuery: jest.fn((entity) => entity),
     search: jest.fn((entity) => entity),
+    ping: jest.fn(),
   }));
 
 export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
@@ -51,3 +70,127 @@ export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
     sendMail: jest.fn((entity) => entity),
   }),
 );
+
+export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
+  get: jest.fn(),
+  set: jest.fn(),
+  del: jest.fn(),
+}));
+
+export const cachesServiceMockFactory: () => MockType<CachesService> = jest.fn(
+  () => ({
+    getLastBlock: jest.fn(),
+    setLastBlock: jest.fn(),
+  }),
+);
+
+export const substrateServiceMockFactory: () => MockType<SubstrateService> =
+  jest.fn(() => ({
+    onModuleInit: jest.fn(),
+    startListen: jest.fn(),
+    stopListen: jest.fn(),
+  }));
+
+export const ethereumServiceMockFactory: () => MockType<EthereumService> =
+  jest.fn(() => ({
+    getLastBlock: jest.fn(),
+    setLastBlock: jest.fn(),
+    createWallet: jest.fn(),
+    getEthersProvider: jest.fn(),
+    getContract: jest.fn(),
+    getEscrowSmartContract: jest.fn(),
+  }));
+
+export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> = 
+  jest.fn(() => ({
+    getExchange: jest.fn()
+  }));
+
+export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = 
+  jest.fn(() => ({
+    create: jest.fn(),
+    updateHash: jest.fn(),
+    getLoggingByOrderId: jest.fn(),
+    getLoggingByHashAndStatus: jest.fn()
+  }));
+
+export const escrowServiceMockFactory: () => MockType<EscrowService> = 
+  jest.fn(() => ({
+    createOrder: jest.fn(),
+    refundOrder: jest.fn(),
+    cancelOrder: jest.fn(),
+    orderFulfilled: jest.fn(),
+    setOrderPaidWithSubstrate: jest.fn(),
+    forwardPaymentToSeller: jest.fn(),
+  }));
+
+export const rewardServiceMockFactory: () => MockType<RewardService> =
+  jest.fn(() => ({
+    insert: jest.fn(),
+    getRewardBindingByAccountId: jest.fn()
+  }));
+
+export function createMockOrder(status: OrderStatus) {
+  const first_price = {
+    component: "string", 
+    value: 1
+  };
+  const second_price = {
+    component: "string", 
+    value: 1
+  };
+
+  return {
+    toHuman: jest.fn(
+      () => ({
+        id: "string",
+        serviceId: "string",
+        customerId: "string",
+        customerBoxPublicKey: "string",
+        sellerId: "string",
+        dnaSampleTrackingId: "string",
+        currency: 'XX',
+        prices: [ first_price ],
+        additionalPrices: [ second_price ],
+        status: status,
+        orderFlow: "1",
+        createdAt: "1",
+        updatedAt: "1"
+      })
+    )
+  };
+}
+
+export function mockBlockNumber(): BlockMetaData {
+  return {
+    blockHash: "string",
+    blockNumber: 1,
+  }
+}
+
+export const MockLogger = {
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  debug: jest.fn(),
+  verbose: jest.fn(),
+};
+
+export const stateServiceMockFactory: () => MockType<StateService> = jest.fn(
+  () => ({
+    getAllRegion: jest.fn(),
+    getState: jest.fn(),
+  }),
+);
+
+export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(
+  () => ({
+    sendCustomerStakingRequestServiceEmail: jest.fn(),
+    sendLabRegistrationEmail: jest.fn(),
+  }),
+);
+
+export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
+  getAll: jest.fn(),
+  getByIso2Code: jest.fn()
+}));

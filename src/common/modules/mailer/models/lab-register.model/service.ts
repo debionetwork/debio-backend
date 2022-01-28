@@ -31,18 +31,21 @@ export async function getLabRegisterService(
     const lrs: LabRegisterService = new LabRegisterService();
     const expectedDuration = new LabRegisterExpectedDuration();
     expectedDuration.duration = val.info.expectedDuration.duration;
-    expectedDuration.duration_type = val.info.expectedDuration.durationType ;
+    expectedDuration.duration_type = val.info.expectedDuration.durationType;
 
     lrs.name = val.info.name;
     lrs.category = val.info.category;
-    lrs.currency = val.currency
-    lrs.price = val.price;
-    lrs.qc_price = val.qc_price;
+    lrs.currency = val.currency;
+    lrs.price = (Number(val.price.split(',').join('')) / 10 ** 18).toString();
+    lrs.qc_price = (
+      Number(val.qc_price.split(',').join('')) /
+      10 ** 18
+    ).toString();
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;
-    lrs.expected_duration = expectedDuration
-    
+    lrs.expected_duration = expectedDuration;
+
     labRegisterServices.push(lrs);
   });
 

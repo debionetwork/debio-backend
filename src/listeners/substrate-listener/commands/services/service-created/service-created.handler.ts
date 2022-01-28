@@ -5,6 +5,7 @@ import {
   LabRegister,
   labToLabRegister,
   MailerManager,
+  ProcessEnvProxy,
   queryLabById,
   Service,
   SubstrateService,
@@ -17,12 +18,13 @@ export class ServiceCreatedHandler
   implements ICommandHandler<ServiceCreatedCommand>
 {
   constructor(
+    private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
   ) {}
 
   async execute(command: ServiceCreatedCommand) {
-    const service: Service = command.services[0].toHuman();
+    const service: Service = command.services;
     const lab: Lab = await queryLabById(
       this.substrateService.api,
       service.owner_id,
@@ -35,7 +37,7 @@ export class ServiceCreatedHandler
         lab,
       );
       this.mailerManager.sendLabRegistrationEmail(
-        process.env.EMAILS.split(','),
+        this.process.env.EMAILS.split(','),
         labRegister,
       );
     }

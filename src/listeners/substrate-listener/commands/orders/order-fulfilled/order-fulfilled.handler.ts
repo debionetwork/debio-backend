@@ -14,23 +14,24 @@ import {
   sendRewards,
   SubstrateService,
   TransactionLoggingService,
-} from 'src/common';
-import { EscrowService } from 'src/endpoints/escrow/escrow.service';
-import { TransactionLoggingDto } from 'src/common/modules/transaction-logging/dto/transaction-logging.dto';
-import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
+} from '../../../../../common';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
+import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
 export class OrderFulfilledHandler
   implements ICommandHandler<OrderFulfilledCommand>
 {
+  private readonly logger: Logger = new Logger(OrderFulfilledCommand.name);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
     private readonly rewardService: RewardService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
@@ -77,7 +78,7 @@ export class OrderFulfilledHandler
 
       const resp: any = await queryEthAdressByAccountId(
         this.substrateService.api,
-        order['sellerId'],
+        order['seller_id'],
       );
       if ((resp as Option<any>).isNone) {
         return null;
@@ -112,7 +113,7 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = order['price'][0].value * debioToDai;
+        const servicePrice = order['prices'][0].value * debioToDai;
 
         // Send reward to customer
         await sendRewards(

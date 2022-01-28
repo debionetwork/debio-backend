@@ -2,7 +2,7 @@ import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderCancelledCommand } from './order-cancelled.command';
 import { TransactionLoggingService } from '../../../../../common';
-import { EscrowService } from '../../../../../endpoints/escrow/escrow.service';
+import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 
@@ -11,10 +11,11 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 export class OrderCancelledHandler
   implements ICommandHandler<OrderCancelledCommand>
 {
+  private readonly logger: Logger = new Logger(OrderCancelledCommand.name);
+
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly escrowService: EscrowService,
-    private readonly logger: Logger,
   ) {}
 
   async execute(command: OrderCancelledCommand) {
