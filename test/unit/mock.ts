@@ -101,71 +101,71 @@ export const ethereumServiceMockFactory: () => MockType<EthereumService> =
     getEscrowSmartContract: jest.fn(),
   }));
 
-export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> = 
+export const debioConversionServiceMockFactory: () => MockType<DebioConversionService> =
   jest.fn(() => ({
-    getExchange: jest.fn()
+    getExchange: jest.fn(),
   }));
 
-export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = 
+export const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
   jest.fn(() => ({
     create: jest.fn(),
     updateHash: jest.fn(),
     getLoggingByOrderId: jest.fn(),
-    getLoggingByHashAndStatus: jest.fn()
+    getLoggingByHashAndStatus: jest.fn(),
   }));
 
-export const escrowServiceMockFactory: () => MockType<EscrowService> = 
-  jest.fn(() => ({
+export const escrowServiceMockFactory: () => MockType<EscrowService> = jest.fn(
+  () => ({
     createOrder: jest.fn(),
     refundOrder: jest.fn(),
     cancelOrder: jest.fn(),
     orderFulfilled: jest.fn(),
     setOrderPaidWithSubstrate: jest.fn(),
     forwardPaymentToSeller: jest.fn(),
-  }));
+  }),
+);
 
-export const rewardServiceMockFactory: () => MockType<RewardService> =
-  jest.fn(() => ({
+export const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
+  () => ({
     insert: jest.fn(),
-    getRewardBindingByAccountId: jest.fn()
-  }));
+    getRewardBindingByAccountId: jest.fn(),
+  }),
+);
 
 export function createMockOrder(status: OrderStatus) {
   const first_price = {
-    component: "string", 
-    value: 1
+    component: 'string',
+    value: 1,
   };
   const second_price = {
-    component: "string", 
-    value: 1
+    component: 'string',
+    value: 1,
   };
 
   return {
-    toHuman: jest.fn(
-      () => ({
-        id: "string",
-        serviceId: "string",
-        customerId: "string",
-        customerBoxPublicKey: "string",
-        sellerId: "string",
-        dnaSampleTrackingId: "string",
-        currency: 'XX',
-        prices: [ first_price ],
-        additionalPrices: [ second_price ],
-        status: status,
-        orderFlow: "1",
-        createdAt: "1",
-        updatedAt: "1"
-      })
-    )
+    toHuman: jest.fn(() => ({
+      id: 'string',
+      serviceId: 'string',
+      customerId: 'string',
+      customerBoxPublicKey: 'string',
+      sellerId: 'string',
+      dnaSampleTrackingId: 'string',
+      currency: 'XX',
+      prices: [first_price],
+      additionalPrices: [second_price],
+      status: status,
+      orderFlow: '1',
+      createdAt: '1',
+      updatedAt: '1',
+    })),
   };
 }
 
 export function mockBlockNumber(): BlockMetaData {
   return {
-    blockHash: "string",
+    blockHash: 'string',
     blockNumber: 1,
-  }
+  };
 }
 
 export const MockLogger = {
@@ -190,7 +190,8 @@ export const mailerManagerMockFactory: () => MockType<MailerManager> = jest.fn(
   }),
 );
 
-export const countryServiceMockFactory: () => MockType<CountryService> = jest.fn(() => ({
-  getAll: jest.fn(),
-  getByIso2Code: jest.fn()
-}));
+export const countryServiceMockFactory: () => MockType<CountryService> =
+  jest.fn(() => ({
+    getAll: jest.fn(),
+    getByIso2Code: jest.fn(),
+  }));

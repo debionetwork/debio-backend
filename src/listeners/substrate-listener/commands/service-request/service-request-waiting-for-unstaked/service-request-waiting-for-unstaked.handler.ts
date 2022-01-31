@@ -1,6 +1,9 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiting-for-unstaked.command';
 

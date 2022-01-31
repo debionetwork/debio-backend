@@ -104,7 +104,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     orderServiceMock = module.get(OrderService);
     rewardServiceMock = module.get(RewardService);
     dateTimeProxyMock = module.get(DateTimeProxy);
-    serviceRequestMock = module.get(ServiceRequestService)
+    serviceRequestMock = module.get(ServiceRequestService);
   });
 
   it('should be defined', () => {
@@ -114,7 +114,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(serviceServiceMock).toBeDefined();
     expect(orderServiceMock).toBeDefined();
     expect(rewardServiceMock).toBeDefined();
-    expect(serviceRequestMock).toBeDefined()
+    expect(serviceRequestMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
@@ -251,11 +251,15 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      substrateControllerMock.getServiceRequestByCustomer({ customerId: 1 }, 1, 10),
+      substrateControllerMock.getServiceRequestByCustomer(
+        { customerId: 1 },
+        1,
+        10,
+      ),
     ).resolves.toEqual(RESULT);
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalled();
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalledWith(
-      {"customerId": 1},
+      { customerId: 1 },
       1,
       10,
     );
@@ -267,9 +271,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock.getAggregatedByCountries.mockReturnValue(RESULT);
 
     // Assert
-    expect(
-      substrateControllerMock.getAggregatedByCountries(),
-    ).resolves.toEqual(RESULT);
+    expect(substrateControllerMock.getAggregatedByCountries()).resolves.toEqual(
+      RESULT,
+    );
     expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalled();
     expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith();
   });

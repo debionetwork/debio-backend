@@ -2,7 +2,9 @@ import { ServiceRequestProcessedCommand } from '../../../../../../../src/listene
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceInvoice } from '../../../../../../../src/common/polkadot-provider/models/service-request';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/service-request');
+jest.mock(
+  '../../../../../../../src/common/polkadot-provider/models/service-request',
+);
 
 describe('Service Request Processed Command Event', () => {
   const createMockServiceInvoice = () => {
@@ -34,7 +36,8 @@ describe('Service Request Processed Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockServiceInvoice();
 
-    const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand = new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber());
+    const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand =
+      new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceInvoice).toHaveBeenCalled();
@@ -42,10 +45,9 @@ describe('Service Request Processed Command Event', () => {
   });
 
   it('should throw error', () => {
-    expect(
-      ()=> { 
-        const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand = new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber()) 
-      }
-    ).toThrow();
+    expect(() => {
+      const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand =
+        new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber());
+    }).toThrow();
   });
 });
