@@ -1,22 +1,28 @@
-import { OrderStatus, SubstrateService } from "../../../../../../../src/common";
-import { OrderCreatedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, escrowServiceMockFactory, mockBlockNumber, MockType, substrateServiceMockFactory } from "../../../../../mock";
-import { OrderFailedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler";
-import { EscrowService } from "../../../../../../../src/common/modules/escrow/escrow.service";
+import { OrderStatus, SubstrateService } from '../../../../../../../src/common';
+import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  createMockOrder,
+  escrowServiceMockFactory,
+  mockBlockNumber,
+  MockType,
+  substrateServiceMockFactory,
+} from '../../../../../mock';
+import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
+import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
 
-import * as ordersCommand from "../../../../../../../src/common/polkadot-provider/command/orders";
+import * as ordersCommand from '../../../../../../../src/common/polkadot-provider/command/orders';
 
 jest.mock('ethers', () => ({
   ethers: {
     utils: {
-      toUtf8String: jest.fn(val=>val)
+      toUtf8String: jest.fn((val) => val),
     },
   },
 }));
 
-describe("Order Failed Handler Event", () => {
+describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
   let escrowServiceMock: MockType<EscrowService>;
@@ -24,16 +30,16 @@ describe("Order Failed Handler Event", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-				{
+        {
           provide: SubstrateService,
-          useFactory: substrateServiceMockFactory
-				},
-				{
+          useFactory: substrateServiceMockFactory,
+        },
+        {
           provide: EscrowService,
-          useFactory: escrowServiceMockFactory
-				},
-        OrderFailedHandler
-      ]
+          useFactory: escrowServiceMockFactory,
+        },
+        OrderFailedHandler,
+      ],
     }).compile();
 
     orderFailedHandler = module.get(OrderFailedHandler);
@@ -43,23 +49,34 @@ describe("Order Failed Handler Event", () => {
     await module.init();
   });
 
-  it("should defined Order Failed Handler", () => {
+  it('should defined Order Failed Handler', () => {
     expect(orderFailedHandler).toBeDefined();
   });
 
-  it("should called refunded order if failed", async () => {
+  it('should called refunded order if failed', async () => {
     // Arrange
-    const refundedOrderSpy = jest.spyOn(ordersCommand, 'refundOrder').mockImplementation();
+    const refundedOrderSpy = jest
+      .spyOn(ordersCommand, 'refundOrder')
+      .mockImplementation();
     const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
-    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand([ORDER], mockBlockNumber());
+    const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
+      [ORDER],
+      mockBlockNumber(),
+    );
 
     await orderFailedHandler.execute(orderCancelledCommand);
     expect(escrowServiceMock.refundOrder).toHaveBeenCalled();
-    expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(orderCancelledCommand.orders.id);
+    expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(
+      orderCancelledCommand.orders.id,
+    );
     expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(refundedOrderSpy).toHaveBeenCalled();
-    expect(refundedOrderSpy).toHaveBeenCalledWith(substrateServiceMock.api, substrateServiceMock.pair, orderCancelledCommand.orders.id);
+    expect(refundedOrderSpy).toHaveBeenCalledWith(
+      substrateServiceMock.api,
+      substrateServiceMock.pair,
+      orderCancelledCommand.orders.id,
+    );
   });
 });

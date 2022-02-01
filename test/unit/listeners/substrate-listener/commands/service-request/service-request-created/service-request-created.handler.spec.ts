@@ -136,8 +136,8 @@ describe('Service Request Created Handler Event', () => {
       .mockReturnValue(CONVERT_RETURN);
 
     const serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
-    new ServiceRequestCreatedCommand(requestData, mockBlockNumber());
-    
+      new ServiceRequestCreatedCommand(requestData, mockBlockNumber());
+
     const STAKING_LOGGING_CREATE_CALLED_WITH: TransactionLoggingDto = {
       address: requestData[1].toHuman().requesterAddress,
       amount: CONVERT_RETURN,

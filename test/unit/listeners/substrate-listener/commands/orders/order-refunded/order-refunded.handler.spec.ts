@@ -1,34 +1,42 @@
-import { OrderStatus, TransactionLoggingService } from "../../../../../../../src/common";
-import { OrderRefundedCommand } from "../../../../../../../src/listeners/substrate-listener/commands/orders";
-import { Test, TestingModule } from "@nestjs/testing";
-import { createMockOrder, mockBlockNumber, MockType, transactionLoggingServiceMockFactory } from "../../../../../mock";
-import { OrderRefundedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler";
+import {
+  OrderStatus,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
+import { OrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  createMockOrder,
+  mockBlockNumber,
+  MockType,
+  transactionLoggingServiceMockFactory,
+} from '../../../../../mock';
+import { OrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler';
 import { when } from 'jest-when';
 import { ethers } from 'ethers';
-import { TransactionLoggingDto } from "../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto";
-import { TransactionRequest } from "../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity";
+import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
+import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 jest.mock('ethers', () => ({
   ethers: {
     utils: {
-      toUtf8String: jest.fn(val=>val)
+      toUtf8String: jest.fn((val) => val),
     },
   },
 }));
 
-describe("Order Refunded Handler Event", () => {
+describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-				{
+        {
           provide: TransactionLoggingService,
-          useFactory: transactionLoggingServiceMockFactory
-				},
-        OrderRefundedHandler
-      ]
+          useFactory: transactionLoggingServiceMockFactory,
+        },
+        OrderRefundedHandler,
+      ],
     }).compile();
 
     orderRefundedHandler = module.get(OrderRefundedHandler);
@@ -37,11 +45,11 @@ describe("Order Refunded Handler Event", () => {
     await module.init();
   });
 
-  it("should defined Order Refunded Handler", () => {
+  it('should defined Order Refunded Handler', () => {
     expect(orderRefundedHandler).toBeDefined();
   });
 
-  it("should not called logging service create", async () => {
+  it('should not called logging service create', async () => {
     // Arrange
     const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Refunded);
@@ -62,21 +70,28 @@ describe("Order Refunded Handler Event", () => {
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(ORDER.toHuman().id, 4)
       .mockReturnValue(RESULT_STATUS);
-    
+
     when(transactionLoggingServiceMock.getLoggingByOrderId)
       .calledWith(ORDER.toHuman().id)
       .mockReturnValue(RESULT_TRANSACTION);
 
-    const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([ORDER], mockBlockNumber());
+    const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand(
+      [ORDER],
+      mockBlockNumber(),
+    );
 
     await orderRefundedHandler.execute(orderRefundedCommand);
-    expect(transactionLoggingServiceMock.getLoggingByHashAndStatus).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByHashAndStatus,
+    ).toHaveBeenCalled();
     expect(toUtf8StringSpy).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.getLoggingByOrderId).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByOrderId,
+    ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
   });
 
-  it("should called logging service create", async () => {
+  it('should called logging service create', async () => {
     // Arrange
     const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Refunded);
@@ -97,16 +112,19 @@ describe("Order Refunded Handler Event", () => {
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(ORDER.toHuman().id, 4)
       .mockReturnValue(RESULT_STATUS);
-    
+
     when(transactionLoggingServiceMock.getLoggingByOrderId)
       .calledWith(ORDER.toHuman().id)
       .mockReturnValue(RESULT_TRANSACTION);
 
-    const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand([ORDER], mockBlockNumber());
-    
+    const orderRefundedCommand: OrderRefundedCommand = new OrderRefundedCommand(
+      [ORDER],
+      mockBlockNumber(),
+    );
+
     const orderLogging: TransactionLoggingDto = {
       address: orderRefundedCommand.orders.customer_id,
-      amount: (Number(orderRefundedCommand.orders.prices[0].value) / 10 ** 18),
+      amount: Number(orderRefundedCommand.orders.prices[0].value) / 10 ** 18,
       created_at: orderRefundedCommand.orders.updated_at,
       currency: orderRefundedCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
@@ -116,10 +134,16 @@ describe("Order Refunded Handler Event", () => {
     };
 
     await orderRefundedHandler.execute(orderRefundedCommand);
-    expect(transactionLoggingServiceMock.getLoggingByHashAndStatus).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByHashAndStatus,
+    ).toHaveBeenCalled();
     expect(toUtf8StringSpy).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.getLoggingByOrderId).toHaveBeenCalled();
+    expect(
+      transactionLoggingServiceMock.getLoggingByOrderId,
+    ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(orderLogging)
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
+      orderLogging,
+    );
   });
 });

@@ -1,11 +1,11 @@
-import {
-  RequestStatus,
-} from '../../../../../../../src/common';
+import { RequestStatus } from '../../../../../../../src/common';
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { ServiceRequest } from '../../../../../../../src/common/polkadot-provider/models/service-request';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/service-request');
+jest.mock(
+  '../../../../../../../src/common/polkadot-provider/models/service-request',
+);
 
 describe('Service Request Unstaked Command Event', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -40,7 +40,8 @@ describe('Service Request Unstaked Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Processed);
 
-    const _serviceRequestProcessedCommand: ServiceRequestUnstakedCommand = new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber());
+    const _serviceRequestProcessedCommand: ServiceRequestUnstakedCommand =
+      new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceRequest).toHaveBeenCalled();
@@ -48,10 +49,9 @@ describe('Service Request Unstaked Command Event', () => {
   });
 
   it('should throw error', () => {
-    expect(
-      ()=> {
-        const _serviceRequestProcessedCommand: ServiceRequestUnstakedCommand = new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber()) 
-      }
-    ).toThrow();
+    expect(() => {
+      const _serviceRequestProcessedCommand: ServiceRequestUnstakedCommand =
+        new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber());
+    }).toThrow();
   });
 });
