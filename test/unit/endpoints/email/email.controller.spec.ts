@@ -70,8 +70,6 @@ describe('Email Controller', () => {
 				'queryLabById'
 			).mockImplementation();
 
-		const labToLabRegisterSpy = await 
-		
 		when(queryLab)
 			.calledWith(
 				substrateServiceMock.api,
