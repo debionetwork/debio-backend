@@ -1,7 +1,10 @@
 import { EmailNotificationService, MailerManager, SubstrateService, ProcessEnvProxy } from "../../../../src/common";
 import { emailNotificationServiceMockFactory, mailerManagerMockFactory, MockType, substrateServiceMockFactory } from "../../../../test/unit/mock";
 import { EmailEndpointController } from "../../../../src/endpoints/email/email.controller";
+import { Response } from 'express';
 import { Test, TestingModule } from "@nestjs/testing";
+import * as labQuery from '../../../../src/common/polkadot-provider/query/labs';
+import { when } from 'jest-when';
 
 describe('Email Controller', () => {
 	let emailEndpointControllerMock : EmailEndpointController;
@@ -45,5 +48,35 @@ describe('Email Controller', () => {
 
 	it('should be defined', () => {
 		expect(emailEndpointControllerMock).toBeDefined();
+		expect(mailerManageMock).toBeDefined();
+		expect(substrateServiceMock).toBeDefined();
+	});
+
+	it('should send email lab registration', async () => {
+		//Arrange
+		const MOCK_RESULT = { message : 'Sending Email' };
+		const labId = 'XX' ;
+		const EXPECTED_RESULTS = {
+			labId : 'XX'
+		};
+	
+		const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
+    } as Response;
+		const queryLab = jest
+			.spyOn(
+				labQuery,
+				'queryLabById'
+			).mockImplementation();
+
+		const labToLabRegisterSpy = await 
+		
+		when(queryLab)
+			.calledWith(
+				substrateServiceMock.api,
+				labId
+			)
+			.mockReturnValue(EXPECTED_RESULTS);
 	});
 });
