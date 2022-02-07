@@ -2,7 +2,7 @@ import { RequestStatus } from './request-status';
 
 export class ServiceRequest {
   constructor(anyJson: any) {
-    this.hash = anyJson.hash;
+    this.hash = anyJson.hash_;
     this.requester_address = anyJson.requesterAddress;
     this.lab_address = anyJson.labAddress;
     this.country = anyJson.country;
