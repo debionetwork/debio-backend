@@ -58,7 +58,6 @@ describe('Order Cancelled Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = true;
@@ -89,7 +88,6 @@ describe('Order Cancelled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -99,7 +97,6 @@ describe('Order Cancelled Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = false;
@@ -130,7 +127,6 @@ describe('Order Cancelled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
