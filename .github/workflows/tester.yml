@@ -10,11 +10,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  testing:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['16', '14.x']
+        node-version: ['16']
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
