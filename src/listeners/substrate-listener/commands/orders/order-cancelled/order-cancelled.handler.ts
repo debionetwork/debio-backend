@@ -24,7 +24,7 @@ export class OrderCancelledHandler
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 5);
 
-        order.updated_at = new Date(
+      order.updated_at = new Date(
         Number(
           order.updated_at
             .toString()
@@ -34,10 +34,10 @@ export class OrderCancelledHandler
       )  
       
       order.additional_prices[0].value = Number(
-          order.additional_prices[0].value
-            .toString()
-            .split(',')
-            .join('')
+        order.additional_prices[0].value
+          .toString()
+          .split(',')
+          .join('')
       ) / 10 ** 18;
 
       order.prices[0].value = Number(

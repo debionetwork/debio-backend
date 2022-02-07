@@ -36,24 +36,34 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     await this.logger.log('Order Fulfilled!');
-
     const order = command.orders;
 
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 3);
-      order.dna_sample_tracking_id = ethers.utils.toUtf8String(
-        order.dna_sample_tracking_id,
-      );
-      order.additional_prices[0].value =
-        Number(order.additional_prices[0].value) / 10 ** 18;
-      order.additional_prices[0].component = ethers.utils.toUtf8String(
-        order.additional_prices[0].component,
-      );
-      order.prices[0].value = Number(order.prices[0].value) / 10 ** 18;
-      order.prices[0].component = ethers.utils.toUtf8String(
-        order.prices[0].component,
-      );
+
+      order.additional_prices[0].value = Number(
+        order.additional_prices[0].value
+          .toString()
+          .split(',')
+          .join('')  
+      ) / 10 ** 18;
+
+      order.prices[0].value = Number(
+        order.prices[0].value
+          .toString()
+          .split(',')
+          .join('')
+      ) / 10 ** 18;
+
+      order.updated_at = new Date(
+        Number(
+          order.updated_at
+            .toString()
+            .split(',')
+            .join('')
+        )
+      )
 
       const orderHistory = await this.loggingService.getLoggingByOrderId(
         order.id,
@@ -65,7 +75,7 @@ export class OrderFulfilledHandler
         amount: order.additional_prices[0].value + order.prices[0].value,
         created_at: order.updated_at,
         currency: order.currency.toUpperCase(),
-        parent_id: BigInt(orderHistory.id),
+        parent_id: BigInt((orderHistory.id)),
         ref_number: order.id,
         transaction_status: 3,
         transaction_type: 1,
@@ -113,7 +123,7 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = order['prices'][0].value * debioToDai;
+        const servicePrice = order.prices[0].value * debioToDai;
 
         // Send reward to customer
         await sendRewards(

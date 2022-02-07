@@ -14,16 +14,7 @@ import {
 import { OrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-cancelled/order-cancelled.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
 import { when } from 'jest-when';
-import { ethers } from 'ethers';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
 
 describe('Order Cancelled Handler Event', () => {
   let orderCancelledHandler: OrderCancelledHandler;

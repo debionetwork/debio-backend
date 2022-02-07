@@ -12,16 +12,7 @@ import {
 } from '../../../../../mock';
 import { OrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-created/order-created.handler';
 import { when } from 'jest-when';
-import { ethers } from 'ethers';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
 
 describe('Order Created Handler Event', () => {
   let orderCreatedHandler: OrderCreatedHandler;
