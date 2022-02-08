@@ -127,17 +127,6 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
 
-    const STAKING_LOGGIN_CALLED_WITH: TransactionLoggingDto = {
-      address: requestData[1].toHuman().requesterAddress,
-      amount: 0,
-      created_at: CURRENT_DATE,
-      currency: 'DBIO',
-      parent_id: BigInt(TRANSACTION_SERVICE_RETURN.id),
-      ref_number: requestData[1].toHuman().hash,
-      transaction_status: 11,
-      transaction_type: 2,
-    };
-
     const serviceRequestWaitingForUnstakedCommand: ServiceRequestWaitingForUnstakedCommand =
       new ServiceRequestWaitingForUnstakedCommand(
         requestData,
@@ -153,8 +142,5 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
-      STAKING_LOGGIN_CALLED_WITH,
-    );
   });
 });
