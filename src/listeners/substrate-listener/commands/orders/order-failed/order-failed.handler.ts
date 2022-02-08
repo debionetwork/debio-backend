@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
 import { ethers } from 'ethers';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
-import { refundOrder, SubstrateService } from '../../../../../common';
+import { setOrderRefunded, SubstrateService } from '../../../../../common';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
@@ -34,7 +34,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       ) / 10 ** 18;
 
     await this.escrowService.refundOrder(order.id);
-    await refundOrder(
+    await setOrderRefunded(
       this.substrateService.api,
       this.substrateService.pair,
       order.id,

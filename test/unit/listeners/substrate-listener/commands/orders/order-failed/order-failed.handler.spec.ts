@@ -46,7 +46,7 @@ describe('Order Failed Handler Event', () => {
   it('should called refunded order if failed', async () => {
     // Arrange
     const refundedOrderSpy = jest
-      .spyOn(ordersCommand, 'refundOrder')
+      .spyOn(ordersCommand, 'setOrderRefunded')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
