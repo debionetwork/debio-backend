@@ -11,10 +11,6 @@ export class ServiceCategoryController {
 
   @Get()
   getServiceCategory() {
-    try {
-      return this.serviceCategoryService.getAll();
-    } catch (error) {
-      console.log(error);
-    }
+    return this.serviceCategoryService.getAll();
   }
 }
