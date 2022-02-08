@@ -24,6 +24,7 @@ import { SubstrateListenerModule } from './listeners/substrate-listener/substrat
 import { CachesModule } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
+import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -71,6 +72,7 @@ require('dotenv').config(); // eslint-disable-line
     CachesModule,
     SchedulersModule,
     TransactionModule,
+    SpecializationModule,
   ],
 })
 export class AppModule {}
