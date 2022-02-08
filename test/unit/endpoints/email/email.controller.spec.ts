@@ -10,7 +10,6 @@ describe('Email Controller', () => {
 	let emailEndpointControllerMock : EmailEndpointController;
 	let mailerManageMock: MockType<MailerManager>;
 	let substrateServiceMock: MockType<SubstrateService>;
-	let emailNotificationServiceMock: MockType<EmailNotificationService>
 	const EMAILS = 'email';
 
 	class ProcessEnvProxyMock {
@@ -54,7 +53,6 @@ describe('Email Controller', () => {
 
 	it('should send email lab registration', async () => {
 		//Arrange
-		const MOCK_RESULT = { message : 'Sending Email' };
 		const labId = 'XX' ;
 		const EXPECTED_RESULTS = {
 			labId : 'XX'
