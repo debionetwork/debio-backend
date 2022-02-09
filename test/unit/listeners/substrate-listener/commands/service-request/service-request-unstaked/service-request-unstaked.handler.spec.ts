@@ -81,16 +81,17 @@ describe('Service Request Unstaked Handler Event', () => {
 
     const STATUS_RETURN = true;
 
-    when(transactionLoggingServiceMock.getLoggingByOrderId)
-      .calledWith(requestData[1].toHuman().hash)
-      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
-
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 8)
-      .mockReturnValue(STATUS_RETURN);
-
     const serviceRequestUnstakedCommand: ServiceRequestUnstakedCommand =
       new ServiceRequestUnstakedCommand(requestData, mockBlockNumber());
+
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
+      .calledWith(serviceRequestUnstakedCommand.request.hash, 8)
+      .mockReturnValue(STATUS_RETURN);
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+    .calledWith(serviceRequestUnstakedCommand.request.hash)
+    .mockReturnValue(TRANSACTION_SERVICE_RETURN);
+
     await serviceRequesUnstakedHandler.execute(serviceRequestUnstakedCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
@@ -118,33 +119,34 @@ describe('Service Request Unstaked Handler Event', () => {
 
     const CONVERT_RETURN = 1;
 
-    when(transactionLoggingServiceMock.getLoggingByOrderId)
-      .calledWith(requestData[1].toHuman().hash)
-      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
-
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 8)
-      .mockReturnValue(STATUS_RETURN);
-
-    when(convertToDbioUnitSpy)
-      .calledWith(requestData[1].toHuman().stakingAmount)
-      .mockReturnValue(CONVERT_RETURN);
-
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
 
+    const serviceRequestUnstakedCommand: ServiceRequestUnstakedCommand =
+      new ServiceRequestUnstakedCommand(requestData, mockBlockNumber());
+
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
+    .calledWith(serviceRequestUnstakedCommand.request.hash, 8)
+    .mockReturnValue(STATUS_RETURN);
+    
+    when(convertToDbioUnitSpy)
+      .calledWith(serviceRequestUnstakedCommand.request.staking_amount)
+      .mockReturnValue(CONVERT_RETURN);
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+      .calledWith(serviceRequestUnstakedCommand.request.hash)
+      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
+
     const STAKING_LOGGIN_CALLED_WITH: TransactionLoggingDto = {
-      address: requestData[1].toHuman().requesterAddress,
+      address: serviceRequestUnstakedCommand.request.requester_address,
       amount: CONVERT_RETURN,
       created_at: CURRENT_DATE,
       currency: 'DBIO',
       parent_id: BigInt(TRANSACTION_SERVICE_RETURN.id),
-      ref_number: requestData[1].toHuman().hash,
+      ref_number: serviceRequestUnstakedCommand.request.hash,
       transaction_status: 8,
       transaction_type: 2,
     };
 
-    const serviceRequestUnstakedCommand: ServiceRequestUnstakedCommand =
-      new ServiceRequestUnstakedCommand(requestData, mockBlockNumber());
     await serviceRequesUnstakedHandler.execute(serviceRequestUnstakedCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,

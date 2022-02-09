@@ -81,19 +81,20 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
 
     const STATUS_RETURN = true;
 
-    when(transactionLoggingServiceMock.getLoggingByOrderId)
-      .calledWith(requestData[1].toHuman().hash)
-      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
-
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 11)
-      .mockReturnValue(STATUS_RETURN);
-
     const serviceRequestWaitingForUnstakedCommand: ServiceRequestWaitingForUnstakedCommand =
       new ServiceRequestWaitingForUnstakedCommand(
         requestData,
         mockBlockNumber(),
       );
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+      .calledWith(serviceRequestWaitingForUnstakedCommand.request.hash)
+      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
+
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
+      .calledWith(serviceRequestWaitingForUnstakedCommand.request.hash, 11)
+      .mockReturnValue(STATUS_RETURN);
+
     await serviceRequesWaitingForUnstakedHandler.execute(
       serviceRequestWaitingForUnstakedCommand,
     );
@@ -117,21 +118,22 @@ describe('Service Request Waiting For Unstaked Handler Event', () => {
 
     const STATUS_RETURN = false;
 
-    when(transactionLoggingServiceMock.getLoggingByOrderId)
-      .calledWith(requestData[1].toHuman().hash)
-      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
-
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 11)
-      .mockReturnValue(STATUS_RETURN);
-
-    dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
-
     const serviceRequestWaitingForUnstakedCommand: ServiceRequestWaitingForUnstakedCommand =
       new ServiceRequestWaitingForUnstakedCommand(
         requestData,
         mockBlockNumber(),
       );
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+      .calledWith(serviceRequestWaitingForUnstakedCommand.request.hash)
+      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
+
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
+      .calledWith(serviceRequestWaitingForUnstakedCommand.request.hash, 11)
+      .mockReturnValue(STATUS_RETURN);
+
+    dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
+
     await serviceRequesWaitingForUnstakedHandler.execute(
       serviceRequestWaitingForUnstakedCommand,
     );
