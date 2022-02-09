@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
-import { EmailNotificationService } from 'src/common/modules/database';
+import { EmailNotificationService } from '../../common/modules/database';
 import {
   MailerManager,
   SubstrateService,

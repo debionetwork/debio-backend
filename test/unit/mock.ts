@@ -8,6 +8,7 @@ import {
   DebioConversionService,
   MailerManager,
   RewardService,
+  EmailNotificationService,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
@@ -70,6 +71,14 @@ export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
     sendMail: jest.fn((entity) => entity),
   }),
 );
+
+export const emailNotificationServiceMockFactory: () => MockType<EmailNotificationService> = jest.fn(
+  () => ({
+    insertEmailNotification: jest.fn(),
+    getPendingLabRegisterNotification: jest.fn(),
+    setEmailNotificationSent: jest.fn(),
+  }),
+)
 
 export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
   get: jest.fn(),
