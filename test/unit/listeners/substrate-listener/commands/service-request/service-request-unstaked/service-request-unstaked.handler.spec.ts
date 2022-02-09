@@ -117,7 +117,7 @@ describe('Service Request Unstaked Handler Event', () => {
 
     const STATUS_RETURN = false;
 
-    const CONVERT_RETURN = 1;
+    const CONVERT_RETURN = 1000000000000;
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
 

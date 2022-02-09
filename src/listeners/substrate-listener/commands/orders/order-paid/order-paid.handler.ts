@@ -1,9 +1,9 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
-import { ethers } from 'ethers';
 import { TransactionLoggingService } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { humanToOrderListenerData } from '../../helper/converter';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -15,35 +15,11 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   async execute(command: OrderPaidCommand) {
     await this.logger.log('OrderPaid!');
 
-    const order = command.orders;
+    const order = await humanToOrderListenerData(command.orders);
 
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 2);
-
-      order.additional_prices[0].value = Number(
-        order.additional_prices[0].value
-          .toString()
-          .split(',')
-          .join('')
-      ) / 10 ** 18;
-
-      order.prices[0].value = Number(
-        order.prices[0].value
-          .toString()
-          .split(',')
-          .join('')  
-      ) / 10 ** 18;
-
-      order.updated_at = new Date(
-        Number(
-          order.updated_at
-            .toString()
-            .split(',')
-            .join('')
-        )
-      )  
-
       const orderHistory = await this.loggingService.getLoggingByOrderId(
         order.id,
       );
