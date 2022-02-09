@@ -175,7 +175,8 @@ jobs:
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
   deploy-alpha-release:
