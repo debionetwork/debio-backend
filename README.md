@@ -8,10 +8,15 @@
 The Anonymous-First Platform for Medical and Bioinformatics Data.
 
 <br>
+<br>
 
 [![Node.js version](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org/)
 [![NestJS version](https://img.shields.io/badge/NestJS-%5E8.0.0-red?logo=NestJS)](https://github.com/nestjs/nest)
 [![Medium](https://img.shields.io/badge/Medium-DeBio%20Network-brightgreen?logo=medium)](https://blog.debio.network)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=debionetwork_debio-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=debionetwork_debio-backend)
+[![Builder](https://github.com/debionetwork/debio-backend/actions/workflows/builder.yml/badge.svg)](https://github.com/debionetwork/debio-backend/actions/workflows/builder.yml)
+[![Tester](https://github.com/debionetwork/debio-backend/actions/workflows/tester.yml/badge.svg)](https://github.com/debionetwork/debio-backend/actions/workflows/tester.yml)
+
 </div>
 
 ---

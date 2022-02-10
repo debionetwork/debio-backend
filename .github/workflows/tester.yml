@@ -1,4 +1,4 @@
-name: Pull request automation
+name: Tester
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 concurrency:
-  group: test-code-${{ github.event.pull_request.number }}
+  group: tester-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
