@@ -12,6 +12,7 @@ import {
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
+import { GeneticAnalysisService } from './services/genetic-analysis';
 
 @Module({
   imports: [
@@ -32,6 +33,12 @@ import { LocationModule } from '../location/location.module';
   ],
   exports: [ElasticsearchModule],
   controllers: [SubstrateController],
-  providers: [ServiceService, LabService, OrderService, ServiceRequestService],
+  providers: [
+    ServiceService,
+    LabService,
+    OrderService,
+    ServiceRequestService,
+    GeneticAnalysisService,
+  ],
 })
 export class SubstrateEndpointModule {}
