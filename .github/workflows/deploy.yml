@@ -175,7 +175,8 @@ jobs:
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
   deploy-alpha-release:
@@ -318,7 +319,8 @@ jobs:
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
   deploy-beta-release:
@@ -461,7 +463,8 @@ jobs:
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
   deploy-pre-release:
@@ -604,7 +607,8 @@ jobs:
               --set replicaCount=3 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
   deploy-release:
@@ -747,5 +751,6 @@ jobs:
               --set replicaCount=3 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20
+              --set autoscaling.maxReplicas=20 \
+              --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
