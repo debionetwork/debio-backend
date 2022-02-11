@@ -10,17 +10,7 @@ import {
 } from '../../../../../mock';
 import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
-import { ethers } from 'ethers';
-
 import * as ordersCommand from '../../../../../../../src/common/polkadot-provider/command/orders';
-
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
 
 describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;
@@ -56,9 +46,8 @@ describe('Order Failed Handler Event', () => {
   it('should called refunded order if failed', async () => {
     // Arrange
     const refundedOrderSpy = jest
-      .spyOn(ordersCommand, 'refundOrder')
+      .spyOn(ordersCommand, 'setOrderRefunded')
       .mockImplementation();
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const orderCancelledCommand: OrderCreatedCommand = new OrderCreatedCommand(
@@ -71,7 +60,6 @@ describe('Order Failed Handler Event', () => {
     expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(
       orderCancelledCommand.orders.id,
     );
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(refundedOrderSpy).toHaveBeenCalled();
     expect(refundedOrderSpy).toHaveBeenCalledWith(
       substrateServiceMock.api,

@@ -33,7 +33,7 @@ describe('Service Request Created Handler Event', () => {
       {},
       {
         toHuman: jest.fn(() => ({
-          hash: 'string',
+          hash_: 'string',
           requesterAddress: 'string',
           labAddress: 'string',
           country: 'XX',
@@ -100,14 +100,11 @@ describe('Service Request Created Handler Event', () => {
 
   it('should not called transactionLoggingServiceMock create if status true', async () => {
     // Assert
-    const convertToDbioUnitSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnit')
-      .mockReturnValue(1);
     const TRANSACTION_STATUS = true;
     const requestData = createMockRequest(RequestStatus.Open);
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 7)
+      .calledWith(requestData[1].toHuman().hash_, 7)
       .mockReturnValue(TRANSACTION_STATUS);
 
     const serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
@@ -116,47 +113,25 @@ describe('Service Request Created Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(convertToDbioUnitSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
   });
 
   it('should called transactionLoggingServiceMock create if status false', async () => {
     // Assert
-    const CONVERT_RETURN = 1;
-    const convertToDbioUnitSpy = jest.spyOn(rewardCommand, 'convertToDbioUnit');
     const TRANSACTION_STATUS = false;
     const requestData = createMockRequest(RequestStatus.Open);
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(requestData[1].toHuman().hash, 7)
+      .calledWith(requestData[1].toHuman().hash_, 7)
       .mockReturnValue(TRANSACTION_STATUS);
-
-    when(convertToDbioUnitSpy)
-      .calledWith(requestData[1].toHuman().stakingAmount)
-      .mockReturnValue(CONVERT_RETURN);
 
     const serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
       new ServiceRequestCreatedCommand(requestData, mockBlockNumber());
-
-    const STAKING_LOGGING_CREATE_CALLED_WITH: TransactionLoggingDto = {
-      address: requestData[1].toHuman().requesterAddress,
-      amount: CONVERT_RETURN,
-      created_at: serviceRequestCreatedCommand.request.created_at,
-      currency: 'DBIO',
-      parent_id: BigInt(0),
-      ref_number: requestData[1].toHuman().hash,
-      transaction_status: 7,
-      transaction_type: 2,
-    };
 
     await serviceRequesCreatedHandler.execute(serviceRequestCreatedCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(convertToDbioUnitSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
-      STAKING_LOGGING_CREATE_CALLED_WITH,
-    );
   });
 });

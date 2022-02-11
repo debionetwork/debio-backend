@@ -20,12 +20,12 @@ export async function fulfillOrder(api: ApiPromise, pair: any, orderId: string, 
     );
 }
 
-export async function refundOrder(
+export async function setOrderRefunded(
   api: ApiPromise,
   pair: any,
   orderId,
 ): Promise<void> {
-  await api.tx.orders.refundOrder(orderId).signAndSend(pair, { nonce: -1 });
+  await api.tx.orders.setOrderRefunded(orderId).signAndSend(pair, { nonce: -1 });
 }
 
 export async function setOrderPaid(
