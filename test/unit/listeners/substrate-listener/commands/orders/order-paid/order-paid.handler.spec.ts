@@ -12,23 +12,15 @@ import {
 } from '../../../../../mock';
 import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { when } from 'jest-when';
-import { ethers } from 'ethers';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
   beforeEach(async () => {
+    jest.useFakeTimers().setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
@@ -51,7 +43,6 @@ describe('Order Paid Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Paid);
 
     const RESULT_STATUS = true;
@@ -84,7 +75,6 @@ describe('Order Paid Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -93,7 +83,6 @@ describe('Order Paid Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Paid);
 
     const RESULT_STATUS = false;
@@ -127,7 +116,7 @@ describe('Order Paid Handler Event', () => {
       amount:
         Number(orderPaidCommand.orders.additional_prices[0].value) / 10 ** 18 +
         Number(orderPaidCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: orderPaidCommand.orders.updated_at,
+      created_at: new Date(),
       currency: orderPaidCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderPaidCommand.orders.id,
@@ -139,7 +128,6 @@ describe('Order Paid Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();

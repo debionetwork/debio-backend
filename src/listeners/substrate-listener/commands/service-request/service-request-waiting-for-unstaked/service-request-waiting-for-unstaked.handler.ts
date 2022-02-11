@@ -5,6 +5,7 @@ import {
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { humanToServiceRequestListenerData } from '../../helper/converter';
 import { ServiceRequestWaitingForUnstakedCommand } from './service-request-waiting-for-unstaked.command';
 
 @Injectable()
@@ -22,7 +23,7 @@ export class ServiceRequestWaitingForUnstakedHandler
   ) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
-    const serviceRequest = command.request;
+    const serviceRequest = await humanToServiceRequestListenerData(command.request);
 
     try {
       const serviceRequestParent =

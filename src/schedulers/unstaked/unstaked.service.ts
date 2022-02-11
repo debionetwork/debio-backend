@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Interval } from '@nestjs/schedule';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../../common';
 
 @Injectable()
-export class UnstakedService implements OnModuleInit {
+export class UnstakedService {
   private logger: Logger = new Logger(UnstakedService.name);
   private isRunning = false;
   constructor(
@@ -16,17 +16,12 @@ export class UnstakedService implements OnModuleInit {
     private readonly subtrateService: SubstrateService,
   ) {}
 
-  async onModuleInit() {
-    await this.handleWaitingUnstaked();
-  }
-
   @Interval(30 * 1000)
   async handleWaitingUnstaked() {
     try {
       if (this.isRunning) return;
 
       this.isRunning = true;
-
       const createRequestService = await this.elasticsearchService.search({
         index: 'create-service-request',
         allow_no_indices: true,
@@ -50,6 +45,7 @@ export class UnstakedService implements OnModuleInit {
         from: 0,
         size: 10,
       });
+      
       const listRequestService = createRequestService.body.hits.hits;
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
@@ -87,7 +83,6 @@ export class UnstakedService implements OnModuleInit {
           const sixDays = 6 * 24 * 60 * 60 * 1000;
           const timeNext6Days = numberTimeWaitingUnstaked + sixDays;
           const timeNow = new Date().getTime();
-
           const diffTime = timeNext6Days - timeNow;
 
           if (diffTime <= 0) {
