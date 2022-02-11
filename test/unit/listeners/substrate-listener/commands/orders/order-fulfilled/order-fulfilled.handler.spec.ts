@@ -19,7 +19,6 @@ import {
 } from '../../../../../mock';
 import { OrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
-import { ethers } from 'ethers';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
@@ -30,14 +29,6 @@ import * as serviceRequestQuery from '../../../../../../../src/common/polkadot-p
 import * as ordersQuery from '../../../../../../../src/common/polkadot-provider/query/orders';
 import * as servicesQuery from '../../../../../../../src/common/polkadot-provider/query/services';
 
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
-
 describe('Order Fulfilled Handler Event', () => {
   let orderFulfilledHandler: OrderFulfilledHandler;
   let substrateServiceMock: MockType<SubstrateService>;
@@ -47,6 +38,7 @@ describe('Order Fulfilled Handler Event', () => {
   let rewardServiceMock: MockType<RewardService>;
 
   beforeEach(async () => {
+    jest.useFakeTimers().setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
@@ -107,7 +99,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(rewardCommand, 'convertToDbioUnitString')
       .mockImplementation();
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = true;
@@ -182,7 +173,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -234,7 +224,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(rewardCommand, 'convertToDbioUnitString')
       .mockImplementation();
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = false;
@@ -311,7 +300,7 @@ describe('Order Fulfilled Handler Event', () => {
         Number(orderCancelledCommand.orders.additional_prices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: orderCancelledCommand.orders.updated_at,
+      created_at: new Date(),
       currency: orderCancelledCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderCancelledCommand.orders.id,
@@ -323,7 +312,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -378,7 +366,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(rewardCommand, 'convertToDbioUnitString')
       .mockImplementation();
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = false;
@@ -455,7 +442,7 @@ describe('Order Fulfilled Handler Event', () => {
         Number(orderCancelledCommand.orders.additional_prices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: orderCancelledCommand.orders.updated_at,
+      created_at: new Date(),
       currency: orderCancelledCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderCancelledCommand.orders.id,
@@ -467,7 +454,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -522,7 +508,6 @@ describe('Order Fulfilled Handler Event', () => {
     const convertToDbioUnitStringSpy = jest
       .spyOn(rewardCommand, 'convertToDbioUnitString')
       .mockImplementation();
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
     const RESULT_STATUS = true;
@@ -597,7 +582,6 @@ describe('Order Fulfilled Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
