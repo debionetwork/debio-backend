@@ -12,23 +12,15 @@ import {
 } from '../../../../../mock';
 import { OrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler';
 import { when } from 'jest-when';
-import { ethers } from 'ethers';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-
-jest.mock('ethers', () => ({
-  ethers: {
-    utils: {
-      toUtf8String: jest.fn((val) => val),
-    },
-  },
-}));
 
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
   beforeEach(async () => {
+    jest.useFakeTimers().setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
@@ -51,9 +43,7 @@ describe('Order Refunded Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Refunded);
-
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
@@ -84,7 +74,6 @@ describe('Order Refunded Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
@@ -93,9 +82,7 @@ describe('Order Refunded Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const toUtf8StringSpy = jest.spyOn(ethers.utils, 'toUtf8String');
     const ORDER = createMockOrder(OrderStatus.Refunded);
-
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
@@ -125,7 +112,7 @@ describe('Order Refunded Handler Event', () => {
     const orderLogging: TransactionLoggingDto = {
       address: orderRefundedCommand.orders.customer_id,
       amount: Number(orderRefundedCommand.orders.prices[0].value) / 10 ** 18,
-      created_at: orderRefundedCommand.orders.updated_at,
+      created_at: new Date(),
       currency: orderRefundedCommand.orders.currency.toUpperCase(),
       parent_id: BigInt(RESULT_TRANSACTION.id),
       ref_number: orderRefundedCommand.orders.id,
@@ -137,7 +124,6 @@ describe('Order Refunded Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(toUtf8StringSpy).toHaveBeenCalled();
     expect(
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
