@@ -7,6 +7,7 @@ import { SubstrateController } from '../../../../src/endpoints/substrate-endpoin
 import {
   OrderService,
   ServiceRequestService,
+  GeneticAnalysisService,
 } from '../../../../src/endpoints/substrate-endpoint/services';
 import {
   DateTimeProxy,
@@ -35,6 +36,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let serviceRequestMock: MockType<ServiceRequestService>;
+  let geneticAnalysisMock: MockType<GeneticAnalysisService>
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -68,6 +70,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     }),
   );
 
+  const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> = jest.fn(
+    () => ({
+      getGeneticAnalysByTrackingId: jest.fn(),
+    }),
+  );
+
   class ProcessEnvProxyMock {
     env = {
       DEBIO_API_KEY,
@@ -93,6 +101,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: serviceRequestServiceMockFactory,
         },
         { provide: RewardService, useFactory: rewardServiceMockFactory },
+        { provide: GeneticAnalysisService, useFactory: geneticAnalysisMockfactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
       ],
@@ -105,6 +114,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     rewardServiceMock = module.get(RewardService);
     dateTimeProxyMock = module.get(DateTimeProxy);
     serviceRequestMock = module.get(ServiceRequestService);
+    geneticAnalysisMock = module.get(GeneticAnalysisService);
   });
 
   it('should be defined', () => {
@@ -115,6 +125,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(orderServiceMock).toBeDefined();
     expect(rewardServiceMock).toBeDefined();
     expect(serviceRequestMock).toBeDefined();
+    expect(geneticAnalysisMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
@@ -296,6 +307,19 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
+  });
+
+  it('should genetic analysis by tracking id', () => {
+    // Arrange
+    const RESULT = 1;
+    geneticAnalysisMock.getGeneticAnalysByTrackingId.mockReturnValue(RESULT);
+
+    // Assert
+    expect(substrateControllerMock.getGeneticAnalysisByTrackingId('trackingId')).resolves.toEqual(
+      RESULT,
+    );
+    expect(geneticAnalysisMock.getGeneticAnalysByTrackingId).toHaveBeenCalled();
+    expect(geneticAnalysisMock.getGeneticAnalysByTrackingId).toHaveBeenCalledWith('trackingId');
   });
 
   it('should not wallet bind with binding error', async () => {
