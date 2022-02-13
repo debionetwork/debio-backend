@@ -51,4 +51,32 @@ export class VerificationController {
     }
   }
   
+  @Post('/genetic-analysts')
+  @ApiQuery({ name: 'account_id'})
+  @ApiQuery({
+    name: 'verification_status',
+    enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
+  })
+  async updateStatusGeneticAnalyst(
+    @Headers('debio-api-key') debioApiKey: string,
+    @Res() response: Response,
+    @Query('account_id') account_id: string,
+    @Query('verification_status') verification_status: string,
+  ){
+    try {
+      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
+        return response.status(401).send('debio-api-key header is required');
+      }
+      await this.verificationService.verificationGeneticAnalyst(
+        account_id,
+        verification_status
+      );
+
+      return response
+        .status(200)
+        .send(`Genetic Analyst ${account_id} is ${verification_status}`)
+    } catch (error) {
+      return response.status(500).send(error)
+    }
+  }
 }
