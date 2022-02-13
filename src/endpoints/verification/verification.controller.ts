@@ -12,14 +12,14 @@ import { SentryInterceptor, ProcessEnvProxy } from '../../common';
 import { VerificationService } from './verification.service';
 
 @UseInterceptors(SentryInterceptor)
-@Controller('lab-verification')
+@Controller('verification')
 export class VerificationController {
   constructor(
     private readonly processEnvProxy: ProcessEnvProxy,
     private readonly verificationService: VerificationService,
   ) {}
 
-  @Post()
+  @Post('/lab')
   @ApiQuery({ name: 'account_id' })
   @ApiQuery({
     name: 'verification_status',
@@ -50,4 +50,5 @@ export class VerificationController {
       return response.status(500).send(error);
     }
   }
+  
 }
