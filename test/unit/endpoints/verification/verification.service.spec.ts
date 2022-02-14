@@ -9,11 +9,13 @@ import {
   convertToDbioUnitString,
   sendRewards,
   updateLabVerificationStatus,
+  updateGeneticAnalystVerificationStatus,
 } from '../../../../src/common/polkadot-provider';
 
 jest.mock('../../../../src/common/polkadot-provider', () => ({
   sendRewards: jest.fn(),
   updateLabVerificationStatus: jest.fn(),
+  updateGeneticAnalystVerificationStatus: jest.fn(),
   convertToDbioUnitString: jest.fn(),
 }));
 
@@ -62,6 +64,7 @@ describe('Verification Service Unit Tests', () => {
     Reflect.set(substrateServiceMock, 'pair', PAIR);
 
     (updateLabVerificationStatus as jest.Mock).mockClear();
+    (updateGeneticAnalystVerificationStatus as jest.Mock).mockClear();
     (sendRewards as jest.Mock).mockClear();
     (convertToDbioUnitString as jest.Mock).mockClear();
   });
@@ -69,6 +72,24 @@ describe('Verification Service Unit Tests', () => {
   it('should be defined', () => {
     // Assert
     expect(verificationService).toBeDefined();
+  });
+
+  it('shoul update genetic analyst status', async () => {
+    const ACCOUNT_ID = 'ACCOUNT_ID';
+    const VERIFICATION_STATUS = 'Verified';
+
+    await verificationService.verificationGeneticAnalyst(
+      ACCOUNT_ID,
+      VERIFICATION_STATUS,
+    );
+
+    expect(updateGeneticAnalystVerificationStatus).toHaveBeenCalledTimes(1);
+    expect(updateGeneticAnalystVerificationStatus).toHaveBeenCalledWith(
+      API,
+      PAIR,
+      ACCOUNT_ID,
+      VERIFICATION_STATUS,
+    );
   });
 
   it('should not send reward', async () => {

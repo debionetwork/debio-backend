@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { DateTimeProxy } from '../../common';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
 import {
+  DateTimeProxy,
+  updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
   LabVerificationStatus,
   sendRewards,
   SubstrateService,
   updateLabVerificationStatus,
 } from '../../common';
+import { GeneticAnalystsVerificationStatus } from '../../common/polkadot-provider/models/genetic-analysts';
 
 @Injectable()
 export class VerificationService {
@@ -48,5 +50,16 @@ export class VerificationService {
       created_at: new Date(this.dateTimeProxy.now()),
     };
     return await this.rewardService.insert(dataInput);
+  }
+
+  async verificationGeneticAnalyst(accountId: string, verificationStatus: string) {
+    await updateGeneticAnalystVerificationStatus(
+      this.subtrateService.api,
+      this.subtrateService.pair,
+      accountId,
+      <GeneticAnalystsVerificationStatus>verificationStatus,
+    )
+
+    return { message: `${accountId} is ${verificationStatus}`}
   }
 }

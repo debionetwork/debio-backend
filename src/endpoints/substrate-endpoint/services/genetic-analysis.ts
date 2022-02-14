@@ -7,7 +7,7 @@ export class GeneticAnalysisService {
   constructor(private readonly elasticSearchService: ElasticsearchService) {}
 
   async getGeneticAnalysByTrackingId(genetic_analyst_tracking_id: string) {
-    let hitsGeneticAnalys = [];
+    let hitsGeneticAnalysis = [];
 
     try {
       const geneticAnalysis = await this.elasticSearchService.search({
@@ -22,7 +22,7 @@ export class GeneticAnalysisService {
           },
         },
       });
-      hitsGeneticAnalys = geneticAnalysis.body.hits.hits;
+      hitsGeneticAnalysis = geneticAnalysis.body.hits.hits;
     } catch (error) {
       if (error?.body?.error?.type !== 'index_not_found_exception') {
         throw error;
@@ -31,6 +31,6 @@ export class GeneticAnalysisService {
         `API "genetic-analysis/{tracking_id}": ${error.body.error.reason}`,
       );
     }
-    return hitsGeneticAnalys.length > 0 ? hitsGeneticAnalys[0]._source: {};
+    return hitsGeneticAnalysis.length > 0 ? hitsGeneticAnalysis[0]._source: {};
   }
 }
