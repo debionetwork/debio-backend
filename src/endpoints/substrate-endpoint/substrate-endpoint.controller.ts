@@ -28,6 +28,7 @@ import {
   setEthAddress,
 } from '../../common/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
+import { setGeneticAnalysisOrderPaid } from '../../../src/common/polkadot-provider/command/genetic-analysis-order';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -207,7 +208,7 @@ export class SubstrateController {
   
   @Get('/genetic-analysis/:tracking_id')
   async getGeneticAnalysisByTrackingId(@Param('tracking_id') tracking_id: string) {
-    const geneticAnalysis = await this.geneticAnalysisService.getGeneticAnalysByTrackingId(tracking_id);
+    const geneticAnalysis = await this.geneticAnalysisService.getGeneticAnalysisByTrackingId(tracking_id);
     return geneticAnalysis;
   }
 
@@ -267,5 +268,24 @@ export class SubstrateController {
       reward,
       message: `eth-address ${ethAddress} bound to ${accountId}`,
     });
+  }
+
+  @Post('/genetic-anasysis-order-paid')
+  async geneticAnalysisOrderPaid(
+    @Body() genetic_analysis_order_id: string,
+    @Res() response: Response,
+    @Headers('debio_api_key') debioApiKey: string,
+  ){
+    if (debioApiKey != this.process.env.DEBIO_API_KEY) {
+      return response.status(401).send('debio-api-key header is required');
+    }
+
+    await setGeneticAnalysisOrderPaid(
+      this.substrateService.api,
+      this.substrateService.pair,
+      genetic_analysis_order_id
+    )
+    
+    response.status(200).send(`set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`)
   }
 }
