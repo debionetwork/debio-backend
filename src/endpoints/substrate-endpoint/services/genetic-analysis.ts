@@ -24,13 +24,12 @@ export class GeneticAnalysisService {
       });
       hitsGeneticAnalys = geneticAnalysis.body.hits.hits;
     } catch (error) {
-      if (error?.body?.error?.type === 'index_not_found_exception') {
-        await this.logger.log(
-          `API "genetic-analysis/{tracking_id}": ${error.body.error.reason}`,
-        );
-      } else {
+      if (error?.body?.error?.type !== 'index_not_found_exception') {
         throw error;
       }
+      await this.logger.log(
+        `API "genetic-analysis/{tracking_id}": ${error.body.error.reason}`,
+      );
     }
     return hitsGeneticAnalys.length > 0 ? hitsGeneticAnalys[0]._source: {};
   }
