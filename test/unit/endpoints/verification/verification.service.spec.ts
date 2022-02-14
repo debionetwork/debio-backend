@@ -75,11 +75,10 @@ describe('Verification Service Unit Tests', () => {
   });
 
   it('shoul update genetic analyst status', async () => {
-    const NOW = 0;
     const ACCOUNT_ID = 'ACCOUNT_ID';
     const VERIFICATION_STATUS = 'Verified';
 
-    const RESULTS = await verificationService.verificationGeneticAnalyst(
+    await verificationService.verificationGeneticAnalyst(
       ACCOUNT_ID,
       VERIFICATION_STATUS,
     );
