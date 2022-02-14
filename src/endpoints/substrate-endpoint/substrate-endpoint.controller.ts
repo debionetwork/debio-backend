@@ -20,6 +20,7 @@ import {
   LabService,
   OrderService,
   ServiceService,
+  GeneticAnalysisService,
 } from './services';
 import {
   sendRewards,
@@ -40,6 +41,7 @@ export class SubstrateController {
     private readonly process: ProcessEnvProxy,
     private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
+    private readonly geneticAnalysisService: GeneticAnalysisService,
   ) {}
 
   @Get('/labs')
@@ -200,6 +202,13 @@ export class SubstrateController {
         category,
       );
     return requestServiceByCustomer;
+  }
+
+  
+  @Get('/genetic-analysis/:tracking_id')
+  async getGeneticAnalysisByTrackingId(@Param('tracking_id') tracking_id: string) {
+    const geneticAnalysis = await this.geneticAnalysisService.getGeneticAnalysByTrackingId(tracking_id);
+    return geneticAnalysis;
   }
 
   @Post('/wallet-binding')
