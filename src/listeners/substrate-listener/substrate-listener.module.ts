@@ -36,6 +36,7 @@ import { LocationModule } from '../../endpoints/location/location.module';
     ...GeneticTestingCommandHandlers,
     ...ServiceRequestCommandHandlers,
     ...OrderCommandHandlers,
+    ...GeneticTestingCommandHandlers,
   ],
 })
 export class SubstrateListenerModule {}
