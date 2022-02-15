@@ -427,7 +427,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     ).toEqual(EXPECTED_RESULTS);
   });
 
-  it('shoul set genetic analysis order paid', async () => {
+  it('should set genetic analysis order paid', async () => {
     const genetic_analysis_order_id = 'XX';
     const EXPECTED_RESULTS = `set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`;
     const RESPONSE: Response = {
