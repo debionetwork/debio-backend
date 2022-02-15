@@ -4,9 +4,11 @@ import { ElasticsearchService } from "@nestjs/elasticsearch";
 @Injectable()
 export class GeneticAnalysisService {
   private readonly logger: Logger = new Logger(GeneticAnalysisService.name);
-  constructor(private readonly elasticSearchService: ElasticsearchService) {}
+  constructor(
+    private readonly elasticSearchService: ElasticsearchService,
+    ) {}
 
-  async getGeneticAnalysByTrackingId(genetic_analyst_tracking_id: string) {
+  async getGeneticAnalysisByTrackingId(genetic_analyst_tracking_id: string) {
     let hitsGeneticAnalysis = [];
 
     try {

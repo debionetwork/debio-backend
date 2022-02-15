@@ -60,7 +60,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       .mockReturnValue(ES_RESULT);
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).resolves.toEqual(RESULT);
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -79,7 +79,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).resolves.toEqual(RESULT);
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -97,7 +97,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).rejects.toMatchObject(
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).rejects.toMatchObject(
       ERROR_RESULT,
     );
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();

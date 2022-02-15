@@ -3,7 +3,6 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import { TransactionLoggingService } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { humanToOrderListenerData } from '../../helper/converter';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -15,7 +14,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   async execute(command: OrderPaidCommand) {
     await this.logger.log('OrderPaid!');
 
-    const order = await humanToOrderListenerData(command.orders);
+    const order = command.orders.humanToOrderListenerData();
 
     try {
       const isOrderHasBeenInsert =
