@@ -19,14 +19,39 @@ export class ServiceRequestService {
     private exchangeCacheService: DebioConversionService,
   ) {}
 
-  async getAggregatedByCountries(): Promise<Array<RequestsByCountry>> {
+  async getAggregatedByCountries(page: number, size: number): Promise<Array<RequestsByCountry>> {
     const requestByCountryList: Array<RequestsByCountry> = [];
+
+    let startIndex = 0;
+    let endIndex = 0;
+
     try {
       const exchangeBalance = await this.exchangeCacheService.getExchange();
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
-        body: { from: 0, size: 1000 },
+        body: { 
+          query: {
+            bool: {
+              must: {
+                match: {
+                  "request.status": { query: "Open" },
+                }
+              }
+            }
+          },
+          from: 0, 
+          size: 10000,
+          sort: [
+            {
+              'request.country.keyword': {
+                unmapped_type: 'keyword',
+                order: 'asc',
+              }
+            }
+          ]
+        },
       });
+
       const {
         body: {
           hits: { hits },
@@ -42,16 +67,14 @@ export class ServiceRequestService {
           _source: { request },
         } = req;
 
-        if (request.status !== 'Open') {
-          continue;
-        }
-
         if (!requestByCountryDict[request.country]) {
           requestByCountryDict[request.country] = {
             totalRequests: 0,
             totalValue: 0,
             services: {},
           };
+          
+          endIndex++;
         }
 
         const value =
@@ -97,44 +120,53 @@ export class ServiceRequestService {
         ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
       }
 
+      if (page && size) {
+        startIndex = (page - 1) * size;
+        endIndex = startIndex + (size - 1);
+      }
+
       // Restructure data into array
+      let index = 0;
 
       for (const countryCode in requestByCountryDict) {
-        const countryObj = await this.countryService.getByIso2Code(countryCode);
-        if (!countryObj) {
-          continue;
+        if (index >= startIndex && index <= endIndex) {
+          const countryObj = await this.countryService.getByIso2Code(countryCode);
+          if (!countryObj) {
+            continue;
+          }
+          requestByCountryDict[countryCode]['totalValue'] = {
+            dbio: requestByCountryDict[countryCode]['totalValue'],
+            dai:
+              requestByCountryDict[countryCode]['totalValue'] *
+                oneDbioEqualToDai || 'Conversion Error',
+            usd:
+              requestByCountryDict[countryCode]['totalValue'] *
+                oneDbioEqualToUsd || 'Conversion Error',
+          };
+          const { name } = countryObj;
+          const { totalRequests, services } = requestByCountryDict[countryCode];
+          const { totalValue } = requestByCountryDict[countryCode];
+  
+          const servicesArr = Object.values(services).map((s: any) => ({
+            ...s,
+            totalValue: {
+              dbio: s.totalValue.dbio,
+              dai: s.totalValue.dbio * oneDbioEqualToDai || 'Conversion Error',
+              usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
+            },
+          }));
+  
+          const requestByCountry = {
+            countryId: countryCode,
+            country: name,
+            totalRequests,
+            totalValue,
+            services: servicesArr,
+          };
+  
+          requestByCountryList.push(requestByCountry);
         }
-        requestByCountryDict[countryCode]['totalValue'] = {
-          dbio: requestByCountryDict[countryCode]['totalValue'],
-          dai:
-            requestByCountryDict[countryCode]['totalValue'] *
-              oneDbioEqualToDai || 'Conversion Error',
-          usd:
-            requestByCountryDict[countryCode]['totalValue'] *
-              oneDbioEqualToUsd || 'Conversion Error',
-        };
-        const { name } = countryObj;
-        const { totalRequests, services } = requestByCountryDict[countryCode];
-        const { totalValue } = requestByCountryDict[countryCode];
-
-        const servicesArr = Object.values(services).map((s: any) => ({
-          ...s,
-          totalValue: {
-            dbio: s.totalValue.dbio,
-            dai: s.totalValue.dbio * oneDbioEqualToDai || 'Conversion Error',
-            usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
-          },
-        }));
-
-        const requestByCountry = {
-          countryId: countryCode,
-          country: name,
-          totalRequests,
-          totalValue,
-          services: servicesArr,
-        };
-
-        requestByCountryList.push(requestByCountry);
+        index++;
       }
     } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
