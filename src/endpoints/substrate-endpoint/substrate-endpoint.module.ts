@@ -12,7 +12,7 @@ import {
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
-import { GeneticAnalysisService } from './services/genetic-analysis';
+import { GeneticAnalysisService } from './services/genetic-analysis.service';
 
 @Module({
   imports: [
