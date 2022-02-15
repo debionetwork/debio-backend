@@ -19,7 +19,7 @@ import {
   OrderPaidCommand,
   OrderRefundedCommand,
 } from './commands/orders';
-import { GeneticAnalysisOrderPaidCommand } from './commands/genetic-analysis-order';
+import { GeneticAnalysisOrderCreatedCommand, GeneticAnalysisOrderPaidCommand } from './commands/genetic-analysis-order';
 
 const eventRoutes = {
   services: {
@@ -44,6 +44,7 @@ const eventRoutes = {
   },
   geneticAnalysisOrders: {
     GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
+    GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
   },
 };
 
