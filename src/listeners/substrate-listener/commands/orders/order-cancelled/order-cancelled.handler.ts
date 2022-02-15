@@ -4,7 +4,6 @@ import { OrderCancelledCommand } from './order-cancelled.command';
 import { TransactionLoggingService } from '../../../../../common';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { humanToOrderListenerData } from '../../helper/converter';
 
 @Injectable()
 @CommandHandler(OrderCancelledCommand)
@@ -20,7 +19,7 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     await this.logger.log('OrderCancelled');
-    const order = await humanToOrderListenerData(command.orders);
+    const order = command.orders.humanToOrderListenerData();
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 5);
