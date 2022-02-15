@@ -8,6 +8,7 @@ import {
   OrderService,
   ServiceRequestService,
   GeneticAnalysisService,
+  GeneticAnalysisOrderService,
 } from '../../../../src/endpoints/substrate-endpoint/services';
 import {
   DateTimeProxy,
@@ -39,6 +40,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>
+  let geneticAnalysysOrderMock: MockType<GeneticAnalysisOrderService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -75,7 +77,13 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> = jest.fn(
     () => ({
       getGeneticAnalysisByTrackingId: jest.fn(),
-      geneticAnalysisSetOrderPaid: jest.fn(),
+    }),
+  );
+
+  const geneticAnalysisOrderMockfactory: () => MockType<GeneticAnalysisOrderService> = jest.fn(
+    () => ({
+     geneticAnalysisSetOrderPaid: jest.fn(),
+     getGeneticAnalysisOrderList: jest.fn(),
     }),
   );
 
@@ -105,6 +113,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         },
         { provide: RewardService, useFactory: rewardServiceMockFactory },
         { provide: GeneticAnalysisService, useFactory: geneticAnalysisMockfactory },
+        { provide: GeneticAnalysisOrderService, useFactory: geneticAnalysisOrderMockfactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
       ],
@@ -118,6 +127,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     dateTimeProxyMock = module.get(DateTimeProxy);
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
+    geneticAnalysysOrderMock = module.get(GeneticAnalysisOrderService);
   });
 
   it('should be defined', () => {
@@ -129,6 +139,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(rewardServiceMock).toBeDefined();
     expect(serviceRequestMock).toBeDefined();
     expect(geneticAnalysisMock).toBeDefined();
+    expect(geneticAnalysysOrderMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
@@ -209,6 +220,54 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(orderServiceMock.getOrderList).toHaveBeenCalled();
     expect(orderServiceMock.getOrderList).toHaveBeenCalledWith(
       'customer',
+      1,
+      'keyword',
+      1,
+      10,
+    );
+  });
+
+  it('should genetic analysis orders list by customer', () => {
+    // Arrange
+    const RESULT = 1;
+    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
+
+    // Assert
+    expect(
+      substrateControllerMock.getGeneticAnalysisOrderByCustomer(
+        { customer_id: 1 },
+        'keyword',
+        1,
+        10,
+      ),
+    ).resolves.toEqual(RESULT);
+    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
+    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
+      'customer',
+      1,
+      'keyword',
+      1,
+      10,
+    );
+  });
+
+  it('should genetic analysis orders list by analyst', () => {
+    // Arrange
+    const RESULT = 1;
+    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
+
+    // Assert
+    expect(
+      substrateControllerMock.getGeneticAnalysisOrderByAnalyst(
+        { analyst_id: 1 },
+        'keyword',
+        1,
+        10,
+      ),
+    ).resolves.toEqual(RESULT);
+    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
+    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
+      'analyst',
       1,
       'keyword',
       1,

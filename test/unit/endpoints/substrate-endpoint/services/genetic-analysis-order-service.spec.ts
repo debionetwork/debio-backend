@@ -1,5 +1,6 @@
 import { GeneticAnalysisOrderService } from "../../../../../src/endpoints/substrate-endpoint/services";
-import { MockType, substrateServiceMockFactory } from '../../../mock';
+import { elasticsearchServiceMockFactory, MockType, substrateServiceMockFactory } from '../../../mock';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from "@nestjs/testing";
 import { SubstrateService } from "../../../../../src/common";
 import { setGeneticAnalysisOrderPaid } from "../../../../../src/common/polkadot-provider";
@@ -20,6 +21,10 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GeneticAnalysisOrderService,
+        {
+          provide: ElasticsearchService,
+          useFactory: elasticsearchServiceMockFactory,
+        },
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
