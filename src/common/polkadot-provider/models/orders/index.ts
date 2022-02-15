@@ -34,7 +34,7 @@ export class Order {
   updated_at: Date;
   
   humanToOrderListenerData(){
-    const order = this;
+    const order: Order = this;
     order.additional_prices[0].value = convertSubstrateBalanceToNumber(
       order.additional_prices[0].value
     );
