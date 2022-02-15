@@ -278,15 +278,17 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
   it('should service request countries', () => {
     // Arrange
+    const PAGE = 1;
+    const SIZE = 2;
     const RESULT = 1;
     serviceRequestMock.getAggregatedByCountries.mockReturnValue(RESULT);
 
     // Assert
-    expect(substrateControllerMock.getAggregatedByCountries()).resolves.toEqual(
+    expect(substrateControllerMock.getAggregatedByCountries(PAGE, SIZE)).resolves.toEqual(
       RESULT,
     );
     expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalled();
-    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith();
+    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith(PAGE, SIZE);
   });
 
   it('should not wallet bind with false API key', async () => {
