@@ -438,6 +438,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     } as Response;
     (setGeneticAnalysisOrderPaid as jest.Mock).mockReturnValue(true);
 
+    //Assert
     expect(
       await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, DEBIO_API_KEY),
     ).toEqual(EXPECTED_RESULTS);
