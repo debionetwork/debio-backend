@@ -31,7 +31,7 @@ export class ServiceRequest {
   unstaked_at: Date;
 
   humanToServiceRequestListenerData() {
-    const serviceRequest: ServiceRequest = this;
+    const serviceRequest: ServiceRequest = this;// eslint-disable-line
 
     serviceRequest.staking_amount = convertSubstrateBalanceToNumber(serviceRequest.staking_amount);
   
