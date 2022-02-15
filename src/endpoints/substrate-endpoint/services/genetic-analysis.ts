@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { setGeneticAnalysisOrderPaid } from "../../../../src/common/polkadot-provider";
-import { SubstrateService } from "../../../../src/common";
+import { setGeneticAnalysisOrderPaid } from "../../../common/polkadot-provider";
+import { SubstrateService } from "../../../common";
 
 @Injectable()
 export class GeneticAnalysisService {
