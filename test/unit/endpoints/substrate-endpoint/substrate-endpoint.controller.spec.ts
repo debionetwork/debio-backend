@@ -436,11 +436,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
-    (setGeneticAnalysisOrderPaid as jest.Mock).mockReturnValue(undefined);
+    (setGeneticAnalysisOrderPaid as jest.Mock).mockReturnValue(true);
 
     expect(
       await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, DEBIO_API_KEY),
-    ).resolves.toEqual(EXPECTED_RESULTS);
+    ).toEqual(EXPECTED_RESULTS);
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled()
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
       'API',
