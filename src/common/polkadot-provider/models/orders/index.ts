@@ -1,5 +1,6 @@
 import { ServiceFlow, Price, CurrencyType } from '..';
 import { OrderStatus } from './order-status';
+import { convertSubstrateBalanceToNumber, convertSubstrateNumberToNumber } from '../..';
 
 export class Order {
   constructor(anyJson: any) {
@@ -31,6 +32,29 @@ export class Order {
   order_flow: ServiceFlow;
   created_at: Date;
   updated_at: Date;
+  
+  humanToOrderListenerData(){
+    const order: Order = this; // eslint-disable-line
+    order.additional_prices[0].value = convertSubstrateBalanceToNumber(
+      order.additional_prices[0].value
+    );
+  
+    order.prices[0].value = convertSubstrateBalanceToNumber(
+      order.prices[0].value
+    );
+  
+    order.created_at = new Date(
+      convertSubstrateNumberToNumber(order.created_at)
+    )
+  
+    if (order.updated_at) {
+      order.updated_at = new Date(
+        convertSubstrateNumberToNumber(order.updated_at)
+      ) 
+    }  
+  
+    return order
+  }
 }
 
 export * from './order-status';

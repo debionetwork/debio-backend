@@ -9,7 +9,6 @@ import {
 } from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
-import { humanToServiceRequestListenerData } from '../../helper/converter';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -29,7 +28,7 @@ export class ServiceRequestCreatedHandler
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
-    const serviceRequest = await humanToServiceRequestListenerData(command.request);
+    const serviceRequest = command.request.humanToServiceRequestListenerData();
     const stakingLogging: TransactionLoggingDto = {
       address: serviceRequest.requester_address,
       amount: serviceRequest.staking_amount,
