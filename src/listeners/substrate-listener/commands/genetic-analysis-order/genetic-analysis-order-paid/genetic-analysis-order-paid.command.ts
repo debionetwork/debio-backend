@@ -1,7 +1,7 @@
 import { BlockMetaData } from "../../../models/block-metadata.event-model";
 import { GeneticAnalystOrder } from "../../../../../common";
 
-export class GeneticAnalysisOrderCommand {
+export class GeneticAnalysisOrderPaidCommand {
   geneticAnalysisOrders: GeneticAnalystOrder;
   constructor(data: Array<any>, public readonly blockMetaData: BlockMetaData) {
     const geneticAnalysisOrderData = data[0];
