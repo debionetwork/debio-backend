@@ -20,8 +20,8 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
   sendRewards,
+  setGeneticAnalysisOrderPaid
 } from '../../../../src/common/polkadot-provider';
-import { setGeneticAnalysisOrderPaid } from '../../../../src/common/polkadot-provider/command/genetic-analysis-order';
 
 jest.mock('../../../../src/common/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -434,9 +434,16 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
-    
+    (setGeneticAnalysisOrderPaid as jest.Mock).mockReturnValue(undefined);
+
     expect(
       await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, DEBIO_API_KEY),
-      ).resolves.toEqual(EXPECTED_RESULTS);
+    ).resolves.toEqual(EXPECTED_RESULTS);
+    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled()
+    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
+      'API',
+      'PAIR',
+      genetic_analysis_order_id
+    );
   });
 });

@@ -4,7 +4,6 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from "@nestjs/testing";
 import { when } from 'jest-when';
 import { SubstrateService } from "../../../../../src/common";
-import { setGeneticAnalysisOrderPaid } from "../../../../../src/common/polkadot-provider/command/genetic-analysis-order";
 
 describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   let geneticAnalysisServiceMock: GeneticAnalysisService;
