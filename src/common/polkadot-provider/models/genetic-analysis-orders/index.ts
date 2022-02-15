@@ -50,6 +50,8 @@ export class GeneticAnalystOrder {
         convertSubstrateNumberToNumber(geneticAnalysisOrder.updated_at)
       ) 
     } 
+
+    return geneticAnalysisOrder
   }
 }
 
