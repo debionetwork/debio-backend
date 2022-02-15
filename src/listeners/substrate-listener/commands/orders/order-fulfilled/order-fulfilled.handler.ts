@@ -17,7 +17,6 @@ import {
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
-import { humanToOrderListenerData } from '../../helper/converter';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -36,7 +35,7 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     await this.logger.log('Order Fulfilled!');
-    const order = await humanToOrderListenerData(command.orders);
+    const order = command.orders.humanToOrderListenerData();
 
     try {
       const isOrderHasBeenInsert =

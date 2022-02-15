@@ -26,9 +26,9 @@ import {
   sendRewards,
   queryAccountIdByEthAddress,
   setEthAddress,
+  setGeneticAnalysisOrderPaid,
 } from '../../common/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
-import { setGeneticAnalysisOrderPaid } from '../../../src/common/polkadot-provider/command/genetic-analysis-order';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -160,9 +160,17 @@ export class SubstrateController {
   }
 
   @Get('/countries')
-  async getAggregatedByCountries(): Promise<any> {
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
+  async getAggregatedByCountries(
+    @Query('page') page,
+    @Query('size') size,
+  ): Promise<any> {
     const serviceRequests =
-      await this.serviceRequestService.getAggregatedByCountries();
+      await this.serviceRequestService.getAggregatedByCountries(
+        Number(page),
+        Number(size),
+      );
     return serviceRequests;
   }
 
@@ -286,6 +294,6 @@ export class SubstrateController {
       genetic_analysis_order_id
     )
     
-    response.status(200).send(`set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`)
+    return response.status(200).send(`set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`)
   }
 }
