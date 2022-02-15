@@ -1,8 +1,6 @@
 import { GeneticAnalysisOrderService } from "../../../../../src/endpoints/substrate-endpoint/services";
-import { elasticsearchServiceMockFactory, MockType, substrateServiceMockFactory } from '../../../mock';
-import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { MockType, substrateServiceMockFactory } from '../../../mock';
 import { Test, TestingModule } from "@nestjs/testing";
-import { when } from 'jest-when';
 import { SubstrateService } from "../../../../../src/common";
 import { setGeneticAnalysisOrderPaid } from "../../../../../src/common/polkadot-provider";
 
@@ -12,7 +10,6 @@ jest.mock('../../../../../src/common/polkadot-provider', () => ({
 
 describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   let geneticAnalysisOrderServiceMock: GeneticAnalysisOrderService;
-  let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>
   
   const API = 'API';
@@ -24,10 +21,6 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       providers: [
         GeneticAnalysisOrderService,
         {
-          provide: ElasticsearchService,
-          useFactory: elasticsearchServiceMockFactory,
-        },
-        {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
         },
@@ -35,7 +28,6 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     }).compile();
 
     geneticAnalysisOrderServiceMock = module.get(GeneticAnalysisOrderService);
-    elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
     Reflect.set(substrateServiceMock, 'api', API);
     Reflect.set(substrateServiceMock, 'pair', PAIR);
