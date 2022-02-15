@@ -15,17 +15,19 @@ import {
   RewardService,
   SubstrateService,
 } from '../../../../src/common';
-import { WalletBindingDTO } from 'src/endpoints/substrate-endpoint/dto';
+import { WalletBindingDTO } from '../../../../src/endpoints/substrate-endpoint/dto';
 import {
   queryAccountIdByEthAddress,
   setEthAddress,
   sendRewards,
+  setGeneticAnalysisOrderPaid
 } from '../../../../src/common/polkadot-provider';
 
 jest.mock('../../../../src/common/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
   sendRewards: jest.fn(),
+  setGeneticAnalysisOrderPaid: jest.fn(),
 }));
 
 describe('Substrate Endpoint Controller Unit Tests', () => {
@@ -72,7 +74,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
   const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> = jest.fn(
     () => ({
-      getGeneticAnalysByTrackingId: jest.fn(),
+      getGeneticAnalysisByTrackingId: jest.fn(),
+      geneticAnalysisSetOrderPaid: jest.fn(),
     }),
   );
 
@@ -314,14 +317,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   it('should genetic analysis by tracking id', () => {
     // Arrange
     const RESULT = 1;
-    geneticAnalysisMock.getGeneticAnalysByTrackingId.mockReturnValue(RESULT);
+    geneticAnalysisMock.getGeneticAnalysisByTrackingId.mockReturnValue(RESULT);
 
     // Assert
     expect(substrateControllerMock.getGeneticAnalysisByTrackingId('trackingId')).resolves.toEqual(
       RESULT,
     );
-    expect(geneticAnalysisMock.getGeneticAnalysByTrackingId).toHaveBeenCalled();
-    expect(geneticAnalysisMock.getGeneticAnalysByTrackingId).toHaveBeenCalledWith('trackingId');
+    expect(geneticAnalysisMock.getGeneticAnalysisByTrackingId).toHaveBeenCalled();
+    expect(geneticAnalysisMock.getGeneticAnalysisByTrackingId).toHaveBeenCalledWith('trackingId');
   });
 
   it('should not wallet bind with binding error', async () => {
@@ -409,5 +412,40 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       currency: 'DBIO',
       created_at: dateTimeProxyMock.new(),
     });
+  });
+
+  it('should not set genetic analysis order paid with false API key', async () => {
+    // Arrange
+    const EXPECTED_RESULTS = 'debio-api-key header is required';
+    const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
+    } as Response;
+    const genetic_analysis_order_id = 'XX'
+
+    // Assert
+    expect(
+      await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, 'NOT API KEY'),
+    ).toEqual(EXPECTED_RESULTS);
+  });
+
+  it('should set genetic analysis order paid', async () => {
+    const genetic_analysis_order_id = 'XX';
+    const EXPECTED_RESULTS = `set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`;
+    const RESPONSE: Response = {
+      send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
+      status: (code: number) => RESPONSE, // eslint-disable-line
+    } as Response;
+    (setGeneticAnalysisOrderPaid as jest.Mock).mockReturnValue(undefined);
+
+    expect(
+      await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, DEBIO_API_KEY),
+    ).resolves.toEqual(EXPECTED_RESULTS);
+    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled()
+    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
+      'API',
+      'PAIR',
+      genetic_analysis_order_id
+    );
   });
 });

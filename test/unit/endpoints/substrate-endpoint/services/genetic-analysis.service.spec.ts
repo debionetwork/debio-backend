@@ -1,12 +1,14 @@
 import { GeneticAnalysisService } from "../../../../../src/endpoints/substrate-endpoint/services";
-import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
+import { elasticsearchServiceMockFactory, MockType, substrateServiceMockFactory } from '../../../mock';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from "@nestjs/testing";
 import { when } from 'jest-when';
+import { SubstrateService } from "../../../../../src/common";
 
 describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   let geneticAnalysisServiceMock: GeneticAnalysisService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
+  let substrateServiceMock: MockType<SubstrateService>
   
   const createSearchObject = (genetic_analyst_tracking_id: string) => {
     return {
@@ -32,11 +34,16 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,
         },
+        {
+          provide: SubstrateService,
+          useFactory: substrateServiceMockFactory,
+        },
       ]
     }).compile();
 
     geneticAnalysisServiceMock = module.get(GeneticAnalysisService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
+    substrateServiceMock = module.get(SubstrateService);
   });
 
   it('should be defined', () => {
@@ -60,7 +67,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       .mockReturnValue(ES_RESULT);
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).resolves.toEqual(RESULT);
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -79,7 +86,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).resolves.toEqual(RESULT);
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -97,7 +104,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisServiceMock.getGeneticAnalysByTrackingId('XX')).rejects.toMatchObject(
+    expect(geneticAnalysisServiceMock.getGeneticAnalysisByTrackingId('XX')).rejects.toMatchObject(
       ERROR_RESULT,
     );
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
