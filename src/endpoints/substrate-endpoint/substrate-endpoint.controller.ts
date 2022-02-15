@@ -21,6 +21,7 @@ import {
   OrderService,
   ServiceService,
   GeneticAnalysisService,
+  GeneticAnalysisOrderService,
 } from './services';
 import {
   sendRewards,
@@ -43,6 +44,7 @@ export class SubstrateController {
     private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
+    private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
   ) {}
 
   @Get('/labs')
@@ -218,6 +220,50 @@ export class SubstrateController {
   async getGeneticAnalysisByTrackingId(@Param('tracking_id') tracking_id: string) {
     const geneticAnalysis = await this.geneticAnalysisService.getGeneticAnalysisByTrackingId(tracking_id);
     return geneticAnalysis;
+  }
+
+  @Get('/genetic-analysis-order/list/analyst/:analyst_id')
+  @ApiParam({ name: 'analyst_id' })
+  @ApiQuery({ name: 'keyword', required: false })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
+  async getGeneticAnalysisOrderByAnalyst(
+    @Param() params,
+    @Query('keyword') keyword: string,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const genetic_analysis_orders = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+      'analyst',
+      params.analyst_id,
+      keyword ? keyword.toLowerCase() : '',
+      Number(page),
+      Number(size),
+    );
+
+    return genetic_analysis_orders;
+  }
+
+  @Get('/genetic-analysis-order/list/customer/:customer_id')
+  @ApiParam({ name: 'customer_id' })
+  @ApiQuery({ name: 'keyword', required: false })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
+  async getGeneticAnalysisOrderByCustomer(
+    @Param() params,
+    @Query('keyword') keyword: string,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const genetic_analysis_orders = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+      'customer',
+      params.customer_id,
+      keyword ? keyword.toLowerCase() : '',
+      Number(page),
+      Number(size),
+    );
+
+    return genetic_analysis_orders;
   }
 
   @Post('/wallet-binding')
