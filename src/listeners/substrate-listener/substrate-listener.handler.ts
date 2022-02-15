@@ -41,6 +41,9 @@ const eventRoutes = {
   geneticTesting: {
     DataStaked: DataStakedCommand,
   },
+  geneticAnalysisOrders: {
+
+  },
 };
 
 @Injectable()
