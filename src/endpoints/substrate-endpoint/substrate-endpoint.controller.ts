@@ -159,9 +159,17 @@ export class SubstrateController {
   }
 
   @Get('/countries')
-  async getAggregatedByCountries(): Promise<any> {
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
+  async getAggregatedByCountries(
+    @Query('page') page,
+    @Query('size') size,
+  ): Promise<any> {
     const serviceRequests =
-      await this.serviceRequestService.getAggregatedByCountries();
+      await this.serviceRequestService.getAggregatedByCountries(
+        Number(page),
+        Number(size),
+      );
     return serviceRequests;
   }
 

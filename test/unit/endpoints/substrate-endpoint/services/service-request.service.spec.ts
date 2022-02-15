@@ -20,9 +20,30 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   const createObjectSearchAggregatedByCountries = () => {
     return {
       index: 'create-service-request',
-      body: { from: 0, size: 1000 },
+      body: { 
+        query: {
+          bool: {
+            must: {
+              match: {
+                "request.status": { query: "Open" },
+              }
+            }
+          }
+        },
+        from: 0, 
+        size: 10000,
+        sort: [
+          {
+            'request.country.keyword': {
+              unmapped_type: 'keyword',
+              order: 'asc',
+            }
+          }
+        ]
+      },
     };
   };
+  
 
   const createObjectSearchByCustomerId = (
     customerId: string,
@@ -136,7 +157,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      await serviceRequestService.getAggregatedByCountries(),
+      await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
     expect(exchangeCacheService.getExchange).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
@@ -196,7 +217,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      await serviceRequestService.getAggregatedByCountries(),
+      await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
     expect(exchangeCacheService.getExchange).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
@@ -227,7 +248,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      await serviceRequestService.getAggregatedByCountries(),
+      await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
     expect(exchangeCacheService.getExchange).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
@@ -259,7 +280,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      serviceRequestService.getAggregatedByCountries(),
+      serviceRequestService.getAggregatedByCountries(1, 10),
     ).rejects.toMatchObject(ERROR_RESULT);
     expect(exchangeCacheService.getExchange).toHaveBeenCalled();
     await Promise.resolve();
