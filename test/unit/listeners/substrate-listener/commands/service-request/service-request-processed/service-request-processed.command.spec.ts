@@ -35,9 +35,7 @@ describe('Service Request Processed Command Event', () => {
 
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockServiceInvoice();
-
-    const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand =
-      new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber());
+    new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceInvoice).toHaveBeenCalled();
@@ -46,8 +44,7 @@ describe('Service Request Processed Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      const _serviceRequestProcessedCommand: ServiceRequestProcessedCommand =
-        new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber());
+      new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber());
     }).toThrow();
   });
 });
