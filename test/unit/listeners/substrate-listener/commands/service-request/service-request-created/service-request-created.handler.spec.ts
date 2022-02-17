@@ -18,8 +18,6 @@ import { StateService } from '../../../../../../../src/endpoints/location/state.
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
-import * as rewardCommand from '../../../../../../../src/common/polkadot-provider/command/rewards';
-import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 
 describe('Service Request Created Handler Event', () => {
   let serviceRequesCreatedHandler: ServiceRequestCreatedHandler;

@@ -8,9 +8,8 @@ jest.mock('../../../../../../../src/common/polkadot-provider/models/orders');
 describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {
     const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
-
-    const _orderCancelledCommand: OrderCancelledCommand =
-      new OrderCancelledCommand([ORDER_RESPONSE], mockBlockNumber());
+    
+    new OrderCancelledCommand([ORDER_RESPONSE], mockBlockNumber());
     expect(Order).toHaveBeenCalled();
     expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman());
     expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -18,8 +17,7 @@ describe('Order Cancelled Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _orderCancelledCommand: OrderCancelledCommand =
-        new OrderCancelledCommand([{}], mockBlockNumber());
+      new OrderCancelledCommand([{}], mockBlockNumber());
     }).toThrowError();
   });
 });

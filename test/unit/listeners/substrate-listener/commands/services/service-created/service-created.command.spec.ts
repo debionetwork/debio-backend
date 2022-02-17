@@ -52,7 +52,7 @@ describe('Serive Created Command Event', () => {
 
     const MOCK_DATA = createMockService(serviceInfo, ServiceFlow.RequestTest);
 
-    const _serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand(MOCK_DATA, mockBlockNumber());
+    new ServiceCreatedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[0].toHuman).toHaveBeenCalled();
     expect(Service).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('Serive Created Command Event', () => {
   it('should throw error', () => {
     expect(
       ()=> {
-        const _serviceCreatedCommand: ServiceCreatedCommand = new ServiceCreatedCommand([{}, {}], mockBlockNumber()) 
+        new ServiceCreatedCommand([{}, {}], mockBlockNumber()) 
       }
     ).toThrow();
   });
