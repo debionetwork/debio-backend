@@ -10,7 +10,6 @@ import { when } from 'jest-when';
 describe('Service Created Handler Event', () => {
   let serviceCreatedHandle: ServiceCreatedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
-  let mailerManagerMock: MockType<MailerManager>;
   
   const createMockService = (
     serviceInfo: ServiceInfo,
@@ -32,13 +31,6 @@ describe('Service Created Handler Event', () => {
       ];
   };  
 
-  function mockBlockNumber(): BlockMetaData {
-    return {
-      blockHash: 'string',
-      blockNumber: 1
-    };;
-  }
-
   const EMAILS = 'email'
   class ProcessEnvProxyMock {
     env = { EMAILS };
@@ -59,6 +51,7 @@ describe('Service Created Handler Event', () => {
         ServiceCreatedHandler,
       ],
     }).compile();
+  let mailerManagerMock: MockType<MailerManager>;
 
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);

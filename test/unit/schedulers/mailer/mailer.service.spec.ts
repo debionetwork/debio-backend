@@ -2,12 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockType, MockLogger, mailerManagerMockFactory, emailNotificationServiceMockFactory, substrateServiceMockFactory } from '../../mock';
 import { MailerService } from '../../../../src/schedulers/mailer/mailer.service';
 import { EmailNotificationService, MailerManager, SubstrateService } from '../../../../src/common';
-import * as labToLabRegisterQuery from '../../../../src/common/modules/mailer/mailer.manager';
-import { when } from 'jest-when';
 
 
 describe('MailerService', () => {
-  let service: MailerService;
   let mailManagerMock: MockType<MailerManager>;
   let emailNotificationServiceMock: MockType<EmailNotificationService>;
   let substrateServiceMock: MockType<SubstrateService>;
