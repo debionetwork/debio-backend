@@ -31,7 +31,7 @@ describe('MailerService', () => {
 
     mailManagerMock = module.get(MailerManager);
     emailNotificationServiceMock = module.get(EmailNotificationService);
-    substrateServiceMock = module.get(SubstrateService);
+    substrateServiceMock = module.get(SubstrateService); // eslint-disable-line
   });
 
   it('should be defined', () => {

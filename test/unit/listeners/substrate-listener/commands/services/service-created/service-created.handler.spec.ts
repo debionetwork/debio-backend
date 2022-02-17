@@ -54,7 +54,7 @@ describe('Service Created Handler Event', () => {
 
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);
-    mailerManagerMock = module.get(MailerManager);
+    mailerManagerMock = module.get(MailerManager); // eslint-disable-line
   });
 
   it('ServiceCreatedHandler must defined', () => {

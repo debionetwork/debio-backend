@@ -87,9 +87,9 @@ describe('Service Request Created Handler Event', () => {
 
     serviceRequesCreatedHandler = module.get(ServiceRequestCreatedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    countryServiceMock = module.get(CountryService);
-    stateServiceMock = module.get(StateService);
-    mailerManagerMock = module.get(MailerManager);
+    countryServiceMock = module.get(CountryService); // eslint-disable-line
+    stateServiceMock = module.get(StateService); // eslint-disable-line
+    mailerManagerMock = module.get(MailerManager); // eslint-disable-line
   });
 
   it('ServiceRequesCreatedHandler must defined', () => {

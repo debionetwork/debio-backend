@@ -9,7 +9,8 @@ describe('Genetic Analysis Order Created Command Event', () => {
   it('should called model data and toHuman', () => {
     const GA_ORDER_RESPONSE = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Unpaid);
 
-    const _ = new GeneticAnalysisOrderCreatedCommand([GA_ORDER_RESPONSE],mockBlockNumber());
+    const _ = // eslint-disable-line
+      new GeneticAnalysisOrderCreatedCommand([GA_ORDER_RESPONSE],mockBlockNumber());
     expect(GeneticAnalystOrder).toHaveBeenCalled();
     expect(GeneticAnalystOrder).toHaveBeenCalledWith(GA_ORDER_RESPONSE.toHuman());
     expect(GA_ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -17,7 +18,8 @@ describe('Genetic Analysis Order Created Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _ = new GeneticAnalysisOrderCreatedCommand([{}], mockBlockNumber());
+      const _ = // eslint-disable-line
+        new GeneticAnalysisOrderCreatedCommand([{}], mockBlockNumber());
     }).toThrowError();
   });
 });
