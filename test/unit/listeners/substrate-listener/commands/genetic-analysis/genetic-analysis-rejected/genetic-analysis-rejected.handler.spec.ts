@@ -19,7 +19,6 @@ jest.mock('../../../../../../../src/common/polkadot-provider/command/genetic-ana
 }));
 
 describe('Genetic Analysis Rejected Handler Event', () => {
-  const genetic_analysis = createMockGeneticAnalysis(GeneticAnalysisStatus.Rejected);
 
   let geneticAnalysisRejectedHandler: GeneticAnalysisRejectedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
