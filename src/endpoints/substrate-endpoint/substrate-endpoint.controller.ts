@@ -30,6 +30,7 @@ import {
   setGeneticAnalysisOrderPaid,
 } from '../../common/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
+import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -326,10 +327,12 @@ export class SubstrateController {
 
   @Post('/genetic-anasysis-order-paid')
   async geneticAnalysisOrderPaid(
-    @Body() genetic_analysis_order_id: string,
+    @Body() geneticOrderId: GeneticAnalysisOrderPaidDto,
     @Res() response: Response,
     @Headers('debio_api_key') debioApiKey: string,
   ){
+    const { genetic_analysis_order_id } = geneticOrderId;
+
     if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
