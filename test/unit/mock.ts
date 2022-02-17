@@ -5,6 +5,7 @@ import {
   SubstrateService,
   TransactionLoggingService,
   OrderStatus,
+  GeneticAnalysisOrderStatus,
   DebioConversionService,
   MailerManager,
   RewardService,
@@ -160,6 +161,36 @@ export function createMockOrder(status: OrderStatus) {
       sellerId: 'string',
       dnaSampleTrackingId: 'string',
       currency: 'XX',
+      prices: [first_price],
+      additionalPrices: [second_price],
+      status: status,
+      orderFlow: '1',
+      createdAt: '1',
+      updatedAt: '1',
+    })),
+  };
+}
+
+export function createMockGeneticAnalysisOrder(status: GeneticAnalysisOrderStatus) {
+  const first_price = {
+    component: 'string',
+    value: 1,
+  };
+  const second_price = {
+    component: 'string',
+    value: 1,
+  };
+
+  return {
+    toHuman: jest.fn(() => ({
+      id: 'string',
+      serviceId: 'string',
+      customerId: 'string',
+      customerBoxPublicKey: 'string',
+      sellerId: 'string',
+      geneticDataId: 'string',
+      geneticAnalysisTrackingId: 'string',
+      currency: 'DBIO',
       prices: [first_price],
       additionalPrices: [second_price],
       status: status,
