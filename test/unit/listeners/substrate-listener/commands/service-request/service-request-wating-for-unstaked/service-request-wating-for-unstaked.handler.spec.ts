@@ -13,7 +13,6 @@ import { ServiceRequestWaitingForUnstakedHandler } from '../../../../../../../sr
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestWaitingForUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
-import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 
 describe('Service Request Waiting For Unstaked Handler Event', () => {
   let serviceRequesWaitingForUnstakedHandler: ServiceRequestWaitingForUnstakedHandler;

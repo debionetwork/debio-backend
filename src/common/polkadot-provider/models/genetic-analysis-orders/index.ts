@@ -1,4 +1,5 @@
 import { CurrencyType, Price } from '..';
+import { convertSubstrateBalanceToNumber, convertSubstrateNumberToNumber } from '../..';
 import { GeneticAnalysisOrderStatus } from './genetic-analysis-order-status'
 
 export class GeneticAnalystOrder {
@@ -30,6 +31,28 @@ export class GeneticAnalystOrder {
   status: GeneticAnalysisOrderStatus;
   created_at: Date;
   updated_at: Date;
+
+  humanToGeneticAnalysisOrderListenerData(){
+    const geneticAnalysisOrder : GeneticAnalystOrder = this; // eslint-disable-line
+
+    if(geneticAnalysisOrder.prices[0].value){
+      geneticAnalysisOrder.prices[0].value = convertSubstrateBalanceToNumber(
+        geneticAnalysisOrder.prices[0].value
+      );
+    }
+
+    geneticAnalysisOrder.created_at = new Date(
+      convertSubstrateNumberToNumber(geneticAnalysisOrder.created_at)
+    )
+  
+    if (geneticAnalysisOrder.updated_at) {
+      geneticAnalysisOrder.updated_at = new Date(
+        convertSubstrateNumberToNumber(geneticAnalysisOrder.updated_at)
+      ) 
+    } 
+
+    return geneticAnalysisOrder
+  }
 }
 
 export * from './genetic-analysis-order-status';
