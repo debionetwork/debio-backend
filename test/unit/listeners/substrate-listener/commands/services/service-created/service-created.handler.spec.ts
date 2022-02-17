@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailerManager, ProcessEnvProxy, ServiceFlow, ServiceInfo, SubstrateService } from "../../../../../../../src/common";
 import { ServiceCreatedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler"
-import { BlockMetaData } from "../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model";
 import { mailerManagerMockFactory, MockType, substrateServiceMockFactory } from "../../../../../mock";
 import * as labQuery from '../../../../../../../src/common/polkadot-provider/query/labs';
 import { when } from 'jest-when';
@@ -32,13 +31,6 @@ describe('Service Created Handler Event', () => {
       ];
   };  
 
-  function mockBlockNumber(): BlockMetaData {
-    return {
-      blockHash: 'string',
-      blockNumber: 1
-    };;
-  }
-
   const EMAILS = 'email'
   class ProcessEnvProxyMock {
     env = { EMAILS };
@@ -62,7 +54,7 @@ describe('Service Created Handler Event', () => {
 
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);
-    mailerManagerMock = module.get(MailerManager);
+    mailerManagerMock = module.get(MailerManager); // eslint-disable-line
   });
 
   it('ServiceCreatedHandler must defined', () => {
