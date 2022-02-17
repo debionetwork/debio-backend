@@ -1,22 +1,29 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { Interval } from '@nestjs/schedule';
+import { Interval, SchedulerRegistry } from '@nestjs/schedule';
 import {
+  ProcessEnvProxy,
   queryServiceRequestById,
   retrieveUnstakedAmount,
   SubstrateService,
 } from '../../common';
 
 @Injectable()
-export class UnstakedService {
+export class UnstakedService implements OnModuleInit {
   private logger: Logger = new Logger(UnstakedService.name);
   private isRunning = false;
   constructor(
+    private readonly processEnvProxy: ProcessEnvProxy,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly subtrateService: SubstrateService,
+    private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
-  @Interval(30 * 1000)
+  onModuleInit() {
+    const unstaked = setInterval(async () => { await this.handleWaitingUnstaked() }, parseInt(this.processEnvProxy.env.UNSTAKE_INTERVAL));
+    this.schedulerRegistry.addInterval("unstaked-interval", unstaked);
+  }
+
   async handleWaitingUnstaked() {
     try {
       if (this.isRunning) return;

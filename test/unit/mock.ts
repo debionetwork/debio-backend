@@ -19,6 +19,7 @@ import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
 import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
+import { SchedulerRegistry } from '@nestjs/schedule';
 
 export function mockFunction(args){} // eslint-disable-line
 
@@ -204,3 +205,8 @@ export const countryServiceMockFactory: () => MockType<CountryService> =
     getAll: jest.fn(),
     getByIso2Code: jest.fn(),
   }));
+
+export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
+  jest.fn(() => ({
+    addInterval: jest.fn(),
+  }))
