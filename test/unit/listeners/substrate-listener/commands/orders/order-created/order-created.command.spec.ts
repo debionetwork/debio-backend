@@ -9,7 +9,7 @@ describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {
     const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    new OrderCreatedCommand(
+    const _= new OrderCreatedCommand(
       [ORDER_RESPONSE],
       mockBlockNumber(),
     );
@@ -20,7 +20,7 @@ describe('Order Cancelled Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      new OrderCreatedCommand(
+      const _= new OrderCreatedCommand(
         [{}],
         mockBlockNumber(),
       );

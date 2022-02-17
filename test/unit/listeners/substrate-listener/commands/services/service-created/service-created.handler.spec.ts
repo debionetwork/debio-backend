@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailerManager, ProcessEnvProxy, ServiceFlow, ServiceInfo, SubstrateService } from "../../../../../../../src/common";
 import { ServiceCreatedHandler } from "../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler"
-import { BlockMetaData } from "../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model";
 import { mailerManagerMockFactory, MockType, substrateServiceMockFactory } from "../../../../../mock";
 import * as labQuery from '../../../../../../../src/common/polkadot-provider/query/labs';
 import { when } from 'jest-when';
@@ -10,6 +9,7 @@ import { when } from 'jest-when';
 describe('Service Created Handler Event', () => {
   let serviceCreatedHandle: ServiceCreatedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
+  let mailerManagerMock: MockType<MailerManager>;
   
   const createMockService = (
     serviceInfo: ServiceInfo,
@@ -51,7 +51,6 @@ describe('Service Created Handler Event', () => {
         ServiceCreatedHandler,
       ],
     }).compile();
-  let mailerManagerMock: MockType<MailerManager>;
 
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);

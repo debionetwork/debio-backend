@@ -9,7 +9,7 @@ describe('Genetic Analysis Order Created Command Event', () => {
   it('should called model data and toHuman', () => {
     const GA_ORDER_RESPONSE = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Unpaid);
 
-    new GeneticAnalysisOrderCreatedCommand(
+    const _ = new GeneticAnalysisOrderCreatedCommand(
       [GA_ORDER_RESPONSE],
       mockBlockNumber(),
     );
@@ -20,7 +20,7 @@ describe('Genetic Analysis Order Created Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      new GeneticAnalysisOrderCreatedCommand(
+      const _ = new GeneticAnalysisOrderCreatedCommand(
         [{}],
         mockBlockNumber(),
       );

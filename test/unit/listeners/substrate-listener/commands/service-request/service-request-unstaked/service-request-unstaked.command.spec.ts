@@ -39,7 +39,8 @@ describe('Service Request Unstaked Command Event', () => {
 
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Processed);
-    new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber());
+
+    const _ = new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceRequest).toHaveBeenCalled();
@@ -48,7 +49,7 @@ describe('Service Request Unstaked Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber());
+      const _ = new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber());
     }).toThrow();
   });
 });
