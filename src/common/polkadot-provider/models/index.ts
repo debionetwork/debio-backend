@@ -6,4 +6,4 @@ export * from './genetic-testing';
 export * from './service-request';
 export * from './genetic-analysts';
 export * from './genetic-analysis-orders';
-export * from './genetic-analisys';
+export * from './genetic-analysis';

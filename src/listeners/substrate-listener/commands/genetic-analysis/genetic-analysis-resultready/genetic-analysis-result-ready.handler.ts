@@ -18,7 +18,7 @@ export class GeneticAnalysisResultReadyHandler implements ICommandHandler<Geneti
       await setGeneticAnalysisOrderFulfilled(
         this.substrateService.api,
         this.substrateService.pair,
-        geneticAnalysis.genetic_analysis_orderId
+        geneticAnalysis.genetic_analysis_order_id
       )
     } catch (error) {
       await this.logger.log(error);
