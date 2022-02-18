@@ -45,7 +45,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     expect(geneticAnalysisOrderServiceMock).toBeDefined();
   });
 
-  it('should be called genetic analisys order paid', async () => {
+  it('should be called genetic analysis order paid', async () => {
     const genetic_analyst_order_id = 'XX'
 
     await geneticAnalysisOrderServiceMock.geneticAnalysisSetOrderPaid(genetic_analyst_order_id);

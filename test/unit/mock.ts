@@ -10,6 +10,7 @@ import {
   MailerManager,
   RewardService,
   EmailNotificationService,
+  GeneticAnalysisStatus,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
@@ -197,6 +198,24 @@ export function createMockGeneticAnalysisOrder(status: GeneticAnalysisOrderStatu
       orderFlow: '1',
       createdAt: '1',
       updatedAt: '1',
+    })),
+  };
+}
+
+export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
+  return {
+    toHuman: jest.fn(() => ({
+      geneticAnalysisTrackingId: 'string',
+      geneticAnalystId: 'string',
+      ownerId: 'string',
+      reportLink: 'string',
+      comment: 'string',
+      rejectedTitle: 'string',
+      rejectedDescription: 'string',
+      geneticAnalysisOrderId: 'string',
+      createdAt: '1',
+      updatedAt: '1',
+      status: status,
     })),
   };
 }
