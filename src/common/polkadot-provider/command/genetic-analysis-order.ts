@@ -21,5 +21,5 @@ export async function setGeneticAnalysisOrderFulfilled(
   pair: any,
   geneticAnalysisOrderId,
 ): Promise<void> {
-await api.tx.geneticAnalysisOrders.setGeneticAnalysisOrderFulfilled(geneticAnalysisOrderId).signAndSend(pair, { nonce: -1 });
+await api.tx.geneticAnalysisOrders.fulfillGeneticAnalysisOrder(geneticAnalysisOrderId).signAndSend(pair, { nonce: -1 });
 }
