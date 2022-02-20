@@ -40,7 +40,7 @@ describe('Service Request Created Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Open);
 
-    const _serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
+    const _ = // eslint-disable-line
       new ServiceRequestCreatedCommand(MOCK_DATA, mockBlockNumber());
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('Service Request Created Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      const _serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
+      const _ = // eslint-disable-line
         new ServiceRequestCreatedCommand([{}, {}], mockBlockNumber());
     }).toThrow();
   });

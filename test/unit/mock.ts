@@ -5,10 +5,12 @@ import {
   SubstrateService,
   TransactionLoggingService,
   OrderStatus,
+  GeneticAnalysisOrderStatus,
   DebioConversionService,
   MailerManager,
   RewardService,
   EmailNotificationService,
+  GeneticAnalysisStatus,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
@@ -167,6 +169,54 @@ export function createMockOrder(status: OrderStatus) {
       orderFlow: '1',
       createdAt: '1',
       updatedAt: '1',
+    })),
+  };
+}
+
+export function createMockGeneticAnalysisOrder(status: GeneticAnalysisOrderStatus) {
+  const first_price = {
+    component: 'string',
+    value: 1,
+  };
+  const second_price = {
+    component: 'string',
+    value: 1,
+  };
+
+  return {
+    toHuman: jest.fn(() => ({
+      id: 'string',
+      serviceId: 'string',
+      customerId: 'string',
+      customerBoxPublicKey: 'string',
+      sellerId: 'string',
+      geneticDataId: 'string',
+      geneticAnalysisTrackingId: 'string',
+      currency: 'DBIO',
+      prices: [first_price],
+      additionalPrices: [second_price],
+      status: status,
+      orderFlow: '1',
+      createdAt: '1',
+      updatedAt: '1',
+    })),
+  };
+}
+
+export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
+  return {
+    toHuman: jest.fn(() => ({
+      geneticAnalysisTrackingId: 'string',
+      geneticAnalystId: 'string',
+      ownerId: 'string',
+      reportLink: 'string',
+      comment: 'string',
+      rejectedTitle: 'string',
+      rejectedDescription: 'string',
+      geneticAnalysisOrderId: 'string',
+      createdAt: '1',
+      updatedAt: '1',
+      status: status,
     })),
   };
 }

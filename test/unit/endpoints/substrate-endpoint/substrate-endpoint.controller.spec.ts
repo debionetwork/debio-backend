@@ -480,7 +480,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
-    const genetic_analysis_order_id = 'XX'
+    const genetic_analysis_order_id = { genetic_analysis_order_id: 'XX' }
 
     // Assert
     expect(
@@ -489,7 +489,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   });
 
   it('should set genetic analysis order paid', async () => {
-    const genetic_analysis_order_id = 'XX';
+    const genetic_analysis_order_id = { genetic_analysis_order_id: 'XX' };
     const EXPECTED_RESULTS = `set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`;
     const RESPONSE: Response = {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
@@ -505,7 +505,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
       'API',
       'PAIR',
-      genetic_analysis_order_id
+      genetic_analysis_order_id.genetic_analysis_order_id
     );
   });
 });
