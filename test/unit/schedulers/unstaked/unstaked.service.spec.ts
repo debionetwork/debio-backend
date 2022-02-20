@@ -5,18 +5,32 @@ import {
   substrateServiceMockFactory,
   MockType,
   MockLogger,
+  schedulerRegistryMockFactory,
 } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import { ServiceRequest, SubstrateService } from '../../../../src/common';
+import { ProcessEnvProxy, ServiceRequest, SubstrateService } from '../../../../src/common';
 
 import * as serviceRequestQuery from '../../../../src/common/polkadot-provider/query/service-request';
 import * as serviceRequestCommand from '../../../../src/common/polkadot-provider/command/service-request';
 import { when } from 'jest-when';
+import { SchedulerRegistry } from '@nestjs/schedule';
+
+jest.useFakeTimers();
+jest.spyOn(global, 'setInterval');
 
 describe('UnstakedService', () => {
   let unstakedService: UnstakedService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
+  let schedulerRegistryMock: MockType<SchedulerRegistry>;
+
+  const INTERVAL = '3000';
+
+  class ProcessEnvProxyMock {
+    env = {
+      UNSTAKE_INTERVAL: INTERVAL,
+    };
+  }
 
   const createSearchObject = () => {
     return {
@@ -49,6 +63,10 @@ describe('UnstakedService', () => {
       providers: [
         UnstakedService,
         {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
+        },
+        {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,
         },
@@ -56,6 +74,10 @@ describe('UnstakedService', () => {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
         },
+        {
+          provide: SchedulerRegistry,
+          useFactory: schedulerRegistryMockFactory
+        }
       ],
     }).compile();
     module.useLogger(MockLogger);
@@ -63,10 +85,18 @@ describe('UnstakedService', () => {
     unstakedService = module.get(UnstakedService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
+    schedulerRegistryMock = module.get(SchedulerRegistry);
+    await module.init();
   });
 
   it('should be defined', () => {
+    const EXPECTED_PARAM = parseInt(INTERVAL);
+
     expect(unstakedService).toBeDefined();
+
+    expect(setInterval).toHaveBeenCalled();
+    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), EXPECTED_PARAM);
+    expect(schedulerRegistryMock.addInterval).toHaveBeenCalled();
   });
 
   it('should not do anything', () => {
