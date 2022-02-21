@@ -331,7 +331,7 @@ export class SubstrateController {
     });
   }
 
-  @Post('/genetic-anasysisOrderPaid')
+  @Post('/geneticAnasysisOrderPaid')
   async geneticAnalysisOrderPaid(
     @Body() geneticOrderId: GeneticAnalysisOrderPaidDto,
     @Res() response: Response,
