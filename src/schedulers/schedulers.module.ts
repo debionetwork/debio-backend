@@ -3,6 +3,7 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import {
   EmailNotificationModule,
   MailModule,
+  ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
 } from '../common';
@@ -20,6 +21,7 @@ import { UnstakedService } from './unstaked/unstaked.service';
         },
       }),
     }),
+    ProcessEnvModule,
     SubstrateModule,
     MailModule,
     EmailNotificationModule,

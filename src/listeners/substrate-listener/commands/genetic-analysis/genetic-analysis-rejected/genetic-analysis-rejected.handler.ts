@@ -10,7 +10,7 @@ export class GeneticAnalysisRejectedHandler implements ICommandHandler<GeneticAn
   constructor( private readonly substrateService: SubstrateService) {}
 
   async execute(command: GeneticAnalysisRejectedCommand) {
-    await this.logger.log('Genetic Analysis Order Created!');
+    await this.logger.log('Genetic Analysis Rejected!');
 
     const geneticAnalysis = command.geneticAnalysis.humanToGeneticAnalysisListenerData();
 
@@ -18,7 +18,7 @@ export class GeneticAnalysisRejectedHandler implements ICommandHandler<GeneticAn
       await setGeneticAnalysisOrderRefunded(
         this.substrateService.api,
         this.substrateService.pair,
-        geneticAnalysis.genetic_analysis_orderId
+        geneticAnalysis.genetic_analysis_order_id
       )
     } catch (error) {
       await this.logger.log(error);
