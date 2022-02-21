@@ -18,10 +18,10 @@ export class GeneticAnalystVerificationStatusHandler
     ) {}
 
   async execute(command: GeneticAnalystVerificationStatusCommand) {
-    await this.logger.log('Genetic Analyst Verification Status!');
-
     const geneticAnalyst =
       command.geneticAnalyst.humanToGeneticAnalystListenerData();
+   
+    await this.logger.log(`Genetic Analyst Verification Status ${geneticAnalyst.verification_status}!`);
 
     try {
       const isGeneticAnalystHasBeenInsert =
@@ -31,6 +31,17 @@ export class GeneticAnalystVerificationStatusHandler
         );
       const geneticAnalystHistory =
         await this.loggingService.getLoggingByOrderId(geneticAnalyst.account_id);
+      let transactionStatus;
+
+      if (geneticAnalyst.verification_status === 'Verified'){
+        transactionStatus = 20
+      } 
+      if (geneticAnalyst.verification_status === 'Rejected'){
+        transactionStatus = 21
+      }
+      if (geneticAnalyst.verification_status === 'Revoked'){
+        transactionStatus = 22
+      }
 
       const geneticAnalystLogging: TransactionLoggingDto = {
         address: geneticAnalyst.account_id,
@@ -39,7 +50,7 @@ export class GeneticAnalystVerificationStatusHandler
         currency: 'DBIO',
         parent_id: BigInt(geneticAnalystHistory.id),
         ref_number: geneticAnalyst.account_id,
-        transaction_status: 21,
+        transaction_status: transactionStatus,
         transaction_type: 4,
       };
 

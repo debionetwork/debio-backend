@@ -9,6 +9,7 @@ export class GeneticAnalyst {
     this.qualifications = anyJson.qualifications;
     this.info = anyJson.info;
     this.stake_amount = anyJson.stakeAmount;
+    this.verification_status = anyJson.verificationStatus
   }
   account_id: string;
   services: string[];
