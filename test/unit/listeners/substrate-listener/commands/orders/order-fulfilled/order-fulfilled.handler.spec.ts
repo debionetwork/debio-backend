@@ -38,7 +38,9 @@ describe('Order Fulfilled Handler Event', () => {
   let rewardServiceMock: MockType<RewardService>;
 
   beforeEach(async () => {
-    jest.useFakeTimers().setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
+    jest
+      .useFakeTimers()
+      .setSystemTime(new Date('1970-01-01T00:00:00.001Z').getTime());
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {

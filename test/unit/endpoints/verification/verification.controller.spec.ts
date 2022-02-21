@@ -11,7 +11,7 @@ describe('Verification Controller Unit Tests', () => {
   const verificationServiceMockFactory: () => MockType<VerificationService> =
     jest.fn(() => ({
       vericationLab: jest.fn((entity) => entity),
-      verificationGeneticAnalyst: jest.fn((entity) => entity)
+      verificationGeneticAnalyst: jest.fn((entity) => entity),
     }));
   let verificationServiceMock: MockType<VerificationService>;
 

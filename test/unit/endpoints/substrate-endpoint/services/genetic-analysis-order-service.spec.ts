@@ -1,9 +1,13 @@
-import { GeneticAnalysisOrderService } from "../../../../../src/endpoints/substrate-endpoint/services";
-import { elasticsearchServiceMockFactory, MockType, substrateServiceMockFactory } from '../../../mock';
+import { GeneticAnalysisOrderService } from '../../../../../src/endpoints/substrate-endpoint/services';
+import {
+  elasticsearchServiceMockFactory,
+  MockType,
+  substrateServiceMockFactory,
+} from '../../../mock';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { Test, TestingModule } from "@nestjs/testing";
-import { SubstrateService } from "../../../../../src/common";
-import { setGeneticAnalysisOrderPaid } from "../../../../../src/common/polkadot-provider";
+import { Test, TestingModule } from '@nestjs/testing';
+import { SubstrateService } from '../../../../../src/common';
+import { setGeneticAnalysisOrderPaid } from '../../../../../src/common/polkadot-provider';
 
 jest.mock('../../../../../src/common/polkadot-provider', () => ({
   setGeneticAnalysisOrderPaid: jest.fn(),
@@ -11,11 +15,11 @@ jest.mock('../../../../../src/common/polkadot-provider', () => ({
 
 describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   let geneticAnalysisOrderServiceMock: GeneticAnalysisOrderService;
-  let substrateServiceMock: MockType<SubstrateService>
-  
+  let substrateServiceMock: MockType<SubstrateService>;
+
   const API = 'API';
   const PAIR = 'PAIR';
-  
+
   //Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,7 +33,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
         },
-      ]
+      ],
     }).compile();
 
     geneticAnalysisOrderServiceMock = module.get(GeneticAnalysisOrderService);
@@ -46,15 +50,17 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   });
 
   it('should be called genetic analysis order paid', async () => {
-    const genetic_analyst_order_id = 'XX'
+    const genetic_analyst_order_id = 'XX';
 
-    await geneticAnalysisOrderServiceMock.geneticAnalysisSetOrderPaid(genetic_analyst_order_id);
+    await geneticAnalysisOrderServiceMock.geneticAnalysisSetOrderPaid(
+      genetic_analyst_order_id,
+    );
 
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledTimes(1);
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
       API,
       PAIR,
-      genetic_analyst_order_id
-    )
+      genetic_analyst_order_id,
+    );
   });
 });

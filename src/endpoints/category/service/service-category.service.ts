@@ -5,7 +5,7 @@ import { ServiceCategory } from './models/service-category.service';
 
 @Injectable()
 export class ServiceCategoryService {
-  private readonly _logger: Logger = new Logger(ServiceCategoryService.name)
+  private readonly _logger: Logger = new Logger(ServiceCategoryService.name);
   constructor(
     @InjectRepository(ServiceCategory)
     private readonly serviceCategoryRepository: Repository<ServiceCategory>,

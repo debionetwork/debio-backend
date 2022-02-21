@@ -1,5 +1,5 @@
 import { convertSubstrateNumberToNumber } from '../../';
-import { GeneticAnalysisStatus } from './genetic-analysis-status'
+import { GeneticAnalysisStatus } from './genetic-analysis-status';
 
 export class GeneticAnalysis {
   constructor(anyJson: any) {
@@ -15,7 +15,7 @@ export class GeneticAnalysis {
     this.updated_at = anyJson.updatedAt;
     this.status = anyJson.status;
   }
-  
+
   genetic_analysis_tracking_id: string;
   genetic_analystId: string;
   owner_id: string;
@@ -25,24 +25,23 @@ export class GeneticAnalysis {
   rejected_description: string;
   genetic_analysis_orderId: string;
   created_at: Date;
-  updated_at: Date
-  status: GeneticAnalysisStatus
+  updated_at: Date;
+  status: GeneticAnalysisStatus;
 
-  humanToGeneticAnalysisListenerData(){
+  humanToGeneticAnalysisListenerData() {
     const geneticAnalysis : GeneticAnalysis = this; // eslint-disable-line
 
-
     geneticAnalysis.created_at = new Date(
-      convertSubstrateNumberToNumber(geneticAnalysis.created_at)
-    )
-  
+      convertSubstrateNumberToNumber(geneticAnalysis.created_at),
+    );
+
     if (geneticAnalysis.updated_at) {
       geneticAnalysis.updated_at = new Date(
-        convertSubstrateNumberToNumber(geneticAnalysis.updated_at)
-      ) 
-    } 
+        convertSubstrateNumberToNumber(geneticAnalysis.updated_at),
+      );
+    }
 
-    return geneticAnalysis
+    return geneticAnalysis;
   }
 }
 

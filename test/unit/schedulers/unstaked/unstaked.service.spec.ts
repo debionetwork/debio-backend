@@ -8,7 +8,11 @@ import {
   schedulerRegistryMockFactory,
 } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import { ProcessEnvProxy, ServiceRequest, SubstrateService } from '../../../../src/common';
+import {
+  ProcessEnvProxy,
+  ServiceRequest,
+  SubstrateService,
+} from '../../../../src/common';
 
 import * as serviceRequestQuery from '../../../../src/common/polkadot-provider/query/service-request';
 import * as serviceRequestCommand from '../../../../src/common/polkadot-provider/command/service-request';
@@ -76,8 +80,8 @@ describe('UnstakedService', () => {
         },
         {
           provide: SchedulerRegistry,
-          useFactory: schedulerRegistryMockFactory
-        }
+          useFactory: schedulerRegistryMockFactory,
+        },
       ],
     }).compile();
     module.useLogger(MockLogger);
@@ -95,7 +99,10 @@ describe('UnstakedService', () => {
     expect(unstakedService).toBeDefined();
 
     expect(setInterval).toHaveBeenCalled();
-    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), EXPECTED_PARAM);
+    expect(setInterval).toHaveBeenCalledWith(
+      expect.any(Function),
+      EXPECTED_PARAM,
+    );
     expect(schedulerRegistryMock.addInterval).toHaveBeenCalled();
   });
 

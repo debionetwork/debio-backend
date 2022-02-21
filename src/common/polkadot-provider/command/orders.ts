@@ -25,7 +25,9 @@ export async function setOrderRefunded(
   pair: any,
   orderId,
 ): Promise<void> {
-  await api.tx.orders.setOrderRefunded(orderId).signAndSend(pair, { nonce: -1 });
+  await api.tx.orders
+    .setOrderRefunded(orderId)
+    .signAndSend(pair, { nonce: -1 });
 }
 
 export async function setOrderPaid(

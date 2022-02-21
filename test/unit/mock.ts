@@ -75,13 +75,12 @@ export const mailerServiceMockFactory: () => MockType<MailerService> = jest.fn(
   }),
 );
 
-export const emailNotificationServiceMockFactory: () => MockType<EmailNotificationService> = jest.fn(
-  () => ({
+export const emailNotificationServiceMockFactory: () => MockType<EmailNotificationService> =
+  jest.fn(() => ({
     insertEmailNotification: jest.fn(),
     getPendingLabRegisterNotification: jest.fn(),
     setEmailNotificationSent: jest.fn(),
-  }),
-)
+  }));
 
 export const cacheMockFactory: () => MockType<CacheManager> = jest.fn(() => ({
   get: jest.fn(),
@@ -173,7 +172,9 @@ export function createMockOrder(status: OrderStatus) {
   };
 }
 
-export function createMockGeneticAnalysisOrder(status: GeneticAnalysisOrderStatus) {
+export function createMockGeneticAnalysisOrder(
+  status: GeneticAnalysisOrderStatus,
+) {
   const first_price = {
     component: 'string',
     value: 1,
@@ -259,4 +260,4 @@ export const countryServiceMockFactory: () => MockType<CountryService> =
 export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
   jest.fn(() => ({
     addInterval: jest.fn(),
-  }))
+  }));

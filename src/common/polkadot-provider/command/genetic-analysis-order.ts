@@ -1,11 +1,13 @@
 import { ApiPromise } from '@polkadot/api';
 
 export async function setGeneticAnalysisOrderPaid(
-    api: ApiPromise,
-    pair: any,
-    geneticAnalysisOrderId,
+  api: ApiPromise,
+  pair: any,
+  geneticAnalysisOrderId,
 ): Promise<void> {
-  await api.tx.geneticAnalysisOrders.setGeneticAnalysisOrderPaid(geneticAnalysisOrderId).signAndSend(pair, { nonce: -1 });
+  await api.tx.geneticAnalysisOrders
+    .setGeneticAnalysisOrderPaid(geneticAnalysisOrderId)
+    .signAndSend(pair, { nonce: -1 });
 }
 
 export async function setGeneticAnalysisOrderRefunded(
@@ -13,7 +15,9 @@ export async function setGeneticAnalysisOrderRefunded(
   pair: any,
   geneticAnalysisOrderId,
 ): Promise<void> {
-await api.tx.geneticAnalysisOrders.setGeneticAnalysisOrderRefunded(geneticAnalysisOrderId).signAndSend(pair, { nonce: -1 });
+  await api.tx.geneticAnalysisOrders
+    .setGeneticAnalysisOrderRefunded(geneticAnalysisOrderId)
+    .signAndSend(pair, { nonce: -1 });
 }
 
 export async function setGeneticAnalysisOrderFulfilled(
@@ -21,5 +25,7 @@ export async function setGeneticAnalysisOrderFulfilled(
   pair: any,
   geneticAnalysisOrderId,
 ): Promise<void> {
-await api.tx.geneticAnalysisOrders.fulfillGeneticAnalysisOrder(geneticAnalysisOrderId).signAndSend(pair, { nonce: -1 });
+  await api.tx.geneticAnalysisOrders
+    .fulfillGeneticAnalysisOrder(geneticAnalysisOrderId)
+    .signAndSend(pair, { nonce: -1 });
 }

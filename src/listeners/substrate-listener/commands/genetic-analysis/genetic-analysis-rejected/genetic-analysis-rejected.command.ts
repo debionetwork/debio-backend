@@ -1,5 +1,5 @@
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
-import { GeneticAnalysis } from "../../../../../common";
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
+import { GeneticAnalysis } from '../../../../../common';
 
 export class GeneticAnalysisRejectedCommand {
   geneticAnalysis: GeneticAnalysis;

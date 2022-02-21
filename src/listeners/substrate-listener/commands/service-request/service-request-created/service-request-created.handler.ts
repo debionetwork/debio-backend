@@ -48,14 +48,16 @@ export class ServiceRequestCreatedHandler
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
-        await this._sendEmailNotificationServiceRequestCreated(command)
+        await this._sendEmailNotificationServiceRequestCreated(command);
       }
     } catch (error) {
       await this.logger.log(error);
     }
   }
 
-  async _sendEmailNotificationServiceRequestCreated(command: ServiceRequestCreatedCommand) {
+  async _sendEmailNotificationServiceRequestCreated(
+    command: ServiceRequestCreatedCommand,
+  ) {
     const serviceRequest = await command.request;
     const countryName = await (
       await this.countryService.getByIso2Code(serviceRequest.country)
@@ -71,7 +73,7 @@ export class ServiceRequestCreatedHandler
       service_name: serviceRequest.service_category,
       public_address: serviceRequest.requester_address,
       country: countryName || serviceRequest.country,
-      state: regionName || serviceRequest.region ,
+      state: regionName || serviceRequest.region,
       city: serviceRequest.city,
       amount: serviceRequest.staking_amount,
       currency: 'DBIO',

@@ -1,23 +1,25 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { SubstrateService } from "../../../common";
-import { setGeneticAnalysisOrderPaid } from "../../../common/polkadot-provider";
+import { Injectable, Logger } from '@nestjs/common';
+import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { SubstrateService } from '../../../common';
+import { setGeneticAnalysisOrderPaid } from '../../../common/polkadot-provider';
 
 @Injectable()
 export class GeneticAnalysisOrderService {
-	private readonly logger: Logger = new Logger(GeneticAnalysisOrderService.name);
-	constructor(
-		private readonly elasticSearchService: ElasticsearchService,
-		private readonly substrateService: SubstrateService
-	) {}
+  private readonly logger: Logger = new Logger(
+    GeneticAnalysisOrderService.name,
+  );
+  constructor(
+    private readonly elasticSearchService: ElasticsearchService,
+    private readonly substrateService: SubstrateService,
+  ) {}
 
-	async geneticAnalysisSetOrderPaid(genetic_analyst_order_id: string){
+  async geneticAnalysisSetOrderPaid(genetic_analyst_order_id: string) {
     try {
       await setGeneticAnalysisOrderPaid(
         this.substrateService.api,
         this.substrateService.pair,
-        genetic_analyst_order_id
-      )
+        genetic_analyst_order_id,
+      );
     } catch (error) {
       throw error;
     }
@@ -111,14 +113,17 @@ export class GeneticAnalysisOrderService {
     let data = [];
 
     try {
-      const total_genetic_analysis_orders = await this.elasticSearchService.count({
-        index: 'genetic-analysis-order',
-        body: {
-          query: query,
-        },
-      });
+      const total_genetic_analysis_orders =
+        await this.elasticSearchService.count({
+          index: 'genetic-analysis-order',
+          body: {
+            query: query,
+          },
+        });
 
-      const genetic_analysis_orders = await this.elasticSearchService.search(searchObj);
+      const genetic_analysis_orders = await this.elasticSearchService.search(
+        searchObj,
+      );
       count = total_genetic_analysis_orders;
       data = genetic_analysis_orders.body.hits.hits;
     } catch (error) {

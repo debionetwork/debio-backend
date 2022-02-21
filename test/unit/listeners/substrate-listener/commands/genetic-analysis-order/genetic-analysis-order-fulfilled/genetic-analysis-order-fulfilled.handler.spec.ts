@@ -29,7 +29,9 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       ],
     }).compile();
 
-    geneticAnalysisOrderFulfilledHandler = module.get(GeneticAnalysisOrderFulfilledHandler);
+    geneticAnalysisOrderFulfilledHandler = module.get(
+      GeneticAnalysisOrderFulfilledHandler,
+    );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
 
     await module.init();
@@ -41,7 +43,9 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
 
   it('should not called logging service Fulfilled', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Fulfilled);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Fulfilled,
+    );
 
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -60,10 +64,8 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 15)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrders: GeneticAnalysisOrderFulfilledCommand = new GeneticAnalysisOrderFulfilledCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrders: GeneticAnalysisOrderFulfilledCommand =
+      new GeneticAnalysisOrderFulfilledCommand([GA_ORDER], mockBlockNumber());
 
     await geneticAnalysisOrderFulfilledHandler.execute(geneticAnalysisOrders);
     expect(
@@ -74,9 +76,11 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
 
   it('should called logging service Fulfilled', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Fulfilled);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Fulfilled,
+    );
 
-    const RESULT_STATUS = {id: 1};
+    const RESULT_STATUS = { id: 1 };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
@@ -93,12 +97,12 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 15)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand = new GeneticAnalysisOrderFulfilledCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand =
+      new GeneticAnalysisOrderFulfilledCommand([GA_ORDER], mockBlockNumber());
 
-    await geneticAnalysisOrderFulfilledHandler.execute(geneticAnalysisOrderFulfilledCommand);
+    await geneticAnalysisOrderFulfilledHandler.execute(
+      geneticAnalysisOrderFulfilledCommand,
+    );
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();

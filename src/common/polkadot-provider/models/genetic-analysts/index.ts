@@ -1,5 +1,5 @@
 import { GeneticAnalystInfo } from './genetic-analyst-info';
-import { GeneticAnalystsVerificationStatus } from './genetic-analyst-verification-status'
+import { GeneticAnalystsVerificationStatus } from './genetic-analyst-verification-status';
 
 export class GeneticAnalyst {
   constructor(anyJson: any) {
