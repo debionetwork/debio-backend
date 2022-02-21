@@ -275,9 +275,9 @@ export class SubstrateController {
 
   @Post('/wallet-binding')
   async walletBinding(
+    @Headers('debio-api-key') debioApiKey: string,
     @Body() payload: WalletBindingDTO,
     @Res() response: Response,
-    @Headers('debio-api-key') debioApiKey: string,
   ) {
     if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
@@ -333,9 +333,9 @@ export class SubstrateController {
 
   @Post('/geneticAnasysisOrderPaid')
   async geneticAnalysisOrderPaid(
+    @Headers('debio-api-key') debioApiKey: string,
     @Body() geneticOrderId: GeneticAnalysisOrderPaidDto,
     @Res() response: Response,
-    @Headers('debio_api_key') debioApiKey: string,
   ) {
     const { genetic_analysis_order_id } = geneticOrderId;
     console.log('api key input:', debioApiKey);
