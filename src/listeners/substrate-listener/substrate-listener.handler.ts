@@ -29,6 +29,9 @@ import {
   GeneticAnalysisRejectedCommand,
   GeneticAnalysisResultReadyCommand,
 } from './commands/genetic-analysis';
+import {
+  GeneticAnalystStakedCommand,
+} from './commands/genetic-analysts';
 
 const eventRoutes = {
   services: {
@@ -61,6 +64,9 @@ const eventRoutes = {
     GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
     GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
   },
+  geneticAnalysts: {
+    GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
+  }
 };
 
 @Injectable()
