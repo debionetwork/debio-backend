@@ -11,6 +11,7 @@ import {
   RewardService,
   EmailNotificationService,
   GeneticAnalysisStatus,
+  GeneticAnalystInfo,
 } from '../../src/common';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
@@ -201,6 +202,33 @@ export function createMockGeneticAnalysisOrder(
       createdAt: '1',
       updatedAt: '1',
     })),
+  };
+}
+
+export function createMockGeneticAnalyst(
+) {
+
+  return {
+    toHuman: jest.fn(() => (
+      {
+        accountId: 'string',
+        services: [],
+        qualifications: [],
+        info: {
+          firstName: 'string',
+          lastName: 'string',
+          gender: 'string',
+          dateOfBirth: Date,
+          email: 'string',
+          phoneNumber: 'string',
+          specialization: 'string',
+          profileLink: 'string',
+          profileImage: 'string',
+        },
+        stakeAmount: 1,
+        stakeStatus: 'string',
+        verificationStatus: 'string',
+      })),
   };
 }
 
