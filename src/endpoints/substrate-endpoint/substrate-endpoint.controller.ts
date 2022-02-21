@@ -331,13 +331,18 @@ export class SubstrateController {
     });
   }
 
-  @Post('/genetic-anasysisOrderPaid')
+  @Post('/geneticAnasysisOrderPaid')
   async geneticAnalysisOrderPaid(
     @Body() geneticOrderId: GeneticAnalysisOrderPaidDto,
     @Res() response: Response,
     @Headers('debio_api_key') debioApiKey: string,
   ) {
     const { genetic_analysis_order_id } = geneticOrderId;
+    console.log('api key input:', debioApiKey);
+    console.log('api key env:', this.process.env.DEBIO_API_KEY);
+    console.log('!=',debioApiKey != this.process.env.DEBIO_API_KEY);
+    
+       
 
     if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
