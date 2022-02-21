@@ -18,7 +18,7 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Genetic Analyst Verification Status Handler Event', () => {
   let geneticAnalystVerificationStatusHandler: GeneticAnalystVerificationStatusHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>;// eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,8 +27,9 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
-        { 
-          provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory 
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalystVerificationStatusHandler,
       ],
@@ -38,6 +39,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       GeneticAnalystVerificationStatusHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
 
     await module.init();
   });
@@ -68,7 +70,10 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystOrders: GeneticAnalystVerificationStatusCommand =
-      new GeneticAnalystVerificationStatusCommand([geneticAnalyst], mockBlockNumber());
+      new GeneticAnalystVerificationStatusCommand(
+        [geneticAnalyst],
+        mockBlockNumber(),
+      );
 
     await geneticAnalystVerificationStatusHandler.execute(geneticAnalystOrders);
     expect(
@@ -80,7 +85,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
   it('should called logging Verification Status Rejected', async () => {
     // Arrange
     const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Rejected'
+    geneticAnalyst.toHuman().verificationStatus = 'Rejected';
 
     const RESULT_STATUS = { id: 1 };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -100,7 +105,10 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
-      new GeneticAnalystVerificationStatusCommand([geneticAnalyst], mockBlockNumber());
+      new GeneticAnalystVerificationStatusCommand(
+        [geneticAnalyst],
+        mockBlockNumber(),
+      );
 
     await geneticAnalystVerificationStatusHandler.execute(
       geneticAnalystVerificationStatusCommand,
@@ -113,7 +121,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
   it('should called logging Verification Status Verified', async () => {
     // Arrange
     const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Verified'
+    geneticAnalyst.toHuman().verificationStatus = 'Verified';
 
     const RESULT_STATUS = { id: 1 };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -133,7 +141,10 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
-      new GeneticAnalystVerificationStatusCommand([geneticAnalyst], mockBlockNumber());
+      new GeneticAnalystVerificationStatusCommand(
+        [geneticAnalyst],
+        mockBlockNumber(),
+      );
 
     await geneticAnalystVerificationStatusHandler.execute(
       geneticAnalystVerificationStatusCommand,
@@ -141,12 +152,12 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-  })
+  });
 
   it('should called logging Verification Status Revoked', async () => {
     // Arrange
     const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Revoked'
+    geneticAnalyst.toHuman().verificationStatus = 'Revoked';
 
     const RESULT_STATUS = { id: 1 };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -166,7 +177,10 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
-      new GeneticAnalystVerificationStatusCommand([geneticAnalyst], mockBlockNumber());
+      new GeneticAnalystVerificationStatusCommand(
+        [geneticAnalyst],
+        mockBlockNumber(),
+      );
 
     await geneticAnalystVerificationStatusHandler.execute(
       geneticAnalystVerificationStatusCommand,
@@ -174,5 +188,5 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-  })
+  });
 });

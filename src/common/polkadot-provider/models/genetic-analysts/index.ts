@@ -9,7 +9,7 @@ export class GeneticAnalyst {
     this.qualifications = anyJson.qualifications;
     this.info = anyJson.info;
     this.stake_amount = anyJson.stakeAmount;
-    this.verification_status = anyJson.verificationStatus
+    this.verification_status = anyJson.verificationStatus;
   }
   account_id: string;
   services: string[];
@@ -17,11 +17,13 @@ export class GeneticAnalyst {
   verification_status: GeneticAnalystsVerificationStatus;
   info: GeneticAnalystInfo;
   stake_amount: number;
-  
+
   humanToGeneticAnalystListenerData() {
     const geneticAnalyst : GeneticAnalyst = this; // eslint-disable-line
-    
-    geneticAnalyst.stake_amount = convertSubstrateBalanceToNumber(geneticAnalyst.stake_amount)
+
+    geneticAnalyst.stake_amount = convertSubstrateBalanceToNumber(
+      geneticAnalyst.stake_amount,
+    );
     return geneticAnalyst;
   }
 }

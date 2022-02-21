@@ -1,8 +1,5 @@
 import { GeneticAnalystStakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
-import {
-  createMockGeneticAnalyst,
-  mockBlockNumber,
-} from '../../../../../mock';
+import { createMockGeneticAnalyst, mockBlockNumber } from '../../../../../mock';
 import { GeneticAnalyst } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysts';
 
 jest.mock(
@@ -16,9 +13,7 @@ describe('Genetic Analyst Staked Command Event', () => {
     const _ = // eslint-disable-line
       new GeneticAnalystStakedCommand([geneticAnalyst],mockBlockNumber());
     expect(GeneticAnalyst).toHaveBeenCalled();
-    expect(GeneticAnalyst).toHaveBeenCalledWith(
-      geneticAnalyst.toHuman(),
-    );
+    expect(GeneticAnalyst).toHaveBeenCalledWith(geneticAnalyst.toHuman());
     expect(geneticAnalyst.toHuman).toHaveBeenCalled();
   });
 

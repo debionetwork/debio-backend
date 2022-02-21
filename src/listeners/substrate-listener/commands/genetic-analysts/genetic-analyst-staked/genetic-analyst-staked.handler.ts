@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { GeneticAnalystStakedCommand } from './genetic-analyst-staked.command';
 
 @Injectable()
@@ -15,7 +18,7 @@ export class GeneticAnalystStakedHandler
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: GeneticAnalystStakedCommand) {
     await this.logger.log('Genetic Analyst Staked!');

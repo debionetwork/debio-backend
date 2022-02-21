@@ -67,8 +67,9 @@ const eventRoutes = {
   },
   geneticAnalysts: {
     GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
-    GeneticAnalystUpdateVerificationStatus: GeneticAnalystVerificationStatusCommand,
-  }
+    GeneticAnalystUpdateVerificationStatus:
+      GeneticAnalystVerificationStatusCommand,
+  },
 };
 
 @Injectable()

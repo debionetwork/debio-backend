@@ -1,8 +1,5 @@
 import { GeneticAnalystVerificationStatusCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
-import {
-  createMockGeneticAnalyst,
-  mockBlockNumber,
-} from '../../../../../mock';
+import { createMockGeneticAnalyst, mockBlockNumber } from '../../../../../mock';
 import { GeneticAnalyst } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysts';
 
 jest.mock(
@@ -16,9 +13,7 @@ describe('Genetic Analyst Verification Status Command Event', () => {
     const _= // eslint-disable-line
       new GeneticAnalystVerificationStatusCommand([GA_RESPONSE], mockBlockNumber());
     expect(GeneticAnalyst).toHaveBeenCalled();
-    expect(GeneticAnalyst).toHaveBeenCalledWith(
-      GA_RESPONSE.toHuman(),
-    );
+    expect(GeneticAnalyst).toHaveBeenCalledWith(GA_RESPONSE.toHuman());
     expect(GA_RESPONSE.toHuman).toHaveBeenCalled();
   });
 

@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { GeneticAnalystVerificationStatusCommand } from './genetic-analyst-verification-status.command';
 
 @Injectable()
@@ -15,13 +18,15 @@ export class GeneticAnalystVerificationStatusHandler
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: GeneticAnalystVerificationStatusCommand) {
     const geneticAnalyst =
       command.geneticAnalyst.humanToGeneticAnalystListenerData();
-   
-    await this.logger.log(`Genetic Analyst Verification Status ${geneticAnalyst.verification_status}!`);
+
+    await this.logger.log(
+      `Genetic Analyst Verification Status ${geneticAnalyst.verification_status}!`,
+    );
 
     try {
       const isGeneticAnalystHasBeenInsert =
@@ -30,17 +35,19 @@ export class GeneticAnalystVerificationStatusHandler
           21,
         );
       const geneticAnalystHistory =
-        await this.loggingService.getLoggingByOrderId(geneticAnalyst.account_id);
+        await this.loggingService.getLoggingByOrderId(
+          geneticAnalyst.account_id,
+        );
       let transactionStatus;
 
-      if (geneticAnalyst.verification_status === 'Verified'){
-        transactionStatus = 20
-      } 
-      if (geneticAnalyst.verification_status === 'Rejected'){
-        transactionStatus = 21
+      if (geneticAnalyst.verification_status === 'Verified') {
+        transactionStatus = 20;
       }
-      if (geneticAnalyst.verification_status === 'Revoked'){
-        transactionStatus = 22
+      if (geneticAnalyst.verification_status === 'Rejected') {
+        transactionStatus = 21;
+      }
+      if (geneticAnalyst.verification_status === 'Revoked') {
+        transactionStatus = 22;
       }
 
       const geneticAnalystLogging: TransactionLoggingDto = {

@@ -7,4 +7,4 @@ import { GeneticAnalystVerificationStatusHandler } from './genetic-analyst-verif
 export const GeneticAnalystCommandHandlers = [
   GeneticAnalystStakedHandler,
   GeneticAnalystVerificationStatusHandler,
-]
+];

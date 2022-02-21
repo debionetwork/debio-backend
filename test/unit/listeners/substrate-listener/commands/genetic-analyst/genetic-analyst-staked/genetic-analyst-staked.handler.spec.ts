@@ -18,7 +18,7 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Genetic Analyst Staked Handler Event', () => {
   let geneticAnalystStakedHandler: GeneticAnalystStakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>;// eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,19 +27,17 @@ describe('Genetic Analyst Staked Handler Event', () => {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
-        { 
-          provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory 
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalystStakedHandler,
       ],
     }).compile();
 
-    geneticAnalystStakedHandler = module.get(
-      GeneticAnalystStakedHandler,
-    );
+    geneticAnalystStakedHandler = module.get(GeneticAnalystStakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy);
-
+    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
 
     await module.init();
   });
@@ -103,9 +101,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
     const geneticAnalystOrderPaidCommand: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(
-      geneticAnalystOrderPaidCommand,
-    );
+    await geneticAnalystStakedHandler.execute(geneticAnalystOrderPaidCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
