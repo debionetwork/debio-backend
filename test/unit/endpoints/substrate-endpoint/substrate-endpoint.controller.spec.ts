@@ -374,7 +374,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, 'NOT API KEY'),
+      await substrateControllerMock.walletBinding('NOT API KEY', DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
@@ -405,7 +405,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
-      accountId: 'string',
+      accountId: 'strin',
       ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
@@ -413,7 +413,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -452,7 +452,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -496,9 +496,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       await substrateControllerMock.geneticAnalysisOrderPaid(
+        'NOT API KEY',
         genetic_analysis_order_id,
         RESPONSE,
-        'NOT API KEY',
       ),
     ).toEqual(EXPECTED_RESULTS);
   });
@@ -515,9 +515,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     //Assert
     expect(
       await substrateControllerMock.geneticAnalysisOrderPaid(
+        DEBIO_API_KEY,
         genetic_analysis_order_id,
         RESPONSE,
-        DEBIO_API_KEY,
       ),
     ).toEqual(EXPECTED_RESULTS);
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled();
