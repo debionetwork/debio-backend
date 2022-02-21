@@ -19,13 +19,16 @@ import {
   OrderPaidCommand,
   OrderRefundedCommand,
 } from './commands/orders';
-import { 
+import {
   GeneticAnalysisOrderCreatedCommand,
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
-  GeneticAnalysisOrderFulfilledCommand
+  GeneticAnalysisOrderFulfilledCommand,
 } from './commands/genetic-analysis-order';
-import { GeneticAnalysisRejectedCommand, GeneticAnalysisResultReadyCommand } from './commands/genetic-analysis';
+import {
+  GeneticAnalysisRejectedCommand,
+  GeneticAnalysisResultReadyCommand,
+} from './commands/genetic-analysis';
 
 const eventRoutes = {
   services: {

@@ -53,8 +53,8 @@ describe('Service Request Waiting For Unstaked Command Event', () => {
       const _= // eslint-disable-line
         new ServiceRequestWaitingForUnstakedCommand(
           [{}, {}],
-          mockBlockNumber(),
-        );
+        mockBlockNumber(),
+      );
     }).toThrow();
   });
 });

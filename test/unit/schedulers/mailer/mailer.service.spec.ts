@@ -1,8 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MockType, MockLogger, mailerManagerMockFactory, emailNotificationServiceMockFactory, substrateServiceMockFactory } from '../../mock';
+import {
+  MockType,
+  MockLogger,
+  mailerManagerMockFactory,
+  emailNotificationServiceMockFactory,
+  substrateServiceMockFactory,
+} from '../../mock';
 import { MailerService } from '../../../../src/schedulers/mailer/mailer.service';
-import { EmailNotificationService, MailerManager, SubstrateService } from '../../../../src/common';
-
+import {
+  EmailNotificationService,
+  MailerManager,
+  SubstrateService,
+} from '../../../../src/common';
 
 describe('MailerService', () => {
   let mailManagerMock: MockType<MailerManager>;
@@ -39,9 +48,10 @@ describe('MailerService', () => {
   });
 
   it('should not do anything', async () => {
-   const labRegisterPending = await emailNotificationServiceMock.getPendingLabRegisterNotification();
-   expect(labRegisterPending).toEqual(undefined);
-  })  
+    const labRegisterPending =
+      await emailNotificationServiceMock.getPendingLabRegisterNotification();
+    expect(labRegisterPending).toEqual(undefined);
+  });
 
   it('should handle email scheduler', async () => {
     const createLabToRegister = () => {
@@ -60,7 +70,8 @@ describe('MailerService', () => {
       };
     };
 
-    expect(mailManagerMock.sendLabRegistrationEmail('email', createLabToRegister()))
-      .toEqual(undefined);
-  }); 
+    expect(
+      mailManagerMock.sendLabRegistrationEmail('email', createLabToRegister()),
+    ).toEqual(undefined);
+  });
 });

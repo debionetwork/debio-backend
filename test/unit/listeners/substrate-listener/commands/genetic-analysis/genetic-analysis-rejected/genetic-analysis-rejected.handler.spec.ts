@@ -14,12 +14,14 @@ import { GeneticAnalysisRejectedHandler } from '../../../../../../../src/listene
 import * as geneticAnalysisOrderCommand from '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order';
 import { when } from 'jest-when';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order', () => ({
-  setGeneticAnalysisOrderRefunded: jest.fn(),
-}));
+jest.mock(
+  '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order',
+  () => ({
+    setGeneticAnalysisOrderRefunded: jest.fn(),
+  }),
+);
 
 describe('Genetic Analysis Rejected Handler Event', () => {
-
   let geneticAnalysisRejectedHandler: GeneticAnalysisRejectedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
 
@@ -46,22 +48,28 @@ describe('Genetic Analysis Rejected Handler Event', () => {
 
   it('should called Genetic Analysis Rejected from command bus', async () => {
     // Arrange
-    const genetic_analysis = createMockGeneticAnalysis(GeneticAnalysisStatus.Rejected);
+    const genetic_analysis = createMockGeneticAnalysis(
+      GeneticAnalysisStatus.Rejected,
+    );
     const setRejectedSpy = jest
       .spyOn(geneticAnalysisOrderCommand, 'setGeneticAnalysisOrderRefunded')
       .mockImplementation();
-    const requestData = createMockGeneticAnalysis(GeneticAnalysisStatus.Rejected);
+    const requestData = createMockGeneticAnalysis(
+      GeneticAnalysisStatus.Rejected,
+    );
     when(setRejectedSpy)
       .calledWith(
         substrateServiceMock.api,
         substrateServiceMock.pair,
         requestData.toHuman().geneticAnalysisTrackingId,
       )
-      .mockReturnValue(genetic_analysis)
+      .mockReturnValue(genetic_analysis);
 
     const geneticAnalysisRejectedCommand: GeneticAnalysisRejectedCommand =
       new GeneticAnalysisRejectedCommand([genetic_analysis], mockBlockNumber());
-    await geneticAnalysisRejectedHandler.execute(geneticAnalysisRejectedCommand);
+    await geneticAnalysisRejectedHandler.execute(
+      geneticAnalysisRejectedCommand,
+    );
 
     expect(setRejectedSpy).toHaveBeenCalled();
     expect(setRejectedSpy).toHaveBeenCalledWith(

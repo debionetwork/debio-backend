@@ -29,7 +29,9 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       ],
     }).compile();
 
-    geneticAnalysisOrderRefundedHandler = module.get(GeneticAnalysisOrderRefundedHandler);
+    geneticAnalysisOrderRefundedHandler = module.get(
+      GeneticAnalysisOrderRefundedHandler,
+    );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
 
     await module.init();
@@ -41,7 +43,9 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
 
   it('should not called logging service Refunded', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Refunded);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Refunded,
+    );
 
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -60,10 +64,8 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 16)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrders: GeneticAnalysisOrderRefundedCommand = new GeneticAnalysisOrderRefundedCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrders: GeneticAnalysisOrderRefundedCommand =
+      new GeneticAnalysisOrderRefundedCommand([GA_ORDER], mockBlockNumber());
 
     await geneticAnalysisOrderRefundedHandler.execute(geneticAnalysisOrders);
     expect(
@@ -74,9 +76,11 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
 
   it('should called logging service Refunded', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Refunded);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Refunded,
+    );
 
-    const RESULT_STATUS = {id: 1};
+    const RESULT_STATUS = { id: 1 };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
@@ -93,12 +97,12 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 16)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand = new GeneticAnalysisOrderRefundedCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand =
+      new GeneticAnalysisOrderRefundedCommand([GA_ORDER], mockBlockNumber());
 
-    await geneticAnalysisOrderRefundedHandler.execute(geneticAnalysisOrderRefundedCommand);
+    await geneticAnalysisOrderRefundedHandler.execute(
+      geneticAnalysisOrderRefundedCommand,
+    );
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();

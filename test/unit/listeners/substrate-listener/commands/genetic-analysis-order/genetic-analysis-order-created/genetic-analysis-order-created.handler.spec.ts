@@ -29,7 +29,9 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       ],
     }).compile();
 
-    geneticAnalysisOrderCreatedHandler = module.get(GeneticAnalysisOrderCreatedHandler);
+    geneticAnalysisOrderCreatedHandler = module.get(
+      GeneticAnalysisOrderCreatedHandler,
+    );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
 
     await module.init();
@@ -41,7 +43,9 @@ describe('Genetic Analysis Order Created Handler Event', () => {
 
   it('should not called logging service create', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Unpaid);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Unpaid,
+    );
 
     const RESULT_STATUS = true;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -60,10 +64,8 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 13)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrders: GeneticAnalysisOrderCreatedCommand = new GeneticAnalysisOrderCreatedCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrders: GeneticAnalysisOrderCreatedCommand =
+      new GeneticAnalysisOrderCreatedCommand([GA_ORDER], mockBlockNumber());
 
     await geneticAnalysisOrderCreatedHandler.execute(geneticAnalysisOrders);
     expect(
@@ -74,7 +76,9 @@ describe('Genetic Analysis Order Created Handler Event', () => {
 
   it('should called logging service create', async () => {
     // Arrange
-    const GA_ORDER = createMockGeneticAnalysisOrder(GeneticAnalysisOrderStatus.Paid);
+    const GA_ORDER = createMockGeneticAnalysisOrder(
+      GeneticAnalysisOrderStatus.Paid,
+    );
 
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
@@ -93,12 +97,12 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       .calledWith(GA_ORDER.toHuman().id, 13)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderCreatedCommand = new GeneticAnalysisOrderCreatedCommand(
-      [GA_ORDER],
-      mockBlockNumber(),
-    );
+    const geneticAnalysisOrderPaidCommand: GeneticAnalysisOrderCreatedCommand =
+      new GeneticAnalysisOrderCreatedCommand([GA_ORDER], mockBlockNumber());
 
-    await geneticAnalysisOrderCreatedHandler.execute(geneticAnalysisOrderPaidCommand);
+    await geneticAnalysisOrderCreatedHandler.execute(
+      geneticAnalysisOrderPaidCommand,
+    );
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();

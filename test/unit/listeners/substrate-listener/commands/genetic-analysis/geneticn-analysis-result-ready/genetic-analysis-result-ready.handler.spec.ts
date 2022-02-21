@@ -14,12 +14,14 @@ import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/list
 import * as geneticAnalysisOrderCommand from '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order';
 import { when } from 'jest-when';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order', () => ({
-  setGeneticAnalysisOrderFulfilled: jest.fn(),
-}));
+jest.mock(
+  '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order',
+  () => ({
+    setGeneticAnalysisOrderFulfilled: jest.fn(),
+  }),
+);
 
 describe('Genetic Analysis ResultReady Handler Event', () => {
-
   let geneticAnalysisResultReadyHandler: GeneticAnalysisResultReadyHandler;
   let substrateServiceMock: MockType<SubstrateService>;
 
@@ -34,7 +36,9 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       ],
     }).compile();
 
-    geneticAnalysisResultReadyHandler = module.get(GeneticAnalysisResultReadyHandler);
+    geneticAnalysisResultReadyHandler = module.get(
+      GeneticAnalysisResultReadyHandler,
+    );
     substrateServiceMock = module.get(SubstrateService);
 
     await module.init();
@@ -46,22 +50,31 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
 
   it('should called Genetic Analysis ResultReady from command bus', async () => {
     // Arrange
-    const genetic_analysis = createMockGeneticAnalysis(GeneticAnalysisStatus.ResultReady);
+    const genetic_analysis = createMockGeneticAnalysis(
+      GeneticAnalysisStatus.ResultReady,
+    );
     const setResultReadySpy = jest
       .spyOn(geneticAnalysisOrderCommand, 'setGeneticAnalysisOrderFulfilled')
       .mockImplementation();
-    const requestData = createMockGeneticAnalysis(GeneticAnalysisStatus.ResultReady);
+    const requestData = createMockGeneticAnalysis(
+      GeneticAnalysisStatus.ResultReady,
+    );
     when(setResultReadySpy)
       .calledWith(
         substrateServiceMock.api,
         substrateServiceMock.pair,
         requestData.toHuman().geneticAnalysisTrackingId,
       )
-      .mockReturnValue(genetic_analysis)
+      .mockReturnValue(genetic_analysis);
 
     const geneticAnalysisResultReadyCommand: GeneticAnalysisResultReadyCommand =
-      new GeneticAnalysisResultReadyCommand([genetic_analysis], mockBlockNumber());
-    await geneticAnalysisResultReadyHandler.execute(geneticAnalysisResultReadyCommand);
+      new GeneticAnalysisResultReadyCommand(
+        [genetic_analysis],
+        mockBlockNumber(),
+      );
+    await geneticAnalysisResultReadyHandler.execute(
+      geneticAnalysisResultReadyCommand,
+    );
 
     expect(setResultReadySpy).toHaveBeenCalled();
     expect(setResultReadySpy).toHaveBeenCalledWith(
