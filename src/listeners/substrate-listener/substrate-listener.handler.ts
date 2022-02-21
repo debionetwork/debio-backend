@@ -31,6 +31,7 @@ import {
 } from './commands/genetic-analysis';
 import {
   GeneticAnalystStakedCommand,
+  GeneticAnalystVerificationStatusCommand,
 } from './commands/genetic-analysts';
 
 const eventRoutes = {
@@ -66,6 +67,7 @@ const eventRoutes = {
   },
   geneticAnalysts: {
     GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
+    GeneticAnalystUpdateVerificationStatus: GeneticAnalystVerificationStatusCommand,
   }
 };
 
