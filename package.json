@@ -1,10 +1,13 @@
 {
-  "name": "test-nest",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "2.0.0",
+  "license": "AGPL-3.0",
+  "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
+  "homepage": "https://www.debio.network",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/debionetwork/debio-backend"
+  },
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
