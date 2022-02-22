@@ -204,6 +204,30 @@ export function createMockGeneticAnalysisOrder(
   };
 }
 
+export function createMockGeneticAnalyst() {
+  return {
+    toHuman: jest.fn(() => ({
+      accountId: 'string',
+      services: [],
+      qualifications: [],
+      info: {
+        firstName: 'string',
+        lastName: 'string',
+        gender: 'string',
+        dateOfBirth: Date,
+        email: 'string',
+        phoneNumber: 'string',
+        specialization: 'string',
+        profileLink: 'string',
+        profileImage: 'string',
+      },
+      stakeAmount: 1,
+      stakeStatus: 'string',
+      verificationStatus: 'string',
+    })),
+  };
+}
+
 export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
   return {
     toHuman: jest.fn(() => ({

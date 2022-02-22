@@ -29,6 +29,10 @@ import {
   GeneticAnalysisRejectedCommand,
   GeneticAnalysisResultReadyCommand,
 } from './commands/genetic-analysis';
+import {
+  GeneticAnalystStakedCommand,
+  GeneticAnalystVerificationStatusCommand,
+} from './commands/genetic-analysts';
 
 const eventRoutes = {
   services: {
@@ -60,6 +64,11 @@ const eventRoutes = {
   geneticAnalysis: {
     GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
     GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
+    GeneticAnalystUpdateVerificationStatus:
+      GeneticAnalystVerificationStatusCommand,
   },
 };
 
