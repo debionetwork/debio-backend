@@ -5,7 +5,7 @@
   "homepage": "https://www.debio.network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/debionetwork/debio-customer-ui.git"
+    "url": "https://github.com/debionetwork/debio-backend"
   },
   "private": true,
   "scripts": {
