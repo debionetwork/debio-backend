@@ -23,12 +23,15 @@ describe('UnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
+  const strToMilisecondSpy = jest.spyOn(UnstakedService.prototype, 'strToMilisecond');
 
-  const INTERVAL = '3000';
+  const INTERVAL = '00:00:00:30';
+  const TIMER = '6:00:00:00';
 
   class ProcessEnvProxyMock {
     env = {
       UNSTAKE_INTERVAL: INTERVAL,
+      UNSTAKE_TIMER: TIMER,
     };
   }
 
@@ -86,17 +89,33 @@ describe('UnstakedService', () => {
     elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
     schedulerRegistryMock = module.get(SchedulerRegistry);
+
     await module.init();
   });
 
   it('should be defined', () => {
-    const EXPECTED_PARAM = parseInt(INTERVAL);
+    const EXPECTED_PARAM = 30 * 1000;
 
     expect(unstakedService).toBeDefined();
 
     expect(setInterval).toHaveBeenCalled();
-    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), EXPECTED_PARAM);
+    expect(setInterval).toHaveBeenCalledWith(
+      expect.any(Function),
+      EXPECTED_PARAM,
+    );
+    
     expect(schedulerRegistryMock.addInterval).toHaveBeenCalled();
+    expect(strToMilisecondSpy).toHaveBeenCalled();
+    expect(strToMilisecondSpy).toHaveBeenCalledTimes(2);
+    expect(strToMilisecondSpy).toHaveBeenCalledWith(TIMER);
+    expect(strToMilisecondSpy).toHaveBeenCalledWith(INTERVAL);
+  });
+
+  it('should return 6 days in milisecond', () => {
+    const PARAM = '06:00:00:00';
+    const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
+
+    expect(unstakedService.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
   });
 
   it('should not do anything', () => {
@@ -197,7 +216,7 @@ describe('UnstakedService', () => {
 
     const CALLED_WITH = createSearchObject();
     const REQUEST_ID = 'string';
-    const SIX_DAYS = 7 * 24 * 60 * 60 * 1000;
+    const TIMER = 7 * 24 * 60 * 60 * 1000;
     const ES_RESULT = {
       body: {
         hits: {
@@ -206,7 +225,7 @@ describe('UnstakedService', () => {
               _source: {
                 request: {
                   hash: REQUEST_ID,
-                  unstaked_at: (new Date().getTime() - SIX_DAYS).toString(),
+                  unstaked_at: (new Date().getTime() - TIMER).toString(),
                 },
               },
             },
@@ -241,6 +260,67 @@ describe('UnstakedService', () => {
     await unstakedService.handleWaitingUnstaked();
     expect(queryServiceRequestMock).toHaveBeenCalled();
     expect(retrieveUnstakedAmountMock).toHaveBeenCalled();
+
+    queryServiceRequestMock.mockClear();
+    retrieveUnstakedAmountMock.mockClear();
+  });
+
+  it('should not called unstakedServiceRequest', async () => {
+    const queryServiceRequestMock = jest.spyOn(
+      serviceRequestQuery,
+      'queryServiceRequestById',
+    );
+    const retrieveUnstakedAmountMock = jest.spyOn(
+      serviceRequestCommand,
+      'retrieveUnstakedAmount',
+    );
+
+    const CALLED_WITH = createSearchObject();
+    const REQUEST_ID = 'string';
+    const TIMER = 5 * 24 * 60 * 60 * 1000;
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                request: {
+                  hash: REQUEST_ID,
+                  unstaked_at: (new Date().getTime() - TIMER).toString(),
+                },
+              },
+            },
+          ],
+        },
+      },
+    };
+
+    const SUBSTRATE_RESULT: ServiceRequest = new ServiceRequest({
+      hash: 'string',
+      requester_address: 'string',
+      lab_address: 'string',
+      country: 'string',
+      region: 'string',
+      city: 'string',
+      service_category: 'string',
+      staking_amount: 0,
+      status: 'WaitingForUnstaked',
+      created_at: new Date(),
+      updated_at: new Date(),
+      unstaked_at: new Date(),
+    });
+
+    when(queryServiceRequestMock)
+      .calledWith(substrateServiceMock.api, REQUEST_ID)
+      .mockReturnValue(SUBSTRATE_RESULT);
+
+    when(elasticsearchServiceMock.search.mockReturnValue(ES_RESULT))
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
+
+    await unstakedService.handleWaitingUnstaked();
+    expect(queryServiceRequestMock).toHaveBeenCalled();
+    expect(retrieveUnstakedAmountMock).not.toHaveBeenCalled();
 
     queryServiceRequestMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();

@@ -12,6 +12,7 @@ import {
 export class UnstakedService implements OnModuleInit {
   private logger: Logger = new Logger(UnstakedService.name);
   private isRunning = false;
+  private timer: number;
   constructor(
     private readonly processEnvProxy: ProcessEnvProxy,
     private readonly elasticsearchService: ElasticsearchService,
@@ -20,8 +21,13 @@ export class UnstakedService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    const unstaked = setInterval(async () => { await this.handleWaitingUnstaked() }, parseInt(this.processEnvProxy.env.UNSTAKE_INTERVAL));
-    this.schedulerRegistry.addInterval("unstaked-interval", unstaked);
+    this.timer = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_TIMER);
+    const unstakeInterval: number = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_INTERVAL);
+
+    const unstaked = setInterval(async () => {
+      await this.handleWaitingUnstaked();
+    }, unstakeInterval);
+    this.schedulerRegistry.addInterval('unstaked-interval', unstaked);
   }
 
   async handleWaitingUnstaked() {
@@ -87,8 +93,7 @@ export class UnstakedService implements OnModuleInit {
             timeWaitingUnstaked.replace(/,/gi, ''),
           );
 
-          const sixDays = 6 * 24 * 60 * 60 * 1000;
-          const timeNext6Days = numberTimeWaitingUnstaked + sixDays;
+          const timeNext6Days = numberTimeWaitingUnstaked + this.timer;
           const timeNow = new Date().getTime();
           const diffTime = timeNext6Days - timeNow;
 
@@ -106,5 +111,24 @@ export class UnstakedService implements OnModuleInit {
     } finally {
       this.isRunning = false;
     }
+  }
+
+  strToMilisecond(timeFormat: string): number {
+    // time format must DD:HH:MM:SS
+    const splitTimeFormat = timeFormat.split(":");
+
+    const d = Number(splitTimeFormat[0]);
+    const h = Number(splitTimeFormat[1]);
+    const m = Number(splitTimeFormat[2]);
+    const s = Number(splitTimeFormat[3]);
+
+    const dayToMilisecond = d * 24 * 60 * 60 * 1000;
+    const hourToMilisecond = h * 60 * 60 * 1000;
+    const minuteToMilisecond = m * 60 * 1000;
+    const secondToMilisecond = s * 1000;
+
+    const result = dayToMilisecond + hourToMilisecond + minuteToMilisecond + secondToMilisecond;
+
+    return result;
   }
 }
