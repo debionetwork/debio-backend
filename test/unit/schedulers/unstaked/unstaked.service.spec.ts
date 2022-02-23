@@ -8,7 +8,11 @@ import {
   schedulerRegistryMockFactory,
 } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import { ProcessEnvProxy, ServiceRequest, SubstrateService } from '../../../../src/common';
+import {
+  ProcessEnvProxy,
+  ServiceRequest,
+  SubstrateService,
+} from '../../../../src/common';
 
 import * as serviceRequestQuery from '../../../../src/common/polkadot-provider/query/service-request';
 import * as serviceRequestCommand from '../../../../src/common/polkadot-provider/command/service-request';
@@ -89,7 +93,6 @@ describe('UnstakedService', () => {
     elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
     schedulerRegistryMock = module.get(SchedulerRegistry);
-
     await module.init();
   });
 

@@ -51,7 +51,7 @@ export class OrderFulfilledHandler
         amount: order.additional_prices[0].value + order.prices[0].value,
         created_at: order.updated_at,
         currency: order.currency.toUpperCase(),
-        parent_id: BigInt((orderHistory.id)),
+        parent_id: BigInt(orderHistory.id),
         ref_number: order.id,
         transaction_status: 3,
         transaction_type: 1,

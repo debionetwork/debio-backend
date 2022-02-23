@@ -30,6 +30,7 @@ import {
   setGeneticAnalysisOrderPaid,
 } from '../../common/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
+import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -215,10 +216,14 @@ export class SubstrateController {
     return requestServiceByCustomer;
   }
 
-  
   @Get('/genetic-analysis/:tracking_id')
-  async getGeneticAnalysisByTrackingId(@Param('tracking_id') tracking_id: string) {
-    const geneticAnalysis = await this.geneticAnalysisService.getGeneticAnalysisByTrackingId(tracking_id);
+  async getGeneticAnalysisByTrackingId(
+    @Param('tracking_id') tracking_id: string,
+  ) {
+    const geneticAnalysis =
+      await this.geneticAnalysisService.getGeneticAnalysisByTrackingId(
+        tracking_id,
+      );
     return geneticAnalysis;
   }
 
@@ -233,13 +238,14 @@ export class SubstrateController {
     @Query('page') page,
     @Query('size') size,
   ) {
-    const genetic_analysis_orders = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
-      'analyst',
-      params.analyst_id,
-      keyword ? keyword.toLowerCase() : '',
-      Number(page),
-      Number(size),
-    );
+    const genetic_analysis_orders =
+      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+        'analyst',
+        params.analyst_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
 
     return genetic_analysis_orders;
   }
@@ -255,22 +261,23 @@ export class SubstrateController {
     @Query('page') page,
     @Query('size') size,
   ) {
-    const genetic_analysis_orders = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
-      'customer',
-      params.customer_id,
-      keyword ? keyword.toLowerCase() : '',
-      Number(page),
-      Number(size),
-    );
+    const genetic_analysis_orders =
+      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+        'customer',
+        params.customer_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
 
     return genetic_analysis_orders;
   }
 
   @Post('/wallet-binding')
   async walletBinding(
+    @Headers('debio-api-key') debioApiKey: string,
     @Body() payload: WalletBindingDTO,
     @Res() response: Response,
-    @Headers('debio-api-key') debioApiKey: string,
   ) {
     if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
@@ -324,12 +331,14 @@ export class SubstrateController {
     });
   }
 
-  @Post('/genetic-anasysis-order-paid')
+  @Post('/geneticAnalysisOrderPaid')
   async geneticAnalysisOrderPaid(
-    @Body() genetic_analysis_order_id: string,
+    @Headers('debio-api-key') debioApiKey: string,
+    @Body() geneticOrderId: GeneticAnalysisOrderPaidDto,
     @Res() response: Response,
-    @Headers('debio_api_key') debioApiKey: string,
-  ){
+  ) {
+    const { genetic_analysis_order_id } = geneticOrderId;
+
     if (debioApiKey != this.process.env.DEBIO_API_KEY) {
       return response.status(401).send('debio-api-key header is required');
     }
@@ -337,9 +346,13 @@ export class SubstrateController {
     await setGeneticAnalysisOrderPaid(
       this.substrateService.api,
       this.substrateService.pair,
-      genetic_analysis_order_id
-    )
-    
-    return response.status(200).send(`set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`)
+      genetic_analysis_order_id,
+    );
+
+    return response
+      .status(200)
+      .send(
+        `set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`,
+      );
   }
 }

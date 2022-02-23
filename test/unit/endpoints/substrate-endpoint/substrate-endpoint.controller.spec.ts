@@ -21,7 +21,7 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
   sendRewards,
-  setGeneticAnalysisOrderPaid
+  setGeneticAnalysisOrderPaid,
 } from '../../../../src/common/polkadot-provider';
 
 jest.mock('../../../../src/common/polkadot-provider', () => ({
@@ -39,7 +39,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let serviceRequestMock: MockType<ServiceRequestService>;
-  let geneticAnalysisMock: MockType<GeneticAnalysisService>
+  let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysysOrderMock: MockType<GeneticAnalysisOrderService>;
 
   const DEBIO_API_KEY = 'KEY';
@@ -74,18 +74,16 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     }),
   );
 
-  const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> = jest.fn(
-    () => ({
+  const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> =
+    jest.fn(() => ({
       getGeneticAnalysisByTrackingId: jest.fn(),
-    }),
-  );
+    }));
 
-  const geneticAnalysisOrderMockfactory: () => MockType<GeneticAnalysisOrderService> = jest.fn(
-    () => ({
-     geneticAnalysisSetOrderPaid: jest.fn(),
-     getGeneticAnalysisOrderList: jest.fn(),
-    }),
-  );
+  const geneticAnalysisOrderMockfactory: () => MockType<GeneticAnalysisOrderService> =
+    jest.fn(() => ({
+      geneticAnalysisSetOrderPaid: jest.fn(),
+      getGeneticAnalysisOrderList: jest.fn(),
+    }));
 
   class ProcessEnvProxyMock {
     env = {
@@ -112,8 +110,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: serviceRequestServiceMockFactory,
         },
         { provide: RewardService, useFactory: rewardServiceMockFactory },
-        { provide: GeneticAnalysisService, useFactory: geneticAnalysisMockfactory },
-        { provide: GeneticAnalysisOrderService, useFactory: geneticAnalysisOrderMockfactory },
+        {
+          provide: GeneticAnalysisService,
+          useFactory: geneticAnalysisMockfactory,
+        },
+        {
+          provide: GeneticAnalysisOrderService,
+          useFactory: geneticAnalysisOrderMockfactory,
+        },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
       ],
@@ -230,7 +234,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   it('should genetic analysis orders list by customer', () => {
     // Arrange
     const RESULT = 1;
-    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
+    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+      RESULT,
+    );
 
     // Assert
     expect(
@@ -241,20 +247,20 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         10,
       ),
     ).resolves.toEqual(RESULT);
-    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
-    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
-      'customer',
-      1,
-      'keyword',
-      1,
-      10,
-    );
+    expect(
+      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalledWith('customer', 1, 'keyword', 1, 10);
   });
 
   it('should genetic analysis orders list by analyst', () => {
     // Arrange
     const RESULT = 1;
-    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
+    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+      RESULT,
+    );
 
     // Assert
     expect(
@@ -265,14 +271,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         10,
       ),
     ).resolves.toEqual(RESULT);
-    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
-    expect(geneticAnalysysOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
-      'analyst',
-      1,
-      'keyword',
-      1,
-      10,
-    );
+    expect(
+      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalledWith('analyst', 1, 'keyword', 1, 10);
   });
 
   it('should bounty by product name status lab name', () => {
@@ -346,11 +350,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock.getAggregatedByCountries.mockReturnValue(RESULT);
 
     // Assert
-    expect(substrateControllerMock.getAggregatedByCountries(PAGE, SIZE)).resolves.toEqual(
-      RESULT,
-    );
+    expect(
+      substrateControllerMock.getAggregatedByCountries(PAGE, SIZE),
+    ).resolves.toEqual(RESULT);
     expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalled();
-    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith(PAGE, SIZE);
+    expect(serviceRequestMock.getAggregatedByCountries).toHaveBeenCalledWith(
+      PAGE,
+      SIZE,
+    );
   });
 
   it('should not wallet bind with false API key', async () => {
@@ -367,7 +374,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, 'NOT API KEY'),
+      await substrateControllerMock.walletBinding('NOT API KEY', DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
@@ -379,11 +386,15 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     geneticAnalysisMock.getGeneticAnalysisByTrackingId.mockReturnValue(RESULT);
 
     // Assert
-    expect(substrateControllerMock.getGeneticAnalysisByTrackingId('trackingId')).resolves.toEqual(
-      RESULT,
-    );
-    expect(geneticAnalysisMock.getGeneticAnalysisByTrackingId).toHaveBeenCalled();
-    expect(geneticAnalysisMock.getGeneticAnalysisByTrackingId).toHaveBeenCalledWith('trackingId');
+    expect(
+      substrateControllerMock.getGeneticAnalysisByTrackingId('trackingId'),
+    ).resolves.toEqual(RESULT);
+    expect(
+      geneticAnalysisMock.getGeneticAnalysisByTrackingId,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysisMock.getGeneticAnalysisByTrackingId,
+    ).toHaveBeenCalledWith('trackingId');
   });
 
   it('should not wallet bind with binding error', async () => {
@@ -394,7 +405,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
-      accountId: 'string',
+      accountId: 'strin',
       ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
@@ -402,7 +413,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -441,7 +452,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DTO, RESPONSE, DEBIO_API_KEY),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -480,16 +491,20 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
-    const genetic_analysis_order_id = 'XX'
+    const genetic_analysis_order_id = { genetic_analysis_order_id: 'XX' };
 
     // Assert
     expect(
-      await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, 'NOT API KEY'),
+      await substrateControllerMock.geneticAnalysisOrderPaid(
+        'NOT API KEY',
+        genetic_analysis_order_id,
+        RESPONSE,
+      ),
     ).toEqual(EXPECTED_RESULTS);
   });
 
   it('should set genetic analysis order paid', async () => {
-    const genetic_analysis_order_id = 'XX';
+    const genetic_analysis_order_id = { genetic_analysis_order_id: 'XX' };
     const EXPECTED_RESULTS = `set order paid with genetic analysis order id ${genetic_analysis_order_id} on progress`;
     const RESPONSE: Response = {
       send: (body?: any): any => EXPECTED_RESULTS, // eslint-disable-line
@@ -499,13 +514,17 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     //Assert
     expect(
-      await substrateControllerMock.geneticAnalysisOrderPaid(genetic_analysis_order_id, RESPONSE, DEBIO_API_KEY),
+      await substrateControllerMock.geneticAnalysisOrderPaid(
+        DEBIO_API_KEY,
+        genetic_analysis_order_id,
+        RESPONSE,
+      ),
     ).toEqual(EXPECTED_RESULTS);
-    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled()
+    expect(setGeneticAnalysisOrderPaid).toHaveBeenCalled();
     expect(setGeneticAnalysisOrderPaid).toHaveBeenCalledWith(
       'API',
       'PAIR',
-      genetic_analysis_order_id
+      genetic_analysis_order_id.genetic_analysis_order_id,
     );
   });
 });

@@ -52,14 +52,17 @@ export class VerificationService {
     return await this.rewardService.insert(dataInput);
   }
 
-  async verificationGeneticAnalyst(accountId: string, verificationStatus: string) {
+  async verificationGeneticAnalyst(
+    accountId: string,
+    verificationStatus: string,
+  ) {
     await updateGeneticAnalystVerificationStatus(
       this.subtrateService.api,
       this.subtrateService.pair,
       accountId,
       <GeneticAnalystsVerificationStatus>verificationStatus,
-    )
+    );
 
-    return { message: `${accountId} is ${verificationStatus}`}
+    return { message: `${accountId} is ${verificationStatus}` };
   }
 }

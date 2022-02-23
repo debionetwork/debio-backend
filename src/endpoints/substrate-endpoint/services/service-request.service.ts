@@ -19,7 +19,10 @@ export class ServiceRequestService {
     private exchangeCacheService: DebioConversionService,
   ) {}
 
-  async getAggregatedByCountries(page: number, size: number): Promise<Array<RequestsByCountry>> {
+  async getAggregatedByCountries(
+    page: number,
+    size: number,
+  ): Promise<Array<RequestsByCountry>> {
     const requestByCountryList: Array<RequestsByCountry> = [];
 
     let startIndex = 0;
@@ -29,26 +32,26 @@ export class ServiceRequestService {
       const exchangeBalance = await this.exchangeCacheService.getExchange();
       const serviceRequests = await this.elasticsearchService.search({
         index: 'create-service-request',
-        body: { 
+        body: {
           query: {
             bool: {
               must: {
                 match: {
-                  "request.status": { query: "Open" },
-                }
-              }
-            }
+                  'request.status': { query: 'Open' },
+                },
+              },
+            },
           },
-          from: 0, 
+          from: 0,
           size: 10000,
           sort: [
             {
               'request.country.keyword': {
                 unmapped_type: 'keyword',
                 order: 'asc',
-              }
-            }
-          ]
+              },
+            },
+          ],
         },
       });
 
@@ -73,7 +76,7 @@ export class ServiceRequestService {
             totalValue: 0,
             services: {},
           };
-          
+
           endIndex++;
         }
 
@@ -130,7 +133,9 @@ export class ServiceRequestService {
 
       for (const countryCode in requestByCountryDict) {
         if (index >= startIndex && index <= endIndex) {
-          const countryObj = await this.countryService.getByIso2Code(countryCode);
+          const countryObj = await this.countryService.getByIso2Code(
+            countryCode,
+          );
           if (!countryObj) {
             continue;
           }
@@ -146,7 +151,7 @@ export class ServiceRequestService {
           const { name } = countryObj;
           const { totalRequests, services } = requestByCountryDict[countryCode];
           const { totalValue } = requestByCountryDict[countryCode];
-  
+
           const servicesArr = Object.values(services).map((s: any) => ({
             ...s,
             totalValue: {
@@ -155,7 +160,7 @@ export class ServiceRequestService {
               usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
             },
           }));
-  
+
           const requestByCountry = {
             countryId: countryCode,
             country: name,
@@ -163,7 +168,7 @@ export class ServiceRequestService {
             totalValue,
             services: servicesArr,
           };
-  
+
           requestByCountryList.push(requestByCountry);
         }
         index++;

@@ -11,6 +11,9 @@ import {
 } from '../../common';
 import { GeneticTestingCommandHandlers } from './commands/genetic-testing';
 import { ServiceRequestCommandHandlers } from './commands/service-request';
+import { GeneticAnalystCommandHandlers } from './commands/genetic-analysts';
+import { GeneticAnalysisOrderCommandHandlers } from './commands/genetic-analysis-order';
+import { GeneticAnalysisCommandHandlers } from './commands/genetic-analysis';
 import { ServiceCommandHandlers } from './commands/services';
 import { SubstrateListenerHandler } from './substrate-listener.handler';
 import { OrderCommandHandlers } from './commands/orders';
@@ -36,6 +39,10 @@ import { LocationModule } from '../../endpoints/location/location.module';
     ...GeneticTestingCommandHandlers,
     ...ServiceRequestCommandHandlers,
     ...OrderCommandHandlers,
+    ...GeneticTestingCommandHandlers,
+    ...GeneticAnalysisOrderCommandHandlers,
+    ...GeneticAnalysisCommandHandlers,
+    ...GeneticAnalystCommandHandlers,
   ],
 })
 export class SubstrateListenerModule {}

@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
-import { Interval, SchedulerRegistry } from '@nestjs/schedule';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import {
   ProcessEnvProxy,
   queryServiceRequestById,
@@ -58,7 +58,7 @@ export class UnstakedService implements OnModuleInit {
         from: 0,
         size: 10,
       });
-      
+
       const listRequestService = createRequestService.body.hits.hits;
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];

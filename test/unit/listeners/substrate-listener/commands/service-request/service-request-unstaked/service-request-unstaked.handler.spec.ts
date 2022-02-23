@@ -89,8 +89,8 @@ describe('Service Request Unstaked Handler Event', () => {
       .mockReturnValue(STATUS_RETURN);
 
     when(transactionLoggingServiceMock.getLoggingByOrderId)
-    .calledWith(serviceRequestUnstakedCommand.request.hash)
-    .mockReturnValue(TRANSACTION_SERVICE_RETURN);
+      .calledWith(serviceRequestUnstakedCommand.request.hash)
+      .mockReturnValue(TRANSACTION_SERVICE_RETURN);
 
     await serviceRequesUnstakedHandler.execute(serviceRequestUnstakedCommand);
     expect(
@@ -125,9 +125,9 @@ describe('Service Request Unstaked Handler Event', () => {
       new ServiceRequestUnstakedCommand(requestData, mockBlockNumber());
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-    .calledWith(serviceRequestUnstakedCommand.request.hash, 8)
-    .mockReturnValue(STATUS_RETURN);
-    
+      .calledWith(serviceRequestUnstakedCommand.request.hash, 8)
+      .mockReturnValue(STATUS_RETURN);
+
     when(convertToDbioUnitSpy)
       .calledWith(serviceRequestUnstakedCommand.request.staking_amount)
       .mockReturnValue(CONVERT_RETURN);

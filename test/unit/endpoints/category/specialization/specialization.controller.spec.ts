@@ -1,24 +1,25 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { SpecializationController } from "../../../../../src/endpoints/category/specialization/specialization.controller";
-import { SpecializationService } from "../../../../../src/endpoints/category/specialization/specialization.service";
-import { MockType } from "../../../mock";
+import { Test, TestingModule } from '@nestjs/testing';
+import { SpecializationController } from '../../../../../src/endpoints/category/specialization/specialization.controller';
+import { SpecializationService } from '../../../../../src/endpoints/category/specialization/specialization.service';
+import { MockType } from '../../../mock';
 
 describe('Specialization Controller Unit Tests', () => {
-  const specializationServiceMockFactory: () => MockType<SpecializationService> = jest.fn(() => ({
-    getAll: jest.fn((entity) => entity),
-  }));
+  const specializationServiceMockFactory: () => MockType<SpecializationService> =
+    jest.fn(() => ({
+      getAll: jest.fn((entity) => entity),
+    }));
 
   let specializationController: SpecializationController;
   let specializationMock: MockType<SpecializationService>;
 
   //Arrange before each iteration
   beforeEach(async () => {
-    const module: TestingModule =await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         SpecializationController,
         {
           provide: SpecializationService,
-          useFactory: specializationServiceMockFactory
+          useFactory: specializationServiceMockFactory,
         },
       ],
     }).compile();
@@ -44,7 +45,9 @@ describe('Specialization Controller Unit Tests', () => {
     specializationMock.getAll.mockReturnValue(categories);
 
     //Assert
-    expect(specializationController.getSpecializationCategory()).toEqual(categories);
+    expect(specializationController.getSpecializationCategory()).toEqual(
+      categories,
+    );
     expect(specializationMock.getAll).toHaveBeenCalled();
   });
 });

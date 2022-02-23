@@ -1,20 +1,20 @@
 import { ApiPromise } from '@polkadot/api';
-import { GeneticAnalystsVerificationStatus } from '../models/genetic-analysts'
+import { GeneticAnalystsVerificationStatus } from '../models/genetic-analysts';
 
 export async function updateGeneticAnalystVerificationStatus(
-	api: ApiPromise,
-	pair: any,
-	accountId: string,
-	geneticAnalystVerificationStatus: GeneticAnalystsVerificationStatus,
+  api: ApiPromise,
+  pair: any,
+  accountId: string,
+  geneticAnalystVerificationStatus: GeneticAnalystsVerificationStatus,
 	callback: Function = () => {}){ // eslint-disable-line
-	const unsub = await api.tx.geneticAnalysts
-	.updateGeneticAnalystVerificationStatus(
-		accountId,
-		geneticAnalystVerificationStatus.toString(),
-	)
-	.signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
-		isSuccessCallback(api, pair, { events, status, callback, unsub });
-	});
+  const unsub = await api.tx.geneticAnalysts
+    .updateGeneticAnalystVerificationStatus(
+      accountId,
+      geneticAnalystVerificationStatus.toString(),
+    )
+    .signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
+      isSuccessCallback(api, pair, { events, status, callback, unsub });
+    });
 }
 
 export async function isSuccessCallback(

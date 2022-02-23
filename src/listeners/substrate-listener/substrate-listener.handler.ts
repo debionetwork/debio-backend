@@ -19,6 +19,20 @@ import {
   OrderPaidCommand,
   OrderRefundedCommand,
 } from './commands/orders';
+import {
+  GeneticAnalysisOrderCreatedCommand,
+  GeneticAnalysisOrderPaidCommand,
+  GeneticAnalysisOrderRefundedCommand,
+  GeneticAnalysisOrderFulfilledCommand,
+} from './commands/genetic-analysis-order';
+import {
+  GeneticAnalysisRejectedCommand,
+  GeneticAnalysisResultReadyCommand,
+} from './commands/genetic-analysis';
+import {
+  GeneticAnalystStakedCommand,
+  GeneticAnalystVerificationStatusCommand,
+} from './commands/genetic-analysts';
 
 const eventRoutes = {
   services: {
@@ -40,6 +54,21 @@ const eventRoutes = {
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
+  },
+  geneticAnalysisOrders: {
+    GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
+    GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
+    GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
+    GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+  },
+  geneticAnalysis: {
+    GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
+    GeneticAnalysisResultReady: GeneticAnalysisResultReadyCommand,
+  },
+  geneticAnalysts: {
+    GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
+    GeneticAnalystUpdateVerificationStatus:
+      GeneticAnalystVerificationStatusCommand,
   },
 };
 

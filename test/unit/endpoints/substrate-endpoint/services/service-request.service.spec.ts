@@ -20,30 +20,29 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   const createObjectSearchAggregatedByCountries = () => {
     return {
       index: 'create-service-request',
-      body: { 
+      body: {
         query: {
           bool: {
             must: {
               match: {
-                "request.status": { query: "Open" },
-              }
-            }
-          }
+                'request.status': { query: 'Open' },
+              },
+            },
+          },
         },
-        from: 0, 
+        from: 0,
         size: 10000,
         sort: [
           {
             'request.country.keyword': {
               unmapped_type: 'keyword',
               order: 'asc',
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
     };
   };
-  
 
   const createObjectSearchByCustomerId = (
     customerId: string,
