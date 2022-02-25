@@ -29,7 +29,7 @@ DeBio Network's backend servers are built using NestJS, a progressive  <a href="
 
 Follow these steps to get started with our backend
 
-### Rust Setup
+### Node.js Setup
 
 All <a href="http://nodejs.org" target="_blank">Node.js</a> versions `14.0.0` above are compatible with our backend. To complete the [basic Node.js setup instructions](https://techviewleo.com/install-nodejs-and-npm-on-debian-linux/).
 
