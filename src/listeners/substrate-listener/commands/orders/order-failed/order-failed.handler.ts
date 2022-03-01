@@ -7,12 +7,14 @@ import {
   SubstrateService,
   finalizeRequest,
   sendRewards,
+  Order,
 } from '../../../../../common';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
 export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   private readonly logger: Logger = new Logger(OrderFailedCommand.name);
+  private _orderInput:  Order;
 
   constructor(
     private readonly escrowService: EscrowService,
@@ -21,6 +23,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
   async execute(command: OrderFailedCommand) {
     const order = command.orders.humanToOrderListenerData();
+    this._orderInput = order
     await this.logger.log(`${order.order_flow} OrderFailed!`);
 
     if (order.order_flow === 'StakingRequestService') {
@@ -28,23 +31,10 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         this.substrateService.api,
         this.substrateService.pair,
         order.id,
-        'No',);
+        'No',
+        this.callbackSendReward
+        );
       
-      //send reward for customer
-      await sendRewards(
-        this.substrateService.api,
-        this.substrateService.pair,
-        order.customer_id,
-        (order.additional_prices[0].value * 10**18).toString(),
-      )
-
-      //send reward for customer
-      await sendRewards(
-        this.substrateService.api,
-        this.substrateService.pair,
-        order.seller_id,
-        (order.additional_prices[0].value * 10**18 / 10).toString(),
-      )
     } else {
       await this.escrowService.refundOrder(order.id);
       await setOrderRefunded(
@@ -53,5 +43,23 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         order.id,
       );
     }
+  }
+
+  async callbackSendReward() {
+    //send reward for customer
+    await sendRewards(
+      this.substrateService.api,
+      this.substrateService.pair,
+      this._orderInput.customer_id,
+      (this._orderInput.additional_prices[0].value * 10**18).toString(),
+    )
+
+    //send reward for customer
+    await sendRewards(
+      this.substrateService.api,
+      this.substrateService.pair,
+      this._orderInput.seller_id,
+      (this._orderInput.additional_prices[0].value * 10**18 / 10).toString(),
+    )
   }
 }

@@ -15,8 +15,19 @@ export async function finalizeRequest(
   pair: any,
   requestId: string,
   isResultSuccess: string,
-): Promise<void> {
-  await api.tx.serviceRequest
+  callback = () => {}
+) {
+  const unsub = await api.tx.serviceRequest
     .finalizeRequest(requestId, isResultSuccess)
-    .signAndSend(pair, { nonce: -1 });
+    .signAndSend(pair, { nonce: -1 }, async ({ events = [], status }) => {
+      if(status.isFinalized) {
+        const eventList = events.filter(({ event }) =>
+          api.events.system.ExtrinsicSuccess.is(event)
+        )
+        if(eventList.length > 0){
+          callback()
+          unsub()
+        }
+      }
+    });
 }
