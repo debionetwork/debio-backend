@@ -2,7 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
-import { setOrderRefunded, SubstrateService } from '../../../../../common';
+import {
+  setOrderRefunded,
+  SubstrateService,
+  finalizeRequest,
+  sendRewards,
+} from '../../../../../common';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
@@ -15,14 +20,38 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   ) {}
 
   async execute(command: OrderFailedCommand) {
-    await this.logger.log('OrderFailed!');
-
     const order = command.orders.humanToOrderListenerData();
-    await this.escrowService.refundOrder(order.id);
-    await setOrderRefunded(
-      this.substrateService.api,
-      this.substrateService.pair,
-      order.id,
-    );
+    await this.logger.log(`${order.order_flow} OrderFailed!`);
+
+    if (order.order_flow === 'StakingRequestService') {
+      await finalizeRequest(
+        this.substrateService.api,
+        this.substrateService.pair,
+        order.id,
+        'No',);
+      
+      //send reward for customer
+      await sendRewards(
+        this.substrateService.api,
+        this.substrateService.pair,
+        order.customer_id,
+        (order.additional_prices[0].value * 10**18).toString(),
+      )
+
+      //send reward for customer
+      await sendRewards(
+        this.substrateService.api,
+        this.substrateService.pair,
+        order.seller_id,
+        (order.additional_prices[0].value * 10**18 / 10).toString(),
+      )
+    } else {
+      await this.escrowService.refundOrder(order.id);
+      await setOrderRefunded(
+        this.substrateService.api,
+        this.substrateService.pair,
+        order.id,
+      );
+    }
   }
 }

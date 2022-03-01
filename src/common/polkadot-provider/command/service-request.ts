@@ -9,3 +9,14 @@ export async function retrieveUnstakedAmount(
     .retrieveUnstakedAmount(requestId)
     .signAndSend(pair, { nonce: -1 });
 }
+
+export async function finalizeRequest(
+  api: ApiPromise,
+  pair: any,
+  requestId: string,
+  isResultSuccess: string,
+): Promise<void> {
+  await api.tx.serviceRequest
+    .finalizeRequest(requestId, isResultSuccess)
+    .signAndSend(pair, { nonce: -1 });
+}

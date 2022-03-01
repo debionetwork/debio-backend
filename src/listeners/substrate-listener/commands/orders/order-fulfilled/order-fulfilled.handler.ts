@@ -99,7 +99,7 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = order.prices[0].value * debioToDai;
+        const servicePrice = (order.prices[0].value + order.additional_prices[0].value) * debioToDai;
 
         // Send reward to customer
         await sendRewards(
