@@ -22,9 +22,9 @@ import {
   setEthAddress,
   sendRewards,
   setGeneticAnalysisOrderPaid,
-} from '../../../../src/common/polkadot-provider';
+} from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../src/common/polkadot-provider', () => ({
+jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
   sendRewards: jest.fn(),

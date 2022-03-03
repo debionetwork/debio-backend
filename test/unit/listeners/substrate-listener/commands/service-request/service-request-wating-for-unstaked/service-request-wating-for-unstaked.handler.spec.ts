@@ -6,9 +6,11 @@ import {
 } from '../../../../../mock';
 import {
   DateTimeProxy,
-  RequestStatus,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import {
+  RequestStatus,
+} from "@debionetwork/polkadot-provider";
 import { ServiceRequestWaitingForUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-waiting-for-unstaked/service-request-waiting-for-unstaked.handler';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestWaitingForUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';

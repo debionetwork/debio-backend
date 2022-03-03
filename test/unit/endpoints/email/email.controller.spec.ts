@@ -13,7 +13,7 @@ import {
 import { EmailEndpointController } from '../../../../src/endpoints/email/email.controller';
 import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
-import * as labQuery from '../../../../src/common/polkadot-provider/query/labs';
+import * as labQuery from '@debionetwork/polkadot-provider';
 import { when } from 'jest-when';
 
 describe('Email Controller', () => {

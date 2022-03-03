@@ -1,7 +1,9 @@
 import {
-  GeneticAnalysisStatus,
   SubstrateService,
 } from '../../../../../../../src/common';
+import {
+  GeneticAnalysisStatus,
+} from "@debionetwork/polkadot-provider";
 import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -11,11 +13,11 @@ import {
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
-import * as geneticAnalysisOrderCommand from '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order';
+import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider';
 import { when } from 'jest-when';
 
 jest.mock(
-  '../../../../../../../src/common/polkadot-provider/command/genetic-analysis-order',
+  '@debionetwork/polkadot-provider',
   () => ({
     setGeneticAnalysisOrderFulfilled: jest.fn(),
   }),

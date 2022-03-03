@@ -1,5 +1,7 @@
 import {
   GeneticAnalysisOrderStatus,
+} from "@debionetwork/polkadot-provider";
+import {
   TransactionLoggingService,
 } from '../../../../../../../src/common';
 import { GeneticAnalysisOrderFulfilledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';

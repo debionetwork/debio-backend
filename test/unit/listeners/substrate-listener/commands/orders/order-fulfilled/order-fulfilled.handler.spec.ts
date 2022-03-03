@@ -1,10 +1,10 @@
 import {
   DebioConversionService,
-  OrderStatus,
   RewardService,
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import { OrderStatus } from "@debionetwork/polkadot-provider";
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -23,11 +23,11 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
-import * as rewardCommand from '../../../../../../../src/common/polkadot-provider/command/rewards';
-import * as userProfileQuery from '../../../../../../../src/common/polkadot-provider/query/user-profile';
-import * as serviceRequestQuery from '../../../../../../../src/common/polkadot-provider/query/service-request';
-import * as ordersQuery from '../../../../../../../src/common/polkadot-provider/query/orders';
-import * as servicesQuery from '../../../../../../../src/common/polkadot-provider/query/services';
+import * as rewardCommand from '@debionetwork/polkadot-provider';
+import * as userProfileQuery from '@debionetwork/polkadot-provider';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider';
+import * as ordersQuery from '@debionetwork/polkadot-provider';
+import * as servicesQuery from '@debionetwork/polkadot-provider';
 
 describe('Order Fulfilled Handler Event', () => {
   let orderFulfilledHandler: OrderFulfilledHandler;
@@ -297,7 +297,7 @@ describe('Order Fulfilled Handler Event', () => {
     );
 
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customer_id,
+      address: orderCancelledCommand.orders.customerId,
       amount:
         Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +
@@ -439,7 +439,7 @@ describe('Order Fulfilled Handler Event', () => {
     );
 
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customer_id,
+      address: orderCancelledCommand.orders.customerId,
       amount:
         Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +

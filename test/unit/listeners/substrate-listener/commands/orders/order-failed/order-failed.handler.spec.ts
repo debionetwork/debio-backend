@@ -1,4 +1,4 @@
-import { OrderStatus, SubstrateService } from '../../../../../../../src/common';
+import { SubstrateService } from '../../../../../../../src/common';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -8,9 +8,10 @@ import {
   MockType,
   substrateServiceMockFactory,
 } from '../../../../../mock';
+import { OrderStatus } from "@debionetwork/polkadot-provider";
 import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
-import * as ordersCommand from '../../../../../../../src/common/polkadot-provider/command/orders';
+import * as ordersCommand from '@debionetwork/polkadot-provider';
 
 describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;

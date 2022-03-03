@@ -4,8 +4,8 @@ import { SubstrateService } from '../../../../../../../src/common';
 import { ServiceRequestProcessedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-processed/service-request-processed.handler';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestProcessedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import * as serviceRequestQuery from '../../../../../../../src/common/polkadot-provider/query/service-request';
-import * as orderCommand from '../../../../../../../src/common/polkadot-provider/command/orders';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider';
+import * as orderCommand from '@debionetwork/polkadot-provider';
 import { when } from 'jest-when';
 
 describe('Service Request Processed Handler Event', () => {

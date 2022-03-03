@@ -1,7 +1,7 @@
 import {
-  OrderStatus,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import { OrderStatus } from "@debionetwork/polkadot-provider";
 import { OrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -114,7 +114,7 @@ describe('Order Paid Handler Event', () => {
     );
 
     const orderLogging: TransactionLoggingDto = {
-      address: orderPaidCommand.orders.customer_id,
+      address: orderPaidCommand.orders.customerId,
       amount:
         Number(orderPaidCommand.orders.additionalPrices[0].value) / 10 ** 18 +
         Number(orderPaidCommand.orders.prices[0].value) / 10 ** 18,

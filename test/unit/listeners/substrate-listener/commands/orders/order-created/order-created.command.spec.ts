@@ -1,9 +1,8 @@
-import { OrderStatus } from '../../../../../../../src/common';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { createMockOrder, mockBlockNumber } from '../../../../../mock';
-import { Order } from '../../../../../../../src/common/polkadot-provider/models/orders';
+import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/orders');
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {

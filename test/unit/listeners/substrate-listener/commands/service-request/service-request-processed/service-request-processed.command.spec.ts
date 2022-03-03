@@ -1,9 +1,9 @@
 import { ServiceRequestProcessedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { ServiceInvoice } from '../../../../../../../src/common/polkadot-provider/models/service-request';
+import { ServiceInvoice } from '@debionetwork/polkadot-provider';
 
 jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/service-request',
+  '@debionetwork/polkadot-provider',
 );
 
 describe('Service Request Processed Command Event', () => {
