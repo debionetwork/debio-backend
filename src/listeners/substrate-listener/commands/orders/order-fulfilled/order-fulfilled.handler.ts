@@ -68,7 +68,7 @@ export class OrderFulfilledHandler
 
       const resp: any = await queryEthAdressByAccountId(
         this.substrateService.api as any,
-        order['seller_id'],
+        order['sellerId'],
       );
       if ((resp as Option<any>).isNone) {
         return null;

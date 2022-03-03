@@ -23,11 +23,12 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
-import * as rewardCommand from '@debionetwork/polkadot-provider';
-import * as userProfileQuery from '@debionetwork/polkadot-provider';
-import * as serviceRequestQuery from '@debionetwork/polkadot-provider';
-import * as ordersQuery from '@debionetwork/polkadot-provider';
-import * as servicesQuery from '@debionetwork/polkadot-provider';
+import * as globalProviderMethods from '@debionetwork/polkadot-provider/lib/index';
+import * as rewardCommand from '@debionetwork/polkadot-provider/lib/command/rewards';
+import * as userProfileQuery from '@debionetwork/polkadot-provider/lib/query/user-profile';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
+import * as ordersQuery from '@debionetwork/polkadot-provider/lib/query/labs/orders';
+import * as servicesQuery from '@debionetwork/polkadot-provider/lib/query/labs/services';
 
 describe('Order Fulfilled Handler Event', () => {
   let orderFulfilledHandler: OrderFulfilledHandler;
@@ -99,7 +100,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -224,7 +225,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -366,7 +367,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -508,7 +509,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 

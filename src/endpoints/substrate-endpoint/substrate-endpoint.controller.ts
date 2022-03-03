@@ -28,6 +28,7 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
   setGeneticAnalysisOrderPaid,
+  dbioUnit,
 } from '@debionetwork/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
@@ -298,19 +299,16 @@ export class SubstrateController {
       this.substrateService.api as any,
       ethAddress,
     );
-
-    let bindingEth = false;
-    await setEthAddress(
-      this.substrateService.api as any,
-      this.substrateService.pair,
-      accountId,
-      ethAddress,
-      () => {
-        bindingEth = true
-      }
-    );
-
-    if (!bindingEth) {
+    
+    try {
+      await setEthAddress(
+        this.substrateService.api as any,
+        this.substrateService.pair,
+        accountId,
+        ethAddress,
+      );
+    }
+    catch {
       return response.status(401).send('Binding Error');
     }
 
@@ -318,7 +316,6 @@ export class SubstrateController {
       await this.rewardService.getRewardBindingByAccountId(accountId);
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
-      const dbioUnit = 10 ** 18;
       await sendRewards(
         this.substrateService.api as any,
         this.substrateService.pair,

@@ -11,11 +11,11 @@ import {
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisRejectedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
-import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider';
+import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
 
 jest.mock(
-  '@debionetwork/polkadot-provider',
+  '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders',
   () => ({
     setGeneticAnalysisOrderRefunded: jest.fn(),
   }),

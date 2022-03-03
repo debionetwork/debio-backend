@@ -1,7 +1,7 @@
 import {
-  GeneticAnalysisOrderStatus,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import { GeneticAnalysisOrderStatus } from "@debionetwork/polkadot-provider";
 import { GeneticAnalysisOrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {

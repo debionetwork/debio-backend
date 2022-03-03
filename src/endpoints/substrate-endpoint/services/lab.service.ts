@@ -56,9 +56,9 @@ export class LabService {
         lab._source.services.forEach((labService) => {
           labService.lab_detail = lab._source.info;
           labService.certifications = lab._source.certifications;
-          labService.verificationStatus = lab._source.verificationStatus;
+          labService.verification_status = lab._source.verification_status;
           labService.blockMetaData = lab._source.blockMetaData;
-          labService.lab_id = lab._source.accountId;
+          labService.lab_id = lab._source.account_id;
 
           result.push(labService);
         });

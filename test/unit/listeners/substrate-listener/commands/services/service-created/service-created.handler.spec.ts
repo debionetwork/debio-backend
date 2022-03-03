@@ -14,7 +14,7 @@ import {
   MockType,
   substrateServiceMockFactory,
 } from '../../../../../mock';
-import * as labQuery from '@debionetwork/polkadot-provider';
+import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
 
 describe('Service Created Handler Event', () => {

@@ -14,8 +14,8 @@ import {
 } from '../../../../src/common';
 import { ServiceRequest } from "@debionetwork/polkadot-provider";
 
-import * as serviceRequestQuery from '@debionetwork/polkadot-provider';
-import * as serviceRequestCommand from '@debionetwork/polkadot-provider';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
+import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
