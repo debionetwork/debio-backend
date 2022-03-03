@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
-import { queryServicesByMultipleIds } from '../../../../polkadot-provider';
+import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider';
 
 export class LabRegisterExpectedDuration {
   duration: string;
@@ -23,7 +23,7 @@ export async function getLabRegisterService(
   api: ApiPromise,
   ids: string[],
 ): Promise<Array<LabRegisterService>> {
-  const services = await queryServicesByMultipleIds(api, ids);
+  const services = await queryServicesByMultipleIds(api as any, ids);
   const labRegisterServices: Array<LabRegisterService> =
     new Array<LabRegisterService>();
 
@@ -38,7 +38,7 @@ export async function getLabRegisterService(
     lrs.currency = val.currency;
     lrs.price = (Number(val.price.split(',').join('')) / 10 ** 18).toString();
     lrs.qc_price = (
-      Number(val.qc_price.split(',').join('')) /
+      Number(val.qcPrice.split(',').join('')) /
       10 ** 18
     ).toString();
     lrs.description = val.info.description;

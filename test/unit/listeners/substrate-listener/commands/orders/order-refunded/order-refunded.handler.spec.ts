@@ -1,7 +1,7 @@
 import {
-  OrderStatus,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import { OrderStatus } from "@debionetwork/polkadot-provider";
 import { OrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -112,7 +112,7 @@ describe('Order Refunded Handler Event', () => {
     );
 
     const orderLogging: TransactionLoggingDto = {
-      address: orderRefundedCommand.orders.customer_id,
+      address: orderRefundedCommand.orders.customerId,
       amount: Number(orderRefundedCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
       currency: orderRefundedCommand.orders.currency.toUpperCase(),

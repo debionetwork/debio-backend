@@ -10,12 +10,12 @@ import {
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
 import {
   ProcessEnvProxy,
-  ServiceRequest,
   SubstrateService,
 } from '../../../../src/common';
+import { ServiceRequest } from "@debionetwork/polkadot-provider";
 
-import * as serviceRequestQuery from '../../../../src/common/polkadot-provider/query/service-request';
-import * as serviceRequestCommand from '../../../../src/common/polkadot-provider/command/service-request';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
+import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
 

@@ -22,7 +22,7 @@ export class ServiceRequestWaitingForUnstakedHandler
   ) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
-    const serviceRequest = command.request.humanToServiceRequestListenerData();
+    const serviceRequest = command.request.normalize();
 
     try {
       const serviceRequestParent =
@@ -33,7 +33,7 @@ export class ServiceRequestWaitingForUnstakedHandler
           11,
         );
       const stakingLogging: TransactionLoggingDto = {
-        address: serviceRequest.requester_address,
+        address: serviceRequest.requesterAddress,
         amount: 0,
         created_at: this.dateTimeProxy.new(),
         currency: 'DBIO',

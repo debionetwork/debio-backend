@@ -68,7 +68,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
     expect(labServiceMock).toBeDefined();
   });
 
-  it('should find lab by country, city, and category', () => {
+  it('should find lab by country, city, and category', async () => {
     // Arrange
     const CALLED_WITH = createSearchObject(
       'XX',
@@ -130,7 +130,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      labServiceMock.getByCountryCityCategory(
+      await labServiceMock.getByCountryCityCategory(
         'XX',
         'XX',
         'XX',
@@ -139,7 +139,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
         1,
         10,
       ),
-    ).resolves.toEqual(RESULT);
+    ).toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 

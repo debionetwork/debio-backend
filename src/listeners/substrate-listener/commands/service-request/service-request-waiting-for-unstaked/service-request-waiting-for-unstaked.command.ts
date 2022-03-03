@@ -1,4 +1,4 @@
-import { ServiceRequest } from '../../../../../common';
+import { ServiceRequest } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceRequestWaitingForUnstakedCommand {

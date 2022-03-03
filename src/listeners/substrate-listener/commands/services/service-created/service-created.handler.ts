@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
-  Lab,
   LabRegister,
   labToLabRegister,
   MailerManager,
   ProcessEnvProxy,
-  queryLabById,
-  Service,
   SubstrateService,
 } from '../../../../../common';
+import {
+  Lab,
+  queryLabById,
+  Service,
+} from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
 
 @Injectable()
@@ -26,11 +28,11 @@ export class ServiceCreatedHandler
   async execute(command: ServiceCreatedCommand) {
     const service: Service = command.services;
     const lab: Lab = await queryLabById(
-      this.substrateService.api,
-      service.owner_id,
+      this.substrateService.api as any,
+      service.ownerId,
     );
 
-    if (lab.verification_status === 'Unverified' && lab.services.length === 1) {
+    if (lab.verificationStatus === 'Unverified' && lab.services.length === 1) {
       // Send email for unverified accounts only (until further notice)
       const labRegister: LabRegister = await labToLabRegister(
         this.substrateService.api,

@@ -1,10 +1,12 @@
-import { RequestStatus } from '../../../../../../../src/common';
+import {
+  RequestStatus
+} from "@debionetwork/polkadot-provider";
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import { ServiceRequest } from '../../../../../../../src/common/polkadot-provider/models/service-request';
+import { ServiceRequest } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 
 jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/service-request',
+  '@debionetwork/polkadot-provider',
 );
 
 describe('Service Request Unstaked Command Event', () => {

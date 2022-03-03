@@ -2,17 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   MailerManager,
   ProcessEnvProxy,
-  ServiceFlow,
-  ServiceInfo,
   SubstrateService,
 } from '../../../../../../../src/common';
+import {
+  ServiceFlow,
+  ServiceInfo,
+} from "@debionetwork/polkadot-provider";
 import { ServiceCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler';
 import {
   mailerManagerMockFactory,
   MockType,
   substrateServiceMockFactory,
 } from '../../../../../mock';
-import * as labQuery from '../../../../../../../src/common/polkadot-provider/query/labs';
+import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
 
 describe('Service Created Handler Event', () => {

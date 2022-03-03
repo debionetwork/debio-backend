@@ -1,9 +1,12 @@
 import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
-import { ServiceFlow, ServiceInfo } from '../../../../../../../src/common';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { Service } from '../../../../../../../src/common/polkadot-provider/models/services';
+import {
+  Service,
+  ServiceFlow,
+  ServiceInfo,
+} from "@debionetwork/polkadot-provider";
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/services');
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Serive Created Command Event', () => {
   const createMockService = (

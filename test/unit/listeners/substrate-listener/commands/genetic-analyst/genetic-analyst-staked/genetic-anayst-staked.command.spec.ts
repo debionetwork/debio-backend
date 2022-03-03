@@ -1,9 +1,9 @@
 import { GeneticAnalystStakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
 import { createMockGeneticAnalyst, mockBlockNumber } from '../../../../../mock';
-import { GeneticAnalyst } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysts';
+import { GeneticAnalyst } from '@debionetwork/polkadot-provider';
 
 jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/genetic-analysts',
+  '@debionetwork/polkadot-provider',
 );
 
 describe('Genetic Analyst Staked Command Event', () => {

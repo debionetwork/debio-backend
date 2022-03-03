@@ -28,11 +28,11 @@ export class ServiceRequestCreatedHandler
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
-    const serviceRequest = command.request.humanToServiceRequestListenerData();
+    const serviceRequest = command.request.normalize();
     const stakingLogging: TransactionLoggingDto = {
-      address: serviceRequest.requester_address,
-      amount: serviceRequest.staking_amount,
-      created_at: serviceRequest.created_at,
+      address: serviceRequest.requesterAddress,
+      amount: serviceRequest.stakingAmount,
+      created_at: serviceRequest.createdAt,
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: serviceRequest.hash,
@@ -70,12 +70,12 @@ export class ServiceRequestCreatedHandler
     ).name;
 
     const context = {
-      service_name: serviceRequest.service_category,
-      public_address: serviceRequest.requester_address,
+      service_name: serviceRequest.serviceCategory,
+      public_address: serviceRequest.requesterAddress,
       country: countryName || serviceRequest.country,
       state: regionName || serviceRequest.region,
       city: serviceRequest.city,
-      amount: serviceRequest.staking_amount,
+      amount: serviceRequest.stakingAmount,
       currency: 'DBIO',
     };
 

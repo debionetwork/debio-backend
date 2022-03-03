@@ -1,4 +1,4 @@
-import { Service } from '../../../../../common/polkadot-provider/models';
+import { Service } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceCreatedCommand {

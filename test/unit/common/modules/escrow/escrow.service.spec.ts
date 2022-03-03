@@ -11,9 +11,9 @@ import {
 } from '../../../mock';
 import { EscrowService } from '../../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
-import { setOrderPaid } from '../../../../../src/common/polkadot-provider';
+import { setOrderPaid } from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../../src/common/polkadot-provider', () => ({
+jest.mock('@debionetwork/polkadot-provider', () => ({
   setOrderPaid: jest.fn(),
 }));
 
