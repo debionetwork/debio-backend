@@ -3,10 +3,12 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import {
   ProcessEnvProxy,
-  queryServiceRequestById,
-  retrieveUnstakedAmount,
   SubstrateService,
 } from '../../common';
+import {
+  queryServiceRequestById,
+  retrieveUnstakedAmount,
+} from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
@@ -63,7 +65,7 @@ export class UnstakedService implements OnModuleInit {
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
         const serviceRequestDetail = await queryServiceRequestById(
-          this.subtrateService.api,
+          this.subtrateService.api as any,
           requestId,
         );
 
@@ -76,7 +78,7 @@ export class UnstakedService implements OnModuleInit {
               doc: {
                 request: {
                   status: serviceRequestDetail.status,
-                  unstaked_at: serviceRequestDetail.unstaked_at,
+                  unstaked_at: serviceRequestDetail.unstakedAt,
                 },
               },
             },
@@ -99,7 +101,7 @@ export class UnstakedService implements OnModuleInit {
 
           if (diffTime <= 0) {
             await retrieveUnstakedAmount(
-              this.subtrateService.api,
+              this.subtrateService.api as any,
               this.subtrateService.pair,
               requestId,
             );

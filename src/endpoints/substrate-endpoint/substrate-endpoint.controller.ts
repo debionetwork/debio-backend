@@ -28,7 +28,7 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
   setGeneticAnalysisOrderPaid,
-} from '../../common/polkadot-provider';
+} from '@debionetwork/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 
@@ -110,7 +110,7 @@ export class SubstrateController {
   ) {
     const orders = await this.orderService.getOrderList(
       'customer',
-      params.customer_id,
+      params.customerId,
       keyword ? keyword.toLowerCase() : '',
       Number(page),
       Number(size),
@@ -131,7 +131,7 @@ export class SubstrateController {
     @Query('size') size,
   ) {
     const orders = await this.orderService.getBountyList(
-      params.customer_id,
+      params.customerId,
       keyword ? keyword.toLowerCase() : '',
       Number(page),
       Number(size),
@@ -264,7 +264,7 @@ export class SubstrateController {
     const genetic_analysis_orders =
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
         'customer',
-        params.customer_id,
+        params.customerId,
         keyword ? keyword.toLowerCase() : '',
         Number(page),
         Number(size),
@@ -295,15 +295,19 @@ export class SubstrateController {
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
-      this.substrateService.api,
+      this.substrateService.api as any,
       ethAddress,
     );
 
-    const bindingEth = await setEthAddress(
-      this.substrateService.api,
+    let bindingEth = false;
+    await setEthAddress(
+      this.substrateService.api as any,
       this.substrateService.pair,
       accountId,
       ethAddress,
+      () => {
+        bindingEth = true
+      }
     );
 
     if (!bindingEth) {
@@ -316,7 +320,7 @@ export class SubstrateController {
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       const dbioUnit = 10 ** 18;
       await sendRewards(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
         accountId,
         (rewardAmount * dbioUnit).toString(),
@@ -344,7 +348,7 @@ export class SubstrateController {
     }
 
     await setGeneticAnalysisOrderPaid(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       genetic_analysis_order_id,
     );

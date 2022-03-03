@@ -24,22 +24,22 @@ export class GeneticAnalystStakedHandler
     await this.logger.log('Genetic Analyst Staked!');
 
     const geneticAnalyst =
-      command.geneticAnalyst.humanToGeneticAnalystListenerData();
+      command.geneticAnalyst.normalize();
 
     try {
       const isGeneticAnalystHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
-          geneticAnalyst.account_id,
+          geneticAnalyst.accountId,
           19,
         );
 
       const geneticAnalystLogging: TransactionLoggingDto = {
-        address: geneticAnalyst.account_id,
-        amount: geneticAnalyst.stake_amount,
+        address: geneticAnalyst.accountId,
+        amount: geneticAnalyst.stakeAmount,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
         parent_id: BigInt(0),
-        ref_number: geneticAnalyst.account_id,
+        ref_number: geneticAnalyst.accountId,
         transaction_status: 19,
         transaction_type: 4,
       };

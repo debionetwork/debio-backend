@@ -3,14 +3,16 @@ import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
 import {
   DateTimeProxy,
+  SubstrateService,
+} from '../../common';
+import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
   LabVerificationStatus,
   sendRewards,
-  SubstrateService,
   updateLabVerificationStatus,
-} from '../../common';
-import { GeneticAnalystsVerificationStatus } from '../../common/polkadot-provider/models/genetic-analysts';
+  GeneticAnalystsVerificationStatus 
+} from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class VerificationService {
@@ -23,7 +25,7 @@ export class VerificationService {
   async vericationLab(substrateAddress: string, verificationStatus: string) {
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
-      this.subtrateService.api,
+      this.subtrateService.api as any,
       this.subtrateService.pair,
       substrateAddress,
       <LabVerificationStatus>verificationStatus,
@@ -33,7 +35,7 @@ export class VerificationService {
     if (verificationStatus === 'Verified') {
       const reward = 2;
       await sendRewards(
-        this.subtrateService.api,
+        this.subtrateService.api as any,
         this.subtrateService.pair,
         substrateAddress,
         convertToDbioUnitString(reward),
@@ -57,7 +59,7 @@ export class VerificationService {
     verificationStatus: string,
   ) {
     await updateGeneticAnalystVerificationStatus(
-      this.subtrateService.api,
+      this.subtrateService.api as any,
       this.subtrateService.pair,
       accountId,
       <GeneticAnalystsVerificationStatus>verificationStatus,

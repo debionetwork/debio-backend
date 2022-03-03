@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SubstrateService } from '../../../common';
-import { setGeneticAnalysisOrderPaid } from '../../../common/polkadot-provider';
+import { setGeneticAnalysisOrderPaid } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class GeneticAnalysisOrderService {
@@ -16,7 +16,7 @@ export class GeneticAnalysisOrderService {
   async geneticAnalysisSetOrderPaid(genetic_analyst_order_id: string) {
     try {
       await setGeneticAnalysisOrderPaid(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
         genetic_analyst_order_id,
       );

@@ -116,7 +116,7 @@ describe('Order Paid Handler Event', () => {
     const orderLogging: TransactionLoggingDto = {
       address: orderPaidCommand.orders.customer_id,
       amount:
-        Number(orderPaidCommand.orders.additional_prices[0].value) / 10 ** 18 +
+        Number(orderPaidCommand.orders.additionalPrices[0].value) / 10 ** 18 +
         Number(orderPaidCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
       currency: orderPaidCommand.orders.currency.toUpperCase(),

@@ -4,7 +4,7 @@ import {
   createMockGeneticAnalysis,
   mockBlockNumber,
 } from '../../../../../mock';
-import { GeneticAnalysis } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysis';
+import { GeneticAnalysis } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysts/genetic-analysis';
 
 jest.mock(
   '../../../../../../../src/common/polkadot-provider/models/genetic-analysis',

@@ -299,7 +299,7 @@ describe('Order Fulfilled Handler Event', () => {
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
       address: orderCancelledCommand.orders.customer_id,
       amount:
-        Number(orderCancelledCommand.orders.additional_prices[0].value) /
+        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
@@ -441,7 +441,7 @@ describe('Order Fulfilled Handler Event', () => {
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
       address: orderCancelledCommand.orders.customer_id,
       amount:
-        Number(orderCancelledCommand.orders.additional_prices[0].value) /
+        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
