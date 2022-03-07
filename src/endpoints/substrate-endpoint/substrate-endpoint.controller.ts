@@ -111,7 +111,7 @@ export class SubstrateController {
   ) {
     const orders = await this.orderService.getOrderList(
       'customer',
-      params.customerId,
+      params.customer_id,
       keyword ? keyword.toLowerCase() : '',
       Number(page),
       Number(size),
