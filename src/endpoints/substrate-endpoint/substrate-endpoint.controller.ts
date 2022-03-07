@@ -132,7 +132,7 @@ export class SubstrateController {
     @Query('size') size,
   ) {
     const orders = await this.orderService.getBountyList(
-      params.customerId,
+      params.customer_id,
       keyword ? keyword.toLowerCase() : '',
       Number(page),
       Number(size),
@@ -265,7 +265,7 @@ export class SubstrateController {
     const genetic_analysis_orders =
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
         'customer',
-        params.customerId,
+        params.customer_id,
         keyword ? keyword.toLowerCase() : '',
         Number(page),
         Number(size),

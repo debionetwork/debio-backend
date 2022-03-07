@@ -216,7 +216,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       substrateControllerMock.getOrderByCustomer(
-        { customerId: 1 },
+        { customer_id: 1 },
         'keyword',
         1,
         10,
@@ -242,7 +242,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       substrateControllerMock.getGeneticAnalysisOrderByCustomer(
-        { customerId: 1 },
+        { customer_id: 1 },
         'keyword',
         1,
         10,
@@ -288,7 +288,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       substrateControllerMock.getBountyByProductNameStatusLabName(
-        { customerId: 1 },
+        { customer_id: 1 },
         'keyword',
         1,
         10,
@@ -330,14 +330,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       substrateControllerMock.getServiceRequestByCustomer(
-        { customerId: 1 },
+        { customer_id: 1 },
         1,
         10,
       ),
     ).resolves.toEqual(RESULT);
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalled();
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalledWith(
-      { customerId: 1 },
+      { customer_id: 1 },
       1,
       10,
     );
