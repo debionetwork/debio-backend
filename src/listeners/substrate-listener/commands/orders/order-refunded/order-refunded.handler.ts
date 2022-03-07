@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderRefundedCommand } from './order-refunded.command';
 import { TransactionLoggingService } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { Order } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 @CommandHandler(OrderRefundedCommand)
@@ -15,7 +16,8 @@ export class OrderRefundedHandler
 
   async execute(command: OrderRefundedCommand) {
     await this.logger.log('OrderRefunded!');
-    const order = command.orders.humanToOrderListenerData();
+    const order: Order = command.orders;
+    order.normalize();
 
     try {
       const isOrderHasBeenInsert =
@@ -26,9 +28,9 @@ export class OrderRefundedHandler
 
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
-        address: order.customer_id,
+        address: order.customerId,
         amount: order.prices[0].value,
-        created_at: order.updated_at,
+        created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,

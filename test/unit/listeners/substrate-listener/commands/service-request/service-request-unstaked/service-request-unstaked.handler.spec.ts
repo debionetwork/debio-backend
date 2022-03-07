@@ -6,13 +6,15 @@ import {
 } from '../../../../../mock';
 import {
   DateTimeProxy,
-  RequestStatus,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import {
+  RequestStatus
+} from "@debionetwork/polkadot-provider";
 import { ServiceRequestUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-unstaked/service-request-unstaked.handler';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import * as rewardCommand from '../../../../../../../src/common/polkadot-provider/command/rewards';
+import * as rewardCommand from '@debionetwork/polkadot-provider';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 
@@ -129,7 +131,7 @@ describe('Service Request Unstaked Handler Event', () => {
       .mockReturnValue(STATUS_RETURN);
 
     when(convertToDbioUnitSpy)
-      .calledWith(serviceRequestUnstakedCommand.request.staking_amount)
+      .calledWith(serviceRequestUnstakedCommand.request.stakingAmount)
       .mockReturnValue(CONVERT_RETURN);
 
     when(transactionLoggingServiceMock.getLoggingByOrderId)
@@ -137,7 +139,7 @@ describe('Service Request Unstaked Handler Event', () => {
       .mockReturnValue(TRANSACTION_SERVICE_RETURN);
 
     const STAKING_LOGGIN_CALLED_WITH: TransactionLoggingDto = {
-      address: serviceRequestUnstakedCommand.request.requester_address,
+      address: serviceRequestUnstakedCommand.request.requesterAddress,
       amount: CONVERT_RETURN,
       created_at: CURRENT_DATE,
       currency: 'DBIO',

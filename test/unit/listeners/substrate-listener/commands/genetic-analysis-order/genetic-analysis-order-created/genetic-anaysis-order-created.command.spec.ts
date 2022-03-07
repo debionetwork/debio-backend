@@ -1,13 +1,12 @@
-import { GeneticAnalysisOrderStatus } from '../../../../../../../src/common';
 import { GeneticAnalysisOrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import {
   createMockGeneticAnalysisOrder,
   mockBlockNumber,
 } from '../../../../../mock';
-import { GeneticAnalystOrder } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysis-orders';
+import { GeneticAnalystOrder, GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
 
 jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/genetic-analysis-orders',
+  '@debionetwork/polkadot-provider',
 );
 
 describe('Genetic Analysis Order Created Command Event', () => {

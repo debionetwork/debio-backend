@@ -8,7 +8,7 @@ export class Utils {
       totalPrice += element.value;
     });
 
-    req.additional_prices.forEach((element) => {
+    req.additionalPrices.forEach((element) => {
       console.log('[GetDetailPrice] additional_prices.', element);
       totalAddtional += element.value;
     });

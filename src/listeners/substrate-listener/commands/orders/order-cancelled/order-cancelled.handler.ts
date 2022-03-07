@@ -4,6 +4,7 @@ import { OrderCancelledCommand } from './order-cancelled.command';
 import { TransactionLoggingService } from '../../../../../common';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { Order } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 @CommandHandler(OrderCancelledCommand)
@@ -19,7 +20,10 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     await this.logger.log('OrderCancelled');
-    const order = command.orders.humanToOrderListenerData();
+    
+    const order: Order = command.orders;
+    order.normalize();
+
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 5);
@@ -29,9 +33,9 @@ export class OrderCancelledHandler
       );
       //Logging data Input
       const orderLogging: TransactionLoggingDto = {
-        address: order.customer_id,
-        amount: order.additional_prices[0].value + order.prices[0].value,
-        created_at: order.updated_at,
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,

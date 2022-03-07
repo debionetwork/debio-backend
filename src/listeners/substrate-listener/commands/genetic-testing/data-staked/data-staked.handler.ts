@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
-  convertToDbioUnitString,
   DebioConversionService,
   RewardService,
-  sendRewards,
   SubstrateService,
 } from '../../../../../common';
+import {
+  convertToDbioUnitString,
+  sendRewards,
+} from '@debionetwork/polkadot-provider';
 import { DataStakedCommand } from './data-staked.command';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 
@@ -32,7 +34,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
 
     //send reward
     await sendRewards(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       dataOrder['customer_id'],
       convertToDbioUnitString(rewardPrice),

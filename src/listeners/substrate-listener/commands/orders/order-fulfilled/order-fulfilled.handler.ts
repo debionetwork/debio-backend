@@ -3,17 +3,20 @@ import { Option } from '@polkadot/types';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFulfilledCommand } from './order-fulfilled.command';
 import {
-  convertToDbioUnitString,
   DebioConversionService,
+  RewardService,
+  SubstrateService,
+  TransactionLoggingService,
+} from '../../../../../common';
+import {
+  convertToDbioUnitString,
+  Order,
   queryEthAdressByAccountId,
   queryOrderDetailByOrderID,
   queryServiceById,
   queryServiceInvoiceByOrderId,
-  RewardService,
   sendRewards,
-  SubstrateService,
-  TransactionLoggingService,
-} from '../../../../../common';
+} from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
@@ -35,7 +38,8 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     await this.logger.log('Order Fulfilled!');
-    const order = command.orders.humanToOrderListenerData();
+    const order: Order = command.orders;
+    order.normalize();
 
     try {
       const isOrderHasBeenInsert =
@@ -47,9 +51,9 @@ export class OrderFulfilledHandler
 
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
-        address: order.customer_id,
-        amount: order.additional_prices[0].value + order.prices[0].value,
-        created_at: order.updated_at,
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,
@@ -63,26 +67,26 @@ export class OrderFulfilledHandler
       }
 
       const resp: any = await queryEthAdressByAccountId(
-        this.substrateService.api,
-        order['seller_id'],
+        this.substrateService.api as any,
+        order['sellerId'],
       );
       if ((resp as Option<any>).isNone) {
         return null;
       }
       const labEthAddress = (resp as Option<any>).unwrap().toString();
       const orderByOrderId = await queryOrderDetailByOrderID(
-        this.substrateService.api,
+        this.substrateService.api as any,
         order.id,
       );
       const serviceByOrderId = await queryServiceById(
-        this.substrateService.api,
-        order.service_id,
+        this.substrateService.api as any,
+        order.serviceId,
       );
       const totalPrice = order.prices.reduce(
         (acc, price) => acc + price.value,
         0,
       );
-      const totalAdditionalPrice = order.additional_prices.reduce(
+      const totalAdditionalPrice = order.additionalPrices.reduce(
         (acc, price) => acc + price.value,
         0,
       );
@@ -93,7 +97,7 @@ export class OrderFulfilledHandler
         serviceByOrderId['serviceFlow'] === 'StakingRequestService'
       ) {
         const serviceRequest = await queryServiceInvoiceByOrderId(
-          this.substrateService.api,
+          this.substrateService.api as any,
           order.id,
         );
         const debioToDai = Number(
@@ -103,20 +107,20 @@ export class OrderFulfilledHandler
 
         // Send reward to customer
         await sendRewards(
-          this.substrateService.api,
+          this.substrateService.api as any,
           this.substrateService.pair,
-          order.customer_id,
+          order.customerId,
           convertToDbioUnitString(servicePrice),
         );
 
         await queryServiceInvoiceByOrderId(
-          this.substrateService.api,
+          this.substrateService.api as any,
           serviceRequest['hash_'],
         );
 
         // Write Logging Reward Customer Staking Request Service
         const dataCustomerLoggingInput: RewardDto = {
-          address: order.customer_id,
+          address: order.customerId,
           ref_number: order.id,
           reward_amount: servicePrice,
           reward_type: 'Customer Stake Request Service',
@@ -127,15 +131,15 @@ export class OrderFulfilledHandler
 
         // Send reward to lab
         await sendRewards(
-          this.substrateService.api,
+          this.substrateService.api as any,
           this.substrateService.pair,
-          order.customer_id,
+          order.customerId,
           convertToDbioUnitString(servicePrice / 10),
         );
 
         // Write Logging Reward Lab
         const dataLabLoggingInput: RewardDto = {
-          address: order.customer_id,
+          address: order.customerId,
           ref_number: order.id,
           reward_amount: servicePrice / 10,
           reward_type: 'Lab Provide Requested Service',
