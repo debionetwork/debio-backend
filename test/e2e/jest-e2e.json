@@ -2,17 +2,20 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": ".spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.ts$": "ts-jest",
+    "node_modules/@polkadot/.+\\.tsx?$": "ts-jest",
+    "node_modules/@polkadot/.+\\.jsx?$": "babel-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
   },
+  "transformIgnorePatterns": [
+    "node_modules/(?!@polkadot/.*)"
+  ],
+  "globalSetup": "./setup.ts",
+  "globalTeardown": "./teardown.ts",
   "collectCoverageFrom": [
     "**/*.(t|j)s"
   ],
-  "coverageDirectory": "../coverage",
-  "moduleNameMapper": {
-    "@polkadot/api(.*)$": "<rootDir>../src/substrate/substrate.service.ts",
-    "@polkadot/rpc-provider/ws(.*)$": "<rootDir>../src/substrate/substrate.service.ts"
-  },
-  "setupFiles": ["dotenv/config"]
+  "coverageDirectory": "../coverage"
 }

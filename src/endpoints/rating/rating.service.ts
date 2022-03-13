@@ -22,6 +22,7 @@ export class RatingService {
     rating.order_id = data.order_id;
     rating.rating_by = data.rating_by;
     rating.rating = data.rating;
+    rating.review = data.review;
     rating.created = this.dateTimeProxy.new();
 
     await this.cacheManager.del('getAllRating');

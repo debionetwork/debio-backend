@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  db:
+    container_name: debio-postgres
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+  redis:
+    container_name: debio-redis
+    image: redis:6.2.6-alpine
+    ports:
+      - 6379:6379
+  node:
+    container_name: debio-node
+    image: debionetwork/debio-node:latest
+    command: >
+      --dev
+      --alice
+      --rpc-cors all
+      --rpc-methods unsafe
+      --unsafe-rpc-external
+      --unsafe-ws-external
+      --no-telemetry
+    ports:
+      - 30333:30333
+      - 9933:9933
+      - 9944:9944
+      - 9615:9615
