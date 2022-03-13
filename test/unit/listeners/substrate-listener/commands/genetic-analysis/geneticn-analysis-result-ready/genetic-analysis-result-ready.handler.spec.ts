@@ -1,9 +1,5 @@
-import {
-  SubstrateService,
-} from '../../../../../../../src/common';
-import {
-  GeneticAnalysisStatus,
-} from "@debionetwork/polkadot-provider";
+import { SubstrateService } from '../../../../../../../src/common';
+import { GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
 import {

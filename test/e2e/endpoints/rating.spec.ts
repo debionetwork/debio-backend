@@ -14,12 +14,12 @@ describe('Rating Controller (e2e)', () => {
   let app: INestApplication;
 
   const data: CreateRatingDto = {
-    lab_id: "LAB_ID",
-    order_id: "ORDER_ID",
-    service_id: "SERVICE_ID",
+    lab_id: 'LAB_ID',
+    order_id: 'ORDER_ID',
+    service_id: 'SERVICE_ID',
     rating: 1,
-    rating_by: "RATING_BY",
-    review: "REVIEW",
+    rating_by: 'RATING_BY',
+    review: 'REVIEW',
   };
 
   beforeAll(async () => {
@@ -48,37 +48,33 @@ describe('Rating Controller (e2e)', () => {
 
   it('POST /rating: create should return', async () => {
     // Act
-    const result = await request(server)
-      .post('/rating')
-      .send(data);
+    const result = await request(server).post('/rating').send(data);
 
     // Assert
     expect(result.status).toEqual(201);
     const jsonObject = JSON.parse(result.text);
     const dtoEqual: CreateRatingDto = {
-      ...jsonObject
+      ...jsonObject,
     };
     expect(jsonObject).toEqual(dtoEqual);
   }, 25000);
 
   it('GET /rating/order/:order_id: getByCustomer should return', async () => {
     // Act
-    const result = await request(server)
-      .get(`/rating/order/${data.order_id}`);
+    const result = await request(server).get(`/rating/order/${data.order_id}`);
 
     // Assert
     expect(result.status).toEqual(200);
     const jsonObject = JSON.parse(result.text);
     const dtoEqual: CreateRatingDto = {
-      ...jsonObject
+      ...jsonObject,
     };
     expect(jsonObject).toEqual(dtoEqual);
   }, 25000);
 
   it('GET /rating/service: getAllService should return', async () => {
     // Act
-    const result = await request(server)
-      .get(`/rating/service`);
+    const result = await request(server).get(`/rating/service`);
 
     // Assert
     expect(result.status).toEqual(200);
@@ -91,8 +87,9 @@ describe('Rating Controller (e2e)', () => {
 
   it('GET /rating/service/:service_id: getByServiceId should return', async () => {
     // Act
-    const result = await request(server)
-      .get(`/rating/service/${data.service_id}`);
+    const result = await request(server).get(
+      `/rating/service/${data.service_id}`,
+    );
 
     // Assert
     expect(result.status).toEqual(200);
@@ -104,8 +101,7 @@ describe('Rating Controller (e2e)', () => {
 
   it('GET /rating/lab/:lab_id: getLabRating should return', async () => {
     // Act
-    const result = await request(server)
-      .get(`/rating/lab/${data.lab_id}`);
+    const result = await request(server).get(`/rating/lab/${data.lab_id}`);
 
     // Assert
     expect(result.status).toEqual(200);

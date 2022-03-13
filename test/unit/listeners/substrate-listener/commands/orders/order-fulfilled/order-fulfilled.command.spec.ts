@@ -8,8 +8,7 @@ describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {
     const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    const _ = // eslint-disable-line
-      new OrderFulfilledCommand([ORDER_RESPONSE], mockBlockNumber());
+    const _ = new OrderFulfilledCommand([ORDER_RESPONSE], mockBlockNumber()); // eslint-disable-line
     expect(Order).toHaveBeenCalled();
     expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman());
     expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -17,8 +16,7 @@ describe('Order Cancelled Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _ = // eslint-disable-line
-        new OrderFulfilledCommand([{}], mockBlockNumber());
+      const _ = new OrderFulfilledCommand([{}], mockBlockNumber()); // eslint-disable-line
     }).toThrowError();
   });
 });

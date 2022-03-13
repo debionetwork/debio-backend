@@ -11,7 +11,7 @@ import {
   ProcessEnvProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { RequestStatus } from "@debionetwork/polkadot-provider";
+import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
 import { CountryService } from '../../../../../../../src/endpoints/location/country.service';
 import { StateService } from '../../../../../../../src/endpoints/location/state.service';

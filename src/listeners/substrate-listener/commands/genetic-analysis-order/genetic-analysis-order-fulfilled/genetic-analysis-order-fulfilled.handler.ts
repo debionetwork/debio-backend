@@ -17,8 +17,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   async execute(command: GeneticAnalysisOrderFulfilledCommand) {
     await this.logger.log('Genetic Analysis Order Fulfilled!');
 
-    const geneticAnalysisOrder =
-      command.geneticAnalysisOrders.normalize();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =

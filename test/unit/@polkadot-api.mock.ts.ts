@@ -6,10 +6,10 @@ export class WsProvider {
   }
 }
 export class ApiPromise {
-    static create(provider) { // eslint-disable-line
+  static create(provider) { // eslint-disable-line
     return new ApiPromise();
   }
-    on(ev, func) { // eslint-disable-line
+  on(ev, func) { // eslint-disable-line
     mockFunction(ev);
   }
 }
@@ -17,5 +17,5 @@ export class Keyring {
   constructor(params) {
     mockFunction(params);
   }
-    addFromUri(provider) {} // eslint-disable-line
+  addFromUri(provider) {} // eslint-disable-line
 }
