@@ -8,6 +8,7 @@ import { RatingModule } from '../../../src/endpoints/rating/rating.module';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
 import { CreateRatingDto } from 'src/endpoints/rating/dto/create-rating.dto';
+import { dummyCredentials } from '../config';
 
 describe('Rating Controller (e2e)', () => {
   let server: Server;
@@ -29,11 +30,7 @@ describe('Rating Controller (e2e)', () => {
         CacheModule.register(),
         DateTimeModule,
         TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: '127.0.0.1',
-          port: 5432,
-          username: 'postgres',
-          password: 'root',
+          ...dummyCredentials,
           database: 'db_postgres',
           entities: [LabRating],
           autoLoadEntities: true,
