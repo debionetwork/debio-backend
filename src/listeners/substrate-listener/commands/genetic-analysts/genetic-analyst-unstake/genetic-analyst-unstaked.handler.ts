@@ -5,23 +5,23 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../common';
-import { GeneticAnalystStakedCommand } from './genetic-analyst-staked.command';
+import { GeneticAnalystUnstakedCommand } from './genetic-analyst-unstaked.command';
 
 @Injectable()
-@CommandHandler(GeneticAnalystStakedCommand)
-export class GeneticAnalystStakedHandler
-  implements ICommandHandler<GeneticAnalystStakedCommand>
+@CommandHandler(GeneticAnalystUnstakedCommand)
+export class GeneticAnalystUnstakedHandler
+  implements ICommandHandler<GeneticAnalystUnstakedCommand>
 {
   private readonly logger: Logger = new Logger(
-    GeneticAnalystStakedCommand.name,
+    GeneticAnalystUnstakedCommand.name,
   );
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
-  async execute(command: GeneticAnalystStakedCommand) {
-    await this.logger.log('Genetic Analyst Staked!');
+  async execute(command: GeneticAnalystUnstakedCommand) {
+    await this.logger.log('Genetic Analyst Unstaked!');
 
     const geneticAnalyst =
       command.geneticAnalyst.normalize();
@@ -32,17 +32,19 @@ export class GeneticAnalystStakedHandler
           geneticAnalyst.accountId,
           19,
         );
+
       const geneticAnalystLogging: TransactionLoggingDto = {
         address: geneticAnalyst.accountId,
-        amount: geneticAnalyst.stakeAmount,
+        amount: isGeneticAnalystHasBeenInsert.amount,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
-        parent_id: BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
+        parent_id: BigInt(Number(isGeneticAnalystHasBeenInsert.id)),
         ref_number: geneticAnalyst.accountId,
-        transaction_status: 23,
+        transaction_status: 24,
         transaction_type: 5,
       };
-        await this.loggingService.create(geneticAnalystLogging);
+
+      await this.loggingService.create(geneticAnalystLogging);
     } catch (error) {
       await this.logger.log(error);
     }
