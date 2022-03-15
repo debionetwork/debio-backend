@@ -172,14 +172,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -320,14 +320,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.stg.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -468,14 +468,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -616,14 +616,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
+              --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -764,13 +764,13 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
+              --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
