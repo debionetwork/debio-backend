@@ -12,9 +12,7 @@ import {
   ProcessEnvProxy,
   SubstrateService,
 } from '../../common';
-import {
-  queryLabById,
-} from '@debionetwork/polkadot-provider';
+import { queryLabById } from '@debionetwork/polkadot-provider';
 
 @Controller('email')
 export class EmailEndpointController {
@@ -32,7 +30,10 @@ export class EmailEndpointController {
     @Res() response: Response,
   ) {
     let isEmailSent = false;
-    const contextLab = await queryLabById(this.substrateService.api as any, lab_id);
+    const contextLab = await queryLabById(
+      this.substrateService.api as any,
+      lab_id,
+    );
 
     const labRegister: LabRegister = await labToLabRegister(
       this.substrateService.api,

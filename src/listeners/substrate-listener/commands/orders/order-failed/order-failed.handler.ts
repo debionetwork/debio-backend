@@ -20,7 +20,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
     const order: Order = command.orders;
     order.normalize();
-    
+
     await this.escrowService.refundOrder(order.id);
     await setOrderRefunded(
       this.substrateService.api as any,

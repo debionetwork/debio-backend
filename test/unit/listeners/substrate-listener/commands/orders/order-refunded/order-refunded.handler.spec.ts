@@ -1,7 +1,5 @@
-import {
-  TransactionLoggingService,
-} from '../../../../../../../src/common';
-import { OrderStatus } from "@debionetwork/polkadot-provider";
+import { TransactionLoggingService } from '../../../../../../../src/common';
+import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
