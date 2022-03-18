@@ -7,11 +7,7 @@ import {
   ProcessEnvProxy,
   SubstrateService,
 } from '../../../../../common';
-import {
-  Lab,
-  queryLabById,
-  Service,
-} from '@debionetwork/polkadot-provider';
+import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
 
 @Injectable()

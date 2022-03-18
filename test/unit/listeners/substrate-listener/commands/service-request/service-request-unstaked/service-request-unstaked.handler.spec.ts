@@ -8,9 +8,7 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import {
-  RequestStatus
-} from "@debionetwork/polkadot-provider";
+import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-unstaked/service-request-unstaked.handler';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';

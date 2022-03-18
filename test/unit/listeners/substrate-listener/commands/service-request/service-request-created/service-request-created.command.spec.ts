@@ -2,9 +2,7 @@ import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequest, RequestStatus } from '@debionetwork/polkadot-provider';
 
-jest.mock(
-  '@debionetwork/polkadot-provider',
-);
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Service Request Created Command Event', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -39,8 +37,7 @@ describe('Service Request Created Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Open);
 
-    const _ = // eslint-disable-line
-      new ServiceRequestCreatedCommand(MOCK_DATA, mockBlockNumber());
+    const _ = new ServiceRequestCreatedCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceRequest).toHaveBeenCalled();
@@ -49,8 +46,7 @@ describe('Service Request Created Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      const _ = // eslint-disable-line
-        new ServiceRequestCreatedCommand([{}, {}], mockBlockNumber());
+      const _ = new ServiceRequestCreatedCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
     }).toThrow();
   });
 });

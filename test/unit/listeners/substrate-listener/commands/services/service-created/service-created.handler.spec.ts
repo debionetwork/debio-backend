@@ -4,10 +4,7 @@ import {
   ProcessEnvProxy,
   SubstrateService,
 } from '../../../../../../../src/common';
-import {
-  ServiceFlow,
-  ServiceInfo,
-} from "@debionetwork/polkadot-provider";
+import { ServiceFlow, ServiceInfo } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler';
 import {
   mailerManagerMockFactory,

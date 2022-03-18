@@ -37,7 +37,7 @@ export const API_MOCK = {
       getBlock: () => {
         return BLOCK_MOCK;
       },
-      getBlockHash: number => { // eslint-disable-line
+      getBlockHash: (number) => { // eslint-disable-line
         return BLOCK_HASH_MOCK;
       },
     },

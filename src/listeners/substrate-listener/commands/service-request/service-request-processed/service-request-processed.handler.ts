@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  SubstrateService,
-} from '../../../../../common';
+import { SubstrateService } from '../../../../../common';
 import {
   queryServiceInvoiceById,
   setOrderPaid,

@@ -20,7 +20,7 @@ export class OrderCancelledHandler
 
   async execute(command: OrderCancelledCommand) {
     await this.logger.log('OrderCancelled');
-    
+
     const order: Order = command.orders;
     order.normalize();
 

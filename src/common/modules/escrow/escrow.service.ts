@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import {
-  EthereumService,
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../..';
-import { setOrderPaid } from "@debionetwork/polkadot-provider";
+import { EthereumService, ProcessEnvProxy, SubstrateService } from '../..';
+import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 
 @Injectable()

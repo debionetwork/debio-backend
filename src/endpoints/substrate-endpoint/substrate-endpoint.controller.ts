@@ -299,7 +299,7 @@ export class SubstrateController {
       this.substrateService.api as any,
       ethAddress,
     );
-    
+
     try {
       await setEthAddress(
         this.substrateService.api as any,
@@ -307,8 +307,7 @@ export class SubstrateController {
         accountId,
         ethAddress,
       );
-    }
-    catch {
+    } catch {
       return response.status(401).send('Binding Error');
     }
 

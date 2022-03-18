@@ -1,13 +1,9 @@
-import {
-  RequestStatus
-} from "@debionetwork/polkadot-provider";
+import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { ServiceRequest } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 
-jest.mock(
-  '@debionetwork/polkadot-provider',
-);
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Service Request Unstaked Command Event', () => {
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -42,8 +38,7 @@ describe('Service Request Unstaked Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockRequest(RequestStatus.Processed);
 
-    const _ = // eslint-disable-line
-      new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber());
+    const _ = new ServiceRequestUnstakedCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceRequest).toHaveBeenCalled();
@@ -52,8 +47,7 @@ describe('Service Request Unstaked Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      const _ = // eslint-disable-line
-        new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber());
+      const _ = new ServiceRequestUnstakedCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
     }).toThrow();
   });
 });
