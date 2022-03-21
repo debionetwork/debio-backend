@@ -117,7 +117,15 @@ export class SubstrateController {
       Number(size),
     );
 
-    return orders;
+    const ordersGA = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+      'customer',
+      params.customer_id,
+      keyword ? keyword.toLowerCase() : '',
+      Number(page),
+      Number(size),
+    )
+
+    return {orders, ordersGA};
   }
 
   @Get('/orders/bounty_list/:customer_id')
