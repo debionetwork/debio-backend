@@ -208,22 +208,31 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(orderServiceMock.getOrderByHashId).toHaveBeenCalledWith('keyword');
   });
 
-  it('should orders list by customer', () => {
+  it('should orders list by customer', async () => {
     // Arrange
     const RESULT = 1;
     orderServiceMock.getOrderList.mockReturnValue(RESULT);
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
 
     // Assert
     expect(
-      substrateControllerMock.getOrderByCustomer(
+      await substrateControllerMock.getOrderByCustomer(
         { customer_id: 1 },
         'keyword',
         1,
         10,
       ),
-    ).resolves.toEqual(RESULT);
+    ).toEqual({orders: RESULT, ordersGA: RESULT});
     expect(orderServiceMock.getOrderList).toHaveBeenCalled();
     expect(orderServiceMock.getOrderList).toHaveBeenCalledWith(
+      'customer',
+      1,
+      'keyword',
+      1,
+      10,
+    );
+    expect(geneticAnalysisOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
+    expect(geneticAnalysisOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
       'customer',
       1,
       'keyword',
