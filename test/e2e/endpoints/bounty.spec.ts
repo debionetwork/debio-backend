@@ -65,7 +65,6 @@ describe('Bounty Controller (e2e)', () => {
 
     // Assert
     expect(result.status).toEqual(200);
-    console.log(result.text);
     const jsonObject = JSON.parse(result.text);
     const dtoEqual: DataTokenToDatasetMappingDto[] = jsonObject;
     expect(jsonObject).toEqual(dtoEqual);
