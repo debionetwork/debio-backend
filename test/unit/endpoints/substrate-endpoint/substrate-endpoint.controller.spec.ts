@@ -212,7 +212,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Arrange
     const RESULT = 1;
     orderServiceMock.getOrderList.mockReturnValue(RESULT);
-    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(RESULT);
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+      RESULT,
+    );
 
     // Assert
     expect(
@@ -222,7 +224,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         1,
         10,
       ),
-    ).toEqual({orders: RESULT, ordersGA: RESULT});
+    ).toEqual({ orders: RESULT, ordersGA: RESULT });
     expect(orderServiceMock.getOrderList).toHaveBeenCalled();
     expect(orderServiceMock.getOrderList).toHaveBeenCalledWith(
       'customer',

@@ -117,14 +117,15 @@ export class SubstrateController {
       Number(size),
     );
 
-    const ordersGA = await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
-      'customer',
-      params.customer_id,
-      keyword ? keyword.toLowerCase() : '',
-      Number(page),
-      Number(size),
-    );
-    
+    const ordersGA =
+      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+        'customer',
+        params.customer_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
+
     return { orders, ordersGA };
   }
 
