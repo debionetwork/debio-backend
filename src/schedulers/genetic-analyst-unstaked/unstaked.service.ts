@@ -1,10 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import {
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../../common';
+import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
   retrieveUnstakedAmount,
@@ -24,7 +21,9 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
   onModuleInit() {
     this.timer = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_TIMER);
-    const unstakeInterval: number = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_INTERVAL);
+    const unstakeInterval: number = this.strToMilisecond(
+      this.processEnvProxy.env.UNSTAKE_INTERVAL,
+    );
 
     const unstaked = setInterval(async () => {
       await this.handleWaitingUnstaked();
@@ -37,21 +36,22 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
       if (this.isRunning) return;
 
       this.isRunning = true;
-      const geneticAnalystsWaitingUnstaked = await this.elasticsearchService.search({
-        index: 'genetic-analysts',
-        allow_no_indices: true,
-        body: {
-          query: {
-            match: {
-              'stake.status': {
-                query: 'WaitingForUnstaked',
+      const geneticAnalystsWaitingUnstaked =
+        await this.elasticsearchService.search({
+          index: 'genetic-analysts',
+          allow_no_indices: true,
+          body: {
+            query: {
+              match: {
+                'stake.status': {
+                  query: 'WaitingForUnstaked',
+                },
               },
             },
           },
-        },
-        from: 0,
-        size: 10,
-      });
+          from: 0,
+          size: 10,
+        });
 
       const listGeneticAnalyst = geneticAnalystsWaitingUnstaked.body.hits.hits;
       for (const geneticAnalystData of listGeneticAnalyst) {
@@ -109,7 +109,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
   strToMilisecond(timeFormat: string): number {
     // time format must DD:HH:MM:SS
-    const splitTimeFormat = timeFormat.split(":");
+    const splitTimeFormat = timeFormat.split(':');
 
     const d = Number(splitTimeFormat[0]);
     const h = Number(splitTimeFormat[1]);
@@ -121,7 +121,11 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
     const minuteToMilisecond = m * 60 * 1000;
     const secondToMilisecond = s * 1000;
 
-    const result = dayToMilisecond + hourToMilisecond + minuteToMilisecond + secondToMilisecond;
+    const result =
+      dayToMilisecond +
+      hourToMilisecond +
+      minuteToMilisecond +
+      secondToMilisecond;
 
     return result;
   }

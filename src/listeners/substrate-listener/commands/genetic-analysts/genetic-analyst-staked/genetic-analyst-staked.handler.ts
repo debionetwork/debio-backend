@@ -36,12 +36,13 @@ export class GeneticAnalystStakedHandler
         amount: geneticAnalyst.stakeAmount,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
-        parent_id: BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
+        parent_id:
+          BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
         ref_number: geneticAnalyst.accountId,
         transaction_status: 23,
         transaction_type: 5,
       };
-        await this.loggingService.create(geneticAnalystLogging);
+      await this.loggingService.create(geneticAnalystLogging);
     } catch (error) {
       await this.logger.log(error);
     }

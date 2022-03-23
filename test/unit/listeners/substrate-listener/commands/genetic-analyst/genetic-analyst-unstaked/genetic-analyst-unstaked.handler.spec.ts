@@ -18,7 +18,7 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Genetic Analyst Staked Handler Event', () => {
   let geneticAnalystUnstakedHandler: GeneticAnalystUnstakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>;// eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,7 +37,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
 
     geneticAnalystUnstakedHandler = module.get(GeneticAnalystUnstakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
@@ -93,8 +93,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 19)
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
+      geneticAnalyst.toHuman().accountId,
+      19,
+    );
 
     const geneticAnalystUnstakedCommand: GeneticAnalystUnstakedCommand =
       new GeneticAnalystUnstakedCommand([geneticAnalyst], mockBlockNumber());
@@ -103,7 +105,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    await transactionLoggingServiceMock.create()
+    await transactionLoggingServiceMock.create();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
   });
 });

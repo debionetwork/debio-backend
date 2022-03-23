@@ -93,8 +93,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 19)
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
+      geneticAnalyst.toHuman().accountId,
+      19,
+    );
 
     const geneticAnalystStakedCommand: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
@@ -103,7 +105,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    await transactionLoggingServiceMock.create()
+    await transactionLoggingServiceMock.create();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
   });
 });
