@@ -233,14 +233,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       1,
       10,
     );
-    expect(geneticAnalysisOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalled();
-    expect(geneticAnalysisOrderMock.getGeneticAnalysisOrderList).toHaveBeenCalledWith(
-      'customer',
-      1,
-      'keyword',
-      1,
-      10,
-    );
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalledWith('customer', 1, 'keyword', 1, 10);
   });
 
   it('should genetic analysis orders list by customer', () => {
