@@ -42,7 +42,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
     await module.init();
   });
 
-  it('should defined Genetic Analust Staked Handler', () => {
+  it('should defined Genetic Analyst Staked Handler', () => {
     expect(geneticAnalystStakedHandler).toBeDefined();
   });
 
