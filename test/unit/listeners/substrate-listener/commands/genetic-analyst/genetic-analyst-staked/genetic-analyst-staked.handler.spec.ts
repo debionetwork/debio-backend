@@ -18,7 +18,7 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Genetic Analyst Staked Handler Event', () => {
   let geneticAnalystStakedHandler: GeneticAnalystStakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let dateTimeProxyMock: MockType<DateTimeProxy>;// eslint-disable-line
+  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,7 +37,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
 
     geneticAnalystStakedHandler = module.get(GeneticAnalystStakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });

@@ -3,11 +3,12 @@ import {
   createMockGeneticAnalysis,
   mockBlockNumber,
 } from '../../../../../mock';
-import { GeneticAnalysis, GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
+import {
+  GeneticAnalysis,
+  GeneticAnalysisStatus,
+} from '@debionetwork/polkadot-provider';
 
-jest.mock(
-  '@debionetwork/polkadot-provider',
-);
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Genetic Analysis Rejected Command Event', () => {
   it('should called model data and toHuman', () => {
@@ -15,8 +16,10 @@ describe('Genetic Analysis Rejected Command Event', () => {
       GeneticAnalysisStatus.Rejected,
     );
 
-    const _= // eslint-disable-line
-      new GeneticAnalysisRejectedCommand([GA_ORDER_RESPONSE], mockBlockNumber());
+    const _ = new GeneticAnalysisRejectedCommand( // eslint-disable-line
+      [GA_ORDER_RESPONSE],
+      mockBlockNumber(),
+    );
     expect(GeneticAnalysis).toHaveBeenCalled();
     expect(GeneticAnalysis).toHaveBeenCalledWith(GA_ORDER_RESPONSE.toHuman());
     expect(GA_ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -24,8 +27,7 @@ describe('Genetic Analysis Rejected Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _= // eslint-disable-line
-        new GeneticAnalysisRejectedCommand([{}], mockBlockNumber());
+      const _ = new GeneticAnalysisRejectedCommand([{}], mockBlockNumber()); // eslint-disable-line
     }).toThrowError();
   });
 });

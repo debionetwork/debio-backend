@@ -17,8 +17,7 @@ export class GeneticAnalysisOrderRefundedHandler
   async execute(command: GeneticAnalysisOrderRefundedCommand) {
     await this.logger.log('Genetic Analysis Order Refunded!');
 
-    const geneticAnalysisOrder =
-      command.geneticAnalysisOrders.normalize();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =

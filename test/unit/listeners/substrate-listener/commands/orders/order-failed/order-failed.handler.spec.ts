@@ -8,7 +8,7 @@ import {
   MockType,
   substrateServiceMockFactory,
 } from '../../../../../mock';
-import { OrderStatus } from "@debionetwork/polkadot-provider";
+import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
 import * as ordersCommand from '@debionetwork/polkadot-provider/lib/command/labs/orders';

@@ -7,9 +7,7 @@ import {
   labToLabRegister,
   LabRegister,
 } from '../../common';
-import {
-  queryLabById,
-} from '@debionetwork/polkadot-provider';
+import { queryLabById } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class MailerService {

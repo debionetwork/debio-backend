@@ -1,10 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import {
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../../common';
+import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
   queryServiceRequestById,
   retrieveUnstakedAmount,
@@ -24,7 +21,9 @@ export class UnstakedService implements OnModuleInit {
 
   onModuleInit() {
     this.timer = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_TIMER);
-    const unstakeInterval: number = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_INTERVAL);
+    const unstakeInterval: number = this.strToMilisecond(
+      this.processEnvProxy.env.UNSTAKE_INTERVAL,
+    );
 
     const unstaked = setInterval(async () => {
       await this.handleWaitingUnstaked();
@@ -117,7 +116,7 @@ export class UnstakedService implements OnModuleInit {
 
   strToMilisecond(timeFormat: string): number {
     // time format must DD:HH:MM:SS
-    const splitTimeFormat = timeFormat.split(":");
+    const splitTimeFormat = timeFormat.split(':');
 
     const d = Number(splitTimeFormat[0]);
     const h = Number(splitTimeFormat[1]);
@@ -129,7 +128,11 @@ export class UnstakedService implements OnModuleInit {
     const minuteToMilisecond = m * 60 * 1000;
     const secondToMilisecond = s * 1000;
 
-    const result = dayToMilisecond + hourToMilisecond + minuteToMilisecond + secondToMilisecond;
+    const result =
+      dayToMilisecond +
+      hourToMilisecond +
+      minuteToMilisecond +
+      secondToMilisecond;
 
     return result;
   }

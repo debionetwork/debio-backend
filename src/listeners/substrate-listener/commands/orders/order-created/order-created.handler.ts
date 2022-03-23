@@ -16,7 +16,7 @@ export class OrderCreatedHandler
 
   async execute(command: OrderCreatedCommand) {
     await this.logger.log('OrderCreated!');
-    
+
     const order: Order = command.orders;
     order.normalize();
 

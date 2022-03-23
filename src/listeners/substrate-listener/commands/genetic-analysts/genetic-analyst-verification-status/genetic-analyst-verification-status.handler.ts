@@ -21,8 +21,7 @@ export class GeneticAnalystVerificationStatusHandler
   ) {}
 
   async execute(command: GeneticAnalystVerificationStatusCommand) {
-    const geneticAnalyst =
-      command.geneticAnalyst.normalize();
+    const geneticAnalyst = command.geneticAnalyst.normalize();
 
     await this.logger.log(
       `Genetic Analyst Verification Status ${geneticAnalyst.verificationStatus}!`,
@@ -35,9 +34,7 @@ export class GeneticAnalystVerificationStatusHandler
           21,
         );
       const geneticAnalystHistory =
-        await this.loggingService.getLoggingByOrderId(
-          geneticAnalyst.accountId,
-        );
+        await this.loggingService.getLoggingByOrderId(geneticAnalyst.accountId);
       let transactionStatus;
 
       if (geneticAnalyst.verificationStatus === 'Verified') {

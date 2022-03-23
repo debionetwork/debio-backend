@@ -1,17 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
-import {
-  DateTimeProxy,
-  SubstrateService,
-} from '../../common';
+import { DateTimeProxy, SubstrateService } from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
   LabVerificationStatus,
   sendRewards,
   updateLabVerificationStatus,
-  GeneticAnalystsVerificationStatus 
+  GeneticAnalystsVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 
 @Injectable()

@@ -14,7 +14,10 @@ export async function getLabRegisterCertification(
   api: ApiPromise,
   ids: string[],
 ): Promise<Array<LabRegisterCertification>> {
-  const certifications = await queryCertificationsByMultipleIds(api as any, ids);
+  const certifications = await queryCertificationsByMultipleIds(
+    api as any,
+    ids,
+  );
   const labRegisterCertifications: Array<LabRegisterCertification> =
     new Array<LabRegisterCertification>();
 
