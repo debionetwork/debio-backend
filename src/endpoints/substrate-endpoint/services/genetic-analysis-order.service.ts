@@ -124,7 +124,8 @@ export class GeneticAnalysisOrderService {
       const genetic_analysis_orders = await this.elasticSearchService.search(
         searchObj,
       );
-      count = total_genetic_analysis_orders;
+      
+      count = total_genetic_analysis_orders.body.count | 0;
       data = genetic_analysis_orders.body.hits.hits;
     } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
@@ -138,7 +139,7 @@ export class GeneticAnalysisOrderService {
 
     return {
       info: {
-        page: page,
+        page: page | 1,
         count,
       },
       data,

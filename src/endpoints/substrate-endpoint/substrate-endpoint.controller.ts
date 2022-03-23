@@ -123,9 +123,9 @@ export class SubstrateController {
       keyword ? keyword.toLowerCase() : '',
       Number(page),
       Number(size),
-    )
-
-    return {orders, ordersGA};
+    );
+    
+    return { orders, ordersGA };
   }
 
   @Get('/orders/bounty_list/:customer_id')
