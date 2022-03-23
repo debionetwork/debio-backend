@@ -21,7 +21,12 @@ module.exports = async () => {
   const dbPostgresMigration = await createConnection({
     ...dummyCredentials,
     database: 'db_postgres',
-    entities: [LabRating, TransactionRequest, DataStakingEvents, DataTokenToDatasetMapping],
+    entities: [
+      LabRating,
+      TransactionRequest,
+      DataStakingEvents,
+      DataTokenToDatasetMapping,
+    ],
     synchronize: true,
   });
   await dbPostgresMigration.close();

@@ -1,13 +1,13 @@
 import request from 'supertest';
-import { INestApplication } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { Server } from "http";
-import { BountyModule } from "../../../src/endpoints/bounty/bounty.module";
-import { DataStakingEvents } from "../../../src/endpoints/bounty/models/data-staking-events.entity";
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { Server } from 'http';
+import { BountyModule } from '../../../src/endpoints/bounty/bounty.module';
+import { DataStakingEvents } from '../../../src/endpoints/bounty/models/data-staking-events.entity';
 import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
-import { DataTokenToDatasetMapping } from "../../../src/endpoints/bounty/models/data-token-to-dataset-mapping.entity";
-import { dummyCredentials } from "../config";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import { DataTokenToDatasetMapping } from '../../../src/endpoints/bounty/models/data-token-to-dataset-mapping.entity';
+import { dummyCredentials } from '../config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingDto } from '../../../src/endpoints/bounty/dto/data-staking.dto';
 import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from '../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
@@ -48,7 +48,9 @@ describe('Bounty Controller (e2e)', () => {
 
   it('POST /create-sync-event: CreateSyncEvent should return', async () => {
     // Act
-    const result = await request(server).post('/bounty/create-sync-event').send(data);
+    const result = await request(server)
+      .post('/bounty/create-sync-event')
+      .send(data);
 
     // Assert
     expect(result.status).toEqual(201);
@@ -61,7 +63,10 @@ describe('Bounty Controller (e2e)', () => {
 
   it('GET /staked-files: StakedFiles should return', async () => {
     // Act
-    const result = await request(server).get('/bounty/staked-files?tokenId').query({tokenId: ''}).send(data);
+    const result = await request(server)
+      .get('/bounty/staked-files?tokenId')
+      .query({ tokenId: '' })
+      .send(data);
 
     // Assert
     expect(result.status).toEqual(200);
