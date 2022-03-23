@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
-import { queryCertificationsByMultipleIds } from '../../../../polkadot-provider';
+import { queryCertificationsByMultipleIds } from '@debionetwork/polkadot-provider';
 
 export class LabRegisterCertification {
   title: string;
@@ -14,7 +14,10 @@ export async function getLabRegisterCertification(
   api: ApiPromise,
   ids: string[],
 ): Promise<Array<LabRegisterCertification>> {
-  const certifications = await queryCertificationsByMultipleIds(api, ids);
+  const certifications = await queryCertificationsByMultipleIds(
+    api as any,
+    ids,
+  );
   const labRegisterCertifications: Array<LabRegisterCertification> =
     new Array<LabRegisterCertification>();
 

@@ -4,10 +4,10 @@ import { EmailNotificationService } from '../../common/modules/database';
 import {
   MailerManager,
   SubstrateService,
-  queryLabById,
-  LabRegister,
   labToLabRegister,
+  LabRegister,
 } from '../../common';
+import { queryLabById } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class MailerService {
@@ -31,7 +31,7 @@ export class MailerService {
 
       labRegisterPending.forEach(async (data) => {
         const contextLab = await queryLabById(
-          this.substrateService.api,
+          this.substrateService.api as any,
           data.ref_number,
         );
 

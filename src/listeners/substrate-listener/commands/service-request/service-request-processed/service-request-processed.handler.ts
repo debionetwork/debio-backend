@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { SubstrateService } from '../../../../../common';
 import {
   queryServiceInvoiceById,
   setOrderPaid,
-  SubstrateService,
-} from '../../../../../common';
+} from '@debionetwork/polkadot-provider';
 import { ServiceRequestProcessedCommand } from './service-request-processed.command';
 
 @Injectable()
@@ -17,11 +17,11 @@ export class ServiceRequestProcessedHandler
   async execute(command: ServiceRequestProcessedCommand) {
     const serviceRequest = command.serviceInvoice;
     const serviceInvoice = await queryServiceInvoiceById(
-      this.substrateService.api,
-      serviceRequest.request_hash,
+      this.substrateService.api as any,
+      serviceRequest.requestHash,
     );
     await setOrderPaid(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       serviceInvoice['orderId'],
     );

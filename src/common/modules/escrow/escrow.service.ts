@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import {
-  EthereumService,
-  ProcessEnvProxy,
-  setOrderPaid,
-  SubstrateService,
-} from '../..';
+import { EthereumService, ProcessEnvProxy, SubstrateService } from '../..';
+import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 
 @Injectable()
@@ -63,7 +59,7 @@ export class EscrowService {
   async setOrderPaidWithSubstrate(orderId: string): Promise<void> {
     try {
       await setOrderPaid(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
         orderId,
       );

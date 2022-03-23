@@ -17,8 +17,7 @@ export class GeneticAnalysisOrderRefundedHandler
   async execute(command: GeneticAnalysisOrderRefundedCommand) {
     await this.logger.log('Genetic Analysis Order Refunded!');
 
-    const geneticAnalysisOrder =
-      command.geneticAnalysisOrders.humanToGeneticAnalysisOrderListenerData();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =
@@ -30,9 +29,9 @@ export class GeneticAnalysisOrderRefundedHandler
         await this.loggingService.getLoggingByOrderId(geneticAnalysisOrder.id);
 
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
-        address: geneticAnalysisOrder.customer_id,
+        address: geneticAnalysisOrder.customerId,
         amount: geneticAnalysisOrder.prices[0].value,
-        created_at: geneticAnalysisOrder.updated_at,
+        created_at: geneticAnalysisOrder.updatedAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,

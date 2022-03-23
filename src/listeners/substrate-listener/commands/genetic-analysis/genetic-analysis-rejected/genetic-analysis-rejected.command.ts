@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
-import { GeneticAnalysis } from '../../../../../common';
+import { GeneticAnalysis } from '@debionetwork/polkadot-provider';
 
 export class GeneticAnalysisRejectedCommand {
   geneticAnalysis: GeneticAnalysis;

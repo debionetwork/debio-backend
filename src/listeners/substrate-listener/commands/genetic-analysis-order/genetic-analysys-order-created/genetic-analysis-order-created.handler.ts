@@ -17,8 +17,7 @@ export class GeneticAnalysisOrderCreatedHandler
   async execute(command: GeneticAnalysisOrderCreatedCommand) {
     await this.logger.log('Genetic Analysis Order Created!');
 
-    const geneticAnalysisOrder =
-      command.geneticAnalysisOrders.humanToGeneticAnalysisOrderListenerData();
+    const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =
@@ -28,9 +27,9 @@ export class GeneticAnalysisOrderCreatedHandler
         );
 
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
-        address: geneticAnalysisOrder.customer_id,
+        address: geneticAnalysisOrder.customerId,
         amount: 0,
-        created_at: geneticAnalysisOrder.created_at,
+        created_at: geneticAnalysisOrder.createdAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(0),
         ref_number: geneticAnalysisOrder.id,

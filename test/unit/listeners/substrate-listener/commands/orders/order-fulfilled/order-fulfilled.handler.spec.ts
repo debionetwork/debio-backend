@@ -1,10 +1,10 @@
 import {
   DebioConversionService,
-  OrderStatus,
   RewardService,
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
+import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -23,11 +23,12 @@ import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
-import * as rewardCommand from '../../../../../../../src/common/polkadot-provider/command/rewards';
-import * as userProfileQuery from '../../../../../../../src/common/polkadot-provider/query/user-profile';
-import * as serviceRequestQuery from '../../../../../../../src/common/polkadot-provider/query/service-request';
-import * as ordersQuery from '../../../../../../../src/common/polkadot-provider/query/orders';
-import * as servicesQuery from '../../../../../../../src/common/polkadot-provider/query/services';
+import * as globalProviderMethods from '@debionetwork/polkadot-provider/lib/index';
+import * as rewardCommand from '@debionetwork/polkadot-provider/lib/command/rewards';
+import * as userProfileQuery from '@debionetwork/polkadot-provider/lib/query/user-profile';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
+import * as ordersQuery from '@debionetwork/polkadot-provider/lib/query/labs/orders';
+import * as servicesQuery from '@debionetwork/polkadot-provider/lib/query/labs/services';
 
 describe('Order Fulfilled Handler Event', () => {
   let orderFulfilledHandler: OrderFulfilledHandler;
@@ -99,7 +100,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -224,7 +225,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -297,9 +298,9 @@ describe('Order Fulfilled Handler Event', () => {
     );
 
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customer_id,
+      address: orderCancelledCommand.orders.customerId,
       amount:
-        Number(orderCancelledCommand.orders.additional_prices[0].value) /
+        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
@@ -366,7 +367,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 
@@ -439,9 +440,9 @@ describe('Order Fulfilled Handler Event', () => {
     );
 
     const ORDER_LOGGING_CALLED_WITH: TransactionLoggingDto = {
-      address: orderCancelledCommand.orders.customer_id,
+      address: orderCancelledCommand.orders.customerId,
       amount:
-        Number(orderCancelledCommand.orders.additional_prices[0].value) /
+        Number(orderCancelledCommand.orders.additionalPrices[0].value) /
           10 ** 18 +
         Number(orderCancelledCommand.orders.prices[0].value) / 10 ** 18,
       created_at: new Date(),
@@ -508,7 +509,7 @@ describe('Order Fulfilled Handler Event', () => {
       .spyOn(rewardCommand, 'sendRewards')
       .mockImplementation();
     const convertToDbioUnitStringSpy = jest
-      .spyOn(rewardCommand, 'convertToDbioUnitString')
+      .spyOn(globalProviderMethods, 'convertToDbioUnitString')
       .mockImplementation();
     const ORDER = createMockOrder(OrderStatus.Cancelled);
 

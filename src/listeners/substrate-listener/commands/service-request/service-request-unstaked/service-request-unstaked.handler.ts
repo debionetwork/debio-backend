@@ -1,10 +1,10 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
-  convertToDbioUnit,
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../common';
+import { convertToDbioUnit } from '@debionetwork/polkadot-provider';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestUnstakedCommand } from './service-request-unstaked.command';
 
@@ -23,7 +23,7 @@ export class ServiceRequestUnstakedHandler
   ) {}
 
   async execute(command: ServiceRequestUnstakedCommand) {
-    const serviceRequest = command.request.humanToServiceRequestListenerData();
+    const serviceRequest = command.request.normalize();
 
     try {
       const serviceRequestParent =
@@ -34,8 +34,8 @@ export class ServiceRequestUnstakedHandler
           8,
         );
       const stakingLogging: TransactionLoggingDto = {
-        address: serviceRequest.requester_address,
-        amount: convertToDbioUnit(serviceRequest.staking_amount),
+        address: serviceRequest.requesterAddress,
+        amount: convertToDbioUnit(serviceRequest.stakingAmount),
         created_at: this.dateTimeProxy.new(),
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),

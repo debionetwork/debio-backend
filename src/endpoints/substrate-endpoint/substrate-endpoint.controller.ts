@@ -28,7 +28,8 @@ import {
   queryAccountIdByEthAddress,
   setEthAddress,
   setGeneticAnalysisOrderPaid,
-} from '../../common/polkadot-provider';
+  dbioUnit,
+} from '@debionetwork/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 
@@ -116,7 +117,16 @@ export class SubstrateController {
       Number(size),
     );
 
-    return orders;
+    const ordersGA =
+      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderList(
+        'customer',
+        params.customer_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
+
+    return { orders, ordersGA };
   }
 
   @Get('/orders/bounty_list/:customer_id')
@@ -295,18 +305,18 @@ export class SubstrateController {
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
-      this.substrateService.api,
+      this.substrateService.api as any,
       ethAddress,
     );
 
-    const bindingEth = await setEthAddress(
-      this.substrateService.api,
-      this.substrateService.pair,
-      accountId,
-      ethAddress,
-    );
-
-    if (!bindingEth) {
+    try {
+      await setEthAddress(
+        this.substrateService.api as any,
+        this.substrateService.pair,
+        accountId,
+        ethAddress,
+      );
+    } catch {
       return response.status(401).send('Binding Error');
     }
 
@@ -314,9 +324,8 @@ export class SubstrateController {
       await this.rewardService.getRewardBindingByAccountId(accountId);
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
-      const dbioUnit = 10 ** 18;
       await sendRewards(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
         accountId,
         (rewardAmount * dbioUnit).toString(),
@@ -344,7 +353,7 @@ export class SubstrateController {
     }
 
     await setGeneticAnalysisOrderPaid(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       genetic_analysis_order_id,
     );

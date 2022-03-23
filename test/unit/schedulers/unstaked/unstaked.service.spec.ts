@@ -8,14 +8,11 @@ import {
   schedulerRegistryMockFactory,
 } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import {
-  ProcessEnvProxy,
-  ServiceRequest,
-  SubstrateService,
-} from '../../../../src/common';
+import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
-import * as serviceRequestQuery from '../../../../src/common/polkadot-provider/query/service-request';
-import * as serviceRequestCommand from '../../../../src/common/polkadot-provider/command/service-request';
+import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
+import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
@@ -27,7 +24,10 @@ describe('UnstakedService', () => {
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
-  const strToMilisecondSpy = jest.spyOn(UnstakedService.prototype, 'strToMilisecond');
+  const strToMilisecondSpy = jest.spyOn(
+    UnstakedService.prototype,
+    'strToMilisecond',
+  );
 
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
@@ -106,7 +106,6 @@ describe('UnstakedService', () => {
       expect.any(Function),
       EXPECTED_PARAM,
     );
-    
     expect(schedulerRegistryMock.addInterval).toHaveBeenCalled();
     expect(strToMilisecondSpy).toHaveBeenCalled();
     expect(strToMilisecondSpy).toHaveBeenCalledTimes(2);

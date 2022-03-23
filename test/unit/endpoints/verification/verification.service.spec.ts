@@ -10,9 +10,9 @@ import {
   sendRewards,
   updateLabVerificationStatus,
   updateGeneticAnalystVerificationStatus,
-} from '../../../../src/common/polkadot-provider';
+} from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../src/common/polkadot-provider', () => ({
+jest.mock('@debionetwork/polkadot-provider', () => ({
   sendRewards: jest.fn(),
   updateLabVerificationStatus: jest.fn(),
   updateGeneticAnalystVerificationStatus: jest.fn(),

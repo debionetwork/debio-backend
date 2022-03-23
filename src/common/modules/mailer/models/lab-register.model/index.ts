@@ -1,5 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
-import { Lab } from '../../../../polkadot-provider';
+import { Lab } from '@debionetwork/polkadot-provider';
 import {
   getLabRegisterCertification,
   LabRegisterCertification,

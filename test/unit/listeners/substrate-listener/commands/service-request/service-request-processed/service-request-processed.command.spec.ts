@@ -1,10 +1,8 @@
 import { ServiceRequestProcessedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { ServiceInvoice } from '../../../../../../../src/common/polkadot-provider/models/service-request';
+import { ServiceInvoice } from '@debionetwork/polkadot-provider';
 
-jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/service-request',
-);
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Service Request Processed Command Event', () => {
   const createMockServiceInvoice = () => {
@@ -36,8 +34,7 @@ describe('Service Request Processed Command Event', () => {
   it('should called Model and toHuman()', () => {
     const MOCK_DATA = createMockServiceInvoice();
 
-    const _ = // eslint-disable-line
-      new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber());
+    const _ = new ServiceRequestProcessedCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
     expect(MOCK_DATA[1].toHuman).toHaveBeenCalled();
     expect(ServiceInvoice).toHaveBeenCalled();
@@ -46,8 +43,7 @@ describe('Service Request Processed Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-      const _ = // eslint-disable-line
-        new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber());
+      const _ = new ServiceRequestProcessedCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
     }).toThrow();
   });
 });

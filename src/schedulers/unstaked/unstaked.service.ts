@@ -1,12 +1,11 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
-  ProcessEnvProxy,
   queryServiceRequestById,
   retrieveUnstakedAmount,
-  SubstrateService,
-} from '../../common';
+} from '@debionetwork/polkadot-provider';
 
 @Injectable()
 export class UnstakedService implements OnModuleInit {
@@ -22,7 +21,9 @@ export class UnstakedService implements OnModuleInit {
 
   onModuleInit() {
     this.timer = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_TIMER);
-    const unstakeInterval: number = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_INTERVAL);
+    const unstakeInterval: number = this.strToMilisecond(
+      this.processEnvProxy.env.UNSTAKE_INTERVAL,
+    );
 
     const unstaked = setInterval(async () => {
       await this.handleWaitingUnstaked();
@@ -63,7 +64,7 @@ export class UnstakedService implements OnModuleInit {
       for (const requestService of listRequestService) {
         const requestId = requestService['_source']['request']['hash'];
         const serviceRequestDetail = await queryServiceRequestById(
-          this.subtrateService.api,
+          this.subtrateService.api as any,
           requestId,
         );
 
@@ -76,7 +77,7 @@ export class UnstakedService implements OnModuleInit {
               doc: {
                 request: {
                   status: serviceRequestDetail.status,
-                  unstaked_at: serviceRequestDetail.unstaked_at,
+                  unstaked_at: serviceRequestDetail.unstakedAt,
                 },
               },
             },
@@ -99,7 +100,7 @@ export class UnstakedService implements OnModuleInit {
 
           if (diffTime <= 0) {
             await retrieveUnstakedAmount(
-              this.subtrateService.api,
+              this.subtrateService.api as any,
               this.subtrateService.pair,
               requestId,
             );
@@ -115,7 +116,7 @@ export class UnstakedService implements OnModuleInit {
 
   strToMilisecond(timeFormat: string): number {
     // time format must DD:HH:MM:SS
-    const splitTimeFormat = timeFormat.split(":");
+    const splitTimeFormat = timeFormat.split(':');
 
     const d = Number(splitTimeFormat[0]);
     const h = Number(splitTimeFormat[1]);
@@ -127,7 +128,11 @@ export class UnstakedService implements OnModuleInit {
     const minuteToMilisecond = m * 60 * 1000;
     const secondToMilisecond = s * 1000;
 
-    const result = dayToMilisecond + hourToMilisecond + minuteToMilisecond + secondToMilisecond;
+    const result =
+      dayToMilisecond +
+      hourToMilisecond +
+      minuteToMilisecond +
+      secondToMilisecond;
 
     return result;
   }

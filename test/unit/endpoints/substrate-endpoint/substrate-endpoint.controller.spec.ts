@@ -22,9 +22,10 @@ import {
   setEthAddress,
   sendRewards,
   setGeneticAnalysisOrderPaid,
-} from '../../../../src/common/polkadot-provider';
+  dbioUnit,
+} from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../src/common/polkadot-provider', () => ({
+jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
   sendRewards: jest.fn(),
@@ -40,7 +41,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
-  let geneticAnalysysOrderMock: MockType<GeneticAnalysisOrderService>;
+  let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -131,7 +132,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     dateTimeProxyMock = module.get(DateTimeProxy);
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
-    geneticAnalysysOrderMock = module.get(GeneticAnalysisOrderService);
+    geneticAnalysisOrderMock = module.get(GeneticAnalysisOrderService);
   });
 
   it('should be defined', () => {
@@ -143,7 +144,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(rewardServiceMock).toBeDefined();
     expect(serviceRequestMock).toBeDefined();
     expect(geneticAnalysisMock).toBeDefined();
-    expect(geneticAnalysysOrderMock).toBeDefined();
+    expect(geneticAnalysisOrderMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
@@ -207,20 +208,23 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(orderServiceMock.getOrderByHashId).toHaveBeenCalledWith('keyword');
   });
 
-  it('should orders list by customer', () => {
+  it('should orders list by customer', async () => {
     // Arrange
     const RESULT = 1;
     orderServiceMock.getOrderList.mockReturnValue(RESULT);
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+      RESULT,
+    );
 
     // Assert
     expect(
-      substrateControllerMock.getOrderByCustomer(
+      await substrateControllerMock.getOrderByCustomer(
         { customer_id: 1 },
         'keyword',
         1,
         10,
       ),
-    ).resolves.toEqual(RESULT);
+    ).toEqual({ orders: RESULT, ordersGA: RESULT });
     expect(orderServiceMock.getOrderList).toHaveBeenCalled();
     expect(orderServiceMock.getOrderList).toHaveBeenCalledWith(
       'customer',
@@ -229,12 +233,18 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       1,
       10,
     );
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
+    ).toHaveBeenCalledWith('customer', 1, 'keyword', 1, 10);
   });
 
   it('should genetic analysis orders list by customer', () => {
     // Arrange
     const RESULT = 1;
-    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
       RESULT,
     );
 
@@ -248,17 +258,17 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       ),
     ).resolves.toEqual(RESULT);
     expect(
-      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
     ).toHaveBeenCalled();
     expect(
-      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
     ).toHaveBeenCalledWith('customer', 1, 'keyword', 1, 10);
   });
 
   it('should genetic analysis orders list by analyst', () => {
     // Arrange
     const RESULT = 1;
-    geneticAnalysysOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderList.mockReturnValue(
       RESULT,
     );
 
@@ -272,10 +282,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       ),
     ).resolves.toEqual(RESULT);
     expect(
-      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
     ).toHaveBeenCalled();
     expect(
-      geneticAnalysysOrderMock.getGeneticAnalysisOrderList,
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderList,
     ).toHaveBeenCalledWith('analyst', 1, 'keyword', 1, 10);
   });
 
@@ -321,7 +331,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     );
   });
 
-  it('should service request list by customer_id', () => {
+  it('should service request list by customerId', () => {
     // Arrange
     const RESULT = 1;
     serviceRequestMock.getByCustomerId.mockReturnValue(RESULT);
@@ -329,14 +339,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     // Assert
     expect(
       substrateControllerMock.getServiceRequestByCustomer(
-        { customerId: 1 },
+        { customer_id: 1 },
         1,
         10,
       ),
     ).resolves.toEqual(RESULT);
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalled();
     expect(serviceRequestMock.getByCustomerId).toHaveBeenCalledWith(
-      { customerId: 1 },
+      { customer_id: 1 },
       1,
       10,
     );
@@ -435,7 +445,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       accountId: 'string',
       ethAddress: 'string',
     };
-    const DBIO_UNIT = 10 ** 18;
+    const DBIO_UNIT = dbioUnit;
     const REWARD = 0.2;
     const EXPECTED_RESULTS = {
       reward: REWARD,

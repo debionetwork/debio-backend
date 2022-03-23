@@ -1,4 +1,4 @@
-import { ServiceInvoice } from '../../../../../common';
+import { ServiceInvoice } from '@debionetwork/polkadot-provider';
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class ServiceRequestProcessedCommand {

@@ -4,14 +4,16 @@ import {
   CachesService,
   SubstrateService,
   TransactionLoggingService,
-  OrderStatus,
-  GeneticAnalysisOrderStatus,
   DebioConversionService,
   MailerManager,
   RewardService,
   EmailNotificationService,
-  GeneticAnalysisStatus,
 } from '../../src/common';
+import {
+  OrderStatus,
+  GeneticAnalysisStatus,
+  GeneticAnalysisOrderStatus,
+} from '@debionetwork/polkadot-provider';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
 import { File, Bucket } from '@google-cloud/storage';
@@ -23,10 +25,10 @@ import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
-export function mockFunction(args){} // eslint-disable-line
+export function mockFunction(args) {} // eslint-disable-line
 
 export type MockType<T> = {
-    [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
+  [P in keyof T]?: jest.Mock<{}>; // eslint-disable-line
 };
 
 export const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(

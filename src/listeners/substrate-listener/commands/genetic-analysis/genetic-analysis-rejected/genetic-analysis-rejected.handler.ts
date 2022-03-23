@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  setGeneticAnalysisOrderRefunded,
-  SubstrateService,
-} from '../../../../../common';
+import { SubstrateService } from '../../../../../common';
+import { setGeneticAnalysisOrderRefunded } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisRejectedCommand } from './genetic-analysis-rejected.command';
 
 @Injectable()
@@ -19,14 +17,13 @@ export class GeneticAnalysisRejectedHandler
   async execute(command: GeneticAnalysisRejectedCommand) {
     await this.logger.log('Genetic Analysis Rejected!');
 
-    const geneticAnalysis =
-      command.geneticAnalysis.humanToGeneticAnalysisListenerData();
+    const geneticAnalysis = command.geneticAnalysis.normalize();
 
     try {
       await setGeneticAnalysisOrderRefunded(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
-        geneticAnalysis.genetic_analysis_order_id,
+        geneticAnalysis.geneticAnalysisOrderId,
       );
     } catch (error) {
       await this.logger.log(error);

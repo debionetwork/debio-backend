@@ -1,5 +1,5 @@
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
-import { ServiceRequest } from '../../../../../common';
+import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 export class ServiceRequestCreatedCommand {
   request: ServiceRequest;

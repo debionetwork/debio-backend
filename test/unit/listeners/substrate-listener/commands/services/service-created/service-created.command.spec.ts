@@ -1,9 +1,12 @@
 import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
-import { ServiceFlow, ServiceInfo } from '../../../../../../../src/common';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
-import { Service } from '../../../../../../../src/common/polkadot-provider/models/services';
+import {
+  Service,
+  ServiceFlow,
+  ServiceInfo,
+} from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/services');
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Serive Created Command Event', () => {
   const createMockService = (
@@ -52,8 +55,7 @@ describe('Serive Created Command Event', () => {
 
     const MOCK_DATA = createMockService(serviceInfo, ServiceFlow.RequestTest);
 
-    const _ = // eslint-disable-line
-      new ServiceCreatedCommand(MOCK_DATA, mockBlockNumber());
+    const _ = new ServiceCreatedCommand(MOCK_DATA, mockBlockNumber()); // eslint-disable-line
 
     expect(MOCK_DATA[0].toHuman).toHaveBeenCalled();
     expect(Service).toHaveBeenCalled();
@@ -62,8 +64,7 @@ describe('Serive Created Command Event', () => {
 
   it('should throw error', () => {
     expect(() => {
-        const _ = // eslint-disable-line
-          new ServiceCreatedCommand([{}, {}], mockBlockNumber());
+      const _ = new ServiceCreatedCommand([{}, {}], mockBlockNumber()); // eslint-disable-line
     }).toThrow();
   });
 });

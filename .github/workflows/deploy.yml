@@ -91,6 +91,8 @@ jobs:
             EMAILS:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.DEV_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            UNSTAKE_INTERVAL:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
+            UNSTAKE_TIMER:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
@@ -144,10 +146,12 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
+              --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
-              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.className=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
@@ -168,14 +172,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -235,6 +239,8 @@ jobs:
             EMAILS:${{ secrets.STG_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.STG_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            UNSTAKE_INTERVAL:${{ secrets.STG_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
+            UNSTAKE_TIMER:${{ secrets.STG_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.STG_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.STG_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.STG_GCP_PROJECT_ID }}/SSH_HOST
@@ -288,10 +294,12 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
+              --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
-              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
-              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.className=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
@@ -312,14 +320,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.stg.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=1 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -379,6 +387,8 @@ jobs:
             EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            UNSTAKE_INTERVAL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
+            UNSTAKE_TIMER:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
@@ -432,10 +442,12 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
+              --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
-              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
-              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.className=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
@@ -456,14 +468,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -523,6 +535,8 @@ jobs:
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
+            UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
@@ -576,10 +590,12 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
+              --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
-              --set-string config.healthcheck={{ steps.secrets.outputs.API_HEALTHCHECK_URL }} \
+              --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
-              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.className=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
@@ -600,14 +616,14 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
+              --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend
 
@@ -667,6 +683,8 @@ jobs:
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
+            UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
@@ -720,10 +738,12 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
+              --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
-              --set-string ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+              --set-string ingress.className=nginx \
               --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
               --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
@@ -744,13 +764,13 @@ jobs:
               --set-string ingress.hosts[0].paths[1].servicePort=80 \
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.debio.network \
-              --set-string resources.requests.cpu=500m \
-              --set-string resources.requests.memory=800Mi \
-              --set-string resources.limits.cpu=700m \
+              --set-string resources.requests.cpu=300m \
+              --set-string resources.requests.memory=512Mi \
+              --set-string resources.limits.cpu=500m \
               --set-string resources.limits.memory=1024Mi \
-              --set replicaCount=3 \
+              --set replicaCount=1 \
               --set autoscaling.enabled=true \
-              --set autoscaling.minReplicas=3 \
-              --set autoscaling.maxReplicas=20 \
+              --set autoscaling.minReplicas=1 \
+              --set autoscaling.maxReplicas=11 \
               --set-string nodeSelector.pool=general
             kubectl rollout status deployment/debio-backend

@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  setGeneticAnalysisOrderFulfilled,
-  SubstrateService,
-} from '../../../../../common';
+import { SubstrateService } from '../../../../../common';
+import { setGeneticAnalysisOrderFulfilled } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from './genetic-analysis-result-ready.command';
 
 @Injectable()
@@ -19,14 +17,13 @@ export class GeneticAnalysisResultReadyHandler
   async execute(command: GeneticAnalysisResultReadyCommand) {
     await this.logger.log('Genetic Analysis Result Ready!');
 
-    const geneticAnalysis =
-      command.geneticAnalysis.humanToGeneticAnalysisListenerData();
+    const geneticAnalysis = command.geneticAnalysis.normalize();
 
     try {
       await setGeneticAnalysisOrderFulfilled(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
-        geneticAnalysis.genetic_analysis_order_id,
+        geneticAnalysis.geneticAnalysisOrderId,
       );
     } catch (error) {
       await this.logger.log(error);

@@ -3,6 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import { TransactionLoggingService } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { Order } from '@debionetwork/polkadot-provider';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -14,7 +15,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   async execute(command: OrderPaidCommand) {
     await this.logger.log('OrderPaid!');
 
-    const order = command.orders.humanToOrderListenerData();
+    const order: Order = command.orders;
+    order.normalize();
 
     try {
       const isOrderHasBeenInsert =
@@ -25,9 +27,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
 
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
-        address: order.customer_id,
-        amount: order.additional_prices[0].value + order.prices[0].value,
-        created_at: order.updated_at,
+        address: order.customerId,
+        amount: order.additionalPrices[0].value + order.prices[0].value,
+        created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
         ref_number: order.id,

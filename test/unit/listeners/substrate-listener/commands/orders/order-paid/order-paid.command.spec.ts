@@ -1,16 +1,14 @@
-import { OrderStatus } from '../../../../../../../src/common';
 import { OrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { createMockOrder, mockBlockNumber } from '../../../../../mock';
-import { Order } from '../../../../../../../src/common/polkadot-provider/models/orders';
+import { Order, OrderStatus } from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../../../../src/common/polkadot-provider/models/orders');
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Order Cancelled Command Event', () => {
   it('should called model data and toHuman', () => {
     const ORDER_RESPONSE = createMockOrder(OrderStatus.Cancelled);
 
-    const _ = // eslint-disable-line
-      new OrderPaidCommand([ORDER_RESPONSE], mockBlockNumber());
+    const _ = new OrderPaidCommand([ORDER_RESPONSE], mockBlockNumber()); // eslint-disable-line
     expect(Order).toHaveBeenCalled();
     expect(Order).toHaveBeenCalledWith(ORDER_RESPONSE.toHuman());
     expect(ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -18,8 +16,7 @@ describe('Order Cancelled Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _ = // eslint-disable-line
-        new OrderPaidCommand([{}], mockBlockNumber());
+      const _ = new OrderPaidCommand([{}], mockBlockNumber()); // eslint-disable-line
     }).toThrowError();
   });
 });

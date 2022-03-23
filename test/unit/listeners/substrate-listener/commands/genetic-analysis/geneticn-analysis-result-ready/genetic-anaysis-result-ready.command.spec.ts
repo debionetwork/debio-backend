@@ -1,14 +1,14 @@
-import { GeneticAnalysisStatus } from '../../../../../../../src/common';
 import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import {
   createMockGeneticAnalysis,
   mockBlockNumber,
 } from '../../../../../mock';
-import { GeneticAnalysis } from '../../../../../../../src/common/polkadot-provider/models/genetic-analysis';
+import {
+  GeneticAnalysis,
+  GeneticAnalysisStatus,
+} from '@debionetwork/polkadot-provider';
 
-jest.mock(
-  '../../../../../../../src/common/polkadot-provider/models/genetic-analysis',
-);
+jest.mock('@debionetwork/polkadot-provider');
 
 describe('Genetic Analysis Result ready Command Event', () => {
   it('should called model data and toHuman', () => {
@@ -16,8 +16,10 @@ describe('Genetic Analysis Result ready Command Event', () => {
       GeneticAnalysisStatus.ResultReady,
     );
 
-    const _= // eslint-disable-line
-      new GeneticAnalysisResultReadyCommand([GA_ORDER_RESPONSE], mockBlockNumber());
+    const _ = new GeneticAnalysisResultReadyCommand( // eslint-disable-line
+      [GA_ORDER_RESPONSE],
+      mockBlockNumber(),
+    );
     expect(GeneticAnalysis).toHaveBeenCalled();
     expect(GeneticAnalysis).toHaveBeenCalledWith(GA_ORDER_RESPONSE.toHuman());
     expect(GA_ORDER_RESPONSE.toHuman).toHaveBeenCalled();
@@ -25,8 +27,7 @@ describe('Genetic Analysis Result ready Command Event', () => {
 
   it('should throw error if toHuman not defined', () => {
     expect(() => {
-      const _= // eslint-disable-line
-        new GeneticAnalysisResultReadyCommand([{}], mockBlockNumber());
+      const _ = new GeneticAnalysisResultReadyCommand([{}], mockBlockNumber()); // eslint-disable-line
     }).toThrowError();
   });
 });

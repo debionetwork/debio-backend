@@ -7,9 +7,9 @@ import {
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubstrateService } from '../../../../../src/common';
-import { setGeneticAnalysisOrderPaid } from '../../../../../src/common/polkadot-provider';
+import { setGeneticAnalysisOrderPaid } from '@debionetwork/polkadot-provider';
 
-jest.mock('../../../../../src/common/polkadot-provider', () => ({
+jest.mock('@debionetwork/polkadot-provider', () => ({
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
 
