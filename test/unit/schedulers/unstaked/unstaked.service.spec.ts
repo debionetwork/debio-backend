@@ -83,8 +83,8 @@ describe('UnstakedService', () => {
         },
         {
           provide: SchedulerRegistry,
-          useFactory: schedulerRegistryMockFactory
-        }
+          useFactory: schedulerRegistryMockFactory,
+        },
       ],
     }).compile();
     module.useLogger(MockLogger);
