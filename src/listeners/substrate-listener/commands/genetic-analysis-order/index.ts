@@ -15,5 +15,5 @@ export const GeneticAnalysisOrderCommandHandlers = [
   GeneticAnalysisOrderCreatedHandler,
   GeneticAnalysisOrderRefundedHandler,
   GeneticAnalysisOrderFulfilledHandler,
-  GeneticAnalysisOrderCancelledHandler
+  GeneticAnalysisOrderCancelledHandler,
 ];
