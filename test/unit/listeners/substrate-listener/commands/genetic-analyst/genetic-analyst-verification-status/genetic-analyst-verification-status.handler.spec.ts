@@ -75,7 +75,9 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
         mockBlockNumber(),
       );
 
-    await geneticAnalystVerificationStatusHandler.execute(geneticAnalysisOrders);
+    await geneticAnalystVerificationStatusHandler.execute(
+      geneticAnalysisOrders,
+    );
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
