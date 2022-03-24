@@ -84,6 +84,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     jest.fn(() => ({
       geneticAnalysisSetOrderPaid: jest.fn(),
       getGeneticAnalysisOrderList: jest.fn(),
+      getGeneticAnalysisOrderById: jest.fn(),
     }));
 
   class ProcessEnvProxyMock {
@@ -197,8 +198,13 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
   it('should orders by order Id', () => {
     // Arrange
-    const RESULT = 1;
-    orderServiceMock.getOrderByHashId.mockReturnValue(RESULT);
+    const RETURN_VALUE = 1;
+    const RESULT = {
+      order: RETURN_VALUE,
+      orderGA: RETURN_VALUE,
+    }
+    orderServiceMock.getOrderByHashId.mockReturnValue(RETURN_VALUE);
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(RETURN_VALUE)
 
     // Assert
     expect(substrateControllerMock.getOrderById('keyword')).resolves.toEqual(

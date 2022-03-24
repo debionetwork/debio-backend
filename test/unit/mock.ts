@@ -68,6 +68,7 @@ export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchServic
     update: jest.fn((entity) => entity),
     updateByQuery: jest.fn((entity) => entity),
     search: jest.fn((entity) => entity),
+    count: jest.fn((entity) => entity),
     ping: jest.fn(),
   }));
 
