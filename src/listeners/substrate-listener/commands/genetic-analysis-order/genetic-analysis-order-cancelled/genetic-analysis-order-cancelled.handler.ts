@@ -26,10 +26,10 @@ export class GeneticAnalysisOrderCancelledHandler
           17,
         );
       const isGeneticAnalysisOrderHasBeenPaid =
-      await this.loggingService.getLoggingByHashAndStatus(
-        geneticAnalysisOrder.id,
-        14,
-      );
+        await this.loggingService.getLoggingByHashAndStatus(
+          geneticAnalysisOrder.id,
+          14,
+        );
       const geneticAnalysisOrderHistory =
         await this.loggingService.getLoggingByOrderId(geneticAnalysisOrder.id);
 
@@ -44,7 +44,10 @@ export class GeneticAnalysisOrderCancelledHandler
         transaction_type: 3,
       };
 
-      if (!isGeneticAnalysisOrderHasBeenInsert && isGeneticAnalysisOrderHasBeenPaid) {
+      if (
+        !isGeneticAnalysisOrderHasBeenInsert &&
+        isGeneticAnalysisOrderHasBeenPaid
+      ) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
       }
     } catch (error) {
