@@ -202,9 +202,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     const RESULT = {
       order: RETURN_VALUE,
       orderGA: RETURN_VALUE,
-    }
+    };
     orderServiceMock.getOrderByHashId.mockReturnValue(RETURN_VALUE);
-    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(RETURN_VALUE)
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(
+      RETURN_VALUE,
+    );
 
     // Assert
     expect(substrateControllerMock.getOrderById('keyword')).resolves.toEqual(

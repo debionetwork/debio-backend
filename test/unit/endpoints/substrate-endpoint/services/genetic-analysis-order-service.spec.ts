@@ -37,7 +37,13 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     };
   };
 
-  const createSearchListObject = (size: number, page: number, hash_id: string, keyword: string, type: string) => {
+  const createSearchListObject = (
+    size: number,
+    page: number,
+    hash_id: string,
+    keyword: string,
+    type: string,
+  ) => {
     const filter_array = [];
 
     let match;
@@ -116,7 +122,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     };
 
     return { query, searchObj };
-  }
+  };
 
   //Arrange before each iteration
   beforeEach(async () => {
@@ -179,7 +185,11 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       .mockReturnValue(ES_RESULT);
 
     //Assert
-    expect(geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(genetic_analyst_order_id)).resolves.toEqual(RESULT);
+    expect(
+      geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(
+        genetic_analyst_order_id,
+      ),
+    ).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -199,7 +209,11 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(genetic_analyst_order_id)).resolves.toEqual(RESULT);
+    expect(
+      geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(
+        genetic_analyst_order_id,
+      ),
+    ).resolves.toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -218,9 +232,11 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     );
 
     //Assert
-    expect(geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(genetic_analyst_order_id)).rejects.toMatchObject(
-      ERROR_RESULT,
-    );
+    expect(
+      geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderById(
+        genetic_analyst_order_id,
+      ),
+    ).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -230,7 +246,13 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
     const keyword = 'XX';
     const size = 10;
     const page = 1;
-    const CALLED_WITH = createSearchListObject(size, page, genetic_analyst_order_id, keyword, type);
+    const CALLED_WITH = createSearchListObject(
+      size,
+      page,
+      genetic_analyst_order_id,
+      keyword,
+      type,
+    );
     const RESULT = [];
     const RESULT_COUNT = 1;
     const RESULT_PAGE = 1;
@@ -268,7 +290,15 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       .mockReturnValue(ES_RESULT_COUNT);
 
     //Assert
-    expect(await geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderList(type, genetic_analyst_order_id, keyword, page, size)).toEqual(FUNCTION_RESULT);
+    expect(
+      await geneticAnalysisOrderServiceMock.getGeneticAnalysisOrderList(
+        type,
+        genetic_analyst_order_id,
+        keyword,
+        page,
+        size,
+      ),
+    ).toEqual(FUNCTION_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });
