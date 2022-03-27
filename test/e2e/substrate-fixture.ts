@@ -17,7 +17,8 @@ module.exports = async () => {
   const keyring = new Keyring({ type: 'sr25519' });
   const pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
 
-  const promise = new Promise((resolve, reject) => { // eslint-disable-line
+  // eslint-disable-next-line
+  const promise = new Promise((resolve, reject) => {
     registerLab(api as any, pair, labDataMock.info, () =>
       resolve('registerLab'),
     );

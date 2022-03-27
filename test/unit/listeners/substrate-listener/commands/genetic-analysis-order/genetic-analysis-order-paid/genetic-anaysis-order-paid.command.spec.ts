@@ -4,7 +4,7 @@ import {
   mockBlockNumber,
 } from '../../../../../mock';
 import {
-  GeneticAnalystOrder,
+  GeneticAnalysisOrder,
   GeneticAnalysisOrderStatus,
 } from '@debionetwork/polkadot-provider';
 
@@ -20,8 +20,8 @@ describe('Genetic Analysis Order Paid Command Event', () => {
       [GA_ORDER_RESPONSE],
       mockBlockNumber(),
     );
-    expect(GeneticAnalystOrder).toHaveBeenCalled();
-    expect(GeneticAnalystOrder).toHaveBeenCalledWith(
+    expect(GeneticAnalysisOrder).toHaveBeenCalled();
+    expect(GeneticAnalysisOrder).toHaveBeenCalledWith(
       GA_ORDER_RESPONSE.toHuman(),
     );
     expect(GA_ORDER_RESPONSE.toHuman).toHaveBeenCalled();
