@@ -29,7 +29,7 @@ export class MailerService {
       const labRegisterPending =
         await this.emailNotificationService.getPendingLabRegisterNotification();
 
-      labRegisterPending.forEach(async (data) => {
+      for (const data of labRegisterPending) {
         const contextLab = await queryLabById(
           this.substrateService.api as any,
           data.ref_number,
@@ -46,9 +46,9 @@ export class MailerService {
         );
 
         await this.emailNotificationService.setEmailNotificationSent(
-          labRegister.address,
+          labRegister.lab_id,
         );
-      });
+      }
     } catch (error) {
       this.logger.error(`Email Notification scheduler error: ${error}`);
     } finally {
