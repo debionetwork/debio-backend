@@ -2,6 +2,7 @@ module.exports = async () => {
   const path = require('path'); // eslint-disable-line
   const compose = require('docker-compose'); // eslint-disable-line
   const fixture = require('./fixture'); // eslint-disable-line
+  const elasticsearchFixture = require('./elasticsearch-fixture'); // eslint-disable-line
 
   const promise = new Promise((resolve, reject) => {
     // eslint-disable-line
@@ -9,7 +10,15 @@ module.exports = async () => {
       () => {
         fixture()
           .then(() => {
-            resolve('DeBio Backend Dependencies is Up!');
+            elasticsearchFixture()
+              .then(() => {
+                resolve('DeBio Backend Dependencies is Up!');
+              })
+              .catch((err) => {
+                reject(
+                  `Something went wrong when migrating DeBio Network Indexer: ${err.message}`,
+                );
+              });
           })
           .catch((err) => {
             reject(

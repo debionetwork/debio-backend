@@ -8,7 +8,9 @@ import { DataTokenToDatasetMapping } from '../../src/endpoints/bounty/models/dat
 
 module.exports = async () => {
   // Wait for database to open connection.
+  console.log('Waiting for database connection to resolve ⏰...');
   await new Promise((resolve) => setTimeout(resolve, 2000));
+  console.log('Database connection to resolved! ✅');
 
   const mainConnection = await createConnection({
     ...dummyCredentials,
