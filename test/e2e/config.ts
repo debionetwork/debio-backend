@@ -11,6 +11,6 @@ export const dummyCredentials = {
 
 export function setElasticsearchDummyCredentials() {
   process.env.ELASTICSEARCH_NODE = 'http://localhost:9200';
-  process.env.ELASTICSEARCH_USERNAME='elastic';
-  process.env.ELASTICSEARCH_PASSWORD='elastic';
+  process.env.ELASTICSEARCH_USERNAME = 'elastic';
+  process.env.ELASTICSEARCH_PASSWORD = 'elastic';
 }

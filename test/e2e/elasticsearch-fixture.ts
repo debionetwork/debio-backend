@@ -1,4 +1,4 @@
-import { setElasticsearchDummyCredentials } from "./config";
+import { setElasticsearchDummyCredentials } from './config';
 
 module.exports = async () => {
   // Wait for Elasticsearch to open connection.
