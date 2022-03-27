@@ -23,7 +23,7 @@ services:
       discovery.type: single-node
       xpack.security.enabled: "true"
       xpack.security.audit.enabled: "true"
-      ELASTIC_PASSWORD: admin
+      ELASTIC_PASSWORD: elastic
     ports:
       - 9200:9200
       - 9300:9300

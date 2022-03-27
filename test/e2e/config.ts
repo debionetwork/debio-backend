@@ -8,3 +8,9 @@ export const dummyCredentials = {
   username: 'postgres',
   password: pass,
 };
+
+export function setElasticsearchDummyCredentials() {
+  process.env.ELASTICSEARCH_NODE = 'http://localhost:9200';
+  process.env.ELASTICSEARCH_USERNAME='elastic';
+  process.env.ELASTICSEARCH_PASSWORD='elastic';
+}
