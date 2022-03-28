@@ -65,7 +65,7 @@ describe('Health Controller (e2e)', () => {
     const stringResult = JSON.stringify(result);
 
     // Assert
-    expect(result.ok).toEqual(true);
+    expect(result.status).toEqual(200);
     // prettier-ignore
     expect(
       stringResult.includes('\\\"database\\\":{\\\"status\\\":\\\"up\\\"}'),
