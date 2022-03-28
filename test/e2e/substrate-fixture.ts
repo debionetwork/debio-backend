@@ -5,9 +5,9 @@ import { labDataMock } from '../mocks/models/labs/labs.mock';
 
 module.exports = async () => {
   // Wait for Substrate to open connection.
-  console.log('Waiting for Substrate connection to resolve ⏰...');
+  console.log('Waiting for debio-node to resolve ⏰...');
   await cryptoWaitReady();
-  console.log('Substrate connection to resolved! ✅');
+  console.log('debio-node resolved! ✅');
 
   const wsProvider = new WsProvider('ws://127.0.0.1:9944');
   const api = await ApiPromise.create({

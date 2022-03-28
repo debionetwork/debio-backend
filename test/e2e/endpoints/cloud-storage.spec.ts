@@ -28,7 +28,7 @@ describe('Cloud Controller (e2e)', () => {
     await app.init();
   });
 
-  it('GET /signed-url: GetSignedUrl should return', async () => {
+  it('GET /gcs/signed-url: GetSignedUrl should return', async () => {
     // Act
     const FILENAME = 'example.txt';
     const ACTION = 'write';
