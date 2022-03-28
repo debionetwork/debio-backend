@@ -1,7 +1,5 @@
 import { setElasticsearchDummyCredentials } from './config';
 import { Client } from '@elastic/elasticsearch';
-import { labDataMock } from '../mocks/models/labs/labs.mock';
-import { serviceDataMock } from '../mocks/models/labs/services.mock';
 
 module.exports = async () => {
   // Wait for Elasticsearch to open connection.
