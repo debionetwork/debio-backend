@@ -31,6 +31,7 @@ export const service: LabRegisterService = {
 };
 
 export const labRegister: LabRegister = {
+  lab_id: 'string',
   email: 'string',
   phone_number: 'string',
   website: 'string',

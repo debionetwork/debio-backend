@@ -14,7 +14,7 @@ import {
 import { HealthController } from '../../../../src/endpoints/health/health.controller';
 import { getConnectionToken } from '@nestjs/typeorm';
 
-describe('Health Controller Unit TEsts', () => {
+describe('Health Controller Unit Tests', () => {
   let controller: HealthController;
   let healthCheckServiceMock: MockType<HealthCheckService>;
   let typeOrmHealthIndicatorMock: MockType<TypeOrmHealthIndicator>;
@@ -140,7 +140,7 @@ describe('Health Controller Unit TEsts', () => {
     expect(memoryHealthIndicatorMock.checkHeap).toHaveBeenCalledTimes(1);
     expect(memoryHealthIndicatorMock.checkHeap).toHaveBeenCalledWith(
       'memory heap',
-      300 * 1024 * 1024,
+      1000 * 1024 * 1024,
     );
     expect(diskHealthIndicatorMock.checkStorage).toHaveBeenCalledTimes(1);
     expect(diskHealthIndicatorMock.checkStorage).toHaveBeenCalledWith(
