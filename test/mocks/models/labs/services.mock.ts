@@ -1,6 +1,6 @@
 export const serviceDataMock = {
   id: 'ID',
-  ownerId: 'OWNER_ID',
+  ownerId: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
   serviceFlow: 'RequestTest',
   info: {
     name: 'string',

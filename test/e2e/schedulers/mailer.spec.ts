@@ -43,8 +43,8 @@ describe('Mailer Scheduler (e2e)', () => {
       ],
     }).compile();
 
-    (mailerManager = module.get(MailerManager)),
-      (substrateService = module.get(SubstrateService));
+    mailerManager = module.get(MailerManager);
+    substrateService = module.get(SubstrateService);
     emailNotificationService = module.get(EmailNotificationService);
     service = new MailerService(
       mailerManager,

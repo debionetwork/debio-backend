@@ -15,7 +15,7 @@ module.exports = async () => {
               .then(() => {
                 elasticsearchFixture()
                   .then(() => {
-                    resolve('DeBio Backend Dependencies is Up!');
+                    resolve('DeBio Backend Dependencies is Up! 🆙');
                   })
                   .catch((err) => {
                     reject(
