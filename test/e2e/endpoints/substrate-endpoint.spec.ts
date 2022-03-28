@@ -5,7 +5,11 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
 import { LocationModule } from '../../../src/endpoints/location/location.module';
-import { DebioConversionModule, RewardModule, SubstrateModule } from '../../../src/common';
+import {
+  DebioConversionModule,
+  RewardModule,
+  SubstrateModule,
+} from '../../../src/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { labDataMock } from '../../mocks/models/labs/labs.mock';
 import { serviceDataMock } from '../../mocks/models/labs/services.mock';
@@ -68,7 +72,9 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
     // Act
     const result = await request(server)
-      .get(`/substrate/labs?country=${COUNTRY}&region=${REGION}&city=${CITY}&category=${CATEGORY}&service_flow=${SERVICE_FLOW}`)
+      .get(
+        `/substrate/labs?country=${COUNTRY}&region=${REGION}&city=${CITY}&category=${CATEGORY}&service_flow=${SERVICE_FLOW}`,
+      )
       .send();
 
     // Assert
