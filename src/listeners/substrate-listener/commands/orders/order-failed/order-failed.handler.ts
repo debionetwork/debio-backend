@@ -50,7 +50,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.api,
       this.substrateService.pair,
       order.customerId,
-      (order.additionalPrices[0].value * 10 ** 18).toString(),
+      (+order.additionalPrices[0].value * 10 ** 18).toString(),
     );
 
     //send reward for customer
@@ -58,7 +58,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.api,
       this.substrateService.pair,
       order.sellerId,
-      ((order.additionalPrices[0].value * 10 ** 18) / 10).toString(),
+      ((+order.additionalPrices[0].value * 10 ** 18) / 10).toString(),
     );
   }
 }
