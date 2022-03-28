@@ -67,10 +67,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
       .calledWith(geneticAnalyst.toHuman().accountId, 19)
       .mockReturnValue(RESULT_STATUS);
 
-    const GeneticAnalysisOrders: GeneticAnalystStakedCommand =
+    const geneticAnalysisOrders: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrders);
+    await geneticAnalystStakedHandler.execute(geneticAnalysisOrders);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
@@ -98,10 +98,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
       .calledWith(geneticAnalyst.toHuman().accountId, 19)
       .mockReturnValue(RESULT_STATUS);
 
-    const GeneticAnalysisOrderPaidCommand: GeneticAnalystStakedCommand =
+    const geneticAnalysisOrderPaidCommand: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrderPaidCommand);
+    await geneticAnalystStakedHandler.execute(geneticAnalysisOrderPaidCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
