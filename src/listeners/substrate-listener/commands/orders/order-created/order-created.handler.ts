@@ -27,7 +27,7 @@ export class OrderCreatedHandler
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: order.additionalPrices[0].value + order.prices[0].value,
+        amount: +order.additionalPrices[0].value + +order.prices[0].value,
         created_at: order.createdAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(0),
