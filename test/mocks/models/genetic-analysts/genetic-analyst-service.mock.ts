@@ -1,31 +1,31 @@
 export const geneticAnalystServiceDataMock = {
-  id: "string",
-  ownerId: "string",
+  id: 'string',
+  ownerId: 'string',
   info: {
-    name: "string",
+    name: 'string',
     pricesByCurrency: [
       {
-        currency: "string",
-        totalPrice: "string",
+        currency: 'string',
+        totalPrice: 'string',
         priceComponents: [
           {
-            component: "string",
-            value: "string",
+            component: 'string',
+            value: 'string',
           },
         ],
         additionalPrices: [
           {
-            component: "string",
-            value: "string",
+            component: 'string',
+            value: 'string',
           },
         ],
-      }
+      },
     ],
     expectedDuration: {
       duration: 1,
-      durationType: "Days",
+      durationType: 'Days',
     },
-    description: "string",
-    testResultSample: "string",
-  }
-}
+    description: 'string',
+    testResultSample: 'string',
+  },
+};

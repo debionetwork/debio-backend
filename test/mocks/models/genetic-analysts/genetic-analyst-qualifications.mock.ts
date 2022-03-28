@@ -1,21 +1,21 @@
 export const geneticAnalystQualificationsDataMock = {
-  id: "string",
-  ownerId: "string",
+  id: 'string',
+  ownerId: 'string',
   info: {
     experience: [
       {
-        title: "string"
-      }
+        title: 'string',
+      },
     ],
     certification: [
       {
-        title: "string",
-        issuer: "string",
-        month: "string",
-        year: "string",
-        description: "string",
-        supportingDocument: "string",
-      }
-    ]
-  }
-}
+        title: 'string',
+        issuer: 'string',
+        month: 'string',
+        year: 'string',
+        description: 'string',
+        supportingDocument: 'string',
+      },
+    ],
+  },
+};
