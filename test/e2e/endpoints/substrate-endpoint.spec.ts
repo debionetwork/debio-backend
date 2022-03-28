@@ -11,14 +11,13 @@ import {
   SubstrateModule,
 } from '../../../src/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { labDataMock } from '../../mocks/models/labs/labs.mock';
-import { serviceDataMock } from '../../mocks/models/labs/services.mock';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { Reward } from '../../../src/common/modules/reward/models/reward.entity';
 import { Country } from '../../../src/endpoints/location/models/country.entity';
 import { State } from '../../../src/endpoints/location/models/state.entity';
 import { City } from '../../../src/endpoints/location/models/city.entity';
+import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoint/substrate-endpoint.module';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -27,6 +26,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        SubstrateEndpointModule,
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
@@ -64,11 +64,11 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   it('GET /substrate/labs: findByCountryCityCategory should return', async () => {
     // Arrange
-    const COUNTRY = labDataMock.info.country;
-    const REGION = labDataMock.info.region;
-    const CITY = labDataMock.info.city;
-    const CATEGORY = serviceDataMock.info.category;
-    const SERVICE_FLOW = serviceDataMock.serviceFlow;
+    const COUNTRY = 'ID';
+    const REGION = 'BA';
+    const CITY = 'Denpasar';
+    const CATEGORY = 'Single Gene';
+    const SERVICE_FLOW = 'RequestTest';
 
     // Act
     const result = await request(server)
@@ -78,7 +78,27 @@ describe('Substrate Endpoint Controller (e2e)', () => {
       .send();
 
     // Assert
-    console.log(result.text);
+    expect(result.text.includes(COUNTRY)).toBeTruthy();
+    expect(result.text.includes(REGION)).toBeTruthy();
+    expect(result.text.includes(CITY)).toBeTruthy();
+    expect(result.text.includes(CATEGORY)).toBeTruthy();
+    expect(result.text.includes(SERVICE_FLOW)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 25000);
+
+  it('GET /substrate/services: findByCountryCity should return', async () => {
+    // Arrange
+    const COUNTRY = 'ID';
+    const CITY = 'Denpasar';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/services/${COUNTRY}/${CITY}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(COUNTRY)).toBeTruthy();
+    expect(result.text.includes(CITY)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 25000);
 });

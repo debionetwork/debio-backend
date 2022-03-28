@@ -33,10 +33,12 @@ describe('Location Controller (e2e)', () => {
   });
 
   it('GET /location: getLocation should return', async () => {
-    // Act
+    // Arrange
     const COUNTRY_CODE = 'AT';
     const STATE_CODE = '2';
     const CITY_CODE = 1;
+
+    // Act
     const result = await request(server)
       .get(
         `/location?country_code=${COUNTRY_CODE}&state_code=${STATE_CODE}&city_id=${CITY_CODE}`,
@@ -44,7 +46,9 @@ describe('Location Controller (e2e)', () => {
       .send();
 
     // Assert
-    console.log(result);
+    expect(result.text.includes(COUNTRY_CODE)).toBeTruthy();
+    expect(result.text.includes(STATE_CODE)).toBeTruthy();
+    expect(result.text.includes(CITY_CODE.toString())).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 25000);
 });
