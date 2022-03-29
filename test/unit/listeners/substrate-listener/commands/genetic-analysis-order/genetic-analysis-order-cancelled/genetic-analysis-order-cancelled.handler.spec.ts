@@ -8,7 +8,7 @@ import {
   MockType,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalysisOrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-Cancelled/genetic-analysis-order-Cancelled.handler';
+import { GeneticAnalysisOrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
