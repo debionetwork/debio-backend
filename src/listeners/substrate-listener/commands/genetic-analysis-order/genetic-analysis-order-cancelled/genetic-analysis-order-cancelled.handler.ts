@@ -35,7 +35,7 @@ export class GeneticAnalysisOrderCancelledHandler
 
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount: geneticAnalysisOrder.prices[0].value,
+        amount: Number(geneticAnalysisOrder.prices[0].value),
         created_at: geneticAnalysisOrder.updatedAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
