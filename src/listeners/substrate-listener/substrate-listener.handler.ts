@@ -24,6 +24,7 @@ import {
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
   GeneticAnalysisOrderFulfilledCommand,
+  GeneticAnalysisOrderCancelledCommand,
 } from './commands/genetic-analysis-order';
 import {
   GeneticAnalysisRejectedCommand,
@@ -60,6 +61,7 @@ const eventRoutes = {
     GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
     GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
     GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+    GeneticAnalysisOrderCancelled: GeneticAnalysisOrderCancelledCommand,
   },
   geneticAnalysis: {
     GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
