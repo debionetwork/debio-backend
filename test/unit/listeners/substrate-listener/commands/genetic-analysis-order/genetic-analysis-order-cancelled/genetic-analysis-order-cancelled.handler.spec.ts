@@ -1,6 +1,6 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
 import { TransactionLoggingService } from '../../../../../../../src/common';
-import { GeneticAnalysisOrderCancelledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
+import { GeneticAnalysisOrderCancelledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.command';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
