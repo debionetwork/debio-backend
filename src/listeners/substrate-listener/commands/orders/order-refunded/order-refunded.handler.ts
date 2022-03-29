@@ -29,7 +29,7 @@ export class OrderRefundedHandler
       //insert logging to DB
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: order.prices[0].value,
+        amount: +order.prices[0].value,
         created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
