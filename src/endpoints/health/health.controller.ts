@@ -40,7 +40,7 @@ export class HealthController {
         this.db.pingCheck('location-database', {
           connection: this.dbLocationConnection,
         }),
-      () => this.memory.checkHeap('memory heap', 300 * 1024 * 1024),
+      () => this.memory.checkHeap('memory heap', 1000 * 1024 * 1024),
       () =>
         this.disk.checkStorage('disk health', {
           thresholdPercent: 0.5,

@@ -5,5 +5,5 @@ export class WalletBindingDTO {
   accountId: string;
 
   @ApiProperty({ type: String })
-  ethAddress: string;
+  ethAddress: any;
 }

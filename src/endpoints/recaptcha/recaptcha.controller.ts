@@ -18,6 +18,7 @@ export class RecaptchaController {
         '&response=' +
         payload.response,
     );
+
     const { data } = result;
 
     return response.status(200).json(data);

@@ -23,11 +23,13 @@ import {
   sendRewards,
   setGeneticAnalysisOrderPaid,
   dbioUnit,
+  adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
+  adminSetEthAddress: jest.fn(),
   sendRewards: jest.fn(),
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
@@ -84,6 +86,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     jest.fn(() => ({
       geneticAnalysisSetOrderPaid: jest.fn(),
       getGeneticAnalysisOrderList: jest.fn(),
+      getGeneticAnalysisOrderById: jest.fn(),
     }));
 
   class ProcessEnvProxyMock {
@@ -197,8 +200,15 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
   it('should orders by order Id', () => {
     // Arrange
-    const RESULT = 1;
-    orderServiceMock.getOrderByHashId.mockReturnValue(RESULT);
+    const RETURN_VALUE = 1;
+    const RESULT = {
+      order: RETURN_VALUE,
+      orderGA: RETURN_VALUE,
+    };
+    orderServiceMock.getOrderByHashId.mockReturnValue(RETURN_VALUE);
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(
+      RETURN_VALUE,
+    );
 
     // Assert
     expect(substrateControllerMock.getOrderById('keyword')).resolves.toEqual(
@@ -419,7 +429,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
-    (setEthAddress as jest.Mock).mockReturnValue(false);
+    (adminSetEthAddress as jest.Mock).mockReturnValue(false);
 
     // Assert
     expect(
@@ -430,8 +440,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'API',
       DTO.ethAddress,
     );
-    expect(setEthAddress).toHaveBeenCalled();
-    expect(setEthAddress).toHaveBeenCalledWith(
+    expect(adminSetEthAddress).toHaveBeenCalled();
+    expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
       'PAIR',
       DTO.accountId,
@@ -456,7 +466,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(false);
-    (setEthAddress as jest.Mock).mockReturnValue(true);
+    (adminSetEthAddress as jest.Mock).mockReturnValue(true);
     rewardServiceMock.getRewardBindingByAccountId.mockReturnValue(false);
     dateTimeProxyMock.new.mockReturnValue(1);
 
@@ -469,8 +479,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'API',
       DTO.ethAddress,
     );
-    expect(setEthAddress).toHaveBeenCalled();
-    expect(setEthAddress).toHaveBeenCalledWith(
+    expect(adminSetEthAddress).toHaveBeenCalled();
+    expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
       'PAIR',
       DTO.accountId,
