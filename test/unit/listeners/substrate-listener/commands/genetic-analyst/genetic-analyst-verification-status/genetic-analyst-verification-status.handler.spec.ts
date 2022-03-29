@@ -69,14 +69,14 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       .calledWith(geneticAnalyst.toHuman().accountId, 14)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalysisOrders: GeneticAnalystVerificationStatusCommand =
+    const GeneticAnalysisOrders: GeneticAnalystVerificationStatusCommand =
       new GeneticAnalystVerificationStatusCommand(
         [geneticAnalyst],
         mockBlockNumber(),
       );
 
     await geneticAnalystVerificationStatusHandler.execute(
-      geneticAnalysisOrders,
+      GeneticAnalysisOrders,
     );
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,

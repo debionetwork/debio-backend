@@ -16,6 +16,17 @@ services:
     image: redis:6.2.6-alpine
     ports:
       - 6379:6379
+  elasticsearch:
+    container_name: debio-elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "true"
+      xpack.security.audit.enabled: "true"
+      ELASTIC_PASSWORD: elastic
+    ports:
+      - 9200:9200
+      - 9300:9300
   node:
     container_name: debio-node
     image: debionetwork/debio-node:latest
