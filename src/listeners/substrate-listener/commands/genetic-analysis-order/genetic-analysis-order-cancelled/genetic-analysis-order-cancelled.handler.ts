@@ -15,7 +15,7 @@ export class GeneticAnalysisOrderCancelledHandler
   constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: GeneticAnalysisOrderCancelledCommand) {
-    await this.logger.log('Genetic Analysis Order Cancelled!');
+    await this.logger.log('Genetic Analysis Order Cancelled !');
 
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
 
