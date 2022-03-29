@@ -28,7 +28,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
     if (order.orderFlow === 'StakingRequestService') {
       await finalizeRequest(
-        this.substrateService.api,
+        this.substrateService.api as any,
         this.substrateService.pair,
         order.id,
         'No',
@@ -47,7 +47,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   callbackSendReward(order: Order): void {
     //send reward for customer
     sendRewards(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       order.customerId,
       (+order.additionalPrices[0].value * 10 ** 18).toString(),
@@ -55,7 +55,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
     //send reward for customer
     sendRewards(
-      this.substrateService.api,
+      this.substrateService.api as any,
       this.substrateService.pair,
       order.sellerId,
       ((+order.additionalPrices[0].value * 10 ** 18) / 10).toString(),
