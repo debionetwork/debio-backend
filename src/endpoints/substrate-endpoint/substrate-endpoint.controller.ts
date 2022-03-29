@@ -26,7 +26,7 @@ import {
 import {
   sendRewards,
   queryAccountIdByEthAddress,
-  setEthAddress,
+  adminSetEthAddress,
   setGeneticAnalysisOrderPaid,
   dbioUnit,
 } from '@debionetwork/polkadot-provider';
@@ -65,7 +65,7 @@ export class SubstrateController {
     @Query('region') region,
     @Query('city') city,
     @Query('category') category,
-    @Query('service_flow') service_flow: boolean,
+    @Query('service_flow') service_flow,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
@@ -95,7 +95,12 @@ export class SubstrateController {
   @Get('/orders/:hash_id')
   async getOrderById(@Param('hash_id') hashId: string) {
     const order = await this.orderService.getOrderByHashId(hashId);
-    return order;
+    const orderGA =
+      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
+        hashId,
+      );
+
+    return { order, orderGA };
   }
 
   @Get('/orders/list/:customer_id')
@@ -310,7 +315,7 @@ export class SubstrateController {
     );
 
     try {
-      await setEthAddress(
+      await adminSetEthAddress(
         this.substrateService.api as any,
         this.substrateService.pair,
         accountId,

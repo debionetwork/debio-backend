@@ -7,6 +7,7 @@ import {
 import { getLabRegisterService, LabRegisterService } from './service';
 
 export class LabRegister {
+  lab_id: string;
   email: string;
   phone_number: string;
   website: string;
@@ -26,6 +27,7 @@ export async function labToLabRegister(
 ): Promise<LabRegister> {
   const labRegister = new LabRegister();
 
+  labRegister.lab_id = lab.accountId;
   labRegister.email = lab.info.email;
   labRegister.phone_number = lab.info.phoneNumber;
   labRegister.website = lab.info.website;

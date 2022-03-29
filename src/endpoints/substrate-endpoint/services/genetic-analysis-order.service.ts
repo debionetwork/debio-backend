@@ -13,6 +13,34 @@ export class GeneticAnalysisOrderService {
     private readonly substrateService: SubstrateService,
   ) {}
 
+  async getGeneticAnalysisOrderById(genetic_analysis_order_id: string) {
+    let hits_order_ga = [];
+    try {
+      const orderGA = await this.elasticSearchService.search({
+        index: 'genetic-analysis-order',
+        body: {
+          query: {
+            match: {
+              _id: {
+                query: genetic_analysis_order_id,
+              },
+            },
+          },
+        },
+      });
+      hits_order_ga = orderGA.body.hits.hits || [];
+    } catch (error) {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
+        await this.logger.log(
+          `API "orders/{hash_id}": ${error.body.error.reason}`,
+        );
+      } else {
+        throw error;
+      }
+    }
+    return hits_order_ga.length > 0 ? hits_order_ga[0]._source : {};
+  }
+
   async geneticAnalysisSetOrderPaid(genetic_analyst_order_id: string) {
     try {
       await setGeneticAnalysisOrderPaid(
