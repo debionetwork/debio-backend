@@ -300,12 +300,15 @@ export class SubstrateController {
     @Req() request: Request,
   ) {
     const cookie = await request.cookies['jwt'];
-    
+
     if (!cookie || cookie == null || cookie == undefined) {
-      const jwt = await this.authenticationService.validateApiKey(debioApiKey, false)
-      response.cookie('jwt', jwt, { httpOnly: true});
+      const jwt = await this.authenticationService.validateApiKey(
+        debioApiKey,
+        false,
+      );
+      response.cookie('jwt', jwt, { httpOnly: true });
     } else {
-      await this.authenticationService.validateApiKey(debioApiKey, cookie)
+      await this.authenticationService.validateApiKey(debioApiKey, cookie);
     }
     const { accountId, ethAddress } = payload;
     const rewardAmount = 0.2;

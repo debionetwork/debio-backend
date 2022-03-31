@@ -1,7 +1,7 @@
-import { Module } from "@nestjs/common";
-import { ProcessEnvModule } from "../proxies";
-import {JwtModule} from '@nestjs/jwt';
-import { AuthenticationService } from "./authentication.service";
+import { Module } from '@nestjs/common';
+import { ProcessEnvModule } from '../proxies';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthenticationService } from './authentication.service';
 
 @Module({
   imports: [
@@ -12,6 +12,6 @@ import { AuthenticationService } from "./authentication.service";
     }),
   ],
   providers: [AuthenticationService],
-  exports: [ProcessEnvModule, AuthenticationService]
+  exports: [ProcessEnvModule, AuthenticationService],
 })
 export class AuthenticationModule {}

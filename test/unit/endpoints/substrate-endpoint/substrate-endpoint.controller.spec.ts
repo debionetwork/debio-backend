@@ -90,7 +90,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       getGeneticAnalysisOrderList: jest.fn(),
       getGeneticAnalysisOrderById: jest.fn(),
     }));
-  
+
   const authenticationServiceMockFactory: () => MockType<AuthenticationService> =
     jest.fn(() => ({
       validateApiKey: jest.fn(),
@@ -131,7 +131,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
-        { provide: AuthenticationService, useFactory: authenticationServiceMockFactory},
+        {
+          provide: AuthenticationService,
+          useFactory: authenticationServiceMockFactory,
+        },
       ],
     }).compile();
 
@@ -404,7 +407,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding('NOT API KEY', DTO, RESPONSE, request),
+      await substrateControllerMock.walletBinding(
+        'NOT API KEY',
+        DTO,
+        RESPONSE,
+        request,
+      ),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
@@ -443,7 +451,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE, request),
+      await substrateControllerMock.walletBinding(
+        DEBIO_API_KEY,
+        DTO,
+        RESPONSE,
+        request,
+      ),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -482,7 +495,12 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE, request),
+      await substrateControllerMock.walletBinding(
+        DEBIO_API_KEY,
+        DTO,
+        RESPONSE,
+        request,
+      ),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
