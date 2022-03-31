@@ -23,11 +23,13 @@ import {
   sendRewards,
   setGeneticAnalysisOrderPaid,
   dbioUnit,
+  adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
+  adminSetEthAddress: jest.fn(),
   sendRewards: jest.fn(),
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
@@ -427,7 +429,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
-    (setEthAddress as jest.Mock).mockReturnValue(false);
+    (adminSetEthAddress as jest.Mock).mockReturnValue(false);
 
     // Assert
     expect(
@@ -438,8 +440,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'API',
       DTO.ethAddress,
     );
-    expect(setEthAddress).toHaveBeenCalled();
-    expect(setEthAddress).toHaveBeenCalledWith(
+    expect(adminSetEthAddress).toHaveBeenCalled();
+    expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
       'PAIR',
       DTO.accountId,
@@ -464,7 +466,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(false);
-    (setEthAddress as jest.Mock).mockReturnValue(true);
+    (adminSetEthAddress as jest.Mock).mockReturnValue(true);
     rewardServiceMock.getRewardBindingByAccountId.mockReturnValue(false);
     dateTimeProxyMock.new.mockReturnValue(1);
 
@@ -477,8 +479,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'API',
       DTO.ethAddress,
     );
-    expect(setEthAddress).toHaveBeenCalled();
-    expect(setEthAddress).toHaveBeenCalledWith(
+    expect(adminSetEthAddress).toHaveBeenCalled();
+    expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
       'PAIR',
       DTO.accountId,

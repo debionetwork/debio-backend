@@ -24,6 +24,7 @@ import {
   GeneticAnalysisOrderPaidCommand,
   GeneticAnalysisOrderRefundedCommand,
   GeneticAnalysisOrderFulfilledCommand,
+  GeneticAnalysisOrderCancelledCommand,
 } from './commands/genetic-analysis-order';
 import {
   GeneticAnalysisRejectedCommand,
@@ -31,6 +32,7 @@ import {
 } from './commands/genetic-analysis';
 import {
   GeneticAnalystStakedCommand,
+  GeneticAnalystUnstakedCommand,
   GeneticAnalystVerificationStatusCommand,
 } from './commands/genetic-analysts';
 
@@ -60,6 +62,7 @@ const eventRoutes = {
     GeneticAnalysisOrderCreated: GeneticAnalysisOrderCreatedCommand,
     GeneticAnalysisOrderRefunded: GeneticAnalysisOrderRefundedCommand,
     GeneticAnalysisOrderFulfilled: GeneticAnalysisOrderFulfilledCommand,
+    GeneticAnalysisOrderCancelled: GeneticAnalysisOrderCancelledCommand,
   },
   geneticAnalysis: {
     GeneticAnalysisRejected: GeneticAnalysisRejectedCommand,
@@ -67,6 +70,7 @@ const eventRoutes = {
   },
   geneticAnalysts: {
     GeneticAnalystStakeSuccessful: GeneticAnalystStakedCommand,
+    GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakedCommand,
     GeneticAnalystUpdateVerificationStatus:
       GeneticAnalystVerificationStatusCommand,
   },

@@ -42,7 +42,7 @@ describe('Genetic Analyst Staked Handler Event', () => {
     await module.init();
   });
 
-  it('should defined Order Cancelled Handler', () => {
+  it('should defined Genetic Analyst Staked Handler', () => {
     expect(geneticAnalystStakedHandler).toBeDefined();
   });
 
@@ -67,10 +67,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
       .calledWith(geneticAnalyst.toHuman().accountId, 19)
       .mockReturnValue(RESULT_STATUS);
 
-    const geneticAnalystOrders: GeneticAnalystStakedCommand =
+    const GeneticAnalysisOrders: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(geneticAnalystOrders);
+    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrders);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
@@ -81,7 +81,6 @@ describe('Genetic Analyst Staked Handler Event', () => {
     // Arrange
     const geneticAnalyst = createMockGeneticAnalyst();
 
-    const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
@@ -94,17 +93,19 @@ describe('Genetic Analyst Staked Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
-    when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 19)
-      .mockReturnValue(RESULT_STATUS);
+    when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
+      geneticAnalyst.toHuman().accountId,
+      19,
+    );
 
-    const geneticAnalystOrderPaidCommand: GeneticAnalystStakedCommand =
+    const GeneticAnalysisOrderPaidCommand: GeneticAnalystStakedCommand =
       new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(geneticAnalystOrderPaidCommand);
+    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrderPaidCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    await transactionLoggingServiceMock.create();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
   });
 });
