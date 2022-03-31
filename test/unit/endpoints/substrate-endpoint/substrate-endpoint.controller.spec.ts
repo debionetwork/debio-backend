@@ -201,21 +201,37 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   it('should orders by order Id', () => {
     // Arrange
     const RETURN_VALUE = 1;
-    const RESULT = {
-      order: RETURN_VALUE,
-      orderGA: RETURN_VALUE,
-    };
+    const RESULT = RETURN_VALUE;
+
     orderServiceMock.getOrderByHashId.mockReturnValue(RETURN_VALUE);
-    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(
-      RETURN_VALUE,
-    );
 
     // Assert
     expect(substrateControllerMock.getOrderById('keyword')).resolves.toEqual(
       RESULT,
     );
-    expect(orderServiceMock.getOrderByHashId).toHaveBeenCalled();
+    expect(orderServiceMock.getOrderByHashId).toBeCalled();
     expect(orderServiceMock.getOrderByHashId).toHaveBeenCalledWith('keyword');
+  });
+
+  it('should ordersGA by Id', () => {
+    // Arrange
+    const RETURN_VALUE = 1;
+    const RESULT = RETURN_VALUE;
+
+    geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(
+      RESULT,
+    );
+
+    // Assert
+    expect(substrateControllerMock.getOrderGAById('keyword')).resolves.toEqual(
+      RESULT,
+    );
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderById,
+    ).toHaveBeenCalled();
+    expect(
+      geneticAnalysisOrderMock.getGeneticAnalysisOrderById,
+    ).toHaveBeenCalledWith('keyword');
   });
 
   it('should orders list by customer', async () => {
