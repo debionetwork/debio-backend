@@ -120,6 +120,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(COUNTRY)).toBeTruthy();
     expect(result.text.includes(CITY)).toBeTruthy();
     expect(result.status).toEqual(200);
+<<<<<<< HEAD
   }, 30000);
 
   it('GET /substrate/countries: getAggregatedByCountries should return', async () => {
@@ -253,4 +254,16 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(CATEGORY)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 15000);
+=======
+  }, 25000);
+
+
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+>>>>>>> e2e substrate enpoint
 });
