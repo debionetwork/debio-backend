@@ -9,7 +9,6 @@ import {
   Param,
   Query,
   Req,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { RewardService } from '../../common/modules/reward/reward.service';
