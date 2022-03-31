@@ -257,13 +257,18 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 =======
   }, 25000);
 
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {}); // eslint-disable-line
 
-  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {});  // eslint-disable-line
+  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
 
-  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+  it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
 
+<<<<<<< HEAD
   it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
 
   it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
 >>>>>>> e2e substrate enpoint
+=======
+  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
+>>>>>>> linter fixed
 });
