@@ -2,7 +2,7 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { GeneticAnalystStakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
+import { GeneticAnalystUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalyst,
@@ -11,12 +11,12 @@ import {
   transactionLoggingServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { GeneticAnalystStakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-staked/genetic-analyst-staked.handler';
+import { GeneticAnalystUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-unstake/genetic-analyst-unstaked.handler';
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 describe('Genetic Analyst Staked Handler Event', () => {
-  let geneticAnalystStakedHandler: GeneticAnalystStakedHandler;
+  let geneticAnalystUnstakedHandler: GeneticAnalystUnstakedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
@@ -31,19 +31,19 @@ describe('Genetic Analyst Staked Handler Event', () => {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
         },
-        GeneticAnalystStakedHandler,
+        GeneticAnalystUnstakedHandler,
       ],
     }).compile();
 
-    geneticAnalystStakedHandler = module.get(GeneticAnalystStakedHandler);
+    geneticAnalystUnstakedHandler = module.get(GeneticAnalystUnstakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
 
-  it('should defined Genetic Analyst Staked Handler', () => {
-    expect(geneticAnalystStakedHandler).toBeDefined();
+  it('should defined Genetic Analyst Unstaked Handler', () => {
+    expect(geneticAnalystUnstakedHandler).toBeDefined();
   });
 
   it('should not called logging service create', async () => {
@@ -67,10 +67,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
       .calledWith(geneticAnalyst.toHuman().accountId, 19)
       .mockReturnValue(RESULT_STATUS);
 
-    const GeneticAnalysisOrders: GeneticAnalystStakedCommand =
-      new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
+    const geneticAnalystOrders: GeneticAnalystUnstakedCommand =
+      new GeneticAnalystUnstakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrders);
+    await geneticAnalystUnstakedHandler.execute(geneticAnalystOrders);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
@@ -98,10 +98,10 @@ describe('Genetic Analyst Staked Handler Event', () => {
       19,
     );
 
-    const GeneticAnalysisOrderPaidCommand: GeneticAnalystStakedCommand =
-      new GeneticAnalystStakedCommand([geneticAnalyst], mockBlockNumber());
+    const geneticAnalystUnstakedCommand: GeneticAnalystUnstakedCommand =
+      new GeneticAnalystUnstakedCommand([geneticAnalyst], mockBlockNumber());
 
-    await geneticAnalystStakedHandler.execute(GeneticAnalysisOrderPaidCommand);
+    await geneticAnalystUnstakedHandler.execute(geneticAnalystUnstakedCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
