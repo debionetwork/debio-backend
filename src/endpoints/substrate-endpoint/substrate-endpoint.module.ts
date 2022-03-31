@@ -14,6 +14,7 @@ import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
+import { AuthenticationModule } from 'src/common/modules/authentication/authentication.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
     SubstrateModule,
     RewardModule,
     DateTimeModule,
+    AuthenticationModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [SubstrateController],

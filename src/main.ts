@@ -3,12 +3,19 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as Sentry from '@sentry/node';
 import helmet = require('helmet');
+import cookieParser = require('cookie-parser');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet());
-  app.enableCors();
+  app.use(cookieParser());
+  app.enableCors({
+    /* A CORS setting. */
+    // TODO
+    // origin: 'here url FE can access BE only example: "http://localhost:3000"'
+    credentials: true,
+  });
 
   if (process.env.SWAGGER_ENABLE === 'true') {
     const config = new DocumentBuilder()

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Response } from 'express';
+import { request, Response } from 'express';
 import { LabService } from '../../../../src/endpoints/substrate-endpoint/services/lab.service';
 import { ServiceService } from '../../../../src/endpoints/substrate-endpoint/services/service.service';
 import { dateTimeProxyMockFactory, MockType } from '../../mock';
@@ -25,6 +25,7 @@ import {
   dbioUnit,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
+import { AuthenticationService } from '../../../../src/common/modules/authentication/authentication.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -44,6 +45,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
+  let authenticationServiceMock: MockType<AuthenticationService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -88,6 +90,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       getGeneticAnalysisOrderList: jest.fn(),
       getGeneticAnalysisOrderById: jest.fn(),
     }));
+  
+  const authenticationServiceMockFactory: () => MockType<AuthenticationService> =
+    jest.fn(() => ({
+      validateApiKey: jest.fn(),
+    }));
 
   class ProcessEnvProxyMock {
     env = {
@@ -124,6 +131,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        { provide: AuthenticationService, useFactory: authenticationServiceMockFactory},
       ],
     }).compile();
 
@@ -136,6 +144,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
     geneticAnalysisOrderMock = module.get(GeneticAnalysisOrderService);
+    authenticationServiceMock = module.get(AuthenticationService);
   });
 
   it('should be defined', () => {
@@ -148,6 +157,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(serviceRequestMock).toBeDefined();
     expect(geneticAnalysisMock).toBeDefined();
     expect(geneticAnalysisOrderMock).toBeDefined();
+    expect(authenticationServiceMock).toBeDefined();
   });
 
   it('should find lab by country, city, and category', () => {
@@ -394,7 +404,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding('NOT API KEY', DTO, RESPONSE),
+      await substrateControllerMock.walletBinding('NOT API KEY', DTO, RESPONSE, request),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalledTimes(0);
     expect(setEthAddress).toHaveBeenCalledTimes(0);
@@ -433,7 +443,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE, request),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
@@ -472,7 +482,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
 
     // Assert
     expect(
-      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
+      await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE, request),
     ).toEqual(EXPECTED_RESULTS);
     expect(queryAccountIdByEthAddress).toHaveBeenCalled();
     expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(

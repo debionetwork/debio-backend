@@ -8,8 +8,10 @@ import {
   Get,
   Param,
   Query,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { RewardService } from '../../common/modules/reward/reward.service';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { SentryInterceptor } from '../../common/interceptors';
@@ -32,6 +34,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
+import { AuthenticationService } from '../../../src/common/modules/authentication/authentication.service';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -47,6 +50,7 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
+    private readonly authenticationService: AuthenticationService,
   ) {}
 
   @Get('/labs')
@@ -293,9 +297,15 @@ export class SubstrateController {
     @Headers('debio-api-key') debioApiKey: string,
     @Body() payload: WalletBindingDTO,
     @Res() response: Response,
+    @Req() request: Request,
   ) {
-    if (debioApiKey != this.process.env.DEBIO_API_KEY) {
-      return response.status(401).send('debio-api-key header is required');
+    const cookie = await request.cookies['jwt'];
+    
+    if (!cookie || cookie == null || cookie == undefined) {
+      const jwt = await this.authenticationService.validateApiKey(debioApiKey, false)
+      response.cookie('jwt', jwt, { httpOnly: true});
+    } else {
+      await this.authenticationService.validateApiKey(debioApiKey, cookie)
     }
     const { accountId, ethAddress } = payload;
     const rewardAmount = 0.2;
