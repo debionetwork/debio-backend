@@ -101,4 +101,13 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(CITY)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 25000);
+
+
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
+
+  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
 });
