@@ -7,6 +7,7 @@ import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
 import { LocationModule } from '../../../src/endpoints/location/location.module';
 import {
   DebioConversionModule,
+  ProcessEnvProxy,
   RewardModule,
   SubstrateModule,
 } from '../../../src/common';
@@ -22,6 +23,13 @@ import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoi
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
+
+  const apiKey = 'DEBIO_API_KEY';
+  class ProcessEnvProxyMock {
+    env = {
+      DEBIO_API_KEY: apiKey,
+    };
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -54,6 +62,12 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         SubstrateModule,
         RewardModule,
         DateTimeModule,
+      ],
+      providers: [
+        {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
+        },
       ],
     }).compile();
 
@@ -97,6 +111,23 @@ describe('Substrate Endpoint Controller (e2e)', () => {
       .send();
 
     // Assert
+    expect(result.text.includes(COUNTRY)).toBeTruthy();
+    expect(result.text.includes(CITY)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 25000);
+
+  it('GET /substrate/countries: findByCountryCity should return', async () => {
+    // Arrange
+    const COUNTRY = 'ID';
+    const CITY = 'Kota Administrasi Jakarta Barat';
+    const BLOCKHASH =
+      '0x3f314d6ef05403a6a2edee59b67e1cc1b6b1053ee65d2ff6ff759bccd28c4d98';
+
+    // Act
+    const result = await request(server).get(`/substrate/countries`).send();
+
+    // Assert
+    console.log(result.text);
     expect(result.text.includes(COUNTRY)).toBeTruthy();
     expect(result.text.includes(CITY)).toBeTruthy();
     expect(result.status).toEqual(200);
