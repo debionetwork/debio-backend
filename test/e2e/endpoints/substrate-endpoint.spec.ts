@@ -129,17 +129,19 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   it('POST /substrate/wallet-binding: walletBinding should return', async () => {
     // Arrange
     const ACCOUNT_ID = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-    const ETH_ADDRESS = '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75';
+    const ETH_ADDRESS =
+      '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75';
     const data: WalletBindingDTO = {
       accountId: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-      ethAddress: '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75',
+      ethAddress:
+        '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75',
     };
 
     // Act
     const result = await request(server)
-    .post(`/substrate/wallet-binding`)
-    .set('debio-api-key', apiKey)
-    .send(data);
+      .post(`/substrate/wallet-binding`)
+      .set('debio-api-key', apiKey)
+      .send(data);
 
     // Assert
     expect(result.text.includes(ACCOUNT_ID)).toBeTruthy();
