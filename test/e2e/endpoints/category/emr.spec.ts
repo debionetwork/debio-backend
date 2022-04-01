@@ -3,9 +3,9 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Server } from 'http';
-import { EmrModule } from 'src/endpoints/category/emr/emr.module';
-import { EmrCategory } from 'src/endpoints/category/emr/models/emr.entity';
-import { dummyCredentials } from 'test/e2e/config';
+import { EmrModule } from '../../../../src/endpoints/category/emr/emr.module';
+import { EmrCategory } from '../../../../src/endpoints/category/emr/models/emr.entity';
+import { dummyCredentials } from '../../config';
 
 describe('EMR Category (e2e)', () => {
   let server: Server;
