@@ -16,7 +16,7 @@ module.exports = async () => {
   const api = await ApiPromise.create({
     provider: wsProvider,
   });
-  
+
   const mnemonicUri = '//Alice';
   process.env.ADMIN_SUBSTRATE_MNEMONIC = mnemonicUri;
   console.log('debio-node resolved! ✅');

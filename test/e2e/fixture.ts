@@ -53,7 +53,7 @@ module.exports = async () => {
       reward_amount: 2,
       reward_type: 'Registered User',
       currency: 'DBIO',
-      created_at: new Date()
+      created_at: new Date(),
     })
     .execute();
   console.log('`Reward` data injection successful! ✅');

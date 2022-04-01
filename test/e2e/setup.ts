@@ -4,7 +4,7 @@ module.exports = async () => {
   const fixture = require('./fixture'); // eslint-disable-line
   const substrateFixture = require('./substrate-fixture'); // eslint-disable-line
   const elasticsearchFixture = require('./elasticsearch-fixture'); // eslint-disable-line
-  
+
   const apiKey = 'DEBIO_API_KEY';
   process.env.DEBIO_API_KEY = apiKey;
 
