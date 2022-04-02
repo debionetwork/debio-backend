@@ -9,19 +9,15 @@ import {
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
-import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { VerificationModule } from '../../../src/endpoints/verification/verification.module';
-import { Keyring } from '@polkadot/api';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Reward } from '../../../src/common/modules/reward/models/reward.entity';
 import { dummyCredentials } from '../config';
 
 describe('Verification Controller (e2e)', () => {
-  let pair: any;
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
-  const keyring = new Keyring({ type: 'sr25519' });
 
   const apiKey = 'DEBIO_API_KEY';
   class ProcessEnvProxyMock {
@@ -56,9 +52,6 @@ describe('Verification Controller (e2e)', () => {
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
-
-    await cryptoWaitReady();
-    pair = await keyring.addFromUri('//Alice', { name: 'Alice default' });
   });
 
   afterAll(async () => {
@@ -67,13 +60,13 @@ describe('Verification Controller (e2e)', () => {
 
   it('POST /verification/lab: updateStatusLab should return', async () => {
     // Arrange
-    const ACCOUNT_ID = pair.address;
+    const ACCOUNT_ID = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
     const VERIFICATION_STATUS = 'Verified';
 
     // Act
     const result = await request(server)
       .post(
-        `/verification/lab?account_id${ACCOUNT_ID}=&verification_status=${VERIFICATION_STATUS}`,
+        `/verification/lab?account_id=${ACCOUNT_ID}&verification_status=${VERIFICATION_STATUS}`,
       )
       .set('debio-api-key', apiKey)
       .send();
@@ -87,13 +80,13 @@ describe('Verification Controller (e2e)', () => {
 
   it('POST /verification/genetic-analysts: updateStatusGeneticAnalyst should return', async () => {
     // Arrange
-    const ACCOUNT_ID = pair.address;
+    const ACCOUNT_ID = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
     const VERIFICATION_STATUS = 'Verified';
 
     // Act
     const result = await request(server)
       .post(
-        `/verification/genetic-analysts?account_id${ACCOUNT_ID}=&verification_status=${VERIFICATION_STATUS}`,
+        `/verification/genetic-analysts?account_id=${ACCOUNT_ID}&verification_status=${VERIFICATION_STATUS}`,
       )
       .set('debio-api-key', apiKey)
       .send();
