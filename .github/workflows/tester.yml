@@ -27,7 +27,5 @@ jobs:
           cache: 'npm'
       - name: Install Dependencies
         run: npm install
-      - name: Run Linter
-        run: npm run lint
-      - name: Run Unit Tests
-        run: npm run test
+      - name: Run Integration Tests
+        run: npm run test:e2e
