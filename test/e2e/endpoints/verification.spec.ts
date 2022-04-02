@@ -58,7 +58,7 @@ describe('Verification Controller (e2e)', () => {
     await app.init();
 
     await cryptoWaitReady();
-    pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
+    pair = await keyring.addFromUri('//Alice', { name: 'Alice default' });
   });
 
   afterAll(async () => {
@@ -79,7 +79,10 @@ describe('Verification Controller (e2e)', () => {
       .send();
 
     // Assert
-    console.log(result.text);
+    expect(
+      result.text.includes(`Lab ${ACCOUNT_ID} ${VERIFICATION_STATUS}`),
+    ).toBeTruthy();
+    expect(result.status).toEqual(200);
   });
 
   it('POST /verification/genetic-analysts: updateStatusGeneticAnalyst should return', async () => {
@@ -96,6 +99,7 @@ describe('Verification Controller (e2e)', () => {
       .send();
 
     // Assert
-    console.log(result.text);
+    expect(result.text.includes(`Genetic Analyst ${ACCOUNT_ID}`)).toBeTruthy();
+    expect(result.status).toEqual(200);
   });
 });
