@@ -16,11 +16,14 @@ module.exports = async () => {
   const api = await ApiPromise.create({
     provider: wsProvider,
   });
+
+  const mnemonicUri = '//Alice';
+  process.env.ADMIN_SUBSTRATE_MNEMONIC = mnemonicUri;
   console.log('debio-node resolved! ✅');
 
   console.log('Beginning debio-node migrations 🏇...');
   const keyring = new Keyring({ type: 'sr25519' });
-  const pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
+  const pair = keyring.addFromUri(mnemonicUri, { name: 'Alice default' });
 
   console.log('Injecting `Lab` into debio-node 💉...');
 
