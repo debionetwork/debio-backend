@@ -14,7 +14,7 @@ import { Reward } from '../../src/common/modules/reward/models/reward.entity';
 module.exports = async () => {
   // Wait for database to open connection.
   console.log('Waiting for debio-postgres to resolve ⏰...');
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 20000));
   console.log('debio-postgres resolved! ✅');
 
   console.log('Building databases 🏗️...');

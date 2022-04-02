@@ -44,12 +44,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Integration Tests
+        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -199,12 +211,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Integration Tests
+        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -354,12 +378,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Integration Tests
+        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -509,12 +545,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Integration Tests
+        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -664,12 +712,24 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+    strategy:
+      matrix:
+        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Integration Tests
+        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
