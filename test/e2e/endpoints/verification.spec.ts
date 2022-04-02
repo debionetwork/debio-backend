@@ -79,7 +79,9 @@ describe('Verification Controller (e2e)', () => {
       .send();
 
     // Assert
-    expect(result.text.includes(`Lab ${ACCOUNT_ID} ${VERIFICATION_STATUS}`)).toBeTruthy();
+    expect(
+      result.text.includes(`Lab ${ACCOUNT_ID} ${VERIFICATION_STATUS}`),
+    ).toBeTruthy();
     expect(result.status).toEqual(200);
   });
 
