@@ -23,7 +23,7 @@ module.exports = async () => {
 
   console.log('Beginning debio-node migrations 🏇...');
   const keyring = new Keyring({ type: 'sr25519' });
-  const pair = keyring.addFromUri(mnemonicUri, { name: 'Alice default' });
+  const pair = await keyring.addFromUri(mnemonicUri, { name: 'Alice default' });
 
   console.log('Injecting `Lab` into debio-node 💉...');
 

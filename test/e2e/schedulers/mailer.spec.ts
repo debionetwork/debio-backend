@@ -71,7 +71,7 @@ describe('Mailer Scheduler (e2e)', () => {
       'setEmailNotificationSent',
     );
     const keyring = new Keyring({ type: 'sr25519' });
-    const pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
+    const pair = await keyring.addFromUri('//Alice', { name: 'Alice default' });
 
     // Act
     await service.handlePendingLabRegister();
