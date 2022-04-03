@@ -1,18 +1,25 @@
-import { setElasticsearchDummyCredentials } from './config';
+import { connectionRetries, setElasticsearchDummyCredentials } from './config';
 import { Client } from '@elastic/elasticsearch';
 
-module.exports = async () => {
-  // Wait for Elasticsearch to open connection.
-  console.log('Waiting for debio-elasticsearch to resolve ⏰...');
+async function initalElasticsearchConnection(): Promise<Client> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
   setElasticsearchDummyCredentials();
-  await new Promise((resolve) => setTimeout(resolve, 30000));
-  const client = new Client({
+  return new Client({
     node: process.env.ELASTICSEARCH_NODE,
     auth: {
       username: process.env.ELASTICSEARCH_USERNAME,
       password: process.env.ELASTICSEARCH_PASSWORD,
     },
   });
+}
+
+module.exports = async () => {
+  // Wait for Elasticsearch to open connection.
+  console.log('Waiting for debio-elasticsearch to resolve ⏰...');
+  const client: Client = await connectionRetries(
+    initalElasticsearchConnection,
+    60,
+  );
   console.log('debio-elasticsearch resolved! ✅');
 
   console.log('Beginning debio-elasticsearch migrations 🏇...');
