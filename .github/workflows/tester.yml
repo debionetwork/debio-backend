@@ -37,6 +37,15 @@ jobs:
         shell: bash
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=./service-account-file.json
+      - name: Create .env.example File
+        shell: bash
+        run: |
+          tee -a .env.example <<EOF
+          ${{ secrets.FULL_ENV_EXAMPLE }}
+          EOF
+      - name: Echo .env.example
+        shell: bash
+        run: cat .env.example
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:

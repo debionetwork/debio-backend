@@ -14,21 +14,21 @@ module.exports = async () => {
       () => {
         fixture()
           .then(() => {
-            substrateFixture()
+            elasticsearchFixture()
               .then(() => {
-                elasticsearchFixture()
+                substrateFixture()
                   .then(() => {
                     resolve('DeBio Backend Dependencies is Up! 🆙');
                   })
                   .catch((err) => {
                     reject(
-                      `Something went wrong when migrating DeBio Network Indexer: ${err.message}`,
+                      `Something went wrong when migrating DeBio Network Node: ${err.message}`,
                     );
                   });
               })
               .catch((err) => {
                 reject(
-                  `Something went wrong when migrating DeBio Network Node: ${err.message}`,
+                  `Something went wrong when migrating DeBio Network Indexer: ${err.message}`,
                 );
               });
           })
