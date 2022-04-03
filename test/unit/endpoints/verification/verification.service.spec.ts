@@ -14,14 +14,16 @@ import {
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
-  sendRewards: jest.fn((param1, param2, param3, param4, param5) => param5()),
+  sendRewards: jest.fn((_param1, _param2, _param3, _param4, param5) =>
+    param5(),
+  ),
   updateLabVerificationStatus: jest.fn(
     // eslint-disable-next-line
-    (param1, param2, param3, param4, param5) => param5(),
+    (_param1, _param2, _param3, _param4, param5) => param5(),
   ),
   updateGeneticAnalystVerificationStatus: jest.fn(
     // eslint-disable-next-line
-    (param1, param2, param3, param4, param5) => param5(),
+    (_param1, _param2, _param3, _param4, param5) => param5(),
   ),
   convertToDbioUnitString: jest.fn(),
 }));

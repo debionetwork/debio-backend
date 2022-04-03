@@ -30,11 +30,13 @@ jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
   // eslint-disable-next-line
-  adminSetEthAddress: jest.fn((param1, param2, param3, param4, param5) =>
+  adminSetEthAddress: jest.fn((_param1, _param2, _param3, _param4, param5) =>
     param5(),
   ),
   // eslint-disable-next-line
-  sendRewards: jest.fn((param1, param2, param3, param4, param5) => param5()),
+  sendRewards: jest.fn((_param1, _param2, _param3, _param4, param5) =>
+    param5(),
+  ),
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
 
