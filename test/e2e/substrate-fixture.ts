@@ -3,6 +3,7 @@ import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import {
   registerGeneticAnalyst,
   registerLab,
+  stakeGeneticAnalyst,
 } from '@debionetwork/polkadot-provider';
 import { labDataMock } from '../mocks/models/labs/labs.mock';
 import { geneticAnalystsDataMock } from '../mocks/models/genetic-analysts/genetic-analysts.mock';
@@ -47,6 +48,16 @@ module.exports = async () => {
 
   console.log(await geneticAnalystsPromise);
 
+  // eslint-disable-next-line
+  const stakeGeneticAnalystsPromise = new Promise((resolve, reject) => {
+    stakeGeneticAnalyst(api as any, pair, () =>
+      resolve('`GeneticAnalyst` staking successful! ✅'),
+    );
+  });
+
+  console.log(await stakeGeneticAnalystsPromise);
+
+  await wsProvider.disconnect();
   await api.disconnect();
   console.log('debio-node migration successful! 🙌');
 };

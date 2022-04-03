@@ -49,18 +49,19 @@ export class VerificationService {
         );
       });
       await sendRewardsPromise;
+      
+      //Write to Reward Logging
+      const dataInput: RewardDto = {
+        address: substrateAddress,
+        ref_number: '-',
+        reward_amount: 2,
+        reward_type: 'Lab Verified',
+        currency: 'DBIO',
+        created_at: new Date(this.dateTimeProxy.now()),
+      };
+      
+      await this.rewardService.insert(dataInput);
     }
-
-    //Write to Reward Logging
-    const dataInput: RewardDto = {
-      address: substrateAddress,
-      ref_number: '-',
-      reward_amount: 2,
-      reward_type: 'Lab Verified',
-      currency: 'DBIO',
-      created_at: new Date(this.dateTimeProxy.now()),
-    };
-    return await this.rewardService.insert(dataInput);
   }
 
   async verificationGeneticAnalyst(
