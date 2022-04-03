@@ -33,10 +33,14 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=./service-account-file.json
       - name: Create .env.example File
         shell: bash
-        run: ${{ secrets.FULL_ENV_EXAMPLE }} > .env.example
+        run: |
+          tee -a .env.example <<EOF
+          VUE_APP_RECAPTCHA_SITE_KEY=
+          ${{ secrets.FULL_ENV_EXAMPLE }}
+          EOF
       - name: Echo .env.example
         shell: bash
-        run: cat .env.example
+        run: echo .env.example
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
