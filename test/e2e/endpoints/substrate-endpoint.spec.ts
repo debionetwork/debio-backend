@@ -256,6 +256,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   }, 15000);
 =======
   }, 25000);
+<<<<<<< HEAD
 
   it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {}); // eslint-disable-line
 
@@ -271,4 +272,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 =======
   it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
 >>>>>>> linter fixed
+=======
+>>>>>>> remove empty function callback
 });
