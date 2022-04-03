@@ -15,7 +15,6 @@ module.exports = async () => {
       () => {
         fixture()
           .then(() => {
-            console.log("HI");
             substrateFixture()
               .then(() => {
                 elasticsearchFixture()
