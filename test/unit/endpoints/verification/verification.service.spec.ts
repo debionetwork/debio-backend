@@ -13,9 +13,18 @@ import {
 } from '@debionetwork/polkadot-provider';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
-  sendRewards: jest.fn(),
-  updateLabVerificationStatus: jest.fn(),
-  updateGeneticAnalystVerificationStatus: jest.fn(),
+  // eslint-disable-next-line
+  sendRewards: jest.fn((_param1, _param2, _param3, _param4, param5) =>
+    param5(),
+  ),
+  updateLabVerificationStatus: jest.fn(
+    // eslint-disable-next-line
+    (_param1, _param2, _param3, _param4, param5) => param5(),
+  ),
+  updateGeneticAnalystVerificationStatus: jest.fn(
+    // eslint-disable-next-line
+    (_param1, _param2, _param3, _param4, param5) => param5(),
+  ),
   convertToDbioUnitString: jest.fn(),
 }));
 
@@ -89,6 +98,7 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
+      expect.any(Function),
     );
   });
 
@@ -127,6 +137,7 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
+      expect.any(Function),
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(1);
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
@@ -168,6 +179,7 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
+      expect.any(Function),
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(1);
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);

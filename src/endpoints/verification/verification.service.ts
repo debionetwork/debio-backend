@@ -21,22 +21,34 @@ export class VerificationService {
 
   async vericationLab(substrateAddress: string, verificationStatus: string) {
     // Update Status Lab to Verified
-    await updateLabVerificationStatus(
-      this.subtrateService.api as any,
-      this.subtrateService.pair,
-      substrateAddress,
-      <LabVerificationStatus>verificationStatus,
+    const updateLabVerificationStatusPromise = new Promise(
+      // eslint-disable-next-line
+      (resolve, _reject) => {
+        updateLabVerificationStatus(
+          this.subtrateService.api as any,
+          this.subtrateService.pair,
+          substrateAddress,
+          <LabVerificationStatus>verificationStatus,
+          () => resolve('resolved'),
+        );
+      },
     );
+    await updateLabVerificationStatusPromise;
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
       const reward = 2;
-      await sendRewards(
-        this.subtrateService.api as any,
-        this.subtrateService.pair,
-        substrateAddress,
-        convertToDbioUnitString(reward),
-      );
+      // eslint-disable-next-line
+      const sendRewardsPromise = new Promise((resolve, _reject) => {
+        sendRewards(
+          this.subtrateService.api as any,
+          this.subtrateService.pair,
+          substrateAddress,
+          convertToDbioUnitString(reward),
+          () => resolve('resolved'),
+        );
+      });
+      await sendRewardsPromise;
     }
 
     //Write to Reward Logging
@@ -55,12 +67,19 @@ export class VerificationService {
     accountId: string,
     verificationStatus: string,
   ) {
-    await updateGeneticAnalystVerificationStatus(
-      this.subtrateService.api as any,
-      this.subtrateService.pair,
-      accountId,
-      <GeneticAnalystsVerificationStatus>verificationStatus,
+    const updateGeneticAnalystVerificationStatusPromise = new Promise(
+      // eslint-disable-next-line
+      (resolve, _reject) => {
+        updateGeneticAnalystVerificationStatus(
+          this.subtrateService.api as any,
+          this.subtrateService.pair,
+          accountId,
+          <GeneticAnalystsVerificationStatus>verificationStatus,
+          () => resolve('resolved'),
+        );
+      },
     );
+    await updateGeneticAnalystVerificationStatusPromise;
 
     return { message: `${accountId} is ${verificationStatus}` };
   }

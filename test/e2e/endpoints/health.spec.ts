@@ -55,14 +55,12 @@ describe('Health Controller (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await api.stopListen();
-  });
-
   it('GET /health: check should return', async () => {
     // Act
     const result = await request(server).get('/health').send();
     const stringResult = JSON.stringify(result);
+
+    await api.stopListen();
 
     // Assert
     // prettier-ignore

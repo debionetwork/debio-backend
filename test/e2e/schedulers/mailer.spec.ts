@@ -56,10 +56,6 @@ describe('Mailer Scheduler (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await substrateService.stopListen();
-  });
-
   it('handlePendingLabRegister should not throw', async () => {
     // Arrange
     const sendLabRegistrationEmailSpy = jest.spyOn(
@@ -75,6 +71,8 @@ describe('Mailer Scheduler (e2e)', () => {
 
     // Act
     await service.handlePendingLabRegister();
+
+    await substrateService.stopListen();
 
     // Assert
     expect(sendLabRegistrationEmailSpy).toBeCalledTimes(1);
