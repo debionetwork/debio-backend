@@ -76,7 +76,7 @@ describe('Verification Controller (e2e)', () => {
       result.text.includes(`Lab ${ACCOUNT_ID} ${VERIFICATION_STATUS}`),
     ).toBeTruthy();
     expect(result.status).toEqual(200);
-  });
+  }, 30000);
 
   it('POST /verification/genetic-analysts: updateStatusGeneticAnalyst should return', async () => {
     // Arrange
@@ -94,5 +94,5 @@ describe('Verification Controller (e2e)', () => {
     // Assert
     expect(result.text.includes(`Genetic Analyst ${ACCOUNT_ID}`)).toBeTruthy();
     expect(result.status).toEqual(200);
-  });
+  }, 30000);
 });

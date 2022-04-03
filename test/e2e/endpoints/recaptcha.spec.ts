@@ -59,5 +59,5 @@ describe('Recaptcha Controller (e2e)', () => {
     // Assert
     expect(result.status).toEqual(200);
     expect(result.text).toEqual('1');
-  });
+  }, 30000);
 });

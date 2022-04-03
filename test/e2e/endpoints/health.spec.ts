@@ -79,5 +79,5 @@ describe('Health Controller (e2e)', () => {
     expect(
       stringResult.includes('\\\"substrate-node\\\":{\\\"status\\\":\\\"up\\\"}'),
     ).toEqual(true);
-  }, 25000);
+  }, 30000);
 });
