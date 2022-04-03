@@ -1,5 +1,5 @@
-import { dummyCredentials } from './config';
-import { createConnection } from 'typeorm';
+import { connectionRetries, dummyCredentials } from './config';
+import { Connection, createConnection } from 'typeorm';
 import { LabRating } from '../../src/endpoints/rating/models/rating.entity';
 import { LocationEntities } from '../../src/endpoints/location/models';
 import { TransactionRequest } from '../../src/common/modules/transaction-logging/models/transaction-request.entity';
@@ -11,17 +11,23 @@ import { State } from '../../src/endpoints/location/models/state.entity';
 import { City } from '../../src/endpoints/location/models/city.entity';
 import { Reward } from '../../src/common/modules/reward/models/reward.entity';
 
-module.exports = async () => {
-  // Wait for database to open connection.
-  console.log('Waiting for debio-postgres to resolve ⏰...');
-  await new Promise((resolve) => setTimeout(resolve, 20000));
-  console.log('debio-postgres resolved! ✅');
-
-  console.log('Building databases 🏗️...');
-  const mainConnection = await createConnection({
+function initalPostgresConnection(): Promise<Connection> {
+  return createConnection({
     ...dummyCredentials,
     database: 'postgres',
   });
+}
+
+module.exports = async () => {
+  // Wait for database to open connection.
+  console.log('Waiting for debio-postgres to resolve ⏰...');
+  const mainConnection: Connection = await connectionRetries(
+    initalPostgresConnection,
+    40,
+  );
+  console.log('debio-postgres resolved! ✅');
+
+  console.log('Building databases 🏗️...');
   await mainConnection.query(`CREATE DATABASE db_postgres;`);
   await mainConnection.query(`CREATE DATABASE db_location;`);
   await mainConnection.close();
