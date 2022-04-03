@@ -61,7 +61,7 @@ describe('Verification Controller (e2e)', () => {
   it('POST /verification/lab: updateStatusLab should return', async () => {
     // Arrange
     const ACCOUNT_ID = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
-    const VERIFICATION_STATUS = 'Verified';
+    const VERIFICATION_STATUS = 'Unverified';
 
     // Act
     const result = await request(server)

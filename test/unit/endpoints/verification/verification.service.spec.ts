@@ -124,13 +124,9 @@ describe('Verification Service Unit Tests', () => {
     dateTimeProxyMock.now.mockReturnValue(NOW);
 
     // Act
-    const RESULTS = await verificationService.vericationLab(
-      ACCOUNT_ID,
-      VERIFICATION_STATUS,
-    );
+    await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
 
     // Assert
-    expect(RESULTS).toEqual(EXPECTED_RESULTS);
     expect(updateLabVerificationStatus).toHaveBeenCalledTimes(1);
     expect(updateLabVerificationStatus).toHaveBeenCalledWith(
       API,
@@ -139,8 +135,7 @@ describe('Verification Service Unit Tests', () => {
       VERIFICATION_STATUS,
       expect.any(Function),
     );
-    expect(rewardServiceMock.insert).toHaveBeenCalledTimes(1);
-    expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
+    expect(rewardServiceMock.insert).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
   });
 
@@ -166,13 +161,9 @@ describe('Verification Service Unit Tests', () => {
     dateTimeProxyMock.now.mockReturnValue(NOW);
 
     // Act
-    const RESULTS = await verificationService.vericationLab(
-      ACCOUNT_ID,
-      VERIFICATION_STATUS,
-    );
+    await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
 
     // Assert
-    expect(RESULTS).toEqual(EXPECTED_RESULTS);
     expect(updateLabVerificationStatus).toHaveBeenCalledTimes(1);
     expect(updateLabVerificationStatus).toHaveBeenCalledWith(
       API,
