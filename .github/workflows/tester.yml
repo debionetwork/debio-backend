@@ -33,21 +33,22 @@ jobs:
           tee -a service-account-file.json <<EOF
           ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
           EOF
-      - name: Export GOOGLE_APPLICATION_CREDENTIALS Dependency
-        shell: bash
-        run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=./service-account-file.json
       - name: Create .env.example File
         shell: bash
+        env:
+          FULL_ENV_EXAMPLE: ${{ secrets.FULL_ENV_EXAMPLE }}
         run: |
-          tee -a .env.example <<EOF
-          VUE_APP_RECAPTCHA_SITE_KEY=
-          ${{ secrets.FULL_ENV_EXAMPLE }}
-          EOF
-      - name: Echo .env.example
-        shell: bash
-        run: |
-          echo .env.example
+          touch .env.example
+          echo FULL_ENV_EXAMPLE="$FULL_ENV_EXAMPLE" >> .env.example
+
+          echo "cat .env.example"
+          cat .env.example
+
+          echo "ls -a ."
+          ls -a .
+
+          echo "ls -a ${{ github.workspace }}"
+          ls -a ${{ github.workspace }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -56,4 +57,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Run Integration Tests
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
         run: npm run test:e2e
