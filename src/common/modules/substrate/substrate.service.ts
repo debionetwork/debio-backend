@@ -46,8 +46,10 @@ export class SubstrateService implements OnModuleInit {
 
     this._api.on('disconnected', async () => {
       this._logger.log(`Substrate Listener Disconnected`);
-      await this.stopListen();
-      await this.startListen();
+      if (this._listenStatus) {
+        await this.stopListen();
+        await this.startListen();
+      }
     });
 
     this._api.on('error', async (error) => {
@@ -58,6 +60,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async stopListen() {
+    if (!this._listenStatus) return;
     this._listenStatus = false;
     if (this._api) {
       await this._api.disconnect();

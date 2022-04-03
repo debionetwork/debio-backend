@@ -3,7 +3,7 @@
 </div>
 
 <div align="Center">
-<h1> DeBio Networkk Backend</h1>
+<h1> DeBio Network Backend</h1>
 <h2> Decentralized Sovereign Biomed </h2>
 The Anonymous-First Platform for Medical and Bioinformatics Data.
 
