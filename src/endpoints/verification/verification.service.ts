@@ -49,7 +49,7 @@ export class VerificationService {
         );
       });
       await sendRewardsPromise;
-      
+
       //Write to Reward Logging
       const dataInput: RewardDto = {
         address: substrateAddress,
@@ -59,7 +59,7 @@ export class VerificationService {
         currency: 'DBIO',
         created_at: new Date(this.dateTimeProxy.now()),
       };
-      
+
       await this.rewardService.insert(dataInput);
     }
   }
