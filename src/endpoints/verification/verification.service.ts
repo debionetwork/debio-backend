@@ -23,7 +23,7 @@ export class VerificationService {
     // Update Status Lab to Verified
     const updateLabVerificationStatusPromise = new Promise(
       // eslint-disable-next-line
-      (resolve, reject) => {
+      (resolve, _reject) => {
         updateLabVerificationStatus(
           this.subtrateService.api as any,
           this.subtrateService.pair,
@@ -39,7 +39,7 @@ export class VerificationService {
     if (verificationStatus === 'Verified') {
       const reward = 2;
       // eslint-disable-next-line
-      const sendRewardsPromise = new Promise((resolve, reject) => {
+      const sendRewardsPromise = new Promise((resolve, _reject) => {
         sendRewards(
           this.subtrateService.api as any,
           this.subtrateService.pair,
@@ -69,7 +69,7 @@ export class VerificationService {
   ) {
     const updateGeneticAnalystVerificationStatusPromise = new Promise(
       // eslint-disable-next-line
-      (resolve, reject) => {
+      (resolve, _reject) => {
         updateGeneticAnalystVerificationStatus(
           this.subtrateService.api as any,
           this.subtrateService.pair,

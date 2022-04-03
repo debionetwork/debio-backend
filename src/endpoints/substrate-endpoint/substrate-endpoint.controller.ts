@@ -316,7 +316,7 @@ export class SubstrateController {
 
     try {
       // eslint-disable-next-line
-      const substrateServicePromise = new Promise((resolve, reject) => {
+      const substrateServicePromise = new Promise((resolve, _reject) => {
         adminSetEthAddress(
           this.substrateService.api as any,
           this.substrateService.pair,
@@ -335,7 +335,7 @@ export class SubstrateController {
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line
-      const sendRewardsPromise = new Promise((resolve, reject) => {
+      const sendRewardsPromise = new Promise((resolve, _reject) => {
         sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
