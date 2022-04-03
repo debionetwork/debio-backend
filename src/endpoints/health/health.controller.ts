@@ -5,7 +5,6 @@ import {
   TypeOrmHealthIndicator,
   MemoryHealthIndicator,
   DiskHealthIndicator,
-  HealthIndicatorResult,
 } from '@nestjs/terminus';
 import { InjectConnection } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
@@ -31,6 +30,19 @@ export class HealthController {
     private defaultConnection: Connection,
   ) {}
 
+  @Get('server')
+  @HealthCheck()
+  serverCheck() {
+    return this.health.check([
+      () => this.memory.checkHeap('memory heap', 1000 * 1024 * 1024),
+      () =>
+        this.disk.checkStorage('disk health', {
+          thresholdPercent: 0.5,
+          path: '/',
+        }),
+    ]);
+  }
+
   @Get()
   @HealthCheck()
   check() {
@@ -41,33 +53,6 @@ export class HealthController {
         this.db.pingCheck('location-database', {
           connection: this.dbLocationConnection,
         }),
-      () => {
-        try {
-          return this.memory.checkHeap('memory heap', 1000 * 1024 * 1024);
-        } catch {
-          const indicator: HealthIndicatorResult = {
-            ['memory-heap']: {
-              status: 'down',
-            },
-          };
-          return new Promise((resolve, _) => resolve(indicator)); // eslint-disable-line
-        }
-      },
-      () => {
-        try {
-          return this.disk.checkStorage('disk health', {
-            thresholdPercent: 0.5,
-            path: '/',
-          });
-        } catch {
-          const indicator: HealthIndicatorResult = {
-            ['disk-health']: {
-              status: 'down',
-            },
-          };
-          return new Promise((resolve, _) => resolve(indicator)); // eslint-disable-line
-        }
-      },
       () => this.elasticSearch.isHealthy(),
       () => this.substrate.isHealthy(),
     ]);
