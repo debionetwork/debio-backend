@@ -32,6 +32,7 @@ jobs:
         run: |
           tee -a service-account-file.json <<EOF
           ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
+          EOF
       - name: Export GOOGLE_APPLICATION_CREDENTIALS Dependency
         shell: bash
         run: |
