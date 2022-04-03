@@ -29,8 +29,12 @@ import {
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
-  adminSetEthAddress: jest.fn(),
-  sendRewards: jest.fn(),
+  // eslint-disable-next-line
+  adminSetEthAddress: jest.fn((param1, param2, param3, param4, param5) =>
+    param5(),
+  ),
+  // eslint-disable-next-line
+  sendRewards: jest.fn((param1, param2, param3, param4, param5) => param5()),
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
 
@@ -429,7 +433,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       ethAddress: 'string',
     };
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(1);
-    (adminSetEthAddress as jest.Mock).mockReturnValue(false);
+    (adminSetEthAddress as jest.Mock).mockImplementationOnce(() => {
+      throw new Error();
+    });
 
     // Assert
     expect(
@@ -446,6 +452,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'PAIR',
       DTO.accountId,
       DTO.ethAddress,
+      expect.any(Function),
     );
   });
 
@@ -466,7 +473,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(false);
-    (adminSetEthAddress as jest.Mock).mockReturnValue(true);
     rewardServiceMock.getRewardBindingByAccountId.mockReturnValue(false);
     dateTimeProxyMock.new.mockReturnValue(1);
 
@@ -485,6 +491,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'PAIR',
       DTO.accountId,
       DTO.ethAddress,
+      expect.any(Function),
     );
     expect(sendRewards).toHaveBeenCalled();
     expect(sendRewards).toHaveBeenCalledWith(
@@ -492,6 +499,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'PAIR',
       DTO.accountId,
       (REWARD * DBIO_UNIT).toString(),
+      expect.any(Function),
     );
     expect(rewardServiceMock.insert).toHaveBeenCalled();
     expect(rewardServiceMock.insert).toHaveBeenCalledWith({
