@@ -44,8 +44,7 @@ export class HealthController {
       () => {
         try {
           return this.memory.checkHeap('memory heap', 1000 * 1024 * 1024);
-        }
-        catch {
+        } catch {
           const indicator: HealthIndicatorResult = {
             ['memory-heap']: {
               status: 'down',
@@ -60,8 +59,7 @@ export class HealthController {
             thresholdPercent: 0.5,
             path: '/',
           });
-        }
-        catch {
+        } catch {
           const indicator: HealthIndicatorResult = {
             ['disk-health']: {
               status: 'down',
