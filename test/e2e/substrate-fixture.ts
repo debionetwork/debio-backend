@@ -3,6 +3,7 @@ import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import {
   registerGeneticAnalyst,
   registerLab,
+  stakeGeneticAnalyst,
 } from '@debionetwork/polkadot-provider';
 import { labDataMock } from '../mocks/models/labs/labs.mock';
 import { geneticAnalystsDataMock } from '../mocks/models/genetic-analysts/genetic-analysts.mock';
@@ -16,11 +17,14 @@ module.exports = async () => {
   const api = await ApiPromise.create({
     provider: wsProvider,
   });
+
+  const mnemonicUri = '//Alice';
+  process.env.ADMIN_SUBSTRATE_MNEMONIC = mnemonicUri;
   console.log('debio-node resolved! ✅');
 
   console.log('Beginning debio-node migrations 🏇...');
   const keyring = new Keyring({ type: 'sr25519' });
-  const pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
+  const pair = await keyring.addFromUri(mnemonicUri, { name: 'Alice default' });
 
   console.log('Injecting `Lab` into debio-node 💉...');
 
@@ -44,6 +48,16 @@ module.exports = async () => {
 
   console.log(await geneticAnalystsPromise);
 
+  // eslint-disable-next-line
+  const stakeGeneticAnalystsPromise = new Promise((resolve, reject) => {
+    stakeGeneticAnalyst(api as any, pair, () =>
+      resolve('`GeneticAnalyst` staking successful! ✅'),
+    );
+  });
+
+  console.log(await stakeGeneticAnalystsPromise);
+
+  await wsProvider.disconnect();
   await api.disconnect();
   console.log('debio-node migration successful! 🙌');
 };

@@ -54,7 +54,7 @@ describe('Rating Controller (e2e)', () => {
       ...jsonObject,
     };
     expect(jsonObject).toEqual(dtoEqual);
-  }, 25000);
+  }, 30000);
 
   it('GET /rating/order/:order_id: getByCustomer should return', async () => {
     // Act
@@ -67,7 +67,7 @@ describe('Rating Controller (e2e)', () => {
       ...jsonObject,
     };
     expect(jsonObject).toEqual(dtoEqual);
-  }, 25000);
+  }, 30000);
 
   it('GET /rating/service: getAllService should return', async () => {
     // Act
@@ -80,7 +80,7 @@ describe('Rating Controller (e2e)', () => {
     expect(jsonObject[0].rating_lab).toEqual(data.rating);
     expect(jsonObject[0].sum_rating_lab).toEqual(1);
     expect(jsonObject[0].count_rating_lab).toEqual(1);
-  }, 25000);
+  }, 30000);
 
   it('GET /rating/service/:service_id: getByServiceId should return', async () => {
     // Act
@@ -94,7 +94,7 @@ describe('Rating Controller (e2e)', () => {
     expect(jsonObject.service_id).toEqual(data.service_id);
     expect(jsonObject.sum_rating_service).toEqual(data.rating);
     expect(jsonObject.count_rating_service).toEqual(1);
-  }, 25000);
+  }, 30000);
 
   it('GET /rating/lab/:lab_id: getLabRating should return', async () => {
     // Act
@@ -107,5 +107,5 @@ describe('Rating Controller (e2e)', () => {
     expect(jsonObject.rating).toEqual(data.rating);
     expect(jsonObject.sum).toEqual(1);
     expect(jsonObject.count).toEqual(1);
-  }, 25000);
+  }, 30000);
 });

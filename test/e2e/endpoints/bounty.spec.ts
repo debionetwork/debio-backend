@@ -59,7 +59,7 @@ describe('Bounty Controller (e2e)', () => {
       ...jsonObject,
     };
     expect(jsonObject).toEqual(dtoEqual);
-  }, 25000);
+  }, 30000);
 
   it('GET /staked-files: StakedFiles should return', async () => {
     // Act
@@ -73,5 +73,5 @@ describe('Bounty Controller (e2e)', () => {
     const jsonObject = JSON.parse(result.text);
     const dtoEqual: DataTokenToDatasetMappingDto[] = jsonObject;
     expect(jsonObject).toEqual(dtoEqual);
-  }, 25000);
+  }, 30000);
 });
