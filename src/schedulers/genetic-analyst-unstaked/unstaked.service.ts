@@ -4,7 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
-  retrieveUnstakedAmount,
+  retrieveUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
 
 @Injectable()
@@ -26,12 +26,12 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
     );
 
     const unstaked = setInterval(async () => {
-      await this.handleWaitingUnstaked();
+      await this.handleWaitingUnstakedGA();
     }, unstakeInterval);
-    this.schedulerRegistry.addInterval('unstaked-interval', unstaked);
+    this.schedulerRegistry.addInterval('unstaked-ga-interval', unstaked);
   }
 
-  async handleWaitingUnstaked() {
+  async handleWaitingUnstakedGA() {
     try {
       if (this.isRunning) return;
 
@@ -43,8 +43,8 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           body: {
             query: {
               match: {
-                'stake.status': {
-                  query: 'WaitingForUnstaked',
+                stake_status: {
+                  query: 'WaitingForUnStaked',
                 },
               },
             },
@@ -70,7 +70,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
               doc: {
                 request: {
                   stakeStatus: geneticAnalystDetail.stakeStatus,
-                  unstaked_at: geneticAnalystDetail.unstakedAt,
+                  unstaked_at: geneticAnalystDetail.unstakeAt,
                 },
               },
             },
@@ -92,7 +92,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           const diffTime = timeNext6Days - timeNow;
 
           if (diffTime <= 0) {
-            await retrieveUnstakedAmount(
+            await retrieveUnstakeAmount(
               this.subtrateService.api as any,
               this.subtrateService.pair,
               requestId,
