@@ -67,7 +67,7 @@ module.exports = async () => {
     })
     .execute();
   console.log('`Transaction Log` data injection successful! ✅');
-  
+
   console.log('Injecting `Reward` into debio-postgres 💉...');
   await dbPostgresMigration
     .createQueryBuilder()

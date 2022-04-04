@@ -192,7 +192,7 @@ module.exports = async () => {
     },
   });
   console.log('`Order` data injection successful! ✅');
-  
+
   console.log('Injecting `Service Request` into debio-elasticsearch 💉...');
   client.index({
     index: 'create-service-request',
