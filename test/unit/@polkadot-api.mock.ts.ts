@@ -14,6 +14,9 @@ export class ApiPromise {
   on(ev, func) {
     mockFunction(ev);
   }
+  disconnect() {
+    mockFunction('manual disconnect');
+  }
 }
 export class Keyring {
   constructor(params) {

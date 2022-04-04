@@ -14,7 +14,7 @@ export class TransactionLoggingService {
   create(data: TransactionLoggingDto) {
     const logging = new TransactionRequest();
     logging.address = data.address;
-    logging.amount = data.amount;
+    logging.amount = +data.amount;
     logging.created_at = data.created_at;
     logging.currency = data.currency;
     logging.parent_id = data.parent_id;

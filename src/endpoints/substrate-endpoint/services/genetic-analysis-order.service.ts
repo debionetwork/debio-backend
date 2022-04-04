@@ -13,6 +13,34 @@ export class GeneticAnalysisOrderService {
     private readonly substrateService: SubstrateService,
   ) {}
 
+  async getGeneticAnalysisOrderById(genetic_analysis_order_id: string) {
+    let hits_order_ga = [];
+    try {
+      const orderGA = await this.elasticSearchService.search({
+        index: 'genetic-analysis-order',
+        body: {
+          query: {
+            match: {
+              _id: {
+                query: genetic_analysis_order_id,
+              },
+            },
+          },
+        },
+      });
+      hits_order_ga = orderGA.body.hits.hits || [];
+    } catch (error) {
+      if (error?.body?.error?.type === 'index_not_found_exception') {
+        await this.logger.log(
+          `API "orders/{hash_id}": ${error.body.error.reason}`,
+        );
+      } else {
+        throw error;
+      }
+    }
+    return hits_order_ga.length > 0 ? hits_order_ga[0]._source : {};
+  }
+
   async geneticAnalysisSetOrderPaid(genetic_analyst_order_id: string) {
     try {
       await setGeneticAnalysisOrderPaid(
@@ -124,7 +152,8 @@ export class GeneticAnalysisOrderService {
       const genetic_analysis_orders = await this.elasticSearchService.search(
         searchObj,
       );
-      count = total_genetic_analysis_orders;
+
+      count = total_genetic_analysis_orders.body.count | 0;
       data = genetic_analysis_orders.body.hits.hits;
     } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
@@ -138,7 +167,7 @@ export class GeneticAnalysisOrderService {
 
     return {
       info: {
-        page: page,
+        page: page | 1,
         count,
       },
       data,

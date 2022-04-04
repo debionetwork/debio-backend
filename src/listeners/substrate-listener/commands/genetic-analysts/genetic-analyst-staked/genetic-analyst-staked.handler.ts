@@ -31,21 +31,18 @@ export class GeneticAnalystStakedHandler
           geneticAnalyst.accountId,
           19,
         );
-
       const geneticAnalystLogging: TransactionLoggingDto = {
         address: geneticAnalyst.accountId,
         amount: geneticAnalyst.stakeAmount,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
-        parent_id: BigInt(0),
+        parent_id:
+          BigInt(Number(isGeneticAnalystHasBeenInsert.id)) || BigInt(0),
         ref_number: geneticAnalyst.accountId,
-        transaction_status: 19,
-        transaction_type: 4,
+        transaction_status: 23,
+        transaction_type: 5,
       };
-
-      if (!isGeneticAnalystHasBeenInsert) {
-        await this.loggingService.create(geneticAnalystLogging);
-      }
+      await this.loggingService.create(geneticAnalystLogging);
     } catch (error) {
       await this.logger.log(error);
     }

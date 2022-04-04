@@ -52,7 +52,7 @@ export class OrderFulfilledHandler
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
-        amount: order.additionalPrices[0].value + order.prices[0].value,
+        amount: +order.additionalPrices[0].value + +order.prices[0].value,
         created_at: order.updatedAt,
         currency: order.currency.toUpperCase(),
         parent_id: BigInt(orderHistory.id),
@@ -83,11 +83,11 @@ export class OrderFulfilledHandler
         order.serviceId,
       );
       const totalPrice = order.prices.reduce(
-        (acc, price) => acc + price.value,
+        (acc, price) => acc + +price.value,
         0,
       );
       const totalAdditionalPrice = order.additionalPrices.reduce(
-        (acc, price) => acc + price.value,
+        (acc, price) => acc + +price.value,
         0,
       );
       const amountToForward = totalPrice + totalAdditionalPrice;
@@ -103,7 +103,7 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = order.prices[0].value * debioToDai;
+        const servicePrice = +order.prices[0].value * debioToDai;
 
         // Send reward to customer
         await sendRewards(
