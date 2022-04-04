@@ -120,11 +120,9 @@ describe('Health Controller Unit Tests', () => {
       return result;
     });
     typeOrmHealthIndicatorMock.pingCheck.mockReturnValue(1);
-    memoryHealthIndicatorMock.checkHeap.mockReturnValue(1);
-    diskHealthIndicatorMock.checkStorage.mockReturnValue(1);
     elasticsearchHealthIndicatorMock.isHealthy.mockReturnValue(1);
     substrateHealthIndicatorMock.isHealthy.mockReturnValue(1);
-    const EXPECTED_RESULTS = [1, 1, 1, 1, 1, 1];
+    const EXPECTED_RESULTS = [1, 1, 1, 1];
 
     // Assert
     expect(controller.check()).toEqual(EXPECTED_RESULTS);
@@ -137,6 +135,25 @@ describe('Health Controller Unit Tests', () => {
       'location-database',
       { connection: dbLocationConnectionMock },
     );
+    expect(elasticsearchHealthIndicatorMock.isHealthy).toHaveBeenCalledTimes(1);
+    expect(substrateHealthIndicatorMock.isHealthy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should server health check', () => {
+    // Arrange
+    healthCheckServiceMock.check.mockImplementation((args) => {
+      const result = [];
+      for (let i = 0; i < args.length; i++) {
+        result.push(args[i]());
+      }
+      return result;
+    });
+    memoryHealthIndicatorMock.checkHeap.mockReturnValue(1);
+    diskHealthIndicatorMock.checkStorage.mockReturnValue(1);
+    const EXPECTED_RESULTS = [1, 1];
+
+    // Assert
+    expect(controller.serverCheck()).toEqual(EXPECTED_RESULTS);
     expect(memoryHealthIndicatorMock.checkHeap).toHaveBeenCalledTimes(1);
     expect(memoryHealthIndicatorMock.checkHeap).toHaveBeenCalledWith(
       'memory heap',
@@ -150,7 +167,5 @@ describe('Health Controller Unit Tests', () => {
         path: '/',
       },
     );
-    expect(elasticsearchHealthIndicatorMock.isHealthy).toHaveBeenCalledTimes(1);
-    expect(substrateHealthIndicatorMock.isHealthy).toHaveBeenCalledTimes(1);
   });
 });

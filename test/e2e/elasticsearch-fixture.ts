@@ -1,18 +1,25 @@
-import { setElasticsearchDummyCredentials } from './config';
+import { connectionRetries, setElasticsearchDummyCredentials } from './config';
 import { Client } from '@elastic/elasticsearch';
 
-module.exports = async () => {
-  // Wait for Elasticsearch to open connection.
-  console.log('Waiting for debio-elasticsearch to resolve ⏰...');
+async function initalElasticsearchConnection(): Promise<Client> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
   setElasticsearchDummyCredentials();
-  await new Promise((resolve) => setTimeout(resolve, 30000));
-  const client = new Client({
+  return new Client({
     node: process.env.ELASTICSEARCH_NODE,
     auth: {
       username: process.env.ELASTICSEARCH_USERNAME,
       password: process.env.ELASTICSEARCH_PASSWORD,
     },
   });
+}
+
+module.exports = async () => {
+  // Wait for Elasticsearch to open connection.
+  console.log('Waiting for debio-elasticsearch to resolve ⏰...');
+  const client: Client = await connectionRetries(
+    initalElasticsearchConnection,
+    60,
+  );
   console.log('debio-elasticsearch resolved! ✅');
 
   console.log('Beginning debio-elasticsearch migrations 🏇...');
@@ -185,6 +192,35 @@ module.exports = async () => {
     },
   });
   console.log('`Order` data injection successful! ✅');
+  
+  console.log('Injecting `Service Request` into debio-elasticsearch 💉...');
+  client.index({
+    index: 'create-service-request',
+    refresh: 'wait_for',
+    id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    body: {
+      request: {
+        hash: '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75',
+        requester_address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+        lab_address: null,
+        country: 'ID',
+        city: 'Kota Administrasi Jakarta Barat',
+        region: 'JK',
+        service_category: 'SNP Microarray',
+        staking_amount: '5,000,000,000,000,000,000',
+        status: 'Open',
+        created_at: '1,648,627,710,001',
+        updated_at: null,
+        unstaked_at: null,
+      },
+      blockMetadata: {
+        blockNumber: 16559,
+        blockHash:
+          '0x3f314d6ef05403a6a2edee59b67e1cc1b6b1053ee65d2ff6ff759bccd28c4d98',
+      },
+    },
+  });
+  console.log('`Service Request` data injection successful! ✅');
 
   await client.close();
   console.log('debio-elasticsearch migration successful! 🙌');

@@ -4,6 +4,9 @@ export class WsProvider {
   constructor(params) {
     mockFunction(params);
   }
+  disconnect() {
+    mockFunction('manual disconnect');
+  }
 }
 export class ApiPromise {
   // eslint-disable-next-line

@@ -55,17 +55,14 @@ describe('Health Controller (e2e)', () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await api.stopListen();
-  });
-
   it('GET /health: check should return', async () => {
     // Act
     const result = await request(server).get('/health').send();
     const stringResult = JSON.stringify(result);
 
+    await api.stopListen();
+
     // Assert
-    expect(result.status).toEqual(200);
     // prettier-ignore
     expect(
       stringResult.includes('\\\"database\\\":{\\\"status\\\":\\\"up\\\"}'),
@@ -76,19 +73,11 @@ describe('Health Controller (e2e)', () => {
     ).toEqual(true);
     // prettier-ignore
     expect(
-      stringResult.includes('\\\"disk health\\\":{\\\"status\\\":\\\"up\\\"}'),
-    ).toEqual(true);
-    // prettier-ignore
-    expect(
       stringResult.includes('\\\"elasticsearch\\\":{\\\"status\\\":\\\"up\\\"}'),
     ).toEqual(true);
     // prettier-ignore
     expect(
       stringResult.includes('\\\"substrate-node\\\":{\\\"status\\\":\\\"up\\\"}'),
     ).toEqual(true);
-    // prettier-ignore
-    expect(
-      stringResult.includes('\\\"memory heap\\\":{\\\"status\\\":\\\"up\\\"}'),
-    ).toEqual(true);
-  }, 25000);
+  }, 30000);
 });
