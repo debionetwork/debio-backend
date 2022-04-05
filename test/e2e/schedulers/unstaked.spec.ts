@@ -1,9 +1,16 @@
-import { INestApplication } from "@nestjs/common";
-import { ElasticsearchModule, ElasticsearchService } from "@nestjs/elasticsearch";
-import { ScheduleModule, SchedulerRegistry } from "@nestjs/schedule";
-import { Test, TestingModule } from "@nestjs/testing";
-import { ProcessEnvModule, SubstrateModule, SubstrateService } from "../../../src/common";
-import { UnstakedService } from "../../../src/schedulers/unstaked/unstaked.service";
+import { INestApplication } from '@nestjs/common';
+import {
+  ElasticsearchModule,
+  ElasticsearchService,
+} from '@nestjs/elasticsearch';
+import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
+  ProcessEnvModule,
+  SubstrateModule,
+  SubstrateService,
+} from '../../../src/common';
+import { UnstakedService } from '../../../src/schedulers/unstaked/unstaked.service';
 
 describe('Unstaked Scheduler (e2e)', () => {
   let service: UnstakedService;
@@ -12,7 +19,7 @@ describe('Unstaked Scheduler (e2e)', () => {
   let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
-  
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -35,12 +42,14 @@ describe('Unstaked Scheduler (e2e)', () => {
     substrateService = module.get(SubstrateService);
     schedulerRegistry = module.get(ScheduleModule);
     elasticsearchService = module.get(ElasticsearchService);
-    
+
     app = module.createNestApplication();
     await app.init();
   });
 
   it('unstaked-interval must registered', async () => {
-    expect(schedulerRegistry.doesExists('interval', 'unstaked-interval')).toBe(true);
+    expect(schedulerRegistry.doesExists('interval', 'unstaked-interval')).toBe(
+      true,
+    );
   });
 });
