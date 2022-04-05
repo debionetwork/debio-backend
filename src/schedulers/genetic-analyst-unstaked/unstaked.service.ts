@@ -69,15 +69,15 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
             body: {
               doc: {
                 request: {
-                  stakeStatus: geneticAnalystDetail.stakeStatus,
-                  unstaked_at: geneticAnalystDetail.unstakeAt,
+                  stake_status: geneticAnalystDetail.stakeStatus,
+                  unstake_at: geneticAnalystDetail.unstakeAt,
                 },
               },
             },
           });
         } else {
           const timeWaitingUnstaked: string =
-            geneticAnalystData['_source']['request']['unstaked_at'];
+            geneticAnalystData['_source']['unstake_at'];
 
           if (!timeWaitingUnstaked) {
             continue;
