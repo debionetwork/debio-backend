@@ -122,10 +122,10 @@ export class SubstrateListenerHandler implements OnModuleInit {
     await this.substrate.api.query.system
       .events(async (events) => {
         try {
-          const currentBlock = await this.substrate.api.rpc.chain.getBlock();
+          const currentBlock: any = await this.substrate.api.rpc.chain.getBlock();
           const currentBlockNumber =
             currentBlock.block.header.number.toNumber();
-          const blockHash = await this.substrate.api.rpc.chain.getBlockHash(
+          const blockHash: any = await this.substrate.api.rpc.chain.getBlockHash(
             currentBlockNumber,
           );
 
