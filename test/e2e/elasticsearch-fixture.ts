@@ -166,14 +166,11 @@ module.exports = async () => {
       id: '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c',
       service_id:
         '0x27ccd73b42cdf895bf0f48ae43f097313fd96c7286fe2a152b6919fd76f1e05e',
-      customer_id:
-        '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
+      customer_id: '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
       customer_box_public_key:
         '0x35aa27206bdb36f0e5cc892170ec3dd97630c86786be8cbbb71d6b0ebf76a832',
-      seller_id:
-        '5Hj284yPGCrxjh7CHw5o1CFJXKf1DYfgbYk6CPrm1pPyCiYM',
-      dna_sample_tracking_id:
-        'QPDOIJUAB99YXYUF1EX00',
+      seller_id: '5Hj284yPGCrxjh7CHw5o1CFJXKf1DYfgbYk6CPrm1pPyCiYM',
+      dna_sample_tracking_id: 'QPDOIJUAB99YXYUF1EX00',
       currency: 'DAI',
       prices: {
         component: 'testing_price',

@@ -105,7 +105,7 @@ export class SubstrateController {
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
         hashId,
       );
-    
+
     return orderGA;
   }
 

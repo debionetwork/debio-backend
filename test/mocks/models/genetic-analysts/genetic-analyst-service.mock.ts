@@ -10,14 +10,14 @@ export const geneticAnalystServiceDataMock = {
         priceComponents: [
           {
             component: 'string',
-            value: 1
-          }
+            value: 1,
+          },
         ],
         additionalPrices: [
           {
             component: 'string',
-            value: 1
-          }
+            value: 1,
+          },
         ],
       },
     ],
