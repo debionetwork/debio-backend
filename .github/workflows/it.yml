@@ -12,6 +12,7 @@ jobs:
   start-runner:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/it'}}
+    environment: development
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -72,6 +73,7 @@ jobs:
   stop-runner:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/it'}}
+    environment: development
     permissions:
       contents: 'read'
       id-token: 'write'
