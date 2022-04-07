@@ -62,7 +62,19 @@ export class SubstrateService implements OnModuleInit {
   async stopListen() {
     if (!this._listenStatus) return;
     this._listenStatus = false;
-    await this._wsProvider.disconnect();
     await this._api.disconnect();
+    await this._wsProvider.disconnect();
+  }
+
+  destroy() {
+    this._listenStatus = false;
+
+    if (this._api) {
+      delete this._api;
+    }
+
+    if (this._wsProvider) {
+      delete this._wsProvider;
+    }
   }
 }
