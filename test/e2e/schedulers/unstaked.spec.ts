@@ -1,16 +1,8 @@
 import { INestApplication } from '@nestjs/common';
-import {
-  ElasticsearchModule,
-  ElasticsearchService,
-} from '@nestjs/elasticsearch';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
 import { Test, TestingModule } from '@nestjs/testing';
-import {
-  ProcessEnvModule,
-  SubstrateModule,
-  SubstrateService,
-} from '../../../src/common';
-import { UnstakedService } from '../../../src/schedulers/unstaked/unstaked.service';
+import { ProcessEnvModule, SubstrateModule } from '../../../src/common';
 
 describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;
