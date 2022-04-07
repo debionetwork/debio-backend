@@ -31,7 +31,7 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
       - name: Start Runner
-        run: gcloud compute instances start github-runner --zone=asia-southeast1-b
+        run: gcloud compute instances start gh-runner --zone=asia-southeast1-b
         
   testing:
     runs-on: [self-hosted]
@@ -93,4 +93,4 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
       - name: Stop Runner
-        run: gcloud compute instances stop github-runner --zone=asia-southeast1-b
+        run: gcloud compute instances stop gh-runner --zone=asia-southeast1-b
