@@ -14,7 +14,13 @@ describe('Transaction Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
 
-  const data: TransactionHashDto = {
+  const getData: TransactionHashDto = {
+    transaction_hash:
+      '0x85a0773882a27912211db04482865b8dfae7d9e31c1cd6d15899ba47b3c30d1e',
+    order_id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+  };
+
+  const postData: TransactionHashDto = {
     transaction_hash:
       '0x85a0773882a27912211db04482865b8dfae7d9e31c1cd6d15899ba47b3c30d1e',
     order_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
@@ -50,7 +56,9 @@ describe('Transaction Controller (e2e)', () => {
 
   it('POST /hash : submitTransactionHash should return', async () => {
     // Act
-    const result = await request(server).post('/transaction/hash').send(data);
+    const result = await request(server)
+      .post('/transaction/hash')
+      .send(postData);
 
     // Assert
     expect(result.status).toEqual(201);
@@ -62,12 +70,12 @@ describe('Transaction Controller (e2e)', () => {
     // Act
     const result = await request(server)
       .get('/transaction/hash')
-      .query({ order_id: '' })
-      .send(data);
+      .query({ order_id: getData.order_id })
+      .send();
 
     // Assert
     expect(result.status).toEqual(200);
     const jsonObject = JSON.parse(result.text);
-    expect(jsonObject).toEqual(data);
+    expect(jsonObject).toEqual(getData);
   }, 2500);
 });

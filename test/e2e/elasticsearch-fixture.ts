@@ -189,6 +189,42 @@ module.exports = async () => {
       bounty: true,
     },
   });
+
+  client.index({
+    index: 'orders',
+    refresh: 'wait_for',
+    id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    body: {
+      id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      service_id:
+        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+      customer_id:
+        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+      customer_box_public_key:
+        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+      seller_id:
+        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+      transaction_hash:
+        '0x85a0773882a27912211db04482865b8dfae7d9e31c1cd6d15899ba47b3c30d1e',
+      dna_sample_tracking_id:
+        '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      currency: 'DAI',
+      prices: {
+        component: 'test',
+        value: '10000000000',
+      },
+      additional_prices: {
+        component: 'test',
+        value: '10000000000',
+      },
+      status: 'Fulfilled',
+      created_at: new Date().toString(),
+      updated_at: new Date().toString(),
+      lab_info: {},
+      service_info: {},
+      order_flow: 'StakingRequestService',
+    },
+  });
   console.log('`Order` data injection successful! ✅');
 
   console.log('Injecting `Service Request` into debio-elasticsearch 💉...');

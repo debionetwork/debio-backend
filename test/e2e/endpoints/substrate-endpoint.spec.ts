@@ -28,6 +28,15 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   const apiKey = 'DEBIO_API_KEY';
 
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -70,6 +79,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   afterAll(async () => {
     await substrateService.stopListen();
+    substrateService.destroy();
   });
 
   it('GET /substrate/labs: findByCountryCityCategory should return', async () => {
