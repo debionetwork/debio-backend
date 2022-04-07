@@ -12,7 +12,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     environment: development
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/it'}}
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/itf'}}
     strategy:
       matrix:
         node-version: ['16']
