@@ -1,9 +1,4 @@
-name: Integration Tester Automation - Free Runner
-
-on:
-  issue_comment:
-    types:
-    - created
+name: Integration Tester Manual Trigger
 
 concurrency:
   group: it-e2e-tester-${{ github.event.pull_request.number }}
@@ -12,7 +7,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     environment: development
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/itf'}}
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/it'}}
     strategy:
       matrix:
         node-version: ['16']
