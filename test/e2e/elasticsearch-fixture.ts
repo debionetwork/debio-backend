@@ -164,6 +164,7 @@ module.exports = async () => {
     id: '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c',
     body: {
       id: '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c',
+<<<<<<< HEAD
       service_id:
         '0x27ccd73b42cdf895bf0f48ae43f097313fd96c7286fe2a152b6919fd76f1e05e',
       customer_id: '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
@@ -196,33 +197,42 @@ module.exports = async () => {
     id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
     body: {
       id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+=======
+>>>>>>> integration test route in substrate controller
       service_id:
-        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+        '0x27ccd73b42cdf895bf0f48ae43f097313fd96c7286fe2a152b6919fd76f1e05e',
       customer_id:
-        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+        '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
       customer_box_public_key:
-        '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
+        '0x35aa27206bdb36f0e5cc892170ec3dd97630c86786be8cbbb71d6b0ebf76a832',
       seller_id:
+<<<<<<< HEAD
         '0xb7acb3b27d097d8956acf1384e14a2d846820052c45c3a12d7e58c5fa368f8bc',
       transaction_hash:
         '0x85a0773882a27912211db04482865b8dfae7d9e31c1cd6d15899ba47b3c30d1e',
       dna_sample_tracking_id:
         '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+=======
+        '5Hj284yPGCrxjh7CHw5o1CFJXKf1DYfgbYk6CPrm1pPyCiYM',
+      dna_sample_tracking_id:
+        'QPDOIJUAB99YXYUF1EX00',
+>>>>>>> integration test route in substrate controller
       currency: 'DAI',
       prices: {
-        component: 'test',
+        component: 'testing_price',
         value: '10000000000',
       },
       additional_prices: {
-        component: 'test',
+        component: 'qc_price',
         value: '10000000000',
       },
-      status: 'Fulfilled',
+      status: 'Paid',
       created_at: new Date().toString(),
       updated_at: new Date().toString(),
       lab_info: {},
       service_info: {},
-      order_flow: 'StakingRequestService',
+      order_flow: 'RequestTest',
+      bounty: true,
     },
   });
   console.log('`Order` data injection successful! ✅');

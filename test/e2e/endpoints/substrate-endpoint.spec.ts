@@ -20,6 +20,8 @@ import { State } from '../../../src/endpoints/location/models/state.entity';
 import { City } from '../../../src/endpoints/location/models/city.entity';
 import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoint/substrate-endpoint.module';
 import { WalletBindingDTO } from '../../../src/endpoints/substrate-endpoint/dto/wallet-binding.dto';
+import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
+import { GeneticAnalysisOrder, queryGeneticDataByOwnerId, queryLastGeneticAnalysisOrderByCustomerId, registerGeneticAnalyst } from '@debionetwork/polkadot-provider';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -159,11 +161,18 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(ETH_ADDRESS)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 30000);
+<<<<<<< HEAD
 
   it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
     // Arrange
     const HASH_ID =
       '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
+=======
+  
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
+    // Arrange
+    const HASH_ID = '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
+>>>>>>> integration test route in substrate controller
 
     // Act
     const result = await request(server)
@@ -241,10 +250,17 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     // Act
     const result = await request(server)
       .get(`/substrate/provideRequestService`)
+<<<<<<< HEAD
       .query({ countryCode: COUNTRY_CODE })
       .query({ regionCode: REGION_CODE })
       .query({ city: CITY })
       .query({ category: CATEGORY })
+=======
+      .query({countryCode: COUNTRY_CODE})
+      .query({regionCode: REGION_CODE})
+      .query({city: CITY})
+      .query({category: CATEGORY})
+>>>>>>> integration test route in substrate controller
       .send();
 
     // Assert
@@ -254,6 +270,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(CATEGORY)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 15000);
+<<<<<<< HEAD
 =======
   }, 25000);
 <<<<<<< HEAD
@@ -274,4 +291,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 >>>>>>> linter fixed
 =======
 >>>>>>> remove empty function callback
+=======
+>>>>>>> integration test route in substrate controller
 });

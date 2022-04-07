@@ -10,14 +10,24 @@ export const geneticAnalystServiceDataMock = {
         priceComponents: [
           {
             component: 'string',
+<<<<<<< HEAD
             value: 1,
           },
+=======
+            value: 1
+          }
+>>>>>>> integration test route in substrate controller
         ],
         additionalPrices: [
           {
             component: 'string',
+<<<<<<< HEAD
             value: 1,
           },
+=======
+            value: 1
+          }
+>>>>>>> integration test route in substrate controller
         ],
       },
     ],

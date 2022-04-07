@@ -105,7 +105,11 @@ export class SubstrateController {
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
         hashId,
       );
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> integration test route in substrate controller
     return orderGA;
   }
 
