@@ -48,6 +48,26 @@ module.exports = async () => {
     synchronize: true,
   });
 
+  console.log('Injecting `Transaction Log` into debio-postgres 💉...');
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(TransactionRequest)
+    .values({
+      id: BigInt(1),
+      address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      currency: 'DBIO',
+      transaction_type: 4,
+      amount: 50000,
+      transaction_status: 20,
+      created_at: new Date(),
+      ref_number: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      parent_id: BigInt(0),
+      transaction_hash: '',
+    })
+    .execute();
+  console.log('`Transaction Log` data injection successful! ✅');
+
   console.log('Injecting `Reward` into debio-postgres 💉...');
   await dbPostgresMigration
     .createQueryBuilder()
