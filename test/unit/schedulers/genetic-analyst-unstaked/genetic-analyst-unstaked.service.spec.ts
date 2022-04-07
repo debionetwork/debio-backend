@@ -46,7 +46,7 @@ describe('UnstakedService', () => {
       body: {
         query: {
           match: {
-            'stake_status': {
+            stake_status: {
               query: 'WaitingForUnStaked',
             },
           },
@@ -118,7 +118,9 @@ describe('UnstakedService', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(geneticAnalystUnstakedService.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
+    expect(geneticAnalystUnstakedService.strToMilisecond(PARAM)).toBe(
+      EXPECTED_RETURN,
+    );
   });
 
   it('should not do anything', () => {

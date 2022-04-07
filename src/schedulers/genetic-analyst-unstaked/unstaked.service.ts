@@ -43,7 +43,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           body: {
             query: {
               match: {
-                'stake_status': {
+                stake_status: {
                   query: 'WaitingForUnStaked',
                 },
               },
