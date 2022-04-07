@@ -20,13 +20,6 @@ import { State } from '../../../src/endpoints/location/models/state.entity';
 import { City } from '../../../src/endpoints/location/models/city.entity';
 import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoint/substrate-endpoint.module';
 import { WalletBindingDTO } from '../../../src/endpoints/substrate-endpoint/dto/wallet-binding.dto';
-import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
-import {
-  GeneticAnalysisOrder,
-  queryGeneticDataByOwnerId,
-  queryLastGeneticAnalysisOrderByCustomerId,
-  registerGeneticAnalyst,
-} from '@debionetwork/polkadot-provider';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;

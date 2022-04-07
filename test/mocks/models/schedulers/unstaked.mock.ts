@@ -1,4 +1,4 @@
-const serviceRequestMockData = {
+const serviceRequestMockData = { // eslint-disable-line
   request: {
     hash: '0x22d03ae32b4c2dcca4f69c26f768aa160d9466f501bfb622e6d84c639e621fa9',
     requester_address: '5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7',

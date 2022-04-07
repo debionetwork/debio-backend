@@ -13,10 +13,7 @@ import {
 import { UnstakedService } from '../../../src/schedulers/unstaked/unstaked.service';
 
 describe('Unstaked Scheduler (e2e)', () => {
-  let service: UnstakedService;
-  let substrateService: SubstrateService;
   let schedulerRegistry: SchedulerRegistry;
-  let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
 
@@ -38,10 +35,7 @@ describe('Unstaked Scheduler (e2e)', () => {
       ],
     }).compile();
 
-    service = module.get(UnstakedService);
-    substrateService = module.get(SubstrateService);
     schedulerRegistry = module.get(ScheduleModule);
-    elasticsearchService = module.get(ElasticsearchService);
 
     app = module.createNestApplication();
     await app.init();
