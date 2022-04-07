@@ -21,7 +21,12 @@ import { City } from '../../../src/endpoints/location/models/city.entity';
 import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoint/substrate-endpoint.module';
 import { WalletBindingDTO } from '../../../src/endpoints/substrate-endpoint/dto/wallet-binding.dto';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
-import { GeneticAnalysisOrder, queryGeneticDataByOwnerId, queryLastGeneticAnalysisOrderByCustomerId, registerGeneticAnalyst } from '@debionetwork/polkadot-provider';
+import {
+  GeneticAnalysisOrder,
+  queryGeneticDataByOwnerId,
+  queryLastGeneticAnalysisOrderByCustomerId,
+  registerGeneticAnalyst,
+} from '@debionetwork/polkadot-provider';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -162,6 +167,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.status).toEqual(200);
   }, 30000);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
     // Arrange
@@ -173,6 +179,13 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     // Arrange
     const HASH_ID = '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
 >>>>>>> integration test route in substrate controller
+=======
+
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
+    // Arrange
+    const HASH_ID =
+      '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
+>>>>>>> linter
 
     // Act
     const result = await request(server)
@@ -251,16 +264,22 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     const result = await request(server)
       .get(`/substrate/provideRequestService`)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> linter
       .query({ countryCode: COUNTRY_CODE })
       .query({ regionCode: REGION_CODE })
       .query({ city: CITY })
       .query({ category: CATEGORY })
+<<<<<<< HEAD
 =======
       .query({countryCode: COUNTRY_CODE})
       .query({regionCode: REGION_CODE})
       .query({city: CITY})
       .query({category: CATEGORY})
 >>>>>>> integration test route in substrate controller
+=======
+>>>>>>> linter
       .send();
 
     // Assert

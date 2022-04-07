@@ -106,10 +106,14 @@ export class SubstrateController {
         hashId,
       );
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     
 >>>>>>> integration test route in substrate controller
+=======
+
+>>>>>>> linter
     return orderGA;
   }
 
