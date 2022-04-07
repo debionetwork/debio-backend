@@ -43,11 +43,19 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           body: {
             query: {
               match: {
-                stake_status: {
+                'stake_status': {
                   query: 'WaitingForUnStaked',
                 },
               },
             },
+            sort: [
+              {
+                'unstake_at.keyword': {
+                  unmapped_type: 'keyword',
+                  order: 'asc',
+                },
+              },
+            ],
           },
           from: 0,
           size: 10,
@@ -55,11 +63,13 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
       const listGeneticAnalyst = geneticAnalystsWaitingUnstaked.body.hits.hits;
       for (const geneticAnalystData of listGeneticAnalyst) {
+        console.log(listGeneticAnalyst);
         const requestId = geneticAnalystData['_source']['account_id'];
         const geneticAnalystDetail = await queryGeneticAnalystByAccountId(
           this.subtrateService.api as any,
           requestId,
         );
+        console.log(geneticAnalystDetail);
 
         if (geneticAnalystDetail.stakeStatus === 'Unstaked') {
           await this.elasticsearchService.update({
@@ -68,10 +78,8 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
             refresh: 'wait_for',
             body: {
               doc: {
-                request: {
-                  stake_status: geneticAnalystDetail.stakeStatus,
-                  unstake_at: geneticAnalystDetail.unstakeAt,
-                },
+                stake_status: geneticAnalystDetail.stakeStatus,
+                unstake_at: geneticAnalystDetail.unstakeAt,
               },
             },
           });
