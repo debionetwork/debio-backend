@@ -26,6 +26,15 @@ describe('Mailer Scheduler (e2e)', () => {
 
   let app: INestApplication;
 
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,6 +63,11 @@ describe('Mailer Scheduler (e2e)', () => {
 
     app = module.createNestApplication();
     await app.init();
+  });
+
+  afterAll(async () => {
+    await substrateService.stopListen();
+    substrateService.destroy();
   });
 
   it('handlePendingLabRegister should not throw', async () => {

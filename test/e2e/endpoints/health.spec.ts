@@ -20,6 +20,15 @@ describe('Health Controller (e2e)', () => {
   let app: INestApplication;
   let api: SubstrateService;
 
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -53,6 +62,11 @@ describe('Health Controller (e2e)', () => {
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
+  });
+
+  afterAll(async () => {
+    await api.stopListen();
+    api.destroy();
   });
 
   it('GET /health: check should return', async () => {
