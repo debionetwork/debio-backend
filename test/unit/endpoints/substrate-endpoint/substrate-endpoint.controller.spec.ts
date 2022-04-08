@@ -207,10 +207,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   it('should orders by order Id', () => {
     // Arrange
     const RETURN_VALUE = 1;
-    const RESULT = {
-      order: RETURN_VALUE,
-      orderGA: RETURN_VALUE,
-    };
+    const RESULT = RETURN_VALUE;
+
     orderServiceMock.getOrderByHashId.mockReturnValue(RETURN_VALUE);
     geneticAnalysisOrderMock.getGeneticAnalysisOrderById.mockReturnValue(
       RETURN_VALUE,

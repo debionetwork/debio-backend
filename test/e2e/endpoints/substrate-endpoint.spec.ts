@@ -157,5 +157,100 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(ACCOUNT_ID)).toBeTruthy();
     expect(result.text.includes(ETH_ADDRESS)).toBeTruthy();
     expect(result.status).toEqual(200);
-  }, 60000);
+  }, 30000);
+
+  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
+    // Arrange
+    const HASH_ID =
+      '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/orders/${HASH_ID}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(HASH_ID)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 30000);
+
+  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {
+    // Arrange
+    const CUSTOMER_ID = '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/orders/list/${CUSTOMER_ID}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(CUSTOMER_ID)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 30000);
+
+  it('GET /substrate/orders/bounty_list/{customer_id}: getBountyByProductNameStatusLabName should return', async () => {
+    // Arrange
+    const CUSTOMER_ID = '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/orders/bounty_list/${CUSTOMER_ID}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(CUSTOMER_ID)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  });
+
+  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByLab should return', async () => {
+    // Arrange
+    const LAB_ID = '5Hj284yPGCrxjh7CHw5o1CFJXKf1DYfgbYk6CPrm1pPyCiYM';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/orders/list/lab/${LAB_ID}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(LAB_ID)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 30000);
+
+  it('GET /substrate/service-request/{customer_id}', async () => {
+    // Arrange
+    const CUSTOMER_ID = '5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/service-request/${CUSTOMER_ID}`)
+      .send();
+
+    // Assert
+    expect(result.text.includes(CUSTOMER_ID)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 15000);
+
+  it('GET /substrate/provideRequestService: getCustomerProvidedService should return', async () => {
+    // Arrange
+    const COUNTRY_CODE = 'ID';
+    const REGION_CODE = 'JK';
+    const CITY = 'Kota Administrasi Jakarta Barat';
+    const CATEGORY = 'SNP Microarray';
+
+    // Act
+    const result = await request(server)
+      .get(`/substrate/provideRequestService`)
+      .query({ countryCode: COUNTRY_CODE })
+      .query({ regionCode: REGION_CODE })
+      .query({ city: CITY })
+      .query({ category: CATEGORY })
+      .send();
+
+    // Assert
+    expect(result.text.includes(COUNTRY_CODE)).toBeTruthy();
+    expect(result.text.includes(REGION_CODE)).toBeTruthy();
+    expect(result.text.includes(CITY)).toBeTruthy();
+    expect(result.text.includes(CATEGORY)).toBeTruthy();
+    expect(result.status).toEqual(200);
+  }, 15000);
 });

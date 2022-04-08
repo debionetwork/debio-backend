@@ -95,12 +95,18 @@ export class SubstrateController {
   @Get('/orders/:hash_id')
   async getOrderById(@Param('hash_id') hashId: string) {
     const order = await this.orderService.getOrderByHashId(hashId);
+
+    return order;
+  }
+
+  @Get('/orders/ga/:hash_id')
+  async getOrderGa(@Param('hash_id') hashId: string) {
     const orderGA =
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
         hashId,
       );
 
-    return { order, orderGA };
+    return orderGA;
   }
 
   @Get('/orders/list/:customer_id')
