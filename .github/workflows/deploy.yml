@@ -38,45 +38,18 @@ jobs:
   deploy-dev:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    environment: development
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.DEV_DEPLOY }}
     permissions:
       contents: 'read'
       id-token: 'write'
-    strategy:
-      matrix:
-        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -220,45 +193,18 @@ jobs:
   deploy-alpha-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'alpha')"
     runs-on: ubuntu-latest
-    environment: staging
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.STG_DEPLOY }}
     permissions:
       contents: 'read'
       id-token: 'write'
-    strategy:
-      matrix:
-        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -402,45 +348,18 @@ jobs:
   deploy-beta-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'beta')"
     runs-on: ubuntu-latest
-    environment: testnet
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.TESTNET_DEPLOY }}
     permissions:
       contents: 'read'
       id-token: 'write'
-    strategy:
-      matrix:
-        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -584,45 +503,18 @@ jobs:
   deploy-pre-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'rc')"
     runs-on: ubuntu-latest
-    environment: testnet
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
     permissions:
       contents: 'read'
       id-token: 'write'
-    strategy:
-      matrix:
-        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
@@ -766,45 +658,18 @@ jobs:
   deploy-release:
     if: "startsWith(github.ref, 'refs/tags/') && !github.event.release.prerelease"
     runs-on: ubuntu-latest
-    environment: mainnet
     needs: [compute-build-info]
     env:
       DEPLOY: ${{ secrets.MAINNET_DEPLOY }}
     permissions:
       contents: 'read'
       id-token: 'write'
-    strategy:
-      matrix:
-        node-version: ['16']
     steps:
       - name: Checkout code
         if: "${{ env.DEPLOY == 'true' }}"
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
       - name: Authenticate to Google Cloud
         if: "${{ env.DEPLOY == 'true' }}"
         id: 'auth'
