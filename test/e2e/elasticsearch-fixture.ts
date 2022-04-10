@@ -268,6 +268,33 @@ module.exports = async () => {
       },
     },
   });
+
+  client.index({
+    index: 'create-service-request',
+    refresh: 'wait_for',
+    id: '0x8b48ead7cf44e6449cbb5de298f3c3915f09b700b7a74b27a368c69629884155',
+    body: {
+      request: {
+        hash: '0x8b48ead7cf44e6449cbb5de298f3c3915f09b700b7a74b27a368c69629884155',
+        requester_address: '5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7',
+        lab_address: null,
+        country: 'ID',
+        city: 'Kota Administrasi Jakarta Barat',
+        region: 'JK',
+        service_category: 'SNP Microarray',
+        staking_amount: '5,000,000,000,000,000,000',
+        status: 'WaitingForUnstaked',
+        created_at: '1,648,627,710,001',
+        updated_at: null,
+        unstaked_at: '1,648,627,710,001',
+      },
+      blockMetadata: {
+        blockNumber: 16559,
+        blockHash:
+          '0x3f314d6ef05403a6a2edee59b67e1cc1b6b1053ee65d2ff6ff759bccd28c4d98',
+      },
+    },
+  });
   console.log('`Service Request` data injection successful! ✅');
 
   await client.close();
