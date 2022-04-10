@@ -63,13 +63,11 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
 
       const listGeneticAnalyst = geneticAnalystsWaitingUnstaked.body.hits.hits;
       for (const geneticAnalystData of listGeneticAnalyst) {
-        console.log(listGeneticAnalyst);
         const requestId = geneticAnalystData['_source']['account_id'];
         const geneticAnalystDetail = await queryGeneticAnalystByAccountId(
           this.subtrateService.api as any,
           requestId,
         );
-        console.log(geneticAnalystDetail);
 
         if (geneticAnalystDetail.stakeStatus === 'Unstaked') {
           await this.elasticsearchService.update({

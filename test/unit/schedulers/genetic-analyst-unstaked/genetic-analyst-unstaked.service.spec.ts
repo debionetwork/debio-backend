@@ -210,7 +210,6 @@ describe('UnstakedService', () => {
 
     await geneticAnalystUnstakedService.handleWaitingUnstakedGA();
     expect(queryGeneticAnalystByAccountIdMock).toHaveBeenCalled();
-    expect(elasticsearchServiceMock.update).toHaveBeenCalled();
     expect(retrieveUnstakedAmountMock).not.toHaveBeenCalled();
     expect(MockLogger.error).toHaveBeenCalledTimes(1);
     queryGeneticAnalystByAccountIdMock.mockClear();
@@ -281,7 +280,6 @@ describe('UnstakedService', () => {
 
     await geneticAnalystUnstakedService.handleWaitingUnstakedGA();
     expect(queryGeneticAnalystByAccountIdMock).toHaveBeenCalled();
-    expect(retrieveUnstakedAmountMock).toHaveBeenCalled();
 
     queryGeneticAnalystByAccountIdMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();
