@@ -14,7 +14,6 @@ import {
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule';
 import { UnstakedService } from '../../../src/schedulers/unstaked/unstaked.service';
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
-import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
 import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 describe('Unstaked Scheduler (e2e)', () => {
