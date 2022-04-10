@@ -120,7 +120,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(COUNTRY)).toBeTruthy();
     expect(result.text.includes(CITY)).toBeTruthy();
     expect(result.status).toEqual(200);
-<<<<<<< HEAD
   }, 30000);
 
   it('GET /substrate/countries: getAggregatedByCountries should return', async () => {
@@ -159,26 +158,11 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(ETH_ADDRESS)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 30000);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
   it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
     // Arrange
     const HASH_ID =
       '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
-=======
-  
-  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
-    // Arrange
-    const HASH_ID = '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
->>>>>>> integration test route in substrate controller
-=======
-
-  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
-    // Arrange
-    const HASH_ID =
-      '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c';
->>>>>>> linter
 
     // Act
     const result = await request(server)
@@ -256,23 +240,10 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     // Act
     const result = await request(server)
       .get(`/substrate/provideRequestService`)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> linter
       .query({ countryCode: COUNTRY_CODE })
       .query({ regionCode: REGION_CODE })
       .query({ city: CITY })
       .query({ category: CATEGORY })
-<<<<<<< HEAD
-=======
-      .query({countryCode: COUNTRY_CODE})
-      .query({regionCode: REGION_CODE})
-      .query({city: CITY})
-      .query({category: CATEGORY})
->>>>>>> integration test route in substrate controller
-=======
->>>>>>> linter
       .send();
 
     // Assert
@@ -282,27 +253,4 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(CATEGORY)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 15000);
-<<<<<<< HEAD
-=======
-  }, 25000);
-<<<<<<< HEAD
-
-  it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {}); // eslint-disable-line
-
-  it('GET /substrate/orders/list/{customer_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
-
-  it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
-
-<<<<<<< HEAD
-  it('GET /substrate/orders/bounty_list/{customer_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
-
-  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {});  // eslint-disable-line
->>>>>>> e2e substrate enpoint
-=======
-  it('GET /substrate/orders/list/lab/{lab_id}: getOrderByCustomer should return', async () => {}); // eslint-disable-line
->>>>>>> linter fixed
-=======
->>>>>>> remove empty function callback
-=======
->>>>>>> integration test route in substrate controller
 });

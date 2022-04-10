@@ -44,14 +44,9 @@ jobs:
         run: npm run lint
       - name: Run Unit Tests
         run: npm run test
-<<<<<<< HEAD
       - name: Run Integration Tests
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
         run: npm run test:e2e
       - name: Run Build
         run: npm run build
-=======
-      - name: Run Build
-        run: npm run build
->>>>>>> update package and tester.yml
