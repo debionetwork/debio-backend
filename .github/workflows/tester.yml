@@ -12,6 +12,7 @@ concurrency:
 jobs:
   testing:
     runs-on: ubuntu-latest
+    environment: development
     strategy:
       matrix:
         node-version: ['16']
@@ -20,6 +21,18 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Create .env File
+        shell: bash
+        run: |
+          tee -a .env <<EOF
+          ${{ secrets.FULL_ENV }}
+          EOF
+      - name: Create service-account-file.json File
+        shell: bash
+        run: |
+          tee -a service-account-file.json <<EOF
+          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
+          EOF
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
@@ -31,5 +44,9 @@ jobs:
         run: npm run lint
       - name: Run Unit Tests
         run: npm run test
+      - name: Run Integration Tests
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
+        run: npm run test:e2e
       - name: Run Build
         run: npm run build
