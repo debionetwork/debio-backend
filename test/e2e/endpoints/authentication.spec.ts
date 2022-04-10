@@ -19,7 +19,14 @@ describe('Authentication Controller (e2e)', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [JwtModule, AuthenticationModule],
+      imports: [
+        JwtModule.register({
+          signOptions: {
+            expiresIn: '5s',
+          },
+        }),
+        AuthenticationModule,
+      ],
       providers: [
         {
           provide: ProcessEnvProxy,
@@ -35,7 +42,10 @@ describe('Authentication Controller (e2e)', () => {
 
   it('GET /auth/pinata-jwt: check should return', async () => {
     // Act
-    const result = await request(server).get('/auth/pinata-jwt').send();
+    const result = await request(server)
+      .get('/auth/pinata-jwt')
+      .set('debio-api-key', apiKey)
+      .send();
 
     // Assert
     expect(result.status).toEqual(200);
