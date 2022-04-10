@@ -1,5 +1,6 @@
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { ProcessEnvProxy } from '../proxies';
 
 @Injectable()
@@ -24,6 +25,8 @@ export class SubstrateService implements OnModuleInit {
     this._wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
 
     const keyring = new Keyring({ type: 'sr25519' });
+    await cryptoWaitReady();
+
     this._pair = await keyring.addFromUri(
       this.process.env.ADMIN_SUBSTRATE_MNEMONIC,
     );
