@@ -52,47 +52,9 @@ jobs:
           echo "::set-output name=latest_tag::$LATEST_TAG"
           echo "::set-output name=pre_release::$PRE_RELEASE"
 
-  testing:
-    runs-on: ubuntu-latest
-    needs:
-      - compute-build-info
-    environment: development
-    strategy:
-      matrix:
-        node-version: ['16']
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Create .env File
-        shell: bash
-        run: |
-          tee -a .env <<EOF
-          ${{ secrets.FULL_ENV }}
-          EOF
-      - name: Create service-account-file.json File
-        shell: bash
-        run: |
-          tee -a service-account-file.json <<EOF
-          ${{ secrets.SERVICE_ACCOUNT_FILE_JSON }}
-          EOF
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Integration Tests
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
-        run: npm run test:e2e
-
   build:
     runs-on: ubuntu-latest
     needs:
-      - testing
       - compute-build-info
     steps:
       - name: Checkout code
