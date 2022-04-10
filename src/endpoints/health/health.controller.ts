@@ -30,6 +30,19 @@ export class HealthController {
     private defaultConnection: Connection,
   ) {}
 
+  @Get('server')
+  @HealthCheck()
+  serverCheck() {
+    return this.health.check([
+      () => this.memory.checkHeap('memory heap', 1000 * 1024 * 1024),
+      () =>
+        this.disk.checkStorage('disk health', {
+          thresholdPercent: 0.5,
+          path: '/',
+        }),
+    ]);
+  }
+
   @Get()
   @HealthCheck()
   check() {
@@ -39,12 +52,6 @@ export class HealthController {
       () =>
         this.db.pingCheck('location-database', {
           connection: this.dbLocationConnection,
-        }),
-      () => this.memory.checkHeap('memory heap', 1000 * 1024 * 1024),
-      () =>
-        this.disk.checkStorage('disk health', {
-          thresholdPercent: 0.5,
-          path: '/',
         }),
       () => this.elasticSearch.isHealthy(),
       () => this.substrate.isHealthy(),

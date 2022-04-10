@@ -20,6 +20,15 @@ describe('Health Controller (e2e)', () => {
   let app: INestApplication;
   let api: SubstrateService;
 
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -57,6 +66,7 @@ describe('Health Controller (e2e)', () => {
 
   afterAll(async () => {
     await api.stopListen();
+    api.destroy();
   });
 
   it('GET /health: check should return', async () => {
@@ -64,8 +74,9 @@ describe('Health Controller (e2e)', () => {
     const result = await request(server).get('/health').send();
     const stringResult = JSON.stringify(result);
 
+    await api.stopListen();
+
     // Assert
-    expect(result.status).toEqual(200);
     // prettier-ignore
     expect(
       stringResult.includes('\\\"database\\\":{\\\"status\\\":\\\"up\\\"}'),
@@ -76,19 +87,11 @@ describe('Health Controller (e2e)', () => {
     ).toEqual(true);
     // prettier-ignore
     expect(
-      stringResult.includes('\\\"disk health\\\":{\\\"status\\\":\\\"up\\\"}'),
-    ).toEqual(true);
-    // prettier-ignore
-    expect(
       stringResult.includes('\\\"elasticsearch\\\":{\\\"status\\\":\\\"up\\\"}'),
     ).toEqual(true);
     // prettier-ignore
     expect(
       stringResult.includes('\\\"substrate-node\\\":{\\\"status\\\":\\\"up\\\"}'),
     ).toEqual(true);
-    // prettier-ignore
-    expect(
-      stringResult.includes('\\\"memory heap\\\":{\\\"status\\\":\\\"up\\\"}'),
-    ).toEqual(true);
-  }, 25000);
+  }, 30000);
 });

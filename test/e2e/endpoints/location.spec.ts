@@ -50,5 +50,5 @@ describe('Location Controller (e2e)', () => {
     expect(result.text.includes(STATE_CODE)).toBeTruthy();
     expect(result.text.includes(CITY_CODE.toString())).toBeTruthy();
     expect(result.status).toEqual(200);
-  }, 25000);
+  }, 30000);
 });

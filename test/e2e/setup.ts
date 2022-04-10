@@ -5,7 +5,11 @@ module.exports = async () => {
   const substrateFixture = require('./substrate-fixture'); // eslint-disable-line
   const elasticsearchFixture = require('./elasticsearch-fixture'); // eslint-disable-line
 
+  const apiKey = 'DEBIO_API_KEY';
+  process.env.DEBIO_API_KEY = apiKey;
+
   const promise = new Promise((resolve, reject) => {
+    console.log('Starting docker-compose... 🐋');
     // eslint-disable-line
     compose.upAll({ cwd: path.join(__dirname), log: true }).then(
       () => {
