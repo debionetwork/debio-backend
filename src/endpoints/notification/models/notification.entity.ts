@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'notification' })
 export class Notification {
@@ -7,7 +7,7 @@ export class Notification {
 
   @Column()
   role: string;
-  
+
   @Column()
   entity_type: string;
 
@@ -25,10 +25,10 @@ export class Notification {
 
   @Column()
   updated_at: Date;
-  
+
   @Column()
   deleted_at: Date;
-  
+
   @Column()
   from: string;
 
