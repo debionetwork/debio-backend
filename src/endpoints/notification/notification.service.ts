@@ -15,13 +15,13 @@ export class NotificationService {
 
   getAllByToId(to: string) {
     return this.notificationRepository.find({
-      where: { 
-        to, 
+      where: {
+        to,
         deleted_at: null,
       },
       order: {
-        updated_at: 'DESC'
-      }
+        updated_at: 'DESC',
+      },
     });
   }
 

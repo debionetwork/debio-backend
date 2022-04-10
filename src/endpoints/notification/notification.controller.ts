@@ -41,7 +41,9 @@ export class NotificationController {
   async setBulkNotificationHasbeenRead(@Param('to_id') to_id: string) {
     try {
       return {
-        data: await this.notificationService.setBulkNotificationHasBeenRead(to_id),
+        data: await this.notificationService.setBulkNotificationHasBeenRead(
+          to_id,
+        ),
       };
     } catch (error) {
       return error;
