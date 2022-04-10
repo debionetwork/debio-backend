@@ -25,6 +25,7 @@ import { CachesModule } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
+import { NotificationModule } from './endpoints/notification/notification.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -73,6 +74,7 @@ require('dotenv').config(); // eslint-disable-line
     SchedulersModule,
     TransactionModule,
     SpecializationModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}

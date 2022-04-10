@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { DateTimeProxy } from 'src/common';
 import { Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
@@ -7,14 +8,20 @@ import { Notification } from './models/notification.entity';
 @Injectable()
 export class NotificationService {
   constructor(
-    @Inject(Notification)
+    @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
   getAllByToId(to: string) {
     return this.notificationRepository.find({
-      where: { to },
+      where: { 
+        to, 
+        deleted_at: null,
+      },
+      order: {
+        updated_at: 'DESC'
+      }
     });
   }
 
