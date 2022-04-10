@@ -1,8 +1,8 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { DateTimeProxy } from "src/common";
-import { Repository } from "typeorm";
-import { NotificationDto } from "./dto/notification.dto";
-import { Notification } from "./models/notification.entity";
+import { Inject, Injectable } from '@nestjs/common';
+import { DateTimeProxy } from 'src/common';
+import { Repository } from 'typeorm';
+import { NotificationDto } from './dto/notification.dto';
+import { Notification } from './models/notification.entity';
 
 @Injectable()
 export class NotificationService {
@@ -15,7 +15,7 @@ export class NotificationService {
   getAllByToId(to: string) {
     return this.notificationRepository.find({
       where: { to },
-    })
+    });
   }
 
   insert(data: NotificationDto) {
@@ -41,7 +41,7 @@ export class NotificationService {
         updated_at: await this.dateTimeProxy.new(),
         read: true,
       },
-    )
+    );
   }
 
   async setBulkNotificationHasBeenRead(to) {
@@ -51,6 +51,6 @@ export class NotificationService {
         updated_at: await this.dateTimeProxy.new(),
         read: true,
       },
-    )
+    );
   }
 }
