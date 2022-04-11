@@ -5,11 +5,10 @@ import { DateTimeProxy, SubstrateService } from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
-  LabVerificationStatus,
   sendRewards,
   updateLabVerificationStatus,
-  GeneticAnalystsVerificationStatus,
 } from '@debionetwork/polkadot-provider';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 @Injectable()
 export class VerificationService {
@@ -28,7 +27,7 @@ export class VerificationService {
           this.subtrateService.api as any,
           this.subtrateService.pair,
           substrateAddress,
-          <LabVerificationStatus>verificationStatus,
+          <VerificationStatus>verificationStatus,
           () => resolve('resolved'),
         );
       },
@@ -75,7 +74,7 @@ export class VerificationService {
           this.subtrateService.api as any,
           this.subtrateService.pair,
           accountId,
-          <GeneticAnalystsVerificationStatus>verificationStatus,
+          <VerificationStatus>verificationStatus,
           () => resolve('resolved'),
         );
       },
