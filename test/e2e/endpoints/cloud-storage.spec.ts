@@ -39,5 +39,5 @@ describe('Cloud Controller (e2e)', () => {
     // Assert
     expect(result.status).toEqual(200);
     expect(result.text.includes('signedUrl')).toEqual(true);
-  }, 25000);
+  }, 30000);
 });

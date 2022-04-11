@@ -3,6 +3,7 @@ module.exports = async () => {
   const compose = require('docker-compose'); // eslint-disable-line
 
   const promise = new Promise((resolve, reject) => {
+    console.log('Stopping docker-compose... 🐋');
     // eslint-disable-line
     compose.down({ cwd: path.join(__dirname), log: true }).then(
       () => {

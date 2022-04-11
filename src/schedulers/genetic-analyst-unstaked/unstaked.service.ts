@@ -70,7 +70,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
               doc: {
                 request: {
                   stakeStatus: geneticAnalystDetail.stakeStatus,
-                  // unstaked_at: geneticAnalystDetail.unstakedAt, TODO: polkadot provider genticAnalystDetail.unstakedAt is undefined
+                  unstaked_at: geneticAnalystDetail.unstakeAt,
                 },
               },
             },

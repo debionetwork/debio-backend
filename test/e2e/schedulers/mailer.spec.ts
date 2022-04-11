@@ -26,6 +26,15 @@ describe('Mailer Scheduler (e2e)', () => {
 
   let app: INestApplication;
 
+  global.console = {
+    ...console,
+    log: jest.fn(),
+    debug: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -58,6 +67,7 @@ describe('Mailer Scheduler (e2e)', () => {
 
   afterAll(async () => {
     await substrateService.stopListen();
+    substrateService.destroy();
   });
 
   it('handlePendingLabRegister should not throw', async () => {
@@ -71,10 +81,12 @@ describe('Mailer Scheduler (e2e)', () => {
       'setEmailNotificationSent',
     );
     const keyring = new Keyring({ type: 'sr25519' });
-    const pair = keyring.addFromUri('//Alice', { name: 'Alice default' });
+    const pair = await keyring.addFromUri('//Alice', { name: 'Alice default' });
 
     // Act
     await service.handlePendingLabRegister();
+
+    await substrateService.stopListen();
 
     // Assert
     expect(sendLabRegistrationEmailSpy).toBeCalledTimes(1);

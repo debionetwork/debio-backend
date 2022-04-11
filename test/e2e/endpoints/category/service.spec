@@ -3,9 +3,9 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Server } from 'http';
-import { ServiceCategory } from 'src/endpoints/category/service/models/service-category.service';
-import { dummyCredentials } from 'test/e2e/config';
-import { ServiceCategoryModule } from 'src/endpoints/category/service/service-category.module';
+import { ServiceCategory } from '../../../../src/endpoints/category/service/models/service-category.service';
+import { dummyCredentials } from '../../config';
+import { ServiceCategoryModule } from '../../../../src/endpoints/category/service/service-category.module';
 
 describe('Service Category (e2e)', () => {
   let server: Server;

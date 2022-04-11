@@ -12,6 +12,7 @@ concurrency:
 jobs:
   testing:
     runs-on: ubuntu-latest
+    environment: development
     strategy:
       matrix:
         node-version: ['16']
@@ -31,3 +32,6 @@ jobs:
         run: npm run lint
       - name: Run Unit Tests
         run: npm run test
+        run: npm run test:e2e
+      - name: Run Build
+        run: npm run build

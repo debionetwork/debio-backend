@@ -3,9 +3,9 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Server } from 'http';
-import { dummyCredentials } from 'test/e2e/config';
-import { SpecializationCategory } from 'src/endpoints/category/specialization/models/specialization.entity';
-import { SpecializationModule } from 'src/endpoints/category/specialization/specialization.module';
+import { dummyCredentials } from '../../config';
+import { SpecializationCategory } from '../../../../src/endpoints/category/specialization/models/specialization.entity';
+import { SpecializationModule } from '../../../../src/endpoints/category/specialization/specialization.module';
 
 describe('Specialization Category (e2e)', () => {
   let server: Server;

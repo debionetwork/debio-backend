@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@aginix/nestjs-gcloud-storage": "^1.2.0",
-    "@debionetwork/polkadot-provider": "0.0.6",
+    "@debionetwork/polkadot-provider": "0.0.8",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs-query/query-typeorm": "^0.28.1",
@@ -36,6 +36,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/cqrs": "^8.0.1",
     "@nestjs/elasticsearch": "^8.0.0",
+    "@nestjs/jwt": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/schedule": "^1.0.2",
     "@nestjs/swagger": "^5.0.9",

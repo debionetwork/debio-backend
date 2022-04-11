@@ -100,7 +100,7 @@ export class SubstrateController {
   }
 
   @Get('/orders/ga/:hash_id')
-  async getOrderGAById(@Param('hash_id') hashId: string) {
+  async getOrderGa(@Param('hash_id') hashId: string) {
     const orderGA =
       await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
         hashId,
@@ -321,12 +321,17 @@ export class SubstrateController {
     );
 
     try {
-      await adminSetEthAddress(
-        this.substrateService.api as any,
-        this.substrateService.pair,
-        accountId,
-        ethAddress,
-      );
+      // eslint-disable-next-line
+      const substrateServicePromise = new Promise((resolve, _reject) => {
+        adminSetEthAddress(
+          this.substrateService.api as any,
+          this.substrateService.pair,
+          accountId,
+          ethAddress,
+          () => resolve('resolve'),
+        );
+      });
+      await substrateServicePromise;
     } catch {
       return response.status(401).send('Binding Error');
     }
@@ -335,13 +340,20 @@ export class SubstrateController {
       await this.rewardService.getRewardBindingByAccountId(accountId);
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
-      await sendRewards(
-        this.substrateService.api as any,
-        this.substrateService.pair,
-        accountId,
-        (rewardAmount * dbioUnit).toString(),
-      );
+      // eslint-disable-next-line
+      const sendRewardsPromise = new Promise((resolve, _reject) => {
+        sendRewards(
+          this.substrateService.api as any,
+          this.substrateService.pair,
+          accountId,
+          (rewardAmount * dbioUnit).toString(),
+          () => resolve('resolve'),
+        );
+      });
+      await sendRewardsPromise;
+
       reward = rewardAmount;
+
       await this.rewardService.insert(dataInput);
     }
 
