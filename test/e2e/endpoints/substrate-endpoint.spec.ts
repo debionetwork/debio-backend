@@ -276,8 +276,8 @@ describe('Substrate Endpoint Controller (e2e)', () => {
       await queryGetAllGeneticAnalystServices(substrateService.api)
     )[0];
 
-    // eslint-disable
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
+      // eslint-disable-next-line
       new Promise((resolve, reject) => {
         createGeneticAnalysisOrder(
           substrateService.api,
@@ -297,7 +297,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
           },
         );
       });
-    // eslint-enable
 
     const geneticAnalysisOrder = await geneticAnalysisOrderPromise;
     expect(geneticAnalysisOrder.sellerId).toEqual(

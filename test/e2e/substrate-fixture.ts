@@ -85,8 +85,8 @@ module.exports = async () => {
 
   console.log(await stakeGeneticAnalystsPromise);
 
-  // eslint-disable-next-line
   const updateGeneticAnalystVerificationStatusPromise = new Promise(
+    // eslint-disable-next-line
     (resolve, reject) => {
       updateGeneticAnalystVerificationStatus(
         api as any,
@@ -100,8 +100,8 @@ module.exports = async () => {
 
   console.log(await updateGeneticAnalystVerificationStatusPromise);
 
-  // eslint-disable-next-line
   const updateGeneticAnalystAvailableStatusPromise = new Promise(
+    // eslint-disable-next-line
     (resolve, reject) => {
       updateGeneticAnalystAvailabilityStatus(
         api as any,
