@@ -20,7 +20,13 @@ import { State } from '../../../src/endpoints/location/models/state.entity';
 import { City } from '../../../src/endpoints/location/models/city.entity';
 import { SubstrateEndpointModule } from '../../../src/endpoints/substrate-endpoint/substrate-endpoint.module';
 import { WalletBindingDTO } from '../../../src/endpoints/substrate-endpoint/dto/wallet-binding.dto';
-import { createGeneticAnalysisOrder, GeneticAnalysisOrder, GeneticAnalysisOrderStatus, queryGeneticAnalysisOrderById, queryGeneticDataByOwnerId, queryGetAllGeneticAnalystServices, queryLastGeneticAnalysisOrderByCustomerId } from '@debionetwork/polkadot-provider';
+import {
+  createGeneticAnalysisOrder,
+  GeneticAnalysisOrder,
+  queryGeneticDataByOwnerId,
+  queryGetAllGeneticAnalystServices,
+  queryLastGeneticAnalysisOrderByCustomerId,
+} from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
@@ -258,34 +264,58 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   it('POST /substrate/geneticAnalysisOrderPaid: geneticAnalysisOrderPaid should return', async () => {
     // Arrange
-    const customerBoxPublicKey = '0x8d2f0702072c07d31251be881104acde7953ecc1c8b33c31fce59ec6b0799ecc';
-    const geneticData = (await queryGeneticDataByOwnerId(substrateService.api, substrateService.pair.address))[0];
-    const geneticAnalystService = (await queryGetAllGeneticAnalystServices(substrateService.api))[0];
+    const customerBoxPublicKey =
+      '0x8d2f0702072c07d31251be881104acde7953ecc1c8b33c31fce59ec6b0799ecc';
+    const geneticData = (
+      await queryGeneticDataByOwnerId(
+        substrateService.api,
+        substrateService.pair.address,
+      )
+    )[0];
+    const geneticAnalystService = (
+      await queryGetAllGeneticAnalystServices(substrateService.api)
+    )[0];
 
+    // eslint-disable-next-line
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> = new Promise((resolve, reject) => {
-      createGeneticAnalysisOrder(substrateService.api, substrateService.pair, geneticData.id, geneticAnalystService.id, 0, geneticData.reportLink, customerBoxPublicKey, () => {
-        queryLastGeneticAnalysisOrderByCustomerId(substrateService.api, substrateService.pair.address)
-          .then((res) => {
-            resolve(res);
-          });
+        createGeneticAnalysisOrder(
+          substrateService.api,
+          substrateService.pair,
+          geneticData.id,
+          geneticAnalystService.id,
+          0,
+          geneticData.reportLink,
+          customerBoxPublicKey,
+          () => {
+            queryLastGeneticAnalysisOrderByCustomerId(
+              substrateService.api,
+              substrateService.pair.address,
+            ).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       });
-    });
-    
+
     const geneticAnalysisOrder = await geneticAnalysisOrderPromise;
-    expect(geneticAnalysisOrder.sellerId).toEqual(substrateService.pair.address);
+    expect(geneticAnalysisOrder.sellerId).toEqual(
+      substrateService.pair.address,
+    );
     expect(geneticAnalysisOrder.geneticDataId).toEqual(geneticData.id);
-    expect(geneticAnalysisOrder.customerBoxPublicKey).toEqual(customerBoxPublicKey);
+    expect(geneticAnalysisOrder.customerBoxPublicKey).toEqual(
+      customerBoxPublicKey,
+    );
 
     const data: GeneticAnalysisOrderPaidDto = {
-      genetic_analysis_order_id: geneticAnalysisOrder.id
-    }
+      genetic_analysis_order_id: geneticAnalysisOrder.id,
+    };
 
     // Act
     const result = await request(server)
       .post('/substrate/geneticAnalysisOrderPaid')
       .set('debio-api-key', apiKey)
       .send(data);
-      
+
     // Assert
     expect(result.text.includes(data.genetic_analysis_order_id)).toBeTruthy();
     expect(result.status).toEqual(200);

@@ -86,35 +86,49 @@ module.exports = async () => {
   console.log(await stakeGeneticAnalystsPromise);
 
   // eslint-disable-next-line
-  const updateGeneticAnalystVerificationStatusPromise = new Promise((resolve, reject) => {
-    updateGeneticAnalystVerificationStatus(api as any, pair, pair.address, VerificationStatus.Verified, () => 
-      resolve('`GeneticAnalyst` verification successful! ✅'),
-    );
-  });
+  const updateGeneticAnalystVerificationStatusPromise = new Promise(
+    (resolve, reject) => {
+      updateGeneticAnalystVerificationStatus(
+        api as any,
+        pair,
+        pair.address,
+        VerificationStatus.Verified,
+        () => resolve('`GeneticAnalyst` verification successful! ✅'),
+      );
+    },
+  );
 
   console.log(await updateGeneticAnalystVerificationStatusPromise);
 
   // eslint-disable-next-line
-  const updateGeneticAnalystAvailableStatusPromise = new Promise((resolve, reject) => {
-    updateGeneticAnalystAvailabilityStatus(api as any, pair, AvailabilityStatus.Available, () => 
-      resolve('`GeneticAnalyst` available successful! ✅'),
-    );
-  });
+  const updateGeneticAnalystAvailableStatusPromise = new Promise(
+    (resolve, reject) => {
+      updateGeneticAnalystAvailabilityStatus(
+        api as any,
+        pair,
+        AvailabilityStatus.Available,
+        () => resolve('`GeneticAnalyst` available successful! ✅'),
+      );
+    },
+  );
 
   console.log(await updateGeneticAnalystAvailableStatusPromise);
 
   // eslint-disable-next-line
   const createGeneticAnalystServicePromise = new Promise((resolve, reject) => {
-    createGeneticAnalystService(api as any, pair, geneticAnalystServiceDataMock.info, () => 
-      resolve('`GeneticAnalystService` created successful! ✅'),
+    createGeneticAnalystService(
+      api as any,
+      pair,
+      geneticAnalystServiceDataMock.info,
+      () => resolve('`GeneticAnalystService` created successful! ✅'),
     );
   });
 
   console.log(await createGeneticAnalystServicePromise);
-  
+
   // eslint-disable-next-line
   const addGeneticDataPromise = new Promise((resolve, reject) => {
-    addGeneticData(api as any, pair, 'string', 'string', 'string', () => 
+    addGeneticData(api as any, pair, 'string', 'string', 'string', () =>
       resolve('`GeneticData` added successful! ✅'),
     );
   });
