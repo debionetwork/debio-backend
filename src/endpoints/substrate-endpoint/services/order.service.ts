@@ -10,7 +10,7 @@ export class OrderService {
     let hits_order = [];
     try {
       const order = await this.elasticsearchService.search({
-        index: 'orders',
+        index: ['orders', 'genetic-analysis-order'],
         body: {
           query: {
             match: {

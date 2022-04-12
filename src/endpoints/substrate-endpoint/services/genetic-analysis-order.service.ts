@@ -109,6 +109,27 @@ export class GeneticAnalysisOrderService {
                 },
               },
             },
+            {
+              match_phrase_prefix: {
+                'service_info.name': {
+                  query: keyword,
+                },
+              },
+            },
+            {
+              match_phrase_prefix: {
+                'genetic_analyst_info.first_name': {
+                  query: keyword,
+                },
+              },
+            },
+            {
+              match_phrase_prefix: {
+                'genetic_analyst_info.last_name': {
+                  query: keyword,
+                },
+              },
+            },
           ],
         },
       });
