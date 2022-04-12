@@ -4,7 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
-  retrieveGeneticAnalystUnstakeAmount,
+  retrieveUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
 
 @Injectable()
@@ -98,7 +98,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           const diffTime = timeNext6Days - timeNow;
 
           if (diffTime <= 0) {
-            await retrieveGeneticAnalystUnstakeAmount(
+            await retrieveUnstakeAmount(
               this.subtrateService.api as any,
               this.subtrateService.pair,
               requestId,
