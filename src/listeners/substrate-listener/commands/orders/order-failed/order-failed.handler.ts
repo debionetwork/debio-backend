@@ -31,7 +31,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         this.substrateService.api as any,
         this.substrateService.pair,
         order.id,
-        'No',
+        false,
         () => this.callbackSendReward(order),
       );
     }
