@@ -7,25 +7,25 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
 import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
-import { ServiceRequest } from '@debionetwork/polkadot-provider';
+import { GeneticAnalyst } from '@debionetwork/polkadot-provider';
 
-import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
-import * as serviceRequestCommand from '@debionetwork/polkadot-provider/lib/command/service-request';
+import * as geneticAnalystQuery from '@debionetwork/polkadot-provider/lib/query/genetic-analysts';
+import * as geneticAnalystCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst';
 import { when } from 'jest-when';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { GeneticAnalystUnstakedService } from '../../../../src/schedulers/genetic-analyst-unstaked/unstaked.service';
 
 jest.useFakeTimers();
 jest.spyOn(global, 'setInterval');
 
 describe('UnstakedService', () => {
-  let unstakedService: UnstakedService;
+  let geneticAnalystUnstakedService: GeneticAnalystUnstakedService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
   let substrateServiceMock: MockType<SubstrateService>;
   let schedulerRegistryMock: MockType<SchedulerRegistry>;
   const strToMilisecondSpy = jest.spyOn(
-    UnstakedService.prototype,
+    GeneticAnalystUnstakedService.prototype,
     'strToMilisecond',
   );
 
@@ -41,19 +41,19 @@ describe('UnstakedService', () => {
 
   const createSearchObject = () => {
     return {
-      index: 'create-service-request',
+      index: 'genetic-analysts',
       allow_no_indices: true,
       body: {
         query: {
           match: {
-            'request.status': {
-              query: 'WaitingForUnstaked',
+            stake_status: {
+              query: 'WaitingForUnStaked',
             },
           },
         },
         sort: [
           {
-            'request.unstaked_at.keyword': {
+            'unstake_at.keyword': {
               unmapped_type: 'keyword',
               order: 'asc',
             },
@@ -68,7 +68,7 @@ describe('UnstakedService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        UnstakedService,
+        GeneticAnalystUnstakedService,
         {
           provide: ProcessEnvProxy,
           useClass: ProcessEnvProxyMock,
@@ -89,7 +89,7 @@ describe('UnstakedService', () => {
     }).compile();
     module.useLogger(MockLogger);
 
-    unstakedService = module.get(UnstakedService);
+    geneticAnalystUnstakedService = module.get(GeneticAnalystUnstakedService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
     substrateServiceMock = module.get(SubstrateService);
     schedulerRegistryMock = module.get(SchedulerRegistry);
@@ -99,7 +99,7 @@ describe('UnstakedService', () => {
   it('should be defined', () => {
     const EXPECTED_PARAM = 30 * 1000;
 
-    expect(unstakedService).toBeDefined();
+    expect(geneticAnalystUnstakedService).toBeDefined();
 
     expect(setInterval).toHaveBeenCalled();
     expect(setInterval).toHaveBeenCalledWith(
@@ -118,17 +118,19 @@ describe('UnstakedService', () => {
     const PARAM = '06:00:00:00';
     const EXPECTED_RETURN = 6 * 24 * 60 * 60 * 1000;
 
-    expect(unstakedService.strToMilisecond(PARAM)).toBe(EXPECTED_RETURN);
+    expect(geneticAnalystUnstakedService.strToMilisecond(PARAM)).toBe(
+      EXPECTED_RETURN,
+    );
   });
 
   it('should not do anything', () => {
-    const queryServiceRequestMock = jest.spyOn(
-      serviceRequestQuery,
-      'queryServiceRequestById',
+    const queryGeneticAnalystByAccountIdMock = jest.spyOn(
+      geneticAnalystQuery,
+      'queryGeneticAnalystByAccountId',
     );
-    const retrieveUnstakedAmountMock = jest.spyOn(
-      serviceRequestCommand,
-      'retrieveUnstakedAmount',
+    const retrieveUnstakeAmountMock = jest.spyOn(
+      geneticAnalystCommand,
+      'retrieveUnstakeAmount',
     );
 
     const ERROR_RESULT = {
@@ -142,18 +144,19 @@ describe('UnstakedService', () => {
       Promise.reject(ERROR_RESULT),
     );
 
-    unstakedService.handleWaitingUnstaked();
+    geneticAnalystUnstakedService.handleWaitingUnstakedGA();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
-    expect(queryServiceRequestMock).not.toHaveBeenCalled();
-    expect(retrieveUnstakedAmountMock).not.toHaveBeenCalled();
+    expect(queryGeneticAnalystByAccountIdMock).not.toHaveBeenCalled();
+    expect(retrieveUnstakeAmountMock).not.toHaveBeenCalled();
   });
 
   it('should update index data in elasticsearch', async () => {
-    const queryServiceRequestMock = jest
-      .spyOn(serviceRequestQuery, 'queryServiceRequestById')
-      .mockImplementation();
+    const queryGeneticAnalystByAccountIdMock = jest.spyOn(
+      geneticAnalystQuery,
+      'queryGeneticAnalystByAccountId',
+    );
     const retrieveUnstakedAmountMock = jest
-      .spyOn(serviceRequestCommand, 'retrieveUnstakedAmount')
+      .spyOn(geneticAnalystCommand, 'retrieveUnstakeAmount')
       .mockImplementation();
 
     const CALLED_WITH = createSearchObject();
@@ -164,10 +167,8 @@ describe('UnstakedService', () => {
           hits: [
             {
               _source: {
-                request: {
-                  hash: REQUEST_ID,
-                  unstaked_at: new Date().getTime().toString(),
-                },
+                account_id: REQUEST_ID,
+                unstaked_at: new Date().getTime().toString(),
               },
             },
           ],
@@ -175,22 +176,31 @@ describe('UnstakedService', () => {
       },
     };
 
-    const SUBSTRATE_RESULT: ServiceRequest = new ServiceRequest({
-      hash: 'string',
-      requester_address: 'string',
-      lab_address: 'string',
-      country: 'string',
-      region: 'string',
-      city: 'string',
-      service_category: 'string',
-      staking_amount: 0,
-      status: 'Unstaked',
-      created_at: new Date(),
-      updated_at: new Date(),
-      unstaked_at: new Date(),
+    const SUBSTRATE_RESULT: GeneticAnalyst = new GeneticAnalyst({
+      accountId: 'string',
+      services: [],
+      qualifications: [],
+      info: {
+        boxPublicKey: 'string',
+        firstName: 'string',
+        lastName: 'string',
+        gender: 'string',
+        dateOfBirth: 1,
+        email: 'string',
+        phoneNumber: 'string',
+        specialization: 'string',
+        profileLink: 'string',
+        profileImage: 'string',
+      },
+      stakeAmount: 1,
+      stakeStatus: 'Unstaked',
+      verificationStatus: 'Verified',
+      availabilityStatus: 'Available',
+      unstakeAt: new Date(),
+      retrieveUnstakeAt: new Date(),
     });
 
-    when(queryServiceRequestMock)
+    when(queryGeneticAnalystByAccountIdMock)
       .calledWith(substrateServiceMock.api, REQUEST_ID)
       .mockReturnValue(SUBSTRATE_RESULT);
 
@@ -198,23 +208,22 @@ describe('UnstakedService', () => {
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
 
-    await unstakedService.handleWaitingUnstaked();
-    expect(queryServiceRequestMock).toHaveBeenCalled();
-    expect(elasticsearchServiceMock.update).toHaveBeenCalled();
+    await geneticAnalystUnstakedService.handleWaitingUnstakedGA();
+    expect(queryGeneticAnalystByAccountIdMock).toHaveBeenCalled();
     expect(retrieveUnstakedAmountMock).not.toHaveBeenCalled();
     expect(MockLogger.error).toHaveBeenCalledTimes(1);
-    queryServiceRequestMock.mockClear();
+    queryGeneticAnalystByAccountIdMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();
   });
 
-  it('should unstakedServiceRequest', async () => {
-    const queryServiceRequestMock = jest.spyOn(
-      serviceRequestQuery,
-      'queryServiceRequestById',
+  it('should geneticAnalystUnstakedServiceRequest', async () => {
+    const queryGeneticAnalystByAccountIdMock = jest.spyOn(
+      geneticAnalystQuery,
+      'queryGeneticAnalystByAccountId',
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
-      serviceRequestCommand,
-      'retrieveUnstakedAmount',
+      geneticAnalystCommand,
+      'retrieveUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
@@ -237,22 +246,31 @@ describe('UnstakedService', () => {
       },
     };
 
-    const SUBSTRATE_RESULT: ServiceRequest = new ServiceRequest({
-      hash: 'string',
-      requester_address: 'string',
-      lab_address: 'string',
-      country: 'string',
-      region: 'string',
-      city: 'string',
-      service_category: 'string',
-      staking_amount: 0,
-      status: 'WaitingForUnstaked',
-      created_at: new Date(),
-      updated_at: new Date(),
-      unstaked_at: new Date(),
+    const SUBSTRATE_RESULT: GeneticAnalyst = new GeneticAnalyst({
+      accountId: 'string',
+      services: [],
+      qualifications: [],
+      info: {
+        boxPublicKey: 'string',
+        firstName: 'string',
+        lastName: 'string',
+        gender: 'string',
+        dateOfBirth: 1,
+        email: 'string',
+        phoneNumber: 'string',
+        specialization: 'string',
+        profileLink: 'string',
+        profileImage: 'string',
+      },
+      stakeAmount: 1,
+      stakeStatus: 'WaitingForUnstaked',
+      verificationStatus: 'Verified',
+      availabilityStatus: 'Available',
+      unstakeAt: new Date(),
+      retrieveUnstakeAt: new Date(),
     });
 
-    when(queryServiceRequestMock)
+    when(queryGeneticAnalystByAccountIdMock)
       .calledWith(substrateServiceMock.api, REQUEST_ID)
       .mockReturnValue(SUBSTRATE_RESULT);
 
@@ -260,22 +278,21 @@ describe('UnstakedService', () => {
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
 
-    await unstakedService.handleWaitingUnstaked();
-    expect(queryServiceRequestMock).toHaveBeenCalled();
-    expect(retrieveUnstakedAmountMock).toHaveBeenCalled();
+    await geneticAnalystUnstakedService.handleWaitingUnstakedGA();
+    expect(queryGeneticAnalystByAccountIdMock).toHaveBeenCalled();
 
-    queryServiceRequestMock.mockClear();
+    queryGeneticAnalystByAccountIdMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();
   });
 
-  it('should not called unstakedServiceRequest', async () => {
-    const queryServiceRequestMock = jest.spyOn(
-      serviceRequestQuery,
-      'queryServiceRequestById',
+  it('should not called geneticAnalystUnstakedServiceRequest', async () => {
+    const queryGeneticAnalystByAccountIdMock = jest.spyOn(
+      geneticAnalystQuery,
+      'queryGeneticAnalystByAccountId',
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
-      serviceRequestCommand,
-      'retrieveUnstakedAmount',
+      geneticAnalystCommand,
+      'retrieveUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
@@ -298,22 +315,31 @@ describe('UnstakedService', () => {
       },
     };
 
-    const SUBSTRATE_RESULT: ServiceRequest = new ServiceRequest({
-      hash: 'string',
-      requester_address: 'string',
-      lab_address: 'string',
-      country: 'string',
-      region: 'string',
-      city: 'string',
-      service_category: 'string',
-      staking_amount: 0,
-      status: 'WaitingForUnstaked',
-      created_at: new Date(),
-      updated_at: new Date(),
-      unstaked_at: new Date(),
+    const SUBSTRATE_RESULT: GeneticAnalyst = new GeneticAnalyst({
+      accountId: 'string',
+      services: [],
+      qualifications: [],
+      info: {
+        boxPublicKey: 'string',
+        firstName: 'string',
+        lastName: 'string',
+        gender: 'string',
+        dateOfBirth: 1,
+        email: 'string',
+        phoneNumber: 'string',
+        specialization: 'string',
+        profileLink: 'string',
+        profileImage: 'string',
+      },
+      stakeAmount: 1,
+      stakeStatus: 'WaitingForUnstaked',
+      verificationStatus: 'Verified',
+      availabilityStatus: 'Available',
+      unstakeAt: new Date(),
+      retrieveUnstakeAt: new Date(),
     });
 
-    when(queryServiceRequestMock)
+    when(queryGeneticAnalystByAccountIdMock)
       .calledWith(substrateServiceMock.api, REQUEST_ID)
       .mockReturnValue(SUBSTRATE_RESULT);
 
@@ -321,11 +347,11 @@ describe('UnstakedService', () => {
       .calledWith(CALLED_WITH)
       .mockReturnValue(ES_RESULT);
 
-    await unstakedService.handleWaitingUnstaked();
-    expect(queryServiceRequestMock).toHaveBeenCalled();
+    await geneticAnalystUnstakedService.handleWaitingUnstakedGA();
+    expect(queryGeneticAnalystByAccountIdMock).toHaveBeenCalled();
     expect(retrieveUnstakedAmountMock).not.toHaveBeenCalled();
 
-    queryServiceRequestMock.mockClear();
+    queryGeneticAnalystByAccountIdMock.mockClear();
     retrieveUnstakedAmountMock.mockClear();
   });
 });
