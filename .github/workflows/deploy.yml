@@ -98,6 +98,14 @@ jobs:
             EMAILS:${{ secrets.DEV_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.DEV_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.DEV_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            PINATA_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_API_KEY
+            PINATA_SECRET_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_SECRET_KEY
+            PINATA_EMAIL:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_EMAIL
+            PINATA_USER_ID:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_USER_ID
+            PINATA_EMAIL_VERIFIED:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_EMAIL_VERIFIED
+            PINATA_MFA_ENABLED:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_MFA_ENABLED
+            PINATA_PIN_POLICY_REGION_ID:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_ID
+            PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -153,6 +161,14 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
+              --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
+              --set-string config.pinata.email=${{ steps.secrets.outputs.PINATA_EMAIL }} \
+              --set-string config.pinata.userID=${{ steps.secrets.outputs.PINATA_USER_ID }} \
+              --set-string config.pinata.emailVerified=${{ steps.secrets.outputs.PINATA_EMAIL_VERIFIED }} \
+              --set-string config.pinata.mfaEnable=${{ steps.secrets.outputs.PINATA_MFA_ENABLED }} \
+              --set-string config.pinata.pinPolicyRegionID=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_ID }} \
+              --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
@@ -253,6 +269,14 @@ jobs:
             EMAILS:${{ secrets.STG_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.STG_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.STG_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            PINATA_API_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_API_KEY
+            PINATA_SECRET_KEY:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_SECRET_KEY
+            PINATA_EMAIL:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_EMAIL
+            PINATA_USER_ID:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_USER_ID
+            PINATA_EMAIL_VERIFIED:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_EMAIL_VERIFIED
+            PINATA_MFA_ENABLED:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_MFA_ENABLED
+            PINATA_PIN_POLICY_REGION_ID:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_ID
+            PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.STG_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.STG_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.STG_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.STG_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -308,6 +332,14 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
+              --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
+              --set-string config.pinata.email=${{ steps.secrets.outputs.PINATA_EMAIL }} \
+              --set-string config.pinata.userID=${{ steps.secrets.outputs.PINATA_USER_ID }} \
+              --set-string config.pinata.emailVerified=${{ steps.secrets.outputs.PINATA_EMAIL_VERIFIED }} \
+              --set-string config.pinata.mfaEnable=${{ steps.secrets.outputs.PINATA_MFA_ENABLED }} \
+              --set-string config.pinata.pinPolicyRegionID=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_ID }} \
+              --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
@@ -408,6 +440,14 @@ jobs:
             EMAILS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.TESTNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            PINATA_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_API_KEY
+            PINATA_SECRET_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_SECRET_KEY
+            PINATA_EMAIL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_EMAIL
+            PINATA_USER_ID:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_USER_ID
+            PINATA_EMAIL_VERIFIED:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_EMAIL_VERIFIED
+            PINATA_MFA_ENABLED:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_MFA_ENABLED
+            PINATA_PIN_POLICY_REGION_ID:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_ID
+            PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -463,6 +503,14 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
+              --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
+              --set-string config.pinata.email=${{ steps.secrets.outputs.PINATA_EMAIL }} \
+              --set-string config.pinata.userID=${{ steps.secrets.outputs.PINATA_USER_ID }} \
+              --set-string config.pinata.emailVerified=${{ steps.secrets.outputs.PINATA_EMAIL_VERIFIED }} \
+              --set-string config.pinata.mfaEnable=${{ steps.secrets.outputs.PINATA_MFA_ENABLED }} \
+              --set-string config.pinata.pinPolicyRegionID=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_ID }} \
+              --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
@@ -563,6 +611,14 @@ jobs:
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            PINATA_API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_API_KEY
+            PINATA_SECRET_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_SECRET_KEY
+            PINATA_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_EMAIL
+            PINATA_USER_ID:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_USER_ID
+            PINATA_EMAIL_VERIFIED:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_EMAIL_VERIFIED
+            PINATA_MFA_ENABLED:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_MFA_ENABLED
+            PINATA_PIN_POLICY_REGION_ID:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_ID
+            PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -618,6 +674,14 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
+              --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
+              --set-string config.pinata.email=${{ steps.secrets.outputs.PINATA_EMAIL }} \
+              --set-string config.pinata.userID=${{ steps.secrets.outputs.PINATA_USER_ID }} \
+              --set-string config.pinata.emailVerified=${{ steps.secrets.outputs.PINATA_EMAIL_VERIFIED }} \
+              --set-string config.pinata.mfaEnable=${{ steps.secrets.outputs.PINATA_MFA_ENABLED }} \
+              --set-string config.pinata.pinPolicyRegionID=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_ID }} \
+              --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
@@ -718,6 +782,14 @@ jobs:
             EMAILS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/EMAILS
             BUCKET_NAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/BUCKET_NAME
             STORAGE_BASE_URI:${{ secrets.MAINNET_GCP_PROJECT_ID }}/STORAGE_BASE_URI
+            PINATA_API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_API_KEY
+            PINATA_SECRET_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_SECRET_KEY
+            PINATA_EMAIL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_EMAIL
+            PINATA_USER_ID:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_USER_ID
+            PINATA_EMAIL_VERIFIED:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_EMAIL_VERIFIED
+            PINATA_MFA_ENABLED:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_MFA_ENABLED
+            PINATA_PIN_POLICY_REGION_ID:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_ID
+            PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
@@ -773,6 +845,14 @@ jobs:
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
+              --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
+              --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
+              --set-string config.pinata.email=${{ steps.secrets.outputs.PINATA_EMAIL }} \
+              --set-string config.pinata.userID=${{ steps.secrets.outputs.PINATA_USER_ID }} \
+              --set-string config.pinata.emailVerified=${{ steps.secrets.outputs.PINATA_EMAIL_VERIFIED }} \
+              --set-string config.pinata.mfaEnable=${{ steps.secrets.outputs.PINATA_MFA_ENABLED }} \
+              --set-string config.pinata.pinPolicyRegionID=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_ID }} \
+              --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
               --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
