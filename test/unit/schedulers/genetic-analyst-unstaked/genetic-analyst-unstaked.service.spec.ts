@@ -130,7 +130,7 @@ describe('UnstakedService', () => {
     );
     const retrieveUnstakeAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const ERROR_RESULT = {
@@ -156,7 +156,7 @@ describe('UnstakedService', () => {
       'queryGeneticAnalystByAccountId',
     );
     const retrieveUnstakedAmountMock = jest
-      .spyOn(geneticAnalystCommand, 'retrieveUnstakeAmount')
+      .spyOn(geneticAnalystCommand, 'retrieveGeneticAnalystUnstakeAmount')
       .mockImplementation();
 
     const CALLED_WITH = createSearchObject();
@@ -223,7 +223,7 @@ describe('UnstakedService', () => {
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
@@ -292,7 +292,7 @@ describe('UnstakedService', () => {
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
