@@ -10,7 +10,7 @@ describe('Substrate Indexer Order Service Unit Tests', () => {
 
   const createSearchObject = (hash_id: string) => {
     return {
-      index: 'orders',
+      index: ['orders', 'genetic-analysis-order'],
       body: {
         query: {
           match: {

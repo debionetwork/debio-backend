@@ -128,9 +128,9 @@ describe('UnstakedService', () => {
       geneticAnalystQuery,
       'queryGeneticAnalystByAccountId',
     );
-    const retrieveUnstakeAmountMock = jest.spyOn(
+    const retrieveGeneticAnalystUnstakeAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const ERROR_RESULT = {
@@ -147,7 +147,7 @@ describe('UnstakedService', () => {
     geneticAnalystUnstakedService.handleWaitingUnstakedGA();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
     expect(queryGeneticAnalystByAccountIdMock).not.toHaveBeenCalled();
-    expect(retrieveUnstakeAmountMock).not.toHaveBeenCalled();
+    expect(retrieveGeneticAnalystUnstakeAmountMock).not.toHaveBeenCalled();
   });
 
   it('should update index data in elasticsearch', async () => {
@@ -156,7 +156,7 @@ describe('UnstakedService', () => {
       'queryGeneticAnalystByAccountId',
     );
     const retrieveUnstakedAmountMock = jest
-      .spyOn(geneticAnalystCommand, 'retrieveUnstakeAmount')
+      .spyOn(geneticAnalystCommand, 'retrieveGeneticAnalystUnstakeAmount')
       .mockImplementation();
 
     const CALLED_WITH = createSearchObject();
@@ -223,7 +223,7 @@ describe('UnstakedService', () => {
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
@@ -292,7 +292,7 @@ describe('UnstakedService', () => {
     );
     const retrieveUnstakedAmountMock = jest.spyOn(
       geneticAnalystCommand,
-      'retrieveUnstakeAmount',
+      'retrieveGeneticAnalystUnstakeAmount',
     );
 
     const CALLED_WITH = createSearchObject();
