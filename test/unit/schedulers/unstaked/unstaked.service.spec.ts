@@ -106,7 +106,6 @@ describe('UnstakedService', () => {
       expect.any(Function),
       EXPECTED_PARAM,
     );
-
     expect(schedulerRegistryMock.addInterval).toHaveBeenCalled();
     expect(strToMilisecondSpy).toHaveBeenCalled();
     expect(strToMilisecondSpy).toHaveBeenCalledTimes(2);
