@@ -13,6 +13,7 @@ import { connectionRetries } from './config';
 const WebSocket = require('ws');
 
 const wsUrl = 'ws://127.0.0.1:9944';
+process.env.SUBSTRATE_URL = wsUrl;
 
 async function initalSubstrateConnection(): Promise<WebSocket> {
   return new Promise((resolve, reject) => {
