@@ -157,6 +157,77 @@ module.exports = async () => {
   });
   console.log('`Service` data injection successful! ✅');
 
+  console.log(
+    'Injecting `Genetic Analysis Order` into debio-elasticsearch 💉...',
+  );
+  client.index({
+    index: 'genetic-analysis-order',
+    refresh: 'wait_for',
+    id: '0x104c82003294b88166fbe457555eaa06c88ad3b16e36a38d45ea4b995147869a',
+    body: {
+      id: '0x104c82003294b88166fbe457555eaa06c88ad3b16e36a38d45ea4b995147869a',
+      service_id:
+        '0x5987bcd4132c89dcefd0258e10138a2374a6cc4175d89cc0afb5b06971671a37',
+      customer_id: '5EHVBjYUsmfDRR78xF6m1eecDfYbbRyxD7A5XtdBHSu1U21s',
+      customer_box_public_key:
+        '0x95ff54809b0022e56bf1882978bb73dce92ee0a3bd4b83044ac813258020325b',
+      seller_id: '5EhoT3BgTm1C9tfFstAfkTGHZABXa5CRj6QWdZtjBovYcyy3',
+      genetic_data_id:
+        '0xda63274bf57788e86469af04cdbc84c24427a8ee67bb4285247f4815507fab38',
+      genetic_analysis_tracking_id: 'FSWPWI0S4UQKZCK3MWDN2',
+      currency: 'DBIO',
+      prices: [
+        {
+          component: 'dbio',
+          value: '5,000,000,000,000,000,000',
+        },
+      ],
+      additional_prices: [],
+      status: 'Unpaid',
+      created_at: '1,649,646,486,001',
+      updated_at: '0',
+      service_info: {
+        name: 'diet service',
+        prices_by_currency: [
+          {
+            currency: 'DBIO',
+            total_price: '5,000,000,000,000,000,000',
+            price_components: [
+              {
+                component: 'dbio',
+                value: '5,000,000,000,000,000,000',
+              },
+            ],
+            additional_prices: [],
+          },
+        ],
+        expected_duration: {
+          duration: '10',
+          duration_type: 'WorkingDays',
+        },
+        description: 'string',
+        test_result_sample: 'string',
+      },
+      genetic_analyst_info: {
+        first_name: 'Park',
+        last_name: 'Sungjin',
+        gender: 'male',
+        date_of_birth: '1,993',
+        email: 'bobsungjin@gmail.com',
+        phone_number: '083895969837',
+        specialization: 'metabolic',
+        profile_link: 'https://www.linkedin.com/in/cinia-eleonora/',
+        profile_image: null,
+      },
+      blockMetaData: {
+        blockNumber: 186294,
+        blockHash:
+          '0x267e8690d82d18b8efbf41b6e185f6f08d0ae2b9900b119f99807ff1de8e2391',
+      },
+    },
+  });
+  console.log('`Genetic Analysis Order` data injection successful! ✅');
+
   console.log('Injecting `Order` into debio-elasticsearch 💉...');
   client.index({
     index: 'orders',
