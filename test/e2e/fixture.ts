@@ -10,6 +10,10 @@ import { Country } from '../../src/endpoints/location/models/country.entity';
 import { State } from '../../src/endpoints/location/models/state.entity';
 import { City } from '../../src/endpoints/location/models/city.entity';
 import { Reward } from '../../src/common/modules/reward/models/reward.entity';
+import { EmrCategory } from '../../src/endpoints/category/emr/models/emr.entity';
+import { ServiceCategory } from '../../src/endpoints/category/service/models/service-category.service';
+import { SpecializationCategory } from '../../src/endpoints/category/specialization/models/specialization.entity';
+import { emrList, serviceList, specializationList } from './data-test';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({
@@ -44,9 +48,41 @@ module.exports = async () => {
       DataStakingEvents,
       DataTokenToDatasetMapping,
       EmailNotification,
+      EmrCategory,
+      ServiceCategory,
+      SpecializationCategory,
     ],
     synchronize: true,
   });
+
+  console.log('Injecting `EMR Category` into debio-postgres 💉...');
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(EmrCategory)
+    .values(emrList)
+    .execute();
+  console.log('`EMR Category` data injection successful! ✅');
+
+  console.log('Injecting `Service Category` into debio-postgres 💉...');
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(ServiceCategory)
+    .values(serviceList)
+    .execute();
+  console.log('`EMR Category` data injection successful! ✅');
+
+  console.log('Injecting `Specialization Category` into debio-postgres 💉...');
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(SpecializationCategory)
+    .values(specializationList)
+    .execute();
+  console.log('`EMR Category` data injection successful! ✅');
 
   console.log('Injecting `Transaction Log` into debio-postgres 💉...');
   await dbPostgresMigration
