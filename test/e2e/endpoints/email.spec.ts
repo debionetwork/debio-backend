@@ -1,11 +1,19 @@
-import { Test, TestingModule } from "@nestjs/testing";
+import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { INestApplication } from '@nestjs/common';
-import { EmailNotification, EmailNotificationModule, MailerManager, MailModule, ProcessEnvModule, SubstrateModule, SubstrateService } from "../../../src/common";
+import {
+  EmailNotification,
+  EmailNotificationModule,
+  MailerManager,
+  MailModule,
+  ProcessEnvModule,
+  SubstrateModule,
+  SubstrateService,
+} from '../../../src/common';
 import request from 'supertest';
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { dummyCredentials } from "../config";
-import { EmailEndpointModule } from "../../../src/endpoints/email/email.module";
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dummyCredentials } from '../config';
+import { EmailEndpointModule } from '../../../src/endpoints/email/email.module';
 
 describe('Email Controller (e2e)', () => {
   let server: Server;
@@ -29,9 +37,7 @@ describe('Email Controller (e2e)', () => {
           name: 'default',
           ...dummyCredentials,
           database: 'db_postgres',
-          entities: [
-            EmailNotification,
-          ],
+          entities: [EmailNotification],
           autoLoadEntities: true,
         }),
         MailModule,
@@ -52,18 +58,21 @@ describe('Email Controller (e2e)', () => {
 
   it('POST registered-lab/:lab_id: should return sendMailRegisteredLab', async () => {
     // Act
-    const sendLabRegistrationEmailSpy = jest.spyOn(mailerManager, 'sendLabRegistrationEmail');
-    sendLabRegistrationEmailSpy.mockImplementation(() => 
-      Promise.resolve(true),
+    const sendLabRegistrationEmailSpy = jest.spyOn(
+      mailerManager,
+      'sendLabRegistrationEmail',
     );
-    const result = await request(server).post(`/email/registered-lab/${substrateService.pair.address}`).send();
+    sendLabRegistrationEmailSpy.mockImplementation(() => Promise.resolve(true));
+    const result = await request(server)
+      .post(`/email/registered-lab/${substrateService.pair.address}`)
+      .send();
 
     expect(sendLabRegistrationEmailSpy).toBeCalled();
     expect(result.status).toEqual(200);
     expect(result.body).toEqual(
       expect.objectContaining({
         message: 'Sending Email.',
-      })
+      }),
     );
   });
 });
