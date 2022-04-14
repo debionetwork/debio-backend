@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { EmrModule } from '../../../../src/endpoints/category/emr/emr.module';
 import { EmrCategory } from '../../../../src/endpoints/category/emr/models/emr.entity';
 import { dummyCredentials } from '../../config';
-import { emrList } from '../../data-test';
+import { emrList } from './emr.mock.data';
 
 describe('EMR Category (e2e)', () => {
   let server: Server;

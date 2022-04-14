@@ -13,7 +13,9 @@ import { Reward } from '../../src/common/modules/reward/models/reward.entity';
 import { EmrCategory } from '../../src/endpoints/category/emr/models/emr.entity';
 import { ServiceCategory } from '../../src/endpoints/category/service/models/service-category.service';
 import { SpecializationCategory } from '../../src/endpoints/category/specialization/models/specialization.entity';
-import { emrList, serviceList, specializationList } from './data-test';
+import { emrList } from './endpoints/category/emr.mock.data';
+import { serviceList } from './endpoints/category/service.mock.data';
+import { specializationList } from './endpoints/category/specialization.mock.data';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({

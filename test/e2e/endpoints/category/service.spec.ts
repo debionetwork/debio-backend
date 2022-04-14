@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { ServiceCategory } from '../../../../src/endpoints/category/service/models/service-category.service';
 import { dummyCredentials } from '../../config';
 import { ServiceCategoryModule } from '../../../../src/endpoints/category/service/service-category.module';
-import { serviceList } from '../../data-test';
+import { serviceList } from './service.mock.data';
 
 describe('Service Category (e2e)', () => {
   let server: Server;

@@ -6,7 +6,7 @@ import { Server } from 'http';
 import { dummyCredentials } from '../../config';
 import { SpecializationCategory } from '../../../../src/endpoints/category/specialization/models/specialization.entity';
 import { SpecializationModule } from '../../../../src/endpoints/category/specialization/specialization.module';
-import { specializationList } from '../../data-test';
+import { specializationList } from './specialization.mock.data';
 
 describe('Specialization Category (e2e)', () => {
   let server: Server;
