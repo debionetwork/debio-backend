@@ -252,6 +252,73 @@ module.exports = async () => {
       },
     },
   });
+  
+  client.index({
+    index: 'genetic-analysis-order',
+    refresh: 'wait_for',
+    id: '0x3a8733f1694e5403bfd7a34298253e26037a9ac5fc6ea60b43438d81a2d58dd9',
+    body: {
+      id: '0x3a8733f1694e5403bfd7a34298253e26037a9ac5fc6ea60b43438d81a2d58dd9',
+      service_id:
+        '0x0a05afe158bc0766c4a8f755a8e02e7dc456bbad64e01aed248f59c0bbf314d3',
+      customer_id: '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
+      customer_box_public_key:
+        '0x95ff54809b0022e56bf1882978bb73dce92ee0a3bd4b83044ac813258020325b',
+      seller_id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
+      genetic_data_id:
+        '0x4c981b074d9380417ebf8fb90289500fceca23c05ed114488feb1f693dbb0132',
+      genetic_analysis_tracking_id: 'LINKV5TA3OGAQC4IUU10L',
+      currency: 'DBIO',
+      prices: [
+        {
+          component: 'analyze_price',
+          value: '10,000,000,000,000,000,000',
+        },
+      ],
+      additional_prices: [],
+      status: 'Paid',
+      created_at: '1,649,264,352,001',
+      updated_at: '0',
+      service_info: {
+        name: 'A Genome Services',
+        prices_by_currency: [
+          {
+            currency: 'DBIO',
+            total_price: '10,000,000,000,000,000,000',
+            price_components: [
+              {
+                component: 'analyze_price',
+                value: '10,000,000,000,000,000,000',
+              },
+            ],
+            additional_prices: [],
+          },
+        ],
+        expected_duration: {
+          duration: '4',
+          duration_type: 'Days',
+        },
+        description: 'string',
+        test_result_sample: 'string',
+      },
+      genetic_analyst_info: {
+        first_name: 'Harry James',
+        last_name: 'Potter',
+        gender: 'male',
+        date_of_birth: '473,385,600,000',
+        email: 'harry@potter.com',
+        phone_number: '083895969837',
+        specialization: 'Personalized medicine',
+        profile_link: 'https://www.linkedin.com/in/cinia-eleonora/',
+        profile_image: null,
+      },
+      blockMetaData: {
+        blockNumber: 122629,
+        blockHash:
+          '0xb544187b024fdc39dd8bae55474120c2fcaee72638a4a6b879398faf59683b1a',
+      },
+    },
+  });
   console.log('`Genetic Analysis Order` data injection successful! ✅');
 
   console.log('Injecting `Order` into debio-elasticsearch 💉...');
