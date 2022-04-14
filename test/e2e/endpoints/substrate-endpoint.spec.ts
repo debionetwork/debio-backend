@@ -321,4 +321,33 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(data.genetic_analysis_order_id)).toBeTruthy();
     expect(result.status).toEqual(200);
   }, 30000);
+
+  it('GET /substrate/genetic-analysis/{tracking_id}: getGeneticAnalysisByTrackingId should return', async () => {
+    // Arrange
+    const tracking_id = "FSWPWI0S4UQKZCK3MWDN2";
+
+    const result = await request(server)
+      .get(`/substrate/genetic-analysis/${tracking_id}`)
+      .send();
+
+    
+  });
+
+  it('GET /substrate/genetic-analysis-order/list/analyst/{analyst_id}: getGeneticAnalysisOrderByAnalyst should return', async () => {
+    // Arrange
+    const analyst_id = '';
+
+    const result = await request(server)
+      .get(`/substrate/genetic-analysis-order/list/analyst/${analyst_id}`)
+      .send();
+  });
+
+  it('GET /substrate/genetic-analysis-order/list/customer/{customer_id}: getGeneticAnalysisOrderByCustomer should return', async () => {
+    // Arrange
+    const customer_id = '';
+
+    const result = await request(server)
+      .get(`/substrate/genetic-analysis-order/list/customer/${customer_id}`)
+      .send();
+  });
 });
