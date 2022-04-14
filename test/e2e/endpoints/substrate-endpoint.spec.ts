@@ -324,13 +324,11 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   it('GET /substrate/genetic-analysis/{tracking_id}: getGeneticAnalysisByTrackingId should return', async () => {
     // Arrange
-    const tracking_id = "FSWPWI0S4UQKZCK3MWDN2";
+    const tracking_id = 'FSWPWI0S4UQKZCK3MWDN2';
 
     const result = await request(server)
       .get(`/substrate/genetic-analysis/${tracking_id}`)
       .send();
-
-    
   });
 
   it('GET /substrate/genetic-analysis-order/list/analyst/{analyst_id}: getGeneticAnalysisOrderByAnalyst should return', async () => {

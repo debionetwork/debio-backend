@@ -157,30 +157,30 @@ module.exports = async () => {
   });
   console.log('`Service` data injection successful! ✅');
 
-  console.log(
-    'Injecting `Genetic Analysis` into debio-elasticsearch 💉...',
-  );
+  console.log('Injecting `Genetic Analysis` into debio-elasticsearch 💉...');
   client.index({
     index: 'genetic-analysis',
     refresh: 'wait_for',
     id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
     body: {
-      genetic_analysis_tracking_id: "EKBZDLPMWE3CN32I10EKB",
-      genetic_analyst_id: "5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN",
-      owner_id: "5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7",
-      report_link: "aaaa",
+      genetic_analysis_tracking_id: 'EKBZDLPMWE3CN32I10EKB',
+      genetic_analyst_id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
+      owner_id: '5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7',
+      report_link: 'aaaa',
       comment: null,
-      rejected_title: "asda",
-      rejected_description: "asd",
-      genetic_analysis_order_id: "0xd6420ba31954878047a9965bfd086bca23fb3cd91ac2ee61fbb0da50b17a8805",
-      created_at: "1,649,665,128,000",
-      updated_at: "1,649,840,004,002",
-      status: "Rejected",
+      rejected_title: 'asda',
+      rejected_description: 'asd',
+      genetic_analysis_order_id:
+        '0xd6420ba31954878047a9965bfd086bca23fb3cd91ac2ee61fbb0da50b17a8805',
+      created_at: '1,649,665,128,000',
+      updated_at: '1,649,840,004,002',
+      status: 'Rejected',
       blockMetaData: {
         blockNumber: 218547,
-        blockHash: "0xd56def3b447f82eb90998cfd832ba3f163a25d2b445df757b5103d975078a7ec",
-      }
-    }
+        blockHash:
+          '0xd56def3b447f82eb90998cfd832ba3f163a25d2b445df757b5103d975078a7ec',
+      },
+    },
   });
   console.log('`Genetic Analysis` data injection successful! ✅');
   console.log(
