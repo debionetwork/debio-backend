@@ -15,7 +15,7 @@ export class GeneticAnalysisService {
         body: {
           query: {
             match: {
-              genetic_analyst_tracking_id: {
+              genetic_analysis_tracking_id: {
                 query: genetic_analyst_tracking_id,
               },
             },

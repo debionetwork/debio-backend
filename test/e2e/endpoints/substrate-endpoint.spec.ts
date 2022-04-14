@@ -324,28 +324,37 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   it('GET /substrate/genetic-analysis/{tracking_id}: getGeneticAnalysisByTrackingId should return', async () => {
     // Arrange
-    const tracking_id = 'FSWPWI0S4UQKZCK3MWDN2';
+    const tracking_id = 'EKBZDLPMWE3CN32I10EKB';
 
     const result = await request(server)
       .get(`/substrate/genetic-analysis/${tracking_id}`)
       .send();
+
+    expect(result.text.includes(tracking_id)).toBeTruthy();
+    expect(result.status).toEqual(200);
   });
 
   it('GET /substrate/genetic-analysis-order/list/analyst/{analyst_id}: getGeneticAnalysisOrderByAnalyst should return', async () => {
     // Arrange
-    const analyst_id = '';
+    const analyst_id = '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN';
 
     const result = await request(server)
       .get(`/substrate/genetic-analysis-order/list/analyst/${analyst_id}`)
       .send();
+
+    expect(result.text.includes(analyst_id)).toBeTruthy();
+    expect(result.status).toEqual(200);
   });
 
   it('GET /substrate/genetic-analysis-order/list/customer/{customer_id}: getGeneticAnalysisOrderByCustomer should return', async () => {
     // Arrange
-    const customer_id = '';
+    const customer_id = '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25';
 
     const result = await request(server)
       .get(`/substrate/genetic-analysis-order/list/customer/${customer_id}`)
       .send();
+
+    expect(result.text.includes(customer_id)).toBeTruthy();
+    expect(result.status).toEqual(200);
   });
 });

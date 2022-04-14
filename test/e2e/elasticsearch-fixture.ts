@@ -252,7 +252,7 @@ module.exports = async () => {
       },
     },
   });
-  
+
   client.index({
     index: 'genetic-analysis-order',
     refresh: 'wait_for',
