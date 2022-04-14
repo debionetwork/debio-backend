@@ -3,11 +3,12 @@ import request from 'supertest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Server } from 'http';
-import { ServiceCategory } from '../../../../src/endpoints/category/service/models/service-category.service';
+import { EmrModule } from '../../../../src/endpoints/category/emr/emr.module';
+import { EmrCategory } from '../../../../src/endpoints/category/emr/models/emr.entity';
 import { dummyCredentials } from '../../config';
-import { ServiceCategoryModule } from '../../../../src/endpoints/category/service/service-category.module';
+import { emrList } from './emr.mock.data';
 
-describe('Service Category (e2e)', () => {
+describe('EMR Category (e2e)', () => {
   let server: Server;
   let app: INestApplication;
 
@@ -16,12 +17,11 @@ describe('Service Category (e2e)', () => {
       imports: [
         TypeOrmModule.forRoot({
           ...dummyCredentials,
-          name: 'dbLocation',
-          database: 'db_location',
-          entities: [ServiceCategory],
+          database: 'db_postgres',
+          entities: [EmrCategory],
           autoLoadEntities: true,
         }),
-        ServiceCategoryModule,
+        EmrModule,
       ],
     }).compile();
     app = module.createNestApplication();
@@ -29,9 +29,19 @@ describe('Service Category (e2e)', () => {
     await app.init();
   });
 
-  it('GET /service-category', async () => {
+  it('GET /emr-category', async () => {
     //Act
-    const result = await request(server).get('/service-category').send();
+    const result = await request(server).get('/emr-category').send();
+
+    const body = result.body as Array<EmrCategory>;
+    expect(body.length).toBeGreaterThan(1);
+    expect(body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          category: emrList[0].category,
+        }),
+      ]),
+    );
     expect(result.status).toEqual(200);
   }, 25000);
 });
