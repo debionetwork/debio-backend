@@ -35,7 +35,7 @@ export class ServiceRequestUnstakedHandler
         );
       const stakingLogging: TransactionLoggingDto = {
         address: serviceRequest.requesterAddress,
-        amount: convertToDbioUnit(serviceRequest.stakingAmount),
+        amount: serviceRequest.stakingAmount,
         created_at: this.dateTimeProxy.new(),
         currency: 'DBIO',
         parent_id: BigInt(serviceRequestParent.id),
