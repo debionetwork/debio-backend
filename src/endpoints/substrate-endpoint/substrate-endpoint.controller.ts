@@ -99,16 +99,6 @@ export class SubstrateController {
     return order;
   }
 
-  @Get('/orders/ga/:hash_id')
-  async getOrderGa(@Param('hash_id') hashId: string) {
-    const orderGA =
-      await this.geneticAnalysisOrderService.getGeneticAnalysisOrderById(
-        hashId,
-      );
-
-    return orderGA;
-  }
-
   @Get('/orders/list/:customer_id')
   @ApiParam({ name: 'customer_id' })
   @ApiQuery({ name: 'keyword', required: false })

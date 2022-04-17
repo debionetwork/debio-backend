@@ -1,18 +1,26 @@
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import {
+  addGeneticData,
+  createGeneticAnalystService,
   registerGeneticAnalyst,
   registerLab,
   stakeGeneticAnalyst,
+  updateGeneticAnalystAvailabilityStatus,
+  updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { labDataMock } from '../mocks/models/labs/labs.mock';
 import { geneticAnalystsDataMock } from '../mocks/models/genetic-analysts/genetic-analysts.mock';
 import { connectionRetries } from './config';
+import { geneticAnalystServiceDataMock } from '../mocks/models/genetic-analysts/genetic-analyst-service.mock';
+import { AvailabilityStatus } from '@debionetwork/polkadot-provider/lib/primitives/availability-status';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 // eslint-disable-next-line
 const WebSocket = require('ws');
 
 const wsUrl = 'ws://127.0.0.1:9944';
+process.env.SUBSTRATE_URL = wsUrl;
 
 async function initalSubstrateConnection(): Promise<WebSocket> {
   return new Promise((resolve, reject) => {
@@ -76,6 +84,56 @@ module.exports = async () => {
   });
 
   console.log(await stakeGeneticAnalystsPromise);
+
+  const updateGeneticAnalystVerificationStatusPromise = new Promise(
+    // eslint-disable-next-line
+    (resolve, reject) => {
+      updateGeneticAnalystVerificationStatus(
+        api as any,
+        pair,
+        pair.address,
+        VerificationStatus.Verified,
+        () => resolve('`GeneticAnalyst` verification successful! ✅'),
+      );
+    },
+  );
+
+  console.log(await updateGeneticAnalystVerificationStatusPromise);
+
+  const updateGeneticAnalystAvailableStatusPromise = new Promise(
+    // eslint-disable-next-line
+    (resolve, reject) => {
+      updateGeneticAnalystAvailabilityStatus(
+        api as any,
+        pair,
+        AvailabilityStatus.Available,
+        () => resolve('`GeneticAnalyst` available successful! ✅'),
+      );
+    },
+  );
+
+  console.log(await updateGeneticAnalystAvailableStatusPromise);
+
+  // eslint-disable-next-line
+  const createGeneticAnalystServicePromise = new Promise((resolve, reject) => {
+    createGeneticAnalystService(
+      api as any,
+      pair,
+      geneticAnalystServiceDataMock.info,
+      () => resolve('`GeneticAnalystService` created successful! ✅'),
+    );
+  });
+
+  console.log(await createGeneticAnalystServicePromise);
+
+  // eslint-disable-next-line
+  const addGeneticDataPromise = new Promise((resolve, reject) => {
+    addGeneticData(api as any, pair, 'string', 'string', 'string', () =>
+      resolve('`GeneticData` added successful! ✅'),
+    );
+  });
+
+  console.log(await addGeneticDataPromise);
 
   await wsProvider.disconnect();
   await api.disconnect();

@@ -4,7 +4,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { ProcessEnvProxy, SubstrateService } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
-  retrieveUnstakedAmount,
+  retrieveGeneticAnalystUnstakeAmount,
 } from '@debionetwork/polkadot-provider';
 
 @Injectable()
@@ -26,12 +26,12 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
     );
 
     const unstaked = setInterval(async () => {
-      await this.handleWaitingUnstaked();
+      await this.handleWaitingUnstakedGA();
     }, unstakeInterval);
-    this.schedulerRegistry.addInterval('unstaked-interval', unstaked);
+    this.schedulerRegistry.addInterval('unstaked-ga-interval', unstaked);
   }
 
-  async handleWaitingUnstaked() {
+  async handleWaitingUnstakedGA() {
     try {
       if (this.isRunning) return;
 
@@ -43,11 +43,19 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           body: {
             query: {
               match: {
-                'stake.status': {
-                  query: 'WaitingForUnstaked',
+                stake_status: {
+                  query: 'WaitingForUnStaked',
                 },
               },
             },
+            sort: [
+              {
+                'unstake_at.keyword': {
+                  unmapped_type: 'keyword',
+                  order: 'asc',
+                },
+              },
+            ],
           },
           from: 0,
           size: 10,
@@ -68,16 +76,14 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
             refresh: 'wait_for',
             body: {
               doc: {
-                request: {
-                  stakeStatus: geneticAnalystDetail.stakeStatus,
-                  unstaked_at: geneticAnalystDetail.unstakeAt,
-                },
+                stake_status: geneticAnalystDetail.stakeStatus,
+                unstake_at: geneticAnalystDetail.unstakeAt,
               },
             },
           });
         } else {
           const timeWaitingUnstaked: string =
-            geneticAnalystData['_source']['request']['unstaked_at'];
+            geneticAnalystData['_source']['unstake_at'];
 
           if (!timeWaitingUnstaked) {
             continue;
@@ -92,7 +98,7 @@ export class GeneticAnalystUnstakedService implements OnModuleInit {
           const diffTime = timeNext6Days - timeNow;
 
           if (diffTime <= 0) {
-            await retrieveUnstakedAmount(
+            await retrieveGeneticAnalystUnstakeAmount(
               this.subtrateService.api as any,
               this.subtrateService.pair,
               requestId,
