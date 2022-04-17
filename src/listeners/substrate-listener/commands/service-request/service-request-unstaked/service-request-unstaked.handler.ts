@@ -4,7 +4,6 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../common';
-import { convertToDbioUnit } from '@debionetwork/polkadot-provider';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { ServiceRequestUnstakedCommand } from './service-request-unstaked.command';
 
