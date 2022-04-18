@@ -88,9 +88,8 @@ describe('Order Fulfilled Handler Event', () => {
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     debioConversionServiceMock = module.get(DebioConversionService);
     rewardServiceMock = module.get(RewardService);
-    notificationServiceMock = module.get(NotificationService);
-    dateTimeProxyMock = module.get(DateTimeProxy);
-
+    notificationServiceMock = module.get(NotificationService); // eslint-disable-line
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });

@@ -122,7 +122,7 @@ export class OrderFulfilledHandler
           deleted_at: null,
           from: 'Debio Network',
           to: order.customerId,
-        }
+        };
 
         // Send reward to customer
         await sendRewards(
@@ -130,7 +130,8 @@ export class OrderFulfilledHandler
           this.substrateService.pair,
           order.customerId,
           convertToDbioUnitString(servicePrice),
-          () => this.callbackInsertNotificationLogging(customerNotificationInput),
+          () =>
+            this.callbackInsertNotificationLogging(customerNotificationInput),
         );
 
         await queryServiceInvoiceByOrderId(
@@ -186,7 +187,7 @@ export class OrderFulfilledHandler
     }
   }
 
-  callbackInsertNotificationLogging(data: NotificationDto){
-    this.notificationService.insert(data)
+  callbackInsertNotificationLogging(data: NotificationDto) {
+    this.notificationService.insert(data);
   }
 }

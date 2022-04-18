@@ -33,7 +33,7 @@ import { NotificationModule } from '../../endpoints/notification/notification.mo
     MailModule,
     CqrsModule,
     DateTimeModule,
-    NotificationModule
+    NotificationModule,
   ],
   providers: [
     SubstrateListenerHandler,

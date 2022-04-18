@@ -147,12 +147,11 @@ export const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
   }),
 );
 
-export const notificationServiceMockFactory: () => MockType<NotificationService> = jest.fn(
-  () => ({
+export const notificationServiceMockFactory: () => MockType<NotificationService> =
+  jest.fn(() => ({
     insert: jest.fn(),
     getAllByToId: jest.fn(),
-  }),
-);
+  }));
 
 export function createMockOrder(status: OrderStatus) {
   const first_price = {
