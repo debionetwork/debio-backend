@@ -98,7 +98,6 @@ describe('Service Request Unstaked Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-
   });
 
   it('should called transactionLoggingServiceMock.create if status false', async () => {
