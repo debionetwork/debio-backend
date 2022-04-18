@@ -24,6 +24,7 @@ import { BlockMetaData } from '../../src/listeners/substrate-listener/models/blo
 import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
+import { NotificationService } from '../../src/endpoints/notification/notification.service';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -143,6 +144,13 @@ export const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
   () => ({
     insert: jest.fn(),
     getRewardBindingByAccountId: jest.fn(),
+  }),
+);
+
+export const notificationServiceMockFactory: () => MockType<NotificationService> = jest.fn(
+  () => ({
+    insert: jest.fn(),
+    getAllByToId: jest.fn(),
   }),
 );
 

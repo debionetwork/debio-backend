@@ -1,4 +1,5 @@
 import {
+  DateTimeProxy,
   DebioConversionService,
   RewardService,
   SubstrateService,
@@ -9,16 +10,19 @@ import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrat
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
+  dateTimeProxyMockFactory,
   debioConversionServiceMockFactory,
   escrowServiceMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   rewardServiceMockFactory,
   substrateServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
@@ -37,6 +41,8 @@ describe('Order Fulfilled Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let debioConversionServiceMock: MockType<DebioConversionService>;
   let rewardServiceMock: MockType<RewardService>;
+  let notificationServiceMock: MockType<NotificationService>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     jest
@@ -64,6 +70,14 @@ describe('Order Fulfilled Handler Event', () => {
           provide: RewardService,
           useFactory: rewardServiceMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
         OrderFulfilledHandler,
       ],
     }).compile();
@@ -74,6 +88,9 @@ describe('Order Fulfilled Handler Event', () => {
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     debioConversionServiceMock = module.get(DebioConversionService);
     rewardServiceMock = module.get(RewardService);
+    notificationServiceMock = module.get(NotificationService);
+    dateTimeProxyMock = module.get(DateTimeProxy);
+
 
     await module.init();
   });
