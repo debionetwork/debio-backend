@@ -19,15 +19,15 @@ export class RewardService {
     }
   }
 
-  async getLastRewardByAccountId(accountId){
+  async getLastRewardByAccountId(accountId) {
     try {
       const res = await this.rewardRepository.find({
         where: {
-          address: accountId
+          address: accountId,
         },
         order: {
           created_at: 'DESC',
-        }
+        },
       });
 
       return res[0];

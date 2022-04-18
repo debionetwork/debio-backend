@@ -77,7 +77,7 @@ const eventRoutes = {
   },
   rewards: {
     RewardFunds: RewardFundsCommand,
-  }
+  },
 };
 
 @Injectable()

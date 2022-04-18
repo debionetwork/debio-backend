@@ -1,4 +1,4 @@
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class RewardFundsCommand {
   rewards: any;

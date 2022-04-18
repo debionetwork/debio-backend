@@ -29,7 +29,7 @@ export class NotificationService {
     try {
       return this.notificationRepository.save(data);
     } catch (error) {
-      return error
+      return error;
     }
   }
 
