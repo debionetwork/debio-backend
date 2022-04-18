@@ -8,14 +8,14 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
   let geneticAnalysisServiceMock: GeneticAnalysisService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
 
-  const createSearchObject = (genetic_analyst_tracking_id: string) => {
+  const createSearchObject = (genetic_analysis_tracking_id: string) => {
     return {
       index: 'genetic-analysis',
       body: {
         query: {
           match: {
-            genetic_analyst_tracking_id: {
-              query: genetic_analyst_tracking_id,
+            genetic_analysis_tracking_id: {
+              query: genetic_analysis_tracking_id,
             },
           },
         },
