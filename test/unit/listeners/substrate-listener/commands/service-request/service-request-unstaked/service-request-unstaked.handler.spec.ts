@@ -12,7 +12,6 @@ import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestUnstakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-unstaked/service-request-unstaked.handler';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
-import * as rewardCommand from '@debionetwork/polkadot-provider';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 
@@ -33,7 +32,7 @@ describe('Service Request Unstaked Handler Event', () => {
           region: 'XX',
           city: 'XX',
           serviceCategory: 'Test',
-          stakingAmount: '1000000000000',
+          stakingAmount: '1000000000000000000',
           status: requestStatus,
           createdAt: '1',
           updatedAt: '1',
@@ -72,7 +71,6 @@ describe('Service Request Unstaked Handler Event', () => {
   });
 
   it('should not called transactionLoggingServiceMock.create if status true', async () => {
-    const convertToDbioUnitSpy = jest.spyOn(rewardCommand, 'convertToDbioUnit');
     const requestData = createMockRequest(RequestStatus.Unstaked);
 
     const TRANSACTION_SERVICE_RETURN = {
@@ -99,16 +97,13 @@ describe('Service Request Unstaked Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(convertToDbioUnitSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
 
-    convertToDbioUnitSpy.mockClear();
   });
 
   it('should called transactionLoggingServiceMock.create if status false', async () => {
     const CURRENT_DATE = new Date();
 
-    const convertToDbioUnitSpy = jest.spyOn(rewardCommand, 'convertToDbioUnit');
     const requestData = createMockRequest(RequestStatus.Unstaked);
 
     const TRANSACTION_SERVICE_RETURN = {
@@ -117,7 +112,7 @@ describe('Service Request Unstaked Handler Event', () => {
 
     const STATUS_RETURN = false;
 
-    const CONVERT_RETURN = 1000000000000;
+    const CONVERT_RETURN = 1;
 
     dateTimeProxyMock.new.mockReturnValue(CURRENT_DATE);
 
@@ -127,10 +122,6 @@ describe('Service Request Unstaked Handler Event', () => {
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(serviceRequestUnstakedCommand.request.hash, 8)
       .mockReturnValue(STATUS_RETURN);
-
-    when(convertToDbioUnitSpy)
-      .calledWith(serviceRequestUnstakedCommand.request.stakingAmount)
-      .mockReturnValue(CONVERT_RETURN);
 
     when(transactionLoggingServiceMock.getLoggingByOrderId)
       .calledWith(serviceRequestUnstakedCommand.request.hash)
@@ -154,12 +145,9 @@ describe('Service Request Unstaked Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(convertToDbioUnitSpy).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       STAKING_LOGGIN_CALLED_WITH,
     );
-
-    convertToDbioUnitSpy.mockClear();
   });
 });
