@@ -35,6 +35,7 @@ import {
   GeneticAnalystUnstakedCommand,
   GeneticAnalystVerificationStatusCommand,
 } from './commands/genetic-analysts';
+import { RewardFundsCommand } from './commands/rewards';
 
 const eventRoutes = {
   services: {
@@ -74,6 +75,9 @@ const eventRoutes = {
     GeneticAnalystUpdateVerificationStatus:
       GeneticAnalystVerificationStatusCommand,
   },
+  rewards: {
+    RewardFunds: RewardFundsCommand,
+  }
 };
 
 @Injectable()

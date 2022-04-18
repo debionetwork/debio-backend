@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DateTimeProxy } from 'src/common';
+import { DateTimeProxy } from '../../../src/common';
 import { Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
@@ -26,19 +26,11 @@ export class NotificationService {
   }
 
   insert(data: NotificationDto) {
-    const notification = new Notification();
-    notification.role = data.role;
-    notification.entity_type = data.entity_type;
-    notification.entity = data.entity;
-    notification.description = data.description;
-    notification.read = data.read;
-    notification.created_at = data.created_at;
-    notification.updated_at = data.updated_at;
-    notification.deleted_at = data.deleted_at;
-    notification.from = data.from;
-    notification.to = data.to;
-
-    return this.notificationRepository.save(notification);
+    try {
+      return this.notificationRepository.save(data);
+    } catch (error) {
+      return error
+    }
   }
 
   async setNotificationHasBeenReadById(id) {
