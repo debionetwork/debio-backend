@@ -1,7 +1,10 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderCreatedCommand } from './order-created.command';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
 import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
@@ -18,7 +21,7 @@ export class OrderCreatedHandler
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: OrderCreatedCommand) {
     await this.logger.log('OrderCreated!');
@@ -54,7 +57,7 @@ export class OrderCreatedHandler
         deleted_at: null,
         from: null,
         to: order.customerId,
-      }
+      };
 
       if (!isOrderHasBeenInsert) {
         await this.loggingService.create(orderLogging);

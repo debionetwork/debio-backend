@@ -1,6 +1,8 @@
-import { TransactionLoggingService, DateTimeProxy } from '../../../../../../../src/common';
+import {
+  TransactionLoggingService,
+  DateTimeProxy,
+} from '../../../../../../../src/common';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../../../src/endpoints/notification/dto/notification.dto';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -44,7 +46,7 @@ describe('Order Created Handler Event', () => {
     orderCreatedHandler = module.get(OrderCreatedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     notificationServiceMock = module.get(NotificationService);
-    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
