@@ -47,7 +47,7 @@ describe('LabUnstakedService', () => {
       body: {
         query: {
           match: {
-            'stake_status': {
+            stake_status: {
               query: 'WaitingForUnstaked',
             },
           },
@@ -122,10 +122,7 @@ describe('LabUnstakedService', () => {
   });
 
   it('should not do anything', () => {
-    const queryLabMock = jest.spyOn(
-      labQuery,
-      'queryLabById',
-    );
+    const queryLabMock = jest.spyOn(labQuery, 'queryLabById');
     const retrieveLabUnstakeAmountMock = jest.spyOn(
       labCommand,
       'retrieveLabUnstakeAmount',
@@ -195,7 +192,7 @@ describe('LabUnstakedService', () => {
         latitude: 'string',
         longitude: 'string',
         profileImage: 'string',
-      }
+      },
     });
 
     when(queryLabMock)
@@ -216,10 +213,7 @@ describe('LabUnstakedService', () => {
   });
 
   it('should unstakedServiceRequest', async () => {
-    const queryLabMock = jest.spyOn(
-      labQuery,
-      'queryLabById',
-    );
+    const queryLabMock = jest.spyOn(labQuery, 'queryLabById');
     const retrieveLabUnstakeAmountMock = jest.spyOn(
       labCommand,
       'retrieveLabUnstakeAmount',
@@ -265,7 +259,7 @@ describe('LabUnstakedService', () => {
         latitude: 'string',
         longitude: 'string',
         profileImage: 'string',
-      }
+      },
     });
 
     when(queryLabMock)
@@ -285,10 +279,7 @@ describe('LabUnstakedService', () => {
   });
 
   it('should not called unstakedServiceRequest', async () => {
-    const queryLabMock = jest.spyOn(
-      labQuery,
-      'queryLabById',
-    );
+    const queryLabMock = jest.spyOn(labQuery, 'queryLabById');
     const retrieveLabUnstakeAmountMock = jest.spyOn(
       labCommand,
       'retrieveLabUnstakeAmount',
@@ -334,7 +325,7 @@ describe('LabUnstakedService', () => {
         latitude: 'string',
         longitude: 'string',
         profileImage: 'string',
-      }
+      },
     });
 
     when(queryLabMock)

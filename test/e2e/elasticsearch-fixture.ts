@@ -118,7 +118,8 @@ module.exports = async () => {
           id: '0xd7a18df31d8bf92679aaaec23fca1a7f1fcc3027ce741a2575d04ea4e67ddcd9',
           region: '01',
           info: {
-            image: 'https://ipfs.io/ipfs/QmcVYqPKp9ztSJ8TKqKY4gCDWtf4yPw712EdVQGwBhASMQ',
+            image:
+              'https://ipfs.io/ipfs/QmcVYqPKp9ztSJ8TKqKY4gCDWtf4yPw712EdVQGwBhASMQ',
             dna_collection_process:
               'Epithelial Cells - Buccal Swab Collection Process',
             test_result_sample: 'dummy test result sample',
@@ -145,7 +146,8 @@ module.exports = async () => {
               duration: '7',
               durationType: 'WorkingDays',
             },
-            description: 'Analyze your entire genomic DNA sequence. Genomic information has been instrumental in identifying inherited disorders, characterizing the mutations that drive cancer progression, and tracking disease outbreaks.',
+            description:
+              'Analyze your entire genomic DNA sequence. Genomic information has been instrumental in identifying inherited disorders, characterizing the mutations that drive cancer progression, and tracking disease outbreaks.',
             long_description: 'SG-BLOOD LONG DESC',
             category: 'Whole Genome Sequencing',
           },

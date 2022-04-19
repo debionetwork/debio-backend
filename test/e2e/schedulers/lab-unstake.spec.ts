@@ -86,10 +86,7 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
 
   it('handleWaitingLabUnstaked should not throw error', async () => {
     // Arrange
-    const queryLabByIdSpy = jest.spyOn(
-      labQuery,
-      'queryLabById',
-    );
+    const queryLabByIdSpy = jest.spyOn(labQuery, 'queryLabById');
     const RESULT: Lab = new Lab({
       accountId: '5DAsjPuMX8HD4LtA3fpxMydJuUXShS9JB1hYh4PS1QRBw5yv',
       services: [],
@@ -100,7 +97,8 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
       unstakeAt: new Date(),
       retrieveUnstakeAt: new Date(),
       info: {
-        boxPublicKey: '0x6684ce5f03f06808a5dd7abb5367a1b65a2fdc9c6b4de5aae3ebc2768eba0663',
+        boxPublicKey:
+          '0x6684ce5f03f06808a5dd7abb5367a1b65a2fdc9c6b4de5aae3ebc2768eba0663',
         name: 'International Bioscience',
         email: 'info@ibdna.com.my',
         phoneNumber: '+608873187647186',
@@ -112,11 +110,9 @@ describe('Lab Unstaked Scheduler (e2e)', () => {
         latitude: null,
         longitude: null,
         profileImage: null,
-      }
+      },
     });
-    queryLabByIdSpy.mockImplementation(() =>
-      Promise.resolve(RESULT),
-    );
+    queryLabByIdSpy.mockImplementation(() => Promise.resolve(RESULT));
 
     // Act
     await labUnstakedService.handleWaitingLabUnstaked();
