@@ -1,4 +1,6 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import { TransactionLoggingService, DateTimeProxy } from '../../../../../../../src/common';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../../../src/endpoints/notification/dto/notification.dto';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -7,6 +9,8 @@ import {
   mockBlockNumber,
   MockType,
   transactionLoggingServiceMockFactory,
+  notificationServiceMockFactory,
+  dateTimeProxyMockFactory,
 } from '../../../../../mock';
 import { OrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-created/order-created.handler';
 import { when } from 'jest-when';
@@ -15,6 +19,8 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Order Created Handler Event', () => {
   let orderCreatedHandler: OrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,12 +29,22 @@ describe('Order Created Handler Event', () => {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
         OrderCreatedHandler,
       ],
     }).compile();
 
     orderCreatedHandler = module.get(OrderCreatedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
+    dateTimeProxyMock = module.get(DateTimeProxy);// eslint-disable-line
 
     await module.init();
   });
@@ -68,6 +84,7 @@ describe('Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 
   it('should called logging service create', async () => {
@@ -101,5 +118,6 @@ describe('Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });
