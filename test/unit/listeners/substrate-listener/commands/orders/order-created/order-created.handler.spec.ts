@@ -86,7 +86,7 @@ describe('Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).not.toHaveBeenCalled();
   });
 
   it('should called logging service create', async () => {

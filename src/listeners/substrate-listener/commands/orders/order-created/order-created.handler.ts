@@ -61,8 +61,8 @@ export class OrderCreatedHandler
 
       if (!isOrderHasBeenInsert) {
         await this.loggingService.create(orderLogging);
+        await this.notificationService.insert(notificationInput);
       }
-      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

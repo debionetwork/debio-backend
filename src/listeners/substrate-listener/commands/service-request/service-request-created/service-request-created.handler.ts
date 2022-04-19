@@ -3,12 +3,15 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ServiceRequestCreatedCommand } from './service-request-created.command';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
+  DateTimeProxy,
   MailerManager,
   ProcessEnvProxy,
   TransactionLoggingService,
 } from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
+import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from 'src/endpoints/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -25,6 +28,8 @@ export class ServiceRequestCreatedHandler
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
     private readonly mailerManager: MailerManager,
+    private readonly notificationService: NotificationService,
+    private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
@@ -40,6 +45,19 @@ export class ServiceRequestCreatedHandler
       transaction_type: 2,
     };
 
+    const notificationInput: NotificationDto = {
+      role: 'Customer',
+      entity_type: 'ServiceRequest',
+      entity: 'ServiceRequestCreated',
+      description: `Congrats! Your requested service with staking ID ${serviceRequest.hash} has been submitted.`,
+      read: false,
+      created_at: await this.dateTimeProxy.new(),
+      updated_at: await this.dateTimeProxy.new(),
+      deleted_at: null,
+      from: null,
+      to: serviceRequest.requesterAddress,
+    }
+
     try {
       const isServiceRequestHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -48,6 +66,7 @@ export class ServiceRequestCreatedHandler
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
+        await this.notificationService.insert(notificationInput);
         await this._sendEmailNotificationServiceRequestCreated(command);
       }
     } catch (error) {

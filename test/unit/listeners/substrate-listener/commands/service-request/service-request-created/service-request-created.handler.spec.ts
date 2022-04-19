@@ -5,16 +5,20 @@ import {
   MockType,
   stateServiceMockFactory,
   transactionLoggingServiceMockFactory,
+  notificationServiceMockFactory,
+  dateTimeProxyMockFactory,
 } from '../../../../../mock';
 import {
   MailerManager,
   ProcessEnvProxy,
   TransactionLoggingService,
+  DateTimeProxy
 } from '../../../../../../../src/common';
 import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
 import { CountryService } from '../../../../../../../src/endpoints/location/country.service';
 import { StateService } from '../../../../../../../src/endpoints/location/state.service';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
@@ -25,6 +29,8 @@ describe('Service Request Created Handler Event', () => {
   let countryServiceMock: MockType<CountryService>;
   let stateServiceMock: MockType<StateService>;
   let mailerManagerMock: MockType<MailerManager>;
+  let notificationServiceMock: MockType<NotificationService>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   const createMockRequest = (requestStatus: RequestStatus) => {
     return [
@@ -81,6 +87,14 @@ describe('Service Request Created Handler Event', () => {
           provide: MailerManager,
           useFactory: mailerManagerMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
         ServiceRequestCreatedHandler,
       ],
     }).compile();
@@ -90,6 +104,8 @@ describe('Service Request Created Handler Event', () => {
     countryServiceMock = module.get(CountryService); // eslint-disable-line
     stateServiceMock = module.get(StateService); // eslint-disable-line
     mailerManagerMock = module.get(MailerManager); // eslint-disable-line
+    notificationServiceMock = module.get(NotificationService);
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
   });
 
   it('ServiceRequesCreatedHandler must defined', () => {
@@ -112,6 +128,7 @@ describe('Service Request Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).not.toHaveBeenCalled();
   });
 
   it('should called transactionLoggingServiceMock create if status false', async () => {
@@ -131,5 +148,6 @@ describe('Service Request Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });
