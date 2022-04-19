@@ -25,7 +25,7 @@ module.exports = async () => {
   console.log('Beginning debio-elasticsearch migrations 🏇...');
 
   console.log('Injecting `Lab` into debio-elasticsearch 💉...');
-  client.index({
+  await client.index({
     index: 'labs',
     refresh: 'wait_for',
     id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
@@ -102,10 +102,92 @@ module.exports = async () => {
       },
     },
   });
+
+  await client.index({
+    index: 'labs',
+    refresh: 'wait_for',
+    id: '5DAsjPuMX8HD4LtA3fpxMydJuUXShS9JB1hYh4PS1QRBw5yv',
+    body: {
+      account_id: '5DAsjPuMX8HD4LtA3fpxMydJuUXShS9JB1hYh4PS1QRBw5yv',
+      services: [
+        {
+          country: 'MY',
+          city: 'Johor Bahru',
+          owner_id: '5DAsjPuMX8HD4LtA3fpxMydJuUXShS9JB1hYh4PS1QRBw5yv',
+          service_flow: 'RequestTest',
+          id: '0xd7a18df31d8bf92679aaaec23fca1a7f1fcc3027ce741a2575d04ea4e67ddcd9',
+          region: '01',
+          info: {
+            image: 'https://ipfs.io/ipfs/QmcVYqPKp9ztSJ8TKqKY4gCDWtf4yPw712EdVQGwBhASMQ',
+            dna_collection_process:
+              'Epithelial Cells - Buccal Swab Collection Process',
+            test_result_sample: 'dummy test result sample',
+            prices_by_currency: [
+              {
+                total_price: '20,000,000,000,000,000,000',
+                currency: 'DAI',
+                price_components: [
+                  {
+                    component: 'testing_price',
+                    value: '15,000,000,000,000,000,000',
+                  },
+                ],
+                additional_prices: [
+                  {
+                    component: 'qc_price',
+                    value: '5,000,000,000,000,000,000',
+                  },
+                ],
+              },
+            ],
+            name: 'Whole Genome Sequencing',
+            expected_duration: {
+              duration: '7',
+              durationType: 'WorkingDays',
+            },
+            description: 'Analyze your entire genomic DNA sequence. Genomic information has been instrumental in identifying inherited disorders, characterizing the mutations that drive cancer progression, and tracking disease outbreaks.',
+            long_description: 'SG-BLOOD LONG DESC',
+            category: 'Whole Genome Sequencing',
+          },
+        },
+      ],
+      services_ids: [
+        '0xd7a18df31d8bf92679aaaec23fca1a7f1fcc3027ce741a2575d04ea4e67ddcd9',
+      ],
+      certifications: [],
+      certifications_ids: [],
+      verification_status: 'Verified',
+      info: {
+        box_public_key:
+          '0x6684ce5f03f06808a5dd7abb5367a1b65a2fdc9c6b4de5aae3ebc2768eba0663',
+        name: 'International Bioscience',
+        email: 'info@ibdna.com.my',
+        phone_number: '+608873187647186',
+        website: 'inter-bio.com',
+        country: 'MY',
+        city: 'Johor Bahru',
+        region: '01',
+        address: 'Johor',
+        latitude: null,
+        longitude: null,
+        profile_image:
+          'https://ipfs.io/ipfs/QmQyntJ9uCnmjwDh2AWujBQyb5K1QNob3cBDvrEScL5yHH/featured-lab.jpg',
+      },
+      stake_amount: 10000000,
+      stake_status: 'WaitingForUnstaked',
+      unstake_at: new Date(),
+      retrieve_unstake_at: new Date(),
+      block_meta_data: {
+        blockNumber: 4147,
+        blockHash:
+          '0x75dff4eb85ded7e4c7319348ac5db1b09e7beafcb5905cf4e9f68e876c1fa5a7',
+      },
+    },
+  });
   console.log('`Lab` data injection successful! ✅');
 
   console.log('Injecting `Service` into debio-elasticsearch 💉...');
-  client.index({
+  await client.index({
     index: 'services',
     refresh: 'wait_for',
     id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
@@ -158,7 +240,7 @@ module.exports = async () => {
   console.log('`Service` data injection successful! ✅');
 
   console.log('Injecting `Genetic Analysis` into debio-elasticsearch 💉...');
-  client.index({
+  await client.index({
     index: 'genetic-analysis',
     refresh: 'wait_for',
     id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
@@ -186,7 +268,7 @@ module.exports = async () => {
   console.log(
     'Injecting `Genetic Analysis Order` into debio-elasticsearch 💉...',
   );
-  client.index({
+  await client.index({
     index: 'genetic-analysis-order',
     refresh: 'wait_for',
     id: '0x104c82003294b88166fbe457555eaa06c88ad3b16e36a38d45ea4b995147869a',
@@ -253,7 +335,7 @@ module.exports = async () => {
     },
   });
 
-  client.index({
+  await client.index({
     index: 'genetic-analysis-order',
     refresh: 'wait_for',
     id: '0x3a8733f1694e5403bfd7a34298253e26037a9ac5fc6ea60b43438d81a2d58dd9',
@@ -322,7 +404,7 @@ module.exports = async () => {
   console.log('`Genetic Analysis Order` data injection successful! ✅');
 
   console.log('Injecting `Order` into debio-elasticsearch 💉...');
-  client.index({
+  await client.index({
     index: 'orders',
     refresh: 'wait_for',
     id: '0xf310b59907c98e384a8528b324a0bd96b4e7361c7dfd943e40d3c7156632cf2c',
@@ -354,7 +436,7 @@ module.exports = async () => {
     },
   });
 
-  client.index({
+  await client.index({
     index: 'orders',
     refresh: 'wait_for',
     id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
@@ -388,7 +470,7 @@ module.exports = async () => {
     },
   });
 
-  client.index({
+  await client.index({
     index: 'orders',
     refresh: 'wait_for',
     id: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
@@ -426,7 +508,7 @@ module.exports = async () => {
   console.log('`Order` data injection successful! ✅');
 
   console.log('Injecting `Service Request` into debio-elasticsearch 💉...');
-  client.index({
+  await client.index({
     index: 'create-service-request',
     refresh: 'wait_for',
     id: '0x22d03ae32b4c2dcca4f69c26f768aa160d9466f501bfb622e6d84c639e621fa9',
@@ -453,7 +535,7 @@ module.exports = async () => {
     },
   });
 
-  client.index({
+  await client.index({
     index: 'create-service-request',
     refresh: 'wait_for',
     id: '0x8b48ead7cf44e6449cbb5de298f3c3915f09b700b7a74b27a368c69629884155',
