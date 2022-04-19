@@ -12,7 +12,7 @@ import {
   MailerManager,
   ProcessEnvProxy,
   TransactionLoggingService,
-  DateTimeProxy
+  DateTimeProxy,
 } from '../../../../../../../src/common';
 import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';

@@ -56,7 +56,7 @@ export class ServiceRequestCreatedHandler
       deleted_at: null,
       from: null,
       to: serviceRequest.requesterAddress,
-    }
+    };
 
     try {
       const isServiceRequestHasBeenInsert =
