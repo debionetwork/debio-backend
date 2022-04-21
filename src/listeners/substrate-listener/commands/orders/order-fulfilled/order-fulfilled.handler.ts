@@ -3,6 +3,7 @@ import { Option } from '@polkadot/types';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFulfilledCommand } from './order-fulfilled.command';
 import {
+  DateTimeProxy,
   DebioConversionService,
   RewardService,
   SubstrateService,
@@ -20,6 +21,8 @@ import {
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
+import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationService } from '../../../../../endpoints/notification/notification.service';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -34,6 +37,8 @@ export class OrderFulfilledHandler
     private readonly rewardService: RewardService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
+    private readonly notificationService: NotificationService,
+    private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
@@ -105,12 +110,28 @@ export class OrderFulfilledHandler
         );
         const servicePrice = +order.prices[0].value * debioToDai;
 
+        // Write Logging Notification Customer Reward From Request Service
+        const customerNotificationInput: NotificationDto = {
+          role: 'Customer',
+          entity_type: 'Order',
+          entity: 'OrderFulfilled',
+          description: `Congrats! You’ve got ${servicePrice} DBIO as a reward for completing the request test for ${order.id} from the service requested`,
+          read: false,
+          created_at: await this.dateTimeProxy.new(),
+          updated_at: await this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: order.customerId,
+        };
+
         // Send reward to customer
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.customerId,
           convertToDbioUnitString(servicePrice),
+          () =>
+            this.callbackInsertNotificationLogging(customerNotificationInput),
         );
 
         await queryServiceInvoiceByOrderId(
@@ -164,5 +185,9 @@ export class OrderFulfilledHandler
       await this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
     }
+  }
+
+  callbackInsertNotificationLogging(data: NotificationDto) {
+    this.notificationService.insert(data);
   }
 }
