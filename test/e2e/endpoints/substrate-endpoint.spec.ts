@@ -28,6 +28,7 @@ import {
   queryLastGeneticAnalysisOrderByCustomerId,
 } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
+import { NotificationModule } from '../../../src/endpoints/notification/notification.module';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -76,6 +77,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         SubstrateModule,
         RewardModule,
         DateTimeModule,
+        NotificationModule,
       ],
     }).compile();
 
@@ -165,7 +167,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     expect(result.text.includes(ACCOUNT_ID)).toBeTruthy();
     expect(result.text.includes(ETH_ADDRESS)).toBeTruthy();
     expect(result.status).toEqual(200);
-  }, 30000);
+  }, 120000);
 
   it('GET /substrate/orders/{hash_id}: getOrderById should return', async () => {
     // Arrange
