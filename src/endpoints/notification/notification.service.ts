@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DateTimeProxy } from 'src/common';
+import { DateTimeProxy } from '../../common';
 import { Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
