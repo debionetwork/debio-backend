@@ -19,6 +19,7 @@ import { SubstrateListenerHandler } from './substrate-listener.handler';
 import { OrderCommandHandlers } from './commands/orders';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LocationModule } from '../../endpoints/location/location.module';
+import { NotificationModule } from '../../endpoints/notification/notification.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { LocationModule } from '../../endpoints/location/location.module';
     MailModule,
     CqrsModule,
     DateTimeModule,
+    NotificationModule,
   ],
   providers: [
     SubstrateListenerHandler,
