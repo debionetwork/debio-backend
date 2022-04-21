@@ -32,6 +32,8 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationDto } from '../notification/dto/notification.dto';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -47,6 +49,7 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/labs')
@@ -318,7 +321,22 @@ export class SubstrateController {
           this.substrateService.pair,
           accountId,
           ethAddress,
-          () => resolve('resolve'),
+          async () => {
+            const walletBindingNotification: NotificationDto = {
+              role: 'Customer',
+              entity_type: 'Reward',
+              entity: 'WalletBinding',
+              description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
+              read: false,
+              created_at: await this.dateTime.new(),
+              updated_at: await this.dateTime.new(),
+              deleted_at: null,
+              from: 'Debio Network',
+              to: accountId,
+            };
+
+            this.notificationService.insert(walletBindingNotification);
+          },
         );
       });
       await substrateServicePromise;
