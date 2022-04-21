@@ -85,7 +85,7 @@ const eventRoutes = {
 export class SubstrateListenerHandler implements OnModuleInit {
   private event: any;
   private readonly logger: Logger = new Logger(SubstrateListenerHandler.name);
-  private lastBlock: number = 0;  
+  private lastBlock = 0;
   private head;
 
   constructor(
@@ -187,13 +187,15 @@ export class SubstrateListenerHandler implements OnModuleInit {
         );
       });
   }
-  
+
   async listenToNewBlock() {
     await this.substrate.api.rpc.chain
       .subscribeNewHeads(async (header: Header) => {
         try {
           const blockNumber = header.number.toNumber();
-          const blockHash = await this.substrate.api.rpc.chain.getBlockHash(blockNumber);
+          const blockHash = await this.substrate.api.rpc.chain.getBlockHash(
+            blockNumber,
+          );
 
           // check if env is development
           if (this.process.env.NODE_ENV === 'development') {
@@ -235,9 +237,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
     let lastBlock = 1;
     try {
       //TODO get last block: need storage to save lastblock
-      lastBlock = await this.queryBus.execute(
-        new GetLastSubstrateBlockQuery(),
-      );
+      lastBlock = await this.queryBus.execute(new GetLastSubstrateBlockQuery());
       const currentBlockNumber = currentBlock.block.header.number.toNumber();
       /**
        * Process logs in chunks of blocks
@@ -254,10 +254,15 @@ export class SubstrateListenerHandler implements OnModuleInit {
         this.logger.log(`Syncing block ${chunkStart} - ${chunkEnd}`);
         for (let i = chunkStart; i <= chunkEnd; i++) {
           // Get block by block number
-          const blockHash: any = await this.substrate.api.rpc.chain.getBlockHash(i);
-          const signedBlock: any = await this.substrate.api.rpc.chain.getBlock(blockHash);
+          const blockHash: any =
+            await this.substrate.api.rpc.chain.getBlockHash(i);
+          const signedBlock: any = await this.substrate.api.rpc.chain.getBlock(
+            blockHash,
+          );
 
-          const apiAt = await this.substrate.api.at(signedBlock.block.header.hash);
+          const apiAt = await this.substrate.api.at(
+            signedBlock.block.header.hash,
+          );
           // Get the event records in the block
           const allEventRecords: any = await apiAt.query.system.events();
 
