@@ -321,22 +321,7 @@ export class SubstrateController {
           this.substrateService.pair,
           accountId,
           ethAddress,
-          async () => {
-            const walletBindingNotification: NotificationDto = {
-              role: 'Customer',
-              entity_type: 'Reward',
-              entity: 'WalletBinding',
-              description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
-              read: false,
-              created_at: await this.dateTime.new(),
-              updated_at: await this.dateTime.new(),
-              deleted_at: null,
-              from: 'Debio Network',
-              to: accountId,
-            };
-
-            this.notificationService.insert(walletBindingNotification);
-          },
+          () => resolve('resolve'),
         );
       });
       await substrateServicePromise;
@@ -349,16 +334,28 @@ export class SubstrateController {
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line
-      const sendRewardsPromise = new Promise((resolve, _reject) => {
-        sendRewards(
-          this.substrateService.api as any,
-          this.substrateService.pair,
-          accountId,
-          (rewardAmount * dbioUnit).toString(),
-          () => resolve('resolve'),
-        );
-      });
-      await sendRewardsPromise;
+      sendRewards(
+        this.substrateService.api as any,
+        this.substrateService.pair,
+        accountId,
+        (rewardAmount * dbioUnit).toString(),
+        async () => {
+          const walletBindingNotification: NotificationDto = {
+            role: 'Customer',
+            entity_type: 'Reward',
+            entity: 'WalletBinding',
+            description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
+            read: false,
+            created_at: this.dateTime.new(),
+            updated_at: this.dateTime.new(),
+            deleted_at: null,
+            from: 'Debio Network',
+            to: accountId,
+          };
+
+          this.notificationService.insert(walletBindingNotification);
+        },
+      );
 
       reward = rewardAmount;
 
