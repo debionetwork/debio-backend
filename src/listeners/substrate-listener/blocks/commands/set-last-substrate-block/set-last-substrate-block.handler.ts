@@ -12,8 +12,8 @@ export class SetLastSubstrateBlockHandler
 
   async execute(command: SetLastSubstrateBlockCommand) {
     await this.elasticsearchService.index({
-      index: 'last-block-number-substrate',
-      id: 'last-block-number-substrate',
+      index: 'last-block-number-backend',
+      id: 'last-block-number-backend',
       refresh: 'wait_for',
       body: {
         last_block_number: command.blockNumber,

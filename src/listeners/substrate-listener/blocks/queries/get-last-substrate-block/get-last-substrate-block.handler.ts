@@ -12,7 +12,7 @@ export class GetLastSubstrateBlockHandler
 
   async execute() {
     const { body } = await this.elasticsearchService.search({
-      index: 'last-block-number-substrate',
+      index: 'last-block-number-backend',
       allow_no_indices: true,
     });
     if (body.hits.hits[0]) {

@@ -39,7 +39,6 @@ import {
   GeneticAnalystUnstakedCommand,
   GeneticAnalystVerificationStatusCommand,
 } from './commands/genetic-analysts';
-import { ApiPromise } from '@polkadot/api';
 
 const eventRoutes = {
   services: {
