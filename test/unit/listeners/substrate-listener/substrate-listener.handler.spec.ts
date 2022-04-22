@@ -33,7 +33,7 @@ describe('Substrate Listener Handler Unit Test', () => {
   let substrateServiceMock: MockType<SubstrateService>;
   let queryBusMock: MockType<QueryBus>;
   let commandBusMock: MockType<CommandBus>;
-  let proceccEnvProxy: MockType<ProcessEnvProxy>;// eslint-disable-line
+  let proceccEnvProxy: MockType<ProcessEnvProxy>; // eslint-disable-line
 
   const commandBusMockFactory: () => MockType<CommandBus> = jest.fn(() => ({
     execute: jest.fn(),
