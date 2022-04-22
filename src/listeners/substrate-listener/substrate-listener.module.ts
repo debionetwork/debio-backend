@@ -21,6 +21,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { LocationModule } from '../../endpoints/location/location.module';
 import { NotificationModule } from '../../endpoints/notification/notification.module';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 
 @Module({
   imports: [
@@ -55,6 +56,8 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
     ...GeneticAnalysisOrderCommandHandlers,
     ...GeneticAnalysisCommandHandlers,
     ...GeneticAnalystCommandHandlers,
+    ...BlockCommandHandlers,
+    ...BlockQueryHandlers,
   ],
 })
 export class SubstrateListenerModule {}
