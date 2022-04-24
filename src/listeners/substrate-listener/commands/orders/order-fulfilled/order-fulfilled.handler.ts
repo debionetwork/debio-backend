@@ -79,7 +79,7 @@ export class OrderFulfilledHandler
       if ((labEthAddress as Option<any>).isNone) {
         return null;
       }
-      
+
       const orderByOrderId = await queryOrderDetailByOrderID(
         this.substrateService.api as any,
         order.id,
