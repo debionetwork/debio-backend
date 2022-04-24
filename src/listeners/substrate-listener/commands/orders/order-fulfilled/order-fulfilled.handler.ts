@@ -1,6 +1,6 @@
 import { Logger, Injectable } from '@nestjs/common';
-import { Option } from '@polkadot/types';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Option } from '@polkadot/types';
 import { OrderFulfilledCommand } from './order-fulfilled.command';
 import {
   DateTimeProxy,
@@ -71,14 +71,15 @@ export class OrderFulfilledHandler
         await this.loggingService.create(orderLogging);
       }
 
-      const resp: any = await queryEthAdressByAccountId(
+      const labEthAddress: any = await queryEthAdressByAccountId(
         this.substrateService.api as any,
         order['sellerId'],
       );
-      if ((resp as Option<any>).isNone) {
+
+      if ((labEthAddress as Option<any>).isNone) {
         return null;
       }
-      const labEthAddress = (resp as Option<any>).unwrap().toString();
+      
       const orderByOrderId = await queryOrderDetailByOrderID(
         this.substrateService.api as any,
         order.id,
