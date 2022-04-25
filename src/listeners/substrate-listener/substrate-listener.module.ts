@@ -20,6 +20,7 @@ import { OrderCommandHandlers } from './commands/orders';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LocationModule } from '../../endpoints/location/location.module';
 import { NotificationModule } from '../../endpoints/notification/notification.module';
+import { LabCommandHandlers } from './commands/labs';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { NotificationModule } from '../../endpoints/notification/notification.mo
     ...GeneticAnalysisOrderCommandHandlers,
     ...GeneticAnalysisCommandHandlers,
     ...GeneticAnalystCommandHandlers,
+    ...LabCommandHandlers,
   ],
 })
 export class SubstrateListenerModule {}

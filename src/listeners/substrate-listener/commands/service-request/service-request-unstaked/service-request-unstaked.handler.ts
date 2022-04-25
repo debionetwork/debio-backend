@@ -22,6 +22,7 @@ export class ServiceRequestUnstakedHandler
   ) {}
 
   async execute(command: ServiceRequestUnstakedCommand) {
+    await this.logger.log('Service Request Unstaked!')
     const serviceRequest = command.request.normalize();
 
     try {
