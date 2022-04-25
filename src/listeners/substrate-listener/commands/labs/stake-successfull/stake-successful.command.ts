@@ -1,5 +1,5 @@
-import { Lab } from "@debionetwork/polkadot-provider";
-import { BlockMetaData } from "../../../models/block-metadata.event-model";
+import { Lab } from '@debionetwork/polkadot-provider';
+import { BlockMetaData } from '../../../models/block-metadata.event-model';
 
 export class LabStakeSuccessfulCommand {
   labs: Lab;

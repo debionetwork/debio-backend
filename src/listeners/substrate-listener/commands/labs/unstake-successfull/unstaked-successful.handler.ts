@@ -9,12 +9,8 @@ import { LabUnstakedCommand } from './unstaked-successful.command';
 
 @Injectable()
 @CommandHandler(LabUnstakedCommand)
-export class labUnstakedHandler
-  implements ICommandHandler<LabUnstakedCommand>
-{
-  private readonly logger: Logger = new Logger(
-    LabUnstakedCommand.name,
-  );
+export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
+  private readonly logger: Logger = new Logger(LabUnstakedCommand.name);
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly dateTimeProxy: DateTimeProxy,
@@ -31,8 +27,9 @@ export class labUnstakedHandler
           lab.accountId,
           27, // Lab Waiting For Unstaked
         );
-      const labParent =
-        await this.loggingService.getLoggingByOrderId(lab.accountId);
+      const labParent = await this.loggingService.getLoggingByOrderId(
+        lab.accountId,
+      );
       const labLogging: TransactionLoggingDto = {
         address: lab.accountId,
         amount: 0,
@@ -40,8 +37,8 @@ export class labUnstakedHandler
         currency: 'DBIO',
         parent_id: BigInt(Number(labParent.id)),
         ref_number: lab.accountId,
-        transaction_status: 27,// Lab Waiting For Unstaked
-        transaction_type: 6,// Staking Lab
+        transaction_status: 27, // Lab Waiting For Unstaked
+        transaction_type: 6, // Staking Lab
       };
 
       if (!isLabHasBeenInsert) {

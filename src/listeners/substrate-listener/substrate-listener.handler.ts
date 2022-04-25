@@ -39,7 +39,7 @@ import {
   LabRegisteredCommand,
   LabRetrieveUnstakeAmountCommand,
   LabStakeSuccessfulCommand,
-  LabUnstakedCommand
+  LabUnstakedCommand,
 } from './commands/labs';
 
 const eventRoutes = {
@@ -85,7 +85,7 @@ const eventRoutes = {
     LabStakeSuccessful: LabStakeSuccessfulCommand,
     LabUnstakeSuccessful: LabUnstakedCommand,
     LabRetrieveUnstakeAmount: LabRetrieveUnstakeAmountCommand,
-  }
+  },
 };
 
 @Injectable()

@@ -14,9 +14,7 @@ import { NotificationService } from '../../../../../endpoints/notification/notif
 export class labCreatedHandler
   implements ICommandHandler<LabRegisteredCommand>
 {
-  private readonly logger: Logger = new Logger(
-    LabRegisteredCommand.name,
-  );
+  private readonly logger: Logger = new Logger(LabRegisteredCommand.name);
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
@@ -34,7 +32,7 @@ export class labCreatedHandler
       parent_id: BigInt(0),
       ref_number: lab.accountId,
       transaction_status: 28, // Lab Unverified
-      transaction_type: 7,// Lab
+      transaction_type: 7, // Lab
     };
 
     const notificationInput: NotificationDto = {
@@ -54,7 +52,7 @@ export class labCreatedHandler
       const isLabHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
           lab.accountId,
-          28,// lab Unverified
+          28, // lab Unverified
         );
       if (!isLabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);

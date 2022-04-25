@@ -22,22 +22,22 @@ export class LabRetrieveUnstakeAmountHandler
   ) {}
 
   async execute(command: LabRetrieveUnstakeAmountCommand) {
-    await this.logger.log('Lab Retrieve Unstraked Amount!')
+    await this.logger.log('Lab Retrieve Unstraked Amount!');
     const lab = command.lab.normalize();
-    
+
     try {
-      const labParent =
-        await this.loggingService.getLoggingByOrderId(lab.accountId);
-      const stakingLab =
+      const labParent = await this.loggingService.getLoggingByOrderId(
+        lab.accountId,
+      );
+      const stakingLab = await this.loggingService.getLoggingByHashAndStatus(
+        lab.accountId,
+        26, // Lab Staked
+      );
+      const islabHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
           lab.accountId,
-          26,// Lab Staked
+          25, // Lab Unstaked
         );
-      const islabHasBeenInsert =
-      await this.loggingService.getLoggingByHashAndStatus(
-        lab.accountId,
-        25, // Lab Unstaked
-      );
       const stakingLogging: TransactionLoggingDto = {
         address: lab.accountId,
         amount: stakingLab.amount,
@@ -45,8 +45,8 @@ export class LabRetrieveUnstakeAmountHandler
         currency: 'DBIO',
         parent_id: BigInt(labParent.id),
         ref_number: labParent.address,
-        transaction_status: 25,// Lab Unstaked
-        transaction_type: 6,// Staking Lab
+        transaction_status: 25, // Lab Unstaked
+        transaction_type: 6, // Staking Lab
       };
       if (!islabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
