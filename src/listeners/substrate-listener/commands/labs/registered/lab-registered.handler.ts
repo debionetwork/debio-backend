@@ -11,7 +11,7 @@ import { NotificationService } from '../../../../../endpoints/notification/notif
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
-export class labCreatedHandler
+export class LabRegisteredHandler
   implements ICommandHandler<LabRegisteredCommand>
 {
   private readonly logger: Logger = new Logger(LabRegisteredCommand.name);
