@@ -7,10 +7,10 @@ import { cryptoWaitReady } from '@polkadot/util-crypto';
 import helmet = require('helmet');
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);  
+  const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.enableCors();
-  
+
   if (process.env.SWAGGER_ENABLE === 'true') {
     const config = new DocumentBuilder()
       .setTitle('Debio API')
