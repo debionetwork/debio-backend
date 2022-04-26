@@ -16,6 +16,7 @@ import { SpecializationCategory } from '../../src/endpoints/category/specializat
 import { emrList } from './endpoints/category/emr.mock.data';
 import { serviceList } from './endpoints/category/service.mock.data';
 import { specializationList } from './endpoints/category/specialization.mock.data';
+import { Notification } from '../../src/endpoints/notification/models/notification.entity';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({
@@ -53,6 +54,7 @@ module.exports = async () => {
       EmrCategory,
       ServiceCategory,
       SpecializationCategory,
+      Notification,
     ],
     synchronize: true,
   });

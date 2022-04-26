@@ -1,8 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
+import { NotificationService } from '../../../../src/endpoints/notification/notification.service';
 import { LabService } from '../../../../src/endpoints/substrate-endpoint/services/lab.service';
 import { ServiceService } from '../../../../src/endpoints/substrate-endpoint/services/service.service';
-import { dateTimeProxyMockFactory, MockType } from '../../mock';
+import {
+  dateTimeProxyMockFactory,
+  MockType,
+  notificationServiceMockFactory,
+} from '../../mock';
 import { SubstrateController } from '../../../../src/endpoints/substrate-endpoint/substrate-endpoint.controller';
 import {
   OrderService,
@@ -50,6 +55,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -116,6 +122,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         { provide: ServiceService, useFactory: serviceServiceMockFactory },
         { provide: OrderService, useFactory: orderServiceMockFactory },
         {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
           provide: ServiceRequestService,
           useFactory: serviceRequestServiceMockFactory,
         },
@@ -142,6 +152,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
     geneticAnalysisOrderMock = module.get(GeneticAnalysisOrderService);
+    notificationServiceMock = module.get(NotificationService);
   });
 
   it('should be defined', () => {
@@ -498,6 +509,19 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       (REWARD * DBIO_UNIT).toString(),
       expect.any(Function),
     );
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith({
+      role: 'Customer',
+      entity_type: 'Reward',
+      entity: 'WalletBinding',
+      description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
+      read: false,
+      created_at: dateTimeProxyMock.new(),
+      updated_at: dateTimeProxyMock.new(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: DTO.accountId,
+    });
     expect(rewardServiceMock.insert).toHaveBeenCalled();
     expect(rewardServiceMock.insert).toHaveBeenCalledWith({
       address: DTO.accountId,
