@@ -67,10 +67,8 @@ describe('Lab Retrieve Untaked Amount Handler Event', () => {
       .calledWith(lab.toHuman().accountId, 26)
       .mockReturnValue(RESULT_STATUS);
 
-    const stakedLab: LabRetrieveUnstakeAmountCommand = new LabRetrieveUnstakeAmountCommand(
-      [lab],
-      mockBlockNumber(),
-    );
+    const stakedLab: LabRetrieveUnstakeAmountCommand =
+      new LabRetrieveUnstakeAmountCommand([lab], mockBlockNumber());
 
     await labRetrieveUntakedAmountlHandler.execute(stakedLab);
     expect(
