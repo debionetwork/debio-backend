@@ -2,26 +2,23 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
-import { LabRegisteredCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { LabStakeSuccessfulCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockLab,
   mockBlockNumber,
   MockType,
   transactionLoggingServiceMockFactory,
-  notificationServiceMockFactory,
   dateTimeProxyMockFactory,
 } from '../../../../../mock';
-import { LabRegisteredHandler } from '../../../../../../../src/listeners/substrate-listener/commands/labs/registered/lab-registered.handler';
+import { LabStakeSuccessfullHandler } from '../../../../../../../src/listeners/substrate-listener/commands/labs/stake-successfull/stake-successful.handler';
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
-describe('Lab Registered Handler Event', () => {
+describe('Lab Staked Successful Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
-  let labRegisteredHandler: LabRegisteredHandler;
+  let labStakeSuccessfullHandler: LabStakeSuccessfullHandler;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -31,27 +28,22 @@ describe('Lab Registered Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
-          useFactory: notificationServiceMockFactory,
-        },
-        {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
         },
-        LabRegisteredHandler,
+        LabStakeSuccessfullHandler,
       ],
     }).compile();
 
-    labRegisteredHandler = module.get(LabRegisteredHandler);
+    labStakeSuccessfullHandler = module.get(LabStakeSuccessfullHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
 
-  it('should defined Lab Registered Handler', () => {
-    expect(labRegisteredHandler).toBeDefined();
+  it('should defined Lab Staked Successful Handler', () => {
+    expect(labStakeSuccessfullHandler).toBeDefined();
   });
 
   it('should not called logging service create', async () => {
@@ -72,15 +64,15 @@ describe('Lab Registered Handler Event', () => {
     RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(lab.toHuman().accountId, 28)
+      .calledWith(lab.toHuman().accountId, 26)
       .mockReturnValue(RESULT_STATUS);
 
-    const registeredLab: LabRegisteredCommand = new LabRegisteredCommand(
+    const stakedLab: LabStakeSuccessfulCommand = new LabStakeSuccessfulCommand(
       [lab],
       mockBlockNumber(),
     );
 
-    await labRegisteredHandler.execute(registeredLab);
+    await labStakeSuccessfullHandler.execute(stakedLab);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
@@ -105,21 +97,19 @@ describe('Lab Registered Handler Event', () => {
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
       lab.toHuman().accountId,
-      28,
+      26,
     );
 
-    const labRegisteredCommand: LabRegisteredCommand = new LabRegisteredCommand(
+    const labStakedSuccessfulCommand: LabStakeSuccessfulCommand = new LabStakeSuccessfulCommand(
       [lab],
       mockBlockNumber(),
     );
 
-    await labRegisteredHandler.execute(labRegisteredCommand);
+    await labStakeSuccessfullHandler.execute(labStakedSuccessfulCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     await transactionLoggingServiceMock.create();
-    await notificationServiceMock.insert();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });
