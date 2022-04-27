@@ -2,7 +2,7 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { LabUnstakedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
+import { LabRetrieveUnstakeAmountCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockLab,
@@ -15,10 +15,10 @@ import { labUnstakedHandler } from '../../../../../../../src/listeners/substrate
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
-describe('Lab Untaked Successful Handler Event', () => {
+describe('Lab Retrieve Untaked Amount Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
-  let labUnstakeSuccessfullHandler: labUnstakedHandler;
+  let labRetrieveUntakedAmountlHandler: labUnstakedHandler;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,15 +35,15 @@ describe('Lab Untaked Successful Handler Event', () => {
       ],
     }).compile();
 
-    labUnstakeSuccessfullHandler = module.get(labUnstakedHandler);
+    labRetrieveUntakedAmountlHandler = module.get(labUnstakedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
 
-  it('should defined Lab Unstaked Successful Handler', () => {
-    expect(labUnstakeSuccessfullHandler).toBeDefined();
+  it('should defined Lab Retrieve Unstaked Amount Handler', () => {
+    expect(labRetrieveUntakedAmountlHandler).toBeDefined();
   });
 
   it('should not called logging service create', async () => {
@@ -64,15 +64,15 @@ describe('Lab Untaked Successful Handler Event', () => {
     RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(lab.toHuman().accountId, 27)
+      .calledWith(lab.toHuman().accountId, 26)
       .mockReturnValue(RESULT_STATUS);
 
-    const stakedLab: LabUnstakedCommand = new LabUnstakedCommand(
+    const stakedLab: LabRetrieveUnstakeAmountCommand = new LabRetrieveUnstakeAmountCommand(
       [lab],
       mockBlockNumber(),
     );
 
-    await labUnstakeSuccessfullHandler.execute(stakedLab);
+    await labRetrieveUntakedAmountlHandler.execute(stakedLab);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
@@ -97,13 +97,13 @@ describe('Lab Untaked Successful Handler Event', () => {
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
       lab.toHuman().accountId,
-      27,
+      26,
     );
 
-    const labStakedSuccessfulCommand: LabUnstakedCommand =
-      new LabUnstakedCommand([lab], mockBlockNumber());
+    const labStakedSuccessfulCommand: LabRetrieveUnstakeAmountCommand =
+      new LabRetrieveUnstakeAmountCommand([lab], mockBlockNumber());
 
-    await labUnstakeSuccessfullHandler.execute(labStakedSuccessfulCommand);
+    await labRetrieveUntakedAmountlHandler.execute(labStakedSuccessfulCommand);
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
