@@ -100,10 +100,8 @@ describe('Lab Staked Successful Handler Event', () => {
       26,
     );
 
-    const labStakedSuccessfulCommand: LabStakeSuccessfulCommand = new LabStakeSuccessfulCommand(
-      [lab],
-      mockBlockNumber(),
-    );
+    const labStakedSuccessfulCommand: LabStakeSuccessfulCommand =
+      new LabStakeSuccessfulCommand([lab], mockBlockNumber());
 
     await labStakeSuccessfullHandler.execute(labStakedSuccessfulCommand);
     expect(
