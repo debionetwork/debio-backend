@@ -26,8 +26,10 @@ export class Notification {
   @Column()
   updated_at: Date;
 
-  @Column()
-  deleted_at: Date;
+  @Column({
+    nullable: true,
+  })
+  deleted_at!: Date;
 
   @Column()
   from: string;
