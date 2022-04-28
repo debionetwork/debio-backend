@@ -41,14 +41,14 @@ export class GeneticAnalysisOrderFulfilledHandler
 
       const serviceChargeLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
-        amount: (+geneticAnalysisOrder.prices[0].value) * 5 / 100,  //5% prices
+        amount: (+geneticAnalysisOrder.prices[0].value * 5) / 100, //5% prices
         created_at: geneticAnalysisOrder.updatedAt,
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
         transaction_status: 28,
         transaction_type: 3,
-      }
+      };
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);

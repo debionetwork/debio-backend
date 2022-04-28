@@ -101,8 +101,8 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     await geneticAnalysisOrderFulfilledHandler.execute(
       geneticAnalysisOrderFulfilledCommand,
     );
-    const transactionLogging = await transactionLoggingServiceMock.create()
+    const transactionLogging = await transactionLoggingServiceMock.create();
     expect(transactionLogging).toEqual(undefined);
-    expect(transactionLoggingServiceMock.create).toBeCalled()
+    expect(transactionLoggingServiceMock.create).toBeCalled();
   });
 });
