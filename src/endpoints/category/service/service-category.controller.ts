@@ -12,12 +12,12 @@ export class ServiceCategoryController {
   ) {}
 
   @Get()
-  @ApiOperation({description: 'get categories of lab service.'})
+  @ApiOperation({ description: 'get categories of lab service.' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: serviceCategories
-    }
+      example: serviceCategories,
+    },
   })
   getServiceCategory() {
     return this.serviceCategoryService.getAll();

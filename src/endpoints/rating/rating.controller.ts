@@ -9,7 +9,7 @@ import {
   Res,
   UseInterceptors,
 } from '@nestjs/common';
-import {allService, labRating, serviceLabRating} from './models/response';
+import { allService, labRating, serviceLabRating } from './models/response';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { Cache } from 'cache-manager';
 import { Response } from 'express';
@@ -35,8 +35,10 @@ export class RatingController {
 
   @Post()
   @ApiBody({ type: CreateRatingDto })
-  @ApiOperation({description: 'Customer give feedback or rating for lab service.'})
-  @ApiResponse({status: 201, type: CreateRatingDto})
+  @ApiOperation({
+    description: 'Customer give feedback or rating for lab service.',
+  })
+  @ApiResponse({ status: 201, type: CreateRatingDto })
   async create(@Body() data: CreateRatingDto, @Res() response: Response) {
     const isRatedByOrderId = await this.ratingService.getRatingByOrderId(
       data.order_id,
@@ -57,12 +59,14 @@ export class RatingController {
   }
 
   @Get('service')
-  @ApiOperation({description: 'Get number of ratings from all service and lab'})
+  @ApiOperation({
+    description: 'Get number of ratings from all service and lab',
+  })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: allService
-    }
+    schema: {
+      example: allService,
+    },
   })
   async getAllService(@Res() response: Response) {
     try {
@@ -76,12 +80,12 @@ export class RatingController {
 
   @Get('service/:service_id')
   @ApiParam({ name: 'service_id' })
-  @ApiOperation({description: 'get number of ratings from service lab.'})
+  @ApiOperation({ description: 'get number of ratings from service lab.' })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: serviceLabRating
-    }
+    schema: {
+      example: serviceLabRating,
+    },
   })
   async getByServiceId(
     @Param('service_id') service_id: string,
@@ -94,12 +98,12 @@ export class RatingController {
 
   @Get('lab/:lab_id')
   @ApiParam({ name: 'lab_id' })
-  @ApiOperation({description: 'get number of ratings from lab.'})
+  @ApiOperation({ description: 'get number of ratings from lab.' })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: labRating
-    }
+    schema: {
+      example: labRating,
+    },
   })
   async getLabRating(
     @Param('lab_id') labor_id: string,

@@ -9,10 +9,10 @@ export class TransactionController {
 
   @Post('/hash')
   @ApiBody({ type: TransactionHashDto })
-  @ApiOperation({description: 'insert tx hash from smart contract.'})
+  @ApiOperation({ description: 'insert tx hash from smart contract.' })
   @ApiResponse({
     status: 201,
-    type: TransactionHashDto
+    type: TransactionHashDto,
   })
   async submitTransactionHash(@Body() data: TransactionHashDto) {
     await this.transactionService.submitTransactionHash(
@@ -23,10 +23,10 @@ export class TransactionController {
   }
 
   @Get('/hash')
-  @ApiOperation({description: 'get txhash.'})
+  @ApiOperation({ description: 'get txhash.' })
   @ApiResponse({
     status: 200,
-    type: TransactionHashDto
+    type: TransactionHashDto,
   })
   @ApiQuery({ name: 'order_id', required: true })
   async getTransactionHash(@Query('order_id') order_id: string) {

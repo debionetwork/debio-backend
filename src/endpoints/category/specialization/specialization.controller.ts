@@ -10,12 +10,14 @@ export class SpecializationController {
   constructor(private readonly specializationService: SpecializationService) {}
 
   @Get()
-  @ApiOperation({description: 'get categories of genetic analyst specialization.'})
+  @ApiOperation({
+    description: 'get categories of genetic analyst specialization.',
+  })
   @ApiResponse({
     status: 200,
     schema: {
-      example: specializtionCategories
-    }
+      example: specializtionCategories,
+    },
   })
   getSpecializationCategory() {
     return this.specializationService.getAll();

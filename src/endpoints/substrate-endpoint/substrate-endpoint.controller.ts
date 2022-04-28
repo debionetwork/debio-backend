@@ -34,7 +34,17 @@ import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationDto } from '../notification/dto/notification.dto';
-import { labsResponse, orderByCustomerId, orderByHash, serviceByLocation, stakingRequestService, requestServiceByCustomer, provideRequestServiceResponse, geneticAnalysisByTrakingIdResponse, geneticAnalysisOrderByGA } from './models/response';
+import {
+  labsResponse,
+  orderByCustomerId,
+  orderByHash,
+  serviceByLocation,
+  stakingRequestService,
+  requestServiceByCustomer,
+  provideRequestServiceResponse,
+  geneticAnalysisByTrakingIdResponse,
+  geneticAnalysisOrderByGA,
+} from './models/response';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -64,12 +74,14 @@ export class SubstrateController {
   })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'Get data service by service flow and locations.'})
+  @ApiOperation({
+    description: 'Get data service by service flow and locations.',
+  })
   @ApiResponse({
     status: 200,
     schema: {
-      example: labsResponse
-    }
+      example: labsResponse,
+    },
   })
   async findByCountryCityCategory(
     @Query('country') country,
@@ -95,12 +107,12 @@ export class SubstrateController {
   @Get('/services/:country/:city')
   @ApiParam({ name: 'country' })
   @ApiParam({ name: 'city' })
-  @ApiOperation({description: 'Get list lab service in city.'})
+  @ApiOperation({ description: 'Get list lab service in city.' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: serviceByLocation
-    }
+      example: serviceByLocation,
+    },
   })
   async findByCountryCity(@Param() params): Promise<any> {
     const services = await this.serviceService.getByCountryCity(
@@ -111,12 +123,12 @@ export class SubstrateController {
   }
 
   @Get('/orders/:hash_id')
-  @ApiOperation({description: 'Get detail order by id.'})
+  @ApiOperation({ description: 'Get detail order by id.' })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: orderByHash
-    }
+    schema: {
+      example: orderByHash,
+    },
   })
   async getOrderById(@Param('hash_id') hashId: string) {
     const order = await this.orderService.getOrderByHashId(hashId);
@@ -129,12 +141,14 @@ export class SubstrateController {
   @ApiQuery({ name: 'keyword', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'Get list order customer by customer_id or keyword.'})
+  @ApiOperation({
+    description: 'Get list order customer by customer_id or keyword.',
+  })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: orderByCustomerId
-    }
+    schema: {
+      example: orderByCustomerId,
+    },
   })
   async getOrderByCustomer(
     @Param() params,
@@ -208,12 +222,14 @@ export class SubstrateController {
   @Get('/countries')
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'get number of staking request service group by location.'})
+  @ApiOperation({
+    description: 'get number of staking request service group by location.',
+  })
   @ApiResponse({
     status: 200,
     schema: {
-      example: stakingRequestService
-    }
+      example: stakingRequestService,
+    },
   })
   async getAggregatedByCountries(
     @Query('page') page,
@@ -231,12 +247,12 @@ export class SubstrateController {
   @ApiParam({ name: 'customerId' })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'Get list data service request by customer.'})
+  @ApiOperation({ description: 'Get list data service request by customer.' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: requestServiceByCustomer
-    }
+      example: requestServiceByCustomer,
+    },
   })
   async getServiceRequestByCustomer(
     @Param('customerId') customerId,
@@ -257,12 +273,12 @@ export class SubstrateController {
   @ApiQuery({ name: 'regionCode' })
   @ApiQuery({ name: 'city' })
   @ApiQuery({ name: 'category' })
-  @ApiOperation({description: 'Get list '})
+  @ApiOperation({ description: 'Get list ' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: provideRequestServiceResponse
-    }
+      example: provideRequestServiceResponse,
+    },
   })
   async getCustomerProvidedService(
     @Query('countryCode') countryCode,
@@ -281,12 +297,12 @@ export class SubstrateController {
   }
 
   @Get('/genetic-analysis/:tracking_id')
-  @ApiOperation({description: 'get data genetic analysis by traking id'})
+  @ApiOperation({ description: 'get data genetic analysis by traking id' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: geneticAnalysisByTrakingIdResponse
-    }
+      example: geneticAnalysisByTrakingIdResponse,
+    },
   })
   async getGeneticAnalysisByTrackingId(
     @Param('tracking_id') tracking_id: string,
@@ -303,12 +319,12 @@ export class SubstrateController {
   @ApiQuery({ name: 'keyword', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'Get data genetic analyst order by analyst'})
+  @ApiOperation({ description: 'Get data genetic analyst order by analyst' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: geneticAnalysisOrderByGA
-    }
+      example: geneticAnalysisOrderByGA,
+    },
   })
   async getGeneticAnalysisOrderByAnalyst(
     @Param() params,
@@ -333,12 +349,12 @@ export class SubstrateController {
   @ApiQuery({ name: 'keyword', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({description: 'Get data genetic analysis order by customer'})
+  @ApiOperation({ description: 'Get data genetic analysis order by customer' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: geneticAnalysisOrderByGA
-    }
+      example: geneticAnalysisOrderByGA,
+    },
   })
   async getGeneticAnalysisOrderByCustomer(
     @Param() params,
@@ -359,15 +375,15 @@ export class SubstrateController {
   }
 
   @Post('/wallet-binding')
-  @ApiOperation({description: 'binding metamask wallet and polkatod wallet.'})
+  @ApiOperation({ description: 'binding metamask wallet and polkatod wallet.' })
   @ApiResponse({
     status: 200,
     schema: {
       example: {
         reward: 0,
-        message: `eth-address <ethAddress> bound to <accountId>`
-      }
-    }
+        message: `eth-address <ethAddress> bound to <accountId>`,
+      },
+    },
   })
   async walletBinding(
     @Headers('debio-api-key') debioApiKey: string,

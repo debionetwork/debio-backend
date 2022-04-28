@@ -10,12 +10,12 @@ export class EmrController {
   constructor(private readonly emrService: EmrService) {}
 
   @Get()
-  @ApiOperation({description: 'get categories of electronic medical record'})
+  @ApiOperation({ description: 'get categories of electronic medical record' })
   @ApiResponse({
     status: 200,
     schema: {
-      example: emrCategories
-    }
+      example: emrCategories,
+    },
   })
   getCategory() {
     try {

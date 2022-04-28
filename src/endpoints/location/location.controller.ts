@@ -16,7 +16,7 @@ export class LocationController {
   ) {}
 
   @Get()
-  @ApiOperation({ 
+  @ApiOperation({
     description: `Get list of Location : country, region, or city.\n
     description: \n
     1. { country_code: null, state_code: null, city_code: null }                 : then will get response data list of county. \n
@@ -26,7 +26,7 @@ export class LocationController {
   })
   @ApiResponse({
     description: 'List of location',
-    schema: { example: locationResponse }
+    schema: { example: locationResponse },
   })
   @ApiQuery({ name: 'country_code', required: false })
   @ApiQuery({ name: 'state_code', required: false })

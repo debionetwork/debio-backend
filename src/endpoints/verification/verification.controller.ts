@@ -25,7 +25,7 @@ export class VerificationController {
     name: 'verification_status',
     enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
   })
-  @ApiOperation({description: 'verification lab.'})
+  @ApiOperation({ description: 'verification lab.' })
   async updateStatusLab(
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
@@ -54,7 +54,7 @@ export class VerificationController {
 
   @Post('/genetic-analysts')
   @ApiQuery({ name: 'account_id' })
-  @ApiOperation({description: 'verification genetic analyst.'})
+  @ApiOperation({ description: 'verification genetic analyst.' })
   @ApiQuery({
     name: 'verification_status',
     enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],

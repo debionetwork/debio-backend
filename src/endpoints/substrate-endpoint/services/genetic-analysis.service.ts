@@ -22,7 +22,7 @@ export class GeneticAnalysisService {
           },
         },
       });
-      
+
       hitsGeneticAnalysis = geneticAnalysis.body.hits.hits;
     } catch (error) {
       if (error?.body?.error?.type !== 'index_not_found_exception') {

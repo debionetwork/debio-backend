@@ -11,12 +11,12 @@ export class NotificationController {
 
   @Get(':to_id')
   @ApiParam({ name: 'to_id' })
-  @ApiOperation({description: 'get all notification by receiver.'})
+  @ApiOperation({ description: 'get all notification by receiver.' })
   @ApiResponse({
     status: 200,
-    schema:{
-      example: notificationData
-    }
+    schema: {
+      example: notificationData,
+    },
   })
   async getAllNotificationByToId(@Param('to_id') to_id: string) {
     try {
@@ -30,7 +30,7 @@ export class NotificationController {
 
   @Put('set-read/:notification_id')
   @ApiParam({ name: 'notification_id' })
-  @ApiOperation({description: 'update data notification to hasbeen read.'})
+  @ApiOperation({ description: 'update data notification to hasbeen read.' })
   @ApiResponse({
     status: 200,
     schema: {
@@ -38,10 +38,10 @@ export class NotificationController {
         data: {
           generatedMaps: [],
           raw: [],
-          affected: 1
-        }
-      }
-    }
+          affected: 1,
+        },
+      },
+    },
   })
   async setNotificationHasbeenReadById(
     @Param('notification_id') notification_id: string,
@@ -59,7 +59,7 @@ export class NotificationController {
 
   @Put('set-bulk-read/:to_id')
   @ApiParam({ name: 'to_id' })
-  @ApiOperation({description: 'set all notification receiver hasbeed read'})
+  @ApiOperation({ description: 'set all notification receiver hasbeed read' })
   @ApiResponse({
     status: 200,
     schema: {
@@ -67,10 +67,10 @@ export class NotificationController {
         data: {
           generatedMaps: [],
           raw: [],
-          affected: 9
-        }
-      }
-    }
+          affected: 9,
+        },
+      },
+    },
   })
   async setBulkNotificationHasbeenRead(@Param('to_id') to_id: string) {
     try {

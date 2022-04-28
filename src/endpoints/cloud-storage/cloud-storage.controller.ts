@@ -17,9 +17,9 @@ export class CloudStorageController {
     status: 200,
     schema: {
       example: {
-        "signedUrl": "https://......."
-      }
-    }
+        signedUrl: 'https://.......',
+      },
+    },
   })
   async GetSignedUrl(
     @Query('filename') filename: string,
