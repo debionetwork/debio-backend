@@ -151,6 +151,8 @@ export const notificationServiceMockFactory: () => MockType<NotificationService>
   jest.fn(() => ({
     insert: jest.fn(),
     getAllByToId: jest.fn(),
+    setNotificationHasBeenReadById: jest.fn(),
+    setBulkNotificationHasBeenRead: jest.fn(),
   }));
 
 export function createMockOrder(status: OrderStatus) {
@@ -234,6 +236,35 @@ export function createMockGeneticAnalyst() {
       stakeAmount: 1,
       stakeStatus: 'string',
       verificationStatus: 'string',
+    })),
+  };
+}
+
+export function createMockLab() {
+  return {
+    toHuman: jest.fn(() => ({
+      accountId: 'string',
+      services: [],
+      certifications: [],
+      verificationStatus: 'string',
+      info: {
+        boxPublicKey: 'string',
+        name: 'string',
+        email: 'string',
+        country: 'string',
+        region: 'string',
+        city: 'string',
+        address: 'string',
+        phoneNumber: 'string',
+        website: 'string',
+        latitude: 'string',
+        longitude: 'string',
+        profileImage: null,
+      },
+      stakeAmount: '50,000,000,000,000,000,000,000',
+      stakeStatus: 'string',
+      unstakeAt: 0,
+      retrieveUnstakeAt: 0,
     })),
   };
 }

@@ -39,6 +39,12 @@ import {
   GeneticAnalystUnstakedCommand,
   GeneticAnalystVerificationStatusCommand,
 } from './commands/genetic-analysts';
+import {
+  LabRegisteredCommand,
+  LabRetrieveUnstakeAmountCommand,
+  LabStakeSuccessfulCommand,
+  LabUnstakedCommand,
+} from './commands/labs';
 
 const eventRoutes = {
   services: {
@@ -77,6 +83,12 @@ const eventRoutes = {
     GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakedCommand,
     GeneticAnalystUpdateVerificationStatus:
       GeneticAnalystVerificationStatusCommand,
+  },
+  labs: {
+    LabRegistered: LabRegisteredCommand,
+    LabStakeSuccessful: LabStakeSuccessfulCommand,
+    LabUnstakeSuccessful: LabUnstakedCommand,
+    LabRetrieveUnstakeAmount: LabRetrieveUnstakeAmountCommand,
   },
 };
 
