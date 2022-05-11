@@ -78,7 +78,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       GeneticAnalysisOrderStatus.Fulfilled,
     );
 
-    const RESULT_STATUS = { id: 1 };
+    const RESULT_STATUS = undefined;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
@@ -101,8 +101,8 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     await geneticAnalysisOrderFulfilledHandler.execute(
       geneticAnalysisOrderFulfilledCommand,
     );
-    expect(
-      transactionLoggingServiceMock.getLoggingByHashAndStatus,
-    ).toHaveBeenCalled();
+    const transactionLogging = await transactionLoggingServiceMock.create();
+    expect(transactionLogging).toEqual(undefined);
+    expect(transactionLoggingServiceMock.create).toBeCalled();
   });
 });
