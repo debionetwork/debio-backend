@@ -22,6 +22,7 @@ export class ServiceRequestWaitingForUnstakedHandler
   ) {}
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
+    await this.logger.log('Service Request Waiting For Unstaked!');
     const serviceRequest = command.request.normalize();
 
     try {
