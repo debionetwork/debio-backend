@@ -64,7 +64,6 @@ require('dotenv').config(); // eslint-disable-line
     EscrowModule,
     DebioConversionModule,
     SubstrateEndpointModule,
-    SubstrateListenerModule,
     TransactionLoggingModule,
     VerificationModule,
     RecaptchaModule,
@@ -75,6 +74,7 @@ require('dotenv').config(); // eslint-disable-line
     TransactionModule,
     SpecializationModule,
     NotificationModule,
+    SubstrateListenerModule,
   ],
 })
 export class AppModule {}
