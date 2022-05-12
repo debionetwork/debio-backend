@@ -1,7 +1,7 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../../common';
-import { specializtionCategories } from './models/response';
+import { specializationCategories } from './models/response';
 import { SpecializationService } from './specialization.service';
 
 @UseInterceptors(SentryInterceptor)
@@ -16,7 +16,7 @@ export class SpecializationController {
   @ApiResponse({
     status: 200,
     schema: {
-      example: specializtionCategories,
+      example: specializationCategories,
     },
   })
   getSpecializationCategory() {

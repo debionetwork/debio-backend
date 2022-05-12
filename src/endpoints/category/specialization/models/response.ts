@@ -1,4 +1,4 @@
-export const specializtionCategories = [
+export const specializationCategories = [
   {
     id: 1,
     category: 'Assisted Reproductive Therapy (ART)/Infertility',
