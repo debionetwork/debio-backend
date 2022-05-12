@@ -51,16 +51,30 @@ export class VerificationService {
     if (verificationStatus === 'Verified') {
       const reward = 2;
       // eslint-disable-next-line
-      const sendRewardsPromise = new Promise((resolve, _reject) => {
-        sendRewards(
-          this.subtrateService.api as any,
-          this.subtrateService.pair,
-          substrateAddress,
-          convertToDbioUnitString(reward),
-          () => resolve('resolved'),
-        );
-      });
-      await sendRewardsPromise;
+      await sendRewards(
+        this.subtrateService.api as any,
+        this.subtrateService.pair,
+        substrateAddress,
+        convertToDbioUnitString(reward),
+        async () => {
+          // insert notification
+          const notificationInput: NotificationDto = {
+            role: 'Lab',
+            entity_type: 'Reward',
+            entity: 'Lab verified',
+            description:
+              'Congrats! You’ve got 2 DBIO from account verification.',
+            read: false,
+            created_at: this.dateTimeProxy.new(),
+            updated_at: this.dateTimeProxy.new(),
+            deleted_at: null,
+            from: null,
+            to: substrateAddress,
+          };
+
+          await this.notificationService.insert(notificationInput);
+        },
+      );
 
       //Write to Reward Logging
       const dataInput: RewardDto = {
