@@ -92,6 +92,10 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
                 info: {
                   category: 'XX',
                 },
+                stake_amount: '20',
+                stake_status: 'string',
+                unstake_at: 'string',
+                retrieve_unstake_at: 'string',
                 services: [
                   {
                     info: {
@@ -117,6 +121,10 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
           info: {
             category: 'XX',
           },
+          stake_amount: '20',
+          stake_status: 'string',
+          unstake_at: 'string',
+          retrieve_unstake_at: 'string',
           lab_detail: {
             category: 'XX',
           },
