@@ -399,6 +399,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
+      role: 'Customer',
       accountId: 'string',
       ethAddress: 'string',
     };
@@ -436,6 +437,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     const DTO: WalletBindingDTO = {
+      role: 'Customer',
       accountId: 'strin',
       ethAddress: 'string',
     };
@@ -466,6 +468,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   it('should wallet bind', async () => {
     // Arrange
     const DTO: WalletBindingDTO = {
+      role: 'Customer',
       accountId: 'string',
       ethAddress: 'string',
     };
@@ -512,7 +515,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(notificationServiceMock.insert).toHaveBeenCalledWith({
       role: 'Customer',
       entity_type: 'Reward',
-      entity: 'WalletBinding',
+      entity: 'Wallet Binding',
       description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
       read: false,
       created_at: dateTimeProxyMock.new(),

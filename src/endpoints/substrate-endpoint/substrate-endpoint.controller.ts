@@ -433,9 +433,9 @@ export class SubstrateController {
         (rewardAmount * dbioUnit).toString(),
         async () => {
           const walletBindingNotification: NotificationDto = {
-            role: 'Customer',
+            role: payload.role,
             entity_type: 'Reward',
-            entity: 'WalletBinding',
+            entity: 'Wallet Binding',
             description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
             read: false,
             created_at: this.dateTime.new(),
