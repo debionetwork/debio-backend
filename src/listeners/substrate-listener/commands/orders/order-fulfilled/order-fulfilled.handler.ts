@@ -152,7 +152,6 @@ export class OrderFulfilledHandler
         };
         await this.rewardService.insert(dataCustomerLoggingInput);
 
-
         // Write Logging Notification Lab Reward From Request Service
         const labNotificationInput: NotificationDto = {
           role: 'Lab',
@@ -173,8 +172,7 @@ export class OrderFulfilledHandler
           this.substrateService.pair,
           order.sellerId,
           convertToDbioUnitString(servicePrice / 10),
-          () =>
-            this.callbackInsertNotificationLogging(labNotificationInput),
+          () => this.callbackInsertNotificationLogging(labNotificationInput),
         );
 
         // Write Logging Reward Lab
