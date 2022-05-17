@@ -17,24 +17,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   let countryServiceMock: MockType<CountryService>;
   let exchangeCacheService: MockType<DebioConversionService>;
 
-  const createObjectSearchAggregatedByCountries = () => {
+  const createObjectSearchAggregatedByCountries = (page?: number, size?: number) => {
     return {
-      index: 'create-service-request',
+      index: 'country-service-request',
       body: {
-        query: {
-          bool: {
-            must: {
-              match: {
-                'request.status': { query: 'Open' },
-              },
-            },
-          },
-        },
-        from: 0,
-        size: 10000,
+        from: page ? ((page - 1) * size) : 0,
+        size: size ? size : 10000,
         sort: [
           {
-            'request.country.keyword': {
+            'country.keyword': {
               unmapped_type: 'keyword',
               order: 'asc',
             },
@@ -132,7 +123,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
   it('should get aggregated by countries return array empty', async () => {
     // Arrange
-    const ES_CALLED_WITH = createObjectSearchAggregatedByCountries();
+    const ES_CALLED_WITH = createObjectSearchAggregatedByCountries(1, 10);
     const RESULT = [];
     const EXPECTED_RESULT = [];
     const ES_RESULT = {
@@ -164,23 +155,28 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
   it('should get aggregated by countries return array object', async () => {
     // Arrange
+    const ID = 'XX';
     const COUNTRY = 'XX';
     const REGION = 'XX';
     const CITY = 'XX';
+    const REQUESTER = 'XX';
     const CATEGORY = 'XX';
     const COUNTRY_NAME = 'string';
-    const ES_CALLED_WITH = createObjectSearchAggregatedByCountries();
+    const ES_CALLED_WITH = createObjectSearchAggregatedByCountries(1, 10);
     const RESULT = [
       {
         _source: {
-          request: {
-            status: 'Open',
-            country: COUNTRY,
-            region: REGION,
-            city: CITY,
-            service_category: CATEGORY,
-            staking_amount: '1',
-          },
+          country: COUNTRY,
+          service_request: [
+            {
+              id: ID,
+              region: REGION,
+              city: CITY,
+              requester: REQUESTER,
+              category: CATEGORY,
+              amount: '1',
+            }
+          ],
         },
       },
     ];
