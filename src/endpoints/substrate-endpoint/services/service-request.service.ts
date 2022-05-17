@@ -19,15 +19,15 @@ interface ServiceInterface {
   category: string;
   regionCode: string;
   city: string;
-  totalRequests: number,
+  totalRequests: number;
   totalValue: CurrencyValueInterface;
 }
 interface RequestByCountryDictInterface {
-  totalRequests: number,
-  totalValue: string | number,
+  totalRequests: number;
+  totalValue: string | number;
   services: {
     [id: string]: ServiceInterface;
-  },
+  };
 }
 
 @Injectable()
@@ -51,7 +51,7 @@ export class ServiceRequestService {
       const serviceRequests = await this.elasticsearchService.search({
         index: 'country-service-request',
         body: {
-          from: page ? ((page - 1) * size) : 0,
+          from: page ? (page - 1) * size : 0,
           size: size ? size : 10000,
           sort: [
             {
@@ -73,7 +73,9 @@ export class ServiceRequestService {
       const oneDbioEqualToUsd = exchangeBalance?.dbioToUsd || undefined;
 
       // Accumulate totalRequests and totalValue by country
-      let requestByCountryDict: { [country: string]: RequestByCountryDictInterface} = {};
+      const requestByCountryDict: {
+        [country: string]: RequestByCountryDictInterface;
+      } = {};
       for (const req of hits) {
         const {
           _source: { country, service_request },
@@ -87,15 +89,13 @@ export class ServiceRequestService {
           };
         }
         for (const service of service_request) {
-          const value =
-            Number(service.amount.split(',').join('')) / 10 ** 18;
+          const value = Number(service.amount.split(',').join('')) / 10 ** 18;
           requestByCountryDict[country].totalRequests += 1;
           const currValueByCountry = Number(
             requestByCountryDict[country].totalValue,
           );
-          requestByCountryDict[country].totalValue =
-            currValueByCountry + value;
-  
+          requestByCountryDict[country].totalValue = currValueByCountry + value;
+
           if (
             !requestByCountryDict[country]['services'][
               service.region + '-' + service.city + '-' + service.category
@@ -115,7 +115,7 @@ export class ServiceRequestService {
               },
             };
           }
-  
+
           requestByCountryDict[country]['services'][
             service.region + '-' + service.city + '-' + service.category
           ].totalRequests += 1;
@@ -131,9 +131,7 @@ export class ServiceRequestService {
       }
 
       for (const countryCode in requestByCountryDict) {
-        const countryObj = await this.countryService.getByIso2Code(
-          countryCode,
-        );
+        const countryObj = await this.countryService.getByIso2Code(countryCode);
         if (!countryObj) {
           continue;
         }
@@ -141,7 +139,9 @@ export class ServiceRequestService {
         const { totalRequests, services } = requestByCountryDict[countryCode];
         const { totalValue } = requestByCountryDict[countryCode];
 
-        const servicesArr: Array<ServiceInterface> = Object.values(services).map((s: any) => ({
+        const servicesArr: Array<ServiceInterface> = Object.values(
+          services,
+        ).map((s: any) => ({
           ...s,
           totalValue: {
             dbio: s.totalValue.dbio,
@@ -154,7 +154,7 @@ export class ServiceRequestService {
           country: name,
           services: servicesArr,
           totalRequests: totalRequests,
-          totalValue: totalValue as string
+          totalValue: totalValue as string,
         };
 
         requestByCountryList.push(requestByCountry);

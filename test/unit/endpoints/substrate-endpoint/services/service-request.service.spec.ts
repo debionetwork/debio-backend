@@ -17,11 +17,14 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   let countryServiceMock: MockType<CountryService>;
   let exchangeCacheService: MockType<DebioConversionService>;
 
-  const createObjectSearchAggregatedByCountries = (page?: number, size?: number) => {
+  const createObjectSearchAggregatedByCountries = (
+    page?: number,
+    size?: number,
+  ) => {
     return {
       index: 'country-service-request',
       body: {
-        from: page ? ((page - 1) * size) : 0,
+        from: page ? (page - 1) * size : 0,
         size: size ? size : 10000,
         sort: [
           {
@@ -175,7 +178,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
               requester: REQUESTER,
               category: CATEGORY,
               amount: '1',
-            }
+            },
           ],
         },
       },
