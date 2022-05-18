@@ -137,6 +137,5 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
-
   });
 });
