@@ -1,4 +1,7 @@
-import { DateTimeProxy, SubstrateService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  SubstrateService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -27,7 +30,6 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
   let substrateServiceMock: MockType<SubstrateService>;
   let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

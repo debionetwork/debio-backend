@@ -18,13 +18,13 @@ export class GeneticAnalysisResultReadyHandler
     private readonly substrateService: SubstrateService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: GeneticAnalysisResultReadyCommand) {
     await this.logger.log('Genetic Analysis Result Ready!');
 
     const geneticAnalysis = command.geneticAnalysis.normalize();
-        // Write Logging Notification Customer Reward From Request Service
+    // Write Logging Notification Customer Reward From Request Service
     const customerNotificationInput: NotificationDto = {
       role: 'Customer',
       entity_type: 'Genetic Analysis Tracking',
@@ -43,7 +43,7 @@ export class GeneticAnalysisResultReadyHandler
         this.substrateService.api as any,
         this.substrateService.pair,
         geneticAnalysis.geneticAnalysisOrderId,
-        () => this.callbackInsertNotificationLogging(customerNotificationInput)
+        () => this.callbackInsertNotificationLogging(customerNotificationInput),
       );
     } catch (error) {
       await this.logger.log(error);
