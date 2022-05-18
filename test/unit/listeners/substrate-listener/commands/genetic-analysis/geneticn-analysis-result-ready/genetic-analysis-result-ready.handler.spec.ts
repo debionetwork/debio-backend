@@ -17,6 +17,7 @@ import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/list
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
+import { NotificationDto } from '../../../../../../../src/endpoints/notification/dto/notification.dto';
 
 jest.mock(
   '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders',
@@ -72,14 +73,34 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
     const setResultReadySpy = jest
       .spyOn(geneticAnalysisOrderCommand, 'setGeneticAnalysisOrderFulfilled')
       .mockImplementation();
+    const callBack = jest
+      .spyOn(geneticAnalysisResultReadyHandler, 'callbackInsertNotificationLogging')
+      .mockImplementation();
     const requestData = createMockGeneticAnalysis(
       GeneticAnalysisStatus.ResultReady,
     );
+
+    const customerNotificationInput: NotificationDto = {
+      role: 'Customer',
+      entity_type: 'Order',
+      entity: 'OrderFulfilled',
+      description: `Congrats! You’ve got <String> DBIO as a reward for completing the request test for <order_id> from the service requested`,
+      read: false,
+      created_at: new Date("1"),
+      updated_at: new Date("1"),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: "orderId",
+    };
+
+    when(callBack)
+      .calledWith(customerNotificationInput)
     when(setResultReadySpy)
       .calledWith(
         substrateServiceMock.api,
         substrateServiceMock.pair,
         requestData.toHuman().geneticAnalysisTrackingId,
+        () => callBack
       )
       .mockReturnValue(genetic_analysis);
 
@@ -93,10 +114,5 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
     );
 
     expect(setResultReadySpy).toHaveBeenCalled();
-    expect(setResultReadySpy).toHaveBeenCalledWith(
-      substrateServiceMock.api,
-      substrateServiceMock.pair,
-      requestData.toHuman().geneticAnalysisTrackingId,
-    );
   });
 });
