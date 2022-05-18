@@ -74,7 +74,10 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       .spyOn(geneticAnalysisOrderCommand, 'setGeneticAnalysisOrderFulfilled')
       .mockImplementation();
     const callBack = jest
-      .spyOn(geneticAnalysisResultReadyHandler, 'callbackInsertNotificationLogging')
+      .spyOn(
+        geneticAnalysisResultReadyHandler,
+        'callbackInsertNotificationLogging',
+      )
       .mockImplementation();
     const requestData = createMockGeneticAnalysis(
       GeneticAnalysisStatus.ResultReady,
@@ -86,21 +89,20 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       entity: 'OrderFulfilled',
       description: `Congrats! You’ve got <String> DBIO as a reward for completing the request test for <order_id> from the service requested`,
       read: false,
-      created_at: new Date("1"),
-      updated_at: new Date("1"),
+      created_at: new Date('1'),
+      updated_at: new Date('1'),
       deleted_at: null,
       from: 'Debio Network',
-      to: "orderId",
+      to: 'orderId',
     };
 
-    when(callBack)
-      .calledWith(customerNotificationInput)
+    when(callBack).calledWith(customerNotificationInput);
     when(setResultReadySpy)
       .calledWith(
         substrateServiceMock.api,
         substrateServiceMock.pair,
         requestData.toHuman().geneticAnalysisTrackingId,
-        () => callBack
+        () => callBack,
       )
       .mockReturnValue(genetic_analysis);
 

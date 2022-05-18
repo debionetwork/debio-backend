@@ -1,5 +1,8 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -100,11 +103,11 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       entity: 'string',
       description: `string`,
       read: false,
-      created_at: new Date("1"),
-      updated_at: new Date("1"),
+      created_at: new Date('1'),
+      updated_at: new Date('1'),
       deleted_at: null,
       from: 'Debio Network',
-      to: "string",
+      to: 'string',
     };
 
     const RESULT_STATUS = { id: 1 };
