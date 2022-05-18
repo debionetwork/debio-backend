@@ -58,6 +58,10 @@ export class LabService {
           labService.certifications = lab._source.certifications;
           labService.verification_status = lab._source.verification_status;
           labService.blockMetaData = lab._source.blockMetaData;
+          labService.stake_amount = lab._source.stake_amount;
+          labService.stake_status = lab._source.stake_status;
+          labService.unstake_at = lab._source.unstake_at;
+          labService.retrieve_unstake_at = lab._source.retrieve_unstake_at;
           labService.lab_id = lab._source.account_id;
 
           result.push(labService);
