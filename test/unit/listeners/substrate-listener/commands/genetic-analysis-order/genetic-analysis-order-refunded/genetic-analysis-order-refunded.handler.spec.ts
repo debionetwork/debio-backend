@@ -110,7 +110,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       to: 'string',
     };
 
-    const RESULT_STATUS = { id: 1 };
+    const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
@@ -125,7 +125,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 16)
-      .mockReturnValue(false);
+      .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalysisOrderRefundedCommand: GeneticAnalysisOrderRefundedCommand =
       new GeneticAnalysisOrderRefundedCommand([GA_ORDER], mockBlockNumber());
@@ -136,5 +136,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+
   });
 });
