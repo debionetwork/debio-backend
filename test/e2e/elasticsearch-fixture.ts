@@ -565,6 +565,39 @@ module.exports = async () => {
   });
   console.log('`Service Request` data injection successful! ✅');
 
+  console.log(
+    'Injecting `country-service-request` into debio-elasticsearch 💉...',
+  );
+
+  await client.index({
+    index: 'country-service-request',
+    refresh: 'wait_for',
+    id: 'ID',
+    body: {
+      country: 'ID',
+      service_request: [
+        {
+          id: '0x5b24c057e5d006472b3a0f0e7b02bdb04da07a8f1bc173c26c1d69118b5c9488',
+          region: 'JK',
+          city: 'Kota Administrasi Jakarta Utara',
+          requester: '5EHVBjYUsmfDRR78xF6m1eecDfYbbRyxD7A5XtdBHSu1U21s',
+          category: 'SNP Microarray',
+          amount: '10,000,000,000,000,000,000',
+        },
+        {
+          id: '0xc33c6eb663904d48de2d6511a7e0dac898975e6f1b2dec78cf8399ebccb730e1',
+          region: 'JK',
+          city: 'Kota Administrasi Jakarta Barat',
+          requester: '5Da5aHSoy3Bxb7Kxo4HuPLY7kE9FKxEg93dVhCKeXJ5JGY25',
+          category: 'Single Gene',
+          amount: '10,000,000,000,000,000,000',
+        },
+      ],
+    },
+  });
+
+  console.log('`country-service-request` data injection successful! ✅');
+
   await client.close();
   console.log('debio-elasticsearch migration successful! 🙌');
 };
