@@ -16,7 +16,6 @@ import {
 import { GeneticAnalysisOrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-refunded/genetic-analysis-order-refunded.handler';
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-import { NotificationDto } from '../../../../../../../src/endpoints/notification/dto/notification.dto';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Genetic Analysis Order Refunded Handler Event', () => {

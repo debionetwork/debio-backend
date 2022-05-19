@@ -110,19 +110,6 @@ describe('Genetic Analysis Order Created Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
-    const customerNotificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'string',
-      entity: 'string',
-      description: `string`,
-      read: false,
-      created_at: new Date('1'),
-      updated_at: new Date('1'),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: 'string',
-    };
-
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 13)
       .mockReturnValue(RESULT_STATUS);
