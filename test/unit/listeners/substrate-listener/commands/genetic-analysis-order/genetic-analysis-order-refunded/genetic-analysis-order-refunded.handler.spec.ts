@@ -97,19 +97,6 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       GeneticAnalysisOrderStatus.Refunded,
     );
 
-    const customerNotificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'string',
-      entity: 'string',
-      description: `string`,
-      read: false,
-      created_at: new Date('1'),
-      updated_at: new Date('1'),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: 'string',
-    };
-
     const RESULT_STATUS = false;
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
@@ -136,6 +123,5 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
-    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
   });
 });

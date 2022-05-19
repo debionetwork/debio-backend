@@ -29,7 +29,7 @@ export class GeneticAnalysisResultReadyHandler
       role: 'Customer',
       entity_type: 'Genetic Analysis Tracking',
       entity: 'Order Fulfilled',
-      description: `Congrats! Your DNA results for ${geneticAnalysis.geneticAnalysisOrderId} are out. Click here to see your order details.`,
+      description: `Your Genetic Analysis results for ${geneticAnalysis.geneticAnalysisOrderId} are out. Click here to see your order details.`,
       read: false,
       created_at: await this.dateTimeProxy.new(),
       updated_at: await this.dateTimeProxy.new(),
