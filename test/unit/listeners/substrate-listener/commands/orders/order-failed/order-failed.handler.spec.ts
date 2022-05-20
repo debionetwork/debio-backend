@@ -1,17 +1,23 @@
-import { SubstrateService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  SubstrateService,
+} from '../../../../../../../src/common';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
+  dateTimeProxyMockFactory,
   escrowServiceMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
 import * as ordersCommand from '@debionetwork/polkadot-provider/lib/command/labs/orders';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;
@@ -28,6 +34,14 @@ describe('Order Failed Handler Event', () => {
         {
           provide: EscrowService,
           useFactory: escrowServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         OrderFailedHandler,
       ],
