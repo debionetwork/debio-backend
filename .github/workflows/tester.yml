@@ -12,7 +12,6 @@ concurrency:
 jobs:
   testing:
     runs-on: ubuntu-latest
-    environment: development
     strategy:
       matrix:
         node-version: ['16']
