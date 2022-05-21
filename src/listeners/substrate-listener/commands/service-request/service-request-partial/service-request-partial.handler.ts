@@ -1,6 +1,6 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceRequestStakingAmountExcessRefundedCommand } from './service-request-excess.command';
+import { ServiceRequestStakingAmountIncreasesdCommand } from './service-request-partial.command';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
@@ -10,12 +10,12 @@ import { NotificationService } from '../../../../../endpoints/notification/notif
 import { NotificationDto } from 'src/endpoints/notification/dto/notification.dto';
 
 @Injectable()
-@CommandHandler(ServiceRequestStakingAmountExcessRefundedCommand)
+@CommandHandler(ServiceRequestStakingAmountIncreasesdCommand)
 export class ServiceRequestCreatedHandler
-  implements ICommandHandler<ServiceRequestStakingAmountExcessRefundedCommand>
+  implements ICommandHandler<ServiceRequestStakingAmountIncreasesdCommand>
 {
   private readonly logger: Logger = new Logger(
-    ServiceRequestStakingAmountExcessRefundedCommand.name,
+    ServiceRequestStakingAmountIncreasesdCommand.name,
   );
 
   constructor(
@@ -24,7 +24,7 @@ export class ServiceRequestCreatedHandler
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
-  async execute(command: ServiceRequestStakingAmountExcessRefundedCommand) {
+  async execute(command: ServiceRequestStakingAmountIncreasesdCommand) {
     await this.logger.log('Service Request Staking Amount Excess Refunded!');
     const serviceRequest = command.request;
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
@@ -38,15 +38,15 @@ export class ServiceRequestCreatedHandler
       currency: 'DBIO',
       parent_id: loggingServiceRequest.id,
       ref_number: serviceRequest[1].toString(),
-      transaction_status: 9,
+      transaction_status: 10,
       transaction_type: 2,
     };
 
     const notificationInput: NotificationDto = {
       role: 'Customer',
       entity_type: 'ServiceRequest',
-      entity: 'ServiceRequestStakingAmountExessRefunded',
-      description: `Your over payment staking service request with ID ${serviceRequest[1]} has been refunded.`,
+      entity: 'ServiceRequestStakingAmountIncreased',
+      description: `Your partial payment staking service request with ID ${serviceRequest[1]} has been increased.`,
       read: false,
       created_at: await this.dateTimeProxy.new(),
       updated_at: await this.dateTimeProxy.new(),
@@ -59,7 +59,7 @@ export class ServiceRequestCreatedHandler
       const isServiceRequestHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
           serviceRequest.hash,
-          9,
+          10,
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
