@@ -11,8 +11,27 @@ concurrency:
   group: builder
 
 jobs:
+  start-runner:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: ${{ secrets.DEV_GOOGLE_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.DEV_SERVICE_ACCOUNT_EMAIL }}
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+      - name: start runner
+        run: gcloud compute instances start gh-runner --zone=asia-southeast1-b
+
   integration-testing:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,8 +59,9 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
           NODE_OPTIONS: '--max_old_space_size=4096'
         run: npm run test:e2e
+
   compute-build-info:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - integration-testing
     outputs:
@@ -84,7 +104,7 @@ jobs:
           echo "::set-output name=pre_release::$PRE_RELEASE"
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - compute-build-info
     steps:
@@ -141,3 +161,23 @@ jobs:
           body: ${{ steps.build_changelog.outputs.changelog }}
           draft: true
           prerelease: ${{ needs.compute-build-info.outputs.pre_release }}
+
+  stop-runner:
+    runs-on: self-hosted
+    needs: [start-runner, build]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: ${{ secrets.DEV_GOOGLE_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.DEV_SERVICE_ACCOUNT_EMAIL }}
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+      - name: stop runner
+        run: gcloud compute instances stop gh-runner --zone=asia-southeast1-b
