@@ -11,7 +11,7 @@ import { NotificationDto } from 'src/endpoints/notification/dto/notification.dto
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountExcessRefundedCommand)
-export class ServiceRequestCreatedHandler
+export class ServiceRequestStakingAmountExcessRefunded
   implements ICommandHandler<ServiceRequestStakingAmountExcessRefundedCommand>
 {
   private readonly logger: Logger = new Logger(

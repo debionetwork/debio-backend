@@ -1,6 +1,6 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ServiceRequestStakingAmountIncreasesdCommand } from './service-request-partial.command';
+import { ServiceRequestStakingAmountIncreasedCommand } from './service-request-partial.command';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
@@ -10,12 +10,12 @@ import { NotificationService } from '../../../../../endpoints/notification/notif
 import { NotificationDto } from 'src/endpoints/notification/dto/notification.dto';
 
 @Injectable()
-@CommandHandler(ServiceRequestStakingAmountIncreasesdCommand)
-export class ServiceRequestCreatedHandler
-  implements ICommandHandler<ServiceRequestStakingAmountIncreasesdCommand>
+@CommandHandler(ServiceRequestStakingAmountIncreasedCommand)
+export class ServiceRequestStakingAmountIncreasedHandler
+  implements ICommandHandler<ServiceRequestStakingAmountIncreasedCommand>
 {
   private readonly logger: Logger = new Logger(
-    ServiceRequestStakingAmountIncreasesdCommand.name,
+    ServiceRequestStakingAmountIncreasedCommand.name,
   );
 
   constructor(
@@ -24,7 +24,7 @@ export class ServiceRequestCreatedHandler
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
-  async execute(command: ServiceRequestStakingAmountIncreasesdCommand) {
+  async execute(command: ServiceRequestStakingAmountIncreasedCommand) {
     await this.logger.log('Service Request Staking Amount Excess Refunded!');
     const serviceRequest = command.request;
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
