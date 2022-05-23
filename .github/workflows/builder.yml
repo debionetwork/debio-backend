@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   start-runner:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -164,7 +164,7 @@ jobs:
           prerelease: ${{ needs.compute-build-info.outputs.pre_release }}
 
   stop-runner:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [start-runner, build]
     steps:
       - name: Checkout code
