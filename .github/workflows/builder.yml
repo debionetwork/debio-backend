@@ -38,6 +38,7 @@ jobs:
       - name: Run Integration Tests
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ./service-account-file.json
+          NODE_OPTIONS: '--max_old_space_size=4096'
         run: npm run test:e2e
   compute-build-info:
     runs-on: ubuntu-latest
