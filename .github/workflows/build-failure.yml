@@ -1,0 +1,35 @@
+name: Stop runner automation
+
+on:
+  workflow_run:
+    workflows: ['Builder']
+    branches: [main]
+    types:
+      - completed
+
+concurrency:
+  group: stop-runner-automation
+
+jobs:
+  stop-runner:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          workload_identity_provider: ${{ secrets.DEV_GOOGLE_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.DEV_SERVICE_ACCOUNT_EMAIL }}
+          project_id: ${{ secrets.DEV_GCP_PROJECT_ID }}
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+      - name: stop runner
+        run: gcloud compute instances stop gh-runner --zone=asia-southeast1-b
