@@ -68,7 +68,7 @@ export class OrderFulfilledHandler
 
       // Logging transaction
       if (isOrderHasBeenInsert) {
-        return
+        return;
       }
       await this.loggingService.create(orderLogging);
 
