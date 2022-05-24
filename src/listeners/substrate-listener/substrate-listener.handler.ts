@@ -12,6 +12,7 @@ import {
   ServiceRequestClaimedCommand,
   ServiceRequestCreatedCommand,
   ServiceRequestProcessedCommand,
+  ServiceRequestStakingAmountRefundedCommand,
   ServiceRequestUnstakedCommand,
   ServiceRequestWaitingForUnstakedCommand,
   ServiceRequestStakingAmountIncreasedCommand,
@@ -67,6 +68,7 @@ const eventRoutes = {
     StakingAmountIncreased: ServiceRequestStakingAmountIncreasedCommand,
     StakingAmountExcessRefunded:
       ServiceRequestStakingAmountExcessRefundedCommand,
+    StakingAmountRefunded: ServiceRequestStakingAmountRefundedCommand,
   },
   orders: {
     OrderCreated: OrderCreatedCommand,
