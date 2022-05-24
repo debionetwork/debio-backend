@@ -67,9 +67,10 @@ export class OrderFulfilledHandler
       };
 
       // Logging transaction
-      if (!isOrderHasBeenInsert) {
-        await this.loggingService.create(orderLogging);
+      if (isOrderHasBeenInsert) {
+        return;
       }
+      await this.loggingService.create(orderLogging);
 
       const labEthAddress: any = await queryEthAdressByAccountId(
         this.substrateService.api as any,
