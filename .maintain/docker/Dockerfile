@@ -24,6 +24,6 @@ COPY --from=builder --chown=debio /app .
 # Set to a non-root built-in user
 USER debio
 # Set environment variable
-ENV NODE_ENV=development HOST=0.0.0.0 PORT=3000
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000
 EXPOSE ${PORT}
 CMD [ "npm", "run", "start:prod"]
