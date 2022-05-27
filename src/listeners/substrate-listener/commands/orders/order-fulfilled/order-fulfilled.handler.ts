@@ -43,7 +43,7 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     await this.logger.log('Order Fulfilled!');
-    
+
     const order: Order = command.orders;
     order.normalize();
 
@@ -172,7 +172,7 @@ export class OrderFulfilledHandler
         await this.rewardService.insert(dataLabLoggingInput);
       }
       await this.escrowService.orderFulfilled(order);
-      
+
       this.logger.log('OrderFulfilled Event');
       this.logger.log('Forwarding payment to lab');
       this.logger.log(`labEthAddress: ${labEthAddress}`);
