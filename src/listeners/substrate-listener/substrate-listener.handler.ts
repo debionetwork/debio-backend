@@ -182,7 +182,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
 
           // sync block
           // TODO await this.syncBlock(currentBlock);
-          
+
           // await this.listenToNewBlock();
         } catch (err) {
           this.logger.log(
