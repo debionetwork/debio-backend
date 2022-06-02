@@ -1,9 +1,14 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderRefundedCommand } from './order-refunded.command';
-import { TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
+import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationService } from '../../../../../endpoints/notification/notification.service';
 
 @Injectable()
 @CommandHandler(OrderRefundedCommand)
@@ -12,7 +17,11 @@ export class OrderRefundedHandler
 {
   private readonly logger: Logger = new Logger(OrderRefundedCommand.name);
 
-  constructor(private readonly loggingService: TransactionLoggingService) {}
+  constructor(
+    private readonly loggingService: TransactionLoggingService,
+    private readonly notificationService: NotificationService,
+    private readonly dateTimeProxy: DateTimeProxy,
+  ) {}
 
   async execute(command: OrderRefundedCommand) {
     const order: Order = command.orders;
@@ -38,7 +47,22 @@ export class OrderRefundedHandler
         transaction_type: 1,
       };
       if (!isOrderHasBeenInsert) {
+        const customerOrderRefundedNotification: NotificationDto = {
+          role: 'Customer',
+          entity_type: 'Genetic Testing Order',
+          entity: 'Order Refunded',
+          description: `Your service fee from ${order.id} has been refunded, kindly check your account balance.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: null,
+          to: order.customerId,
+        };
         await this.loggingService.create(orderLogging);
+        await this.notificationService.insert(
+          customerOrderRefundedNotification,
+        );
       }
     } catch (error) {
       await this.logger.log(error);
