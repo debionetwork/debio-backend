@@ -269,6 +269,22 @@ export function createMockLab() {
   };
 }
 
+export function createMockDnaSample() {
+  return {
+    toHuman: jest.fn(() => ({
+      trackingId: 'string',
+      labId: 'string',
+      ownerId: 'string',
+      status: 'Registered',
+      orderId: 'string',
+      rejectedTitle: 'string',
+      rejectedDescription: 'string',
+      createdAt: 0,
+      updatedAt: 0,
+    })),
+  };
+}
+
 export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
   return {
     toHuman: jest.fn(() => ({
