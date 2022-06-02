@@ -10,6 +10,7 @@ import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
 import {
+  ServiceRequestClaimedCommand,
   ServiceRequestCreatedCommand,
   ServiceRequestProcessedCommand,
   ServiceRequestUnstakedCommand,
@@ -53,6 +54,7 @@ const eventRoutes = {
     ServiceCreated: ServiceCreatedCommand,
   },
   serviceRequest: {
+    ServiceRequestClaimed: ServiceRequestClaimedCommand,
     ServiceRequestCreated: ServiceRequestCreatedCommand,
     ServiceRequestProcessed: ServiceRequestProcessedCommand,
     ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
