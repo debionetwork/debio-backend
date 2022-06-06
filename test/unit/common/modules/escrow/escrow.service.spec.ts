@@ -140,15 +140,6 @@ describe('Escrow Service Unit Tests', () => {
     // Assert
     expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
     expect(ethereumServiceMock.createWallet).not.toBeCalled();
-    // expect(ethereumServiceMock.createWallet).toHaveBeenCalledWith(
-    //   DEBIO_ESCROW_PRIVATE_KEY,
-    // );
-    // expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledTimes(1);
-    // expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledWith(WALLET_MOCK);
-    // expect(TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder).toHaveBeenCalledTimes(1);
-    // expect(TOKEN_CONTRACT_SIGNER_MOCK.fulfillOrder).toHaveBeenCalledWith(
-    //   ORDER_ID,
-    // );
   });
 
   it('should set order paid with substrate', async () => {

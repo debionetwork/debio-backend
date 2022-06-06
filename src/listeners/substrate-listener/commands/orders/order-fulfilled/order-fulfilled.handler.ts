@@ -174,14 +174,8 @@ export class OrderFulfilledHandler
       await this.escrowService.orderFulfilled(order);
 
       this.logger.log('OrderFulfilled Event');
-      // this.logger.log('Forwarding payment to lab');
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
-      // const tx = await this.escrowService.forwardPaymentToSeller(
-      //   labEthAddress,
-      //   amountToForward,
-      // );
-      // this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
     } catch (err) {
       await this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);
