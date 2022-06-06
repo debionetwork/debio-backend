@@ -16,7 +16,9 @@ export class GeneticAnalysisRejectedHandler
 
   async execute(command: GeneticAnalysisRejectedCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
-    await this.logger.log(`Genetic Analysis Rejected With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`);
+    await this.logger.log(
+      `Genetic Analysis Rejected With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
+    );
 
     try {
       await setGeneticAnalysisOrderRefunded(

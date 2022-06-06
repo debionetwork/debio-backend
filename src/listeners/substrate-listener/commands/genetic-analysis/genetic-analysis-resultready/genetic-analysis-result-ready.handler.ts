@@ -16,7 +16,9 @@ export class GeneticAnalysisResultReadyHandler
 
   async execute(command: GeneticAnalysisResultReadyCommand) {
     const geneticAnalysis = command.geneticAnalysis.normalize();
-    await this.logger.log(`Genetic Analysis Result Ready With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`);
+    await this.logger.log(
+      `Genetic Analysis Result Ready With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`,
+    );
 
     try {
       await setGeneticAnalysisOrderFulfilled(
