@@ -43,8 +43,7 @@ export class LabService {
       const labs = await this.elasticsearchService.search(searchObj);
       labs.body.hits.hits.forEach((lab) => {
         lab._source.services = lab._source.services.filter(
-          (serviceFilter) =>
-            serviceFilter.info['category'] === category
+          (serviceFilter) => serviceFilter.info['category'] === category,
         );
         lab._source.services.forEach((labService) => {
           labService.lab_detail = lab._source.info;

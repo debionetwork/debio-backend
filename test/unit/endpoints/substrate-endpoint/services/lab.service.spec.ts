@@ -161,14 +161,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      labServiceMock.getByCountryCityCategory(
-        'XX',
-        'XX',
-        'XX',
-        'XX',
-        1,
-        10,
-      ),
+      labServiceMock.getByCountryCityCategory('XX', 'XX', 'XX', 'XX', 1, 10),
     ).resolves.toEqual({
       result: RESULT,
     });
@@ -190,14 +183,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      labServiceMock.getByCountryCityCategory(
-        'XX',
-        'XX',
-        'XX',
-        'XX',
-        1,
-        10,
-      ),
+      labServiceMock.getByCountryCityCategory('XX', 'XX', 'XX', 'XX', 1, 10),
     ).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
