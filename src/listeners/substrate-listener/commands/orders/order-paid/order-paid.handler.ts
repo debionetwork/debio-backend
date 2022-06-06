@@ -54,7 +54,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           role: 'Lab',
           entity_type: 'Lab',
           entity: 'New Order',
-          description: `You have new order ${order.id} awaiting to proceed.`,
+          description: `A new order (${order.id}) is awaiting process.`,
           read: false,
           created_at: this.dateTimeProxy.new(),
           updated_at: this.dateTimeProxy.new(),

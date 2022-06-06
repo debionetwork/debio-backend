@@ -182,16 +182,16 @@ export class OrderFulfilledHandler
       );
       // Write Logging Notification Customer Reward From Request Service
       const labPaymentNotification: NotificationDto = {
-        role: 'Customer',
-        entity_type: 'Order',
-        entity: 'OrderFulfilled',
-        description: `Congrats! You’ve got ${amountToForward} DAI from completing the request test for ${order.id}.`,
+        role: 'Lab',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Fulfilled',
+        description: `You've received ${amountToForward} DAI for completeing the requested test for ${order.id}.`,
         read: false,
-        created_at: await this.dateTimeProxy.new(),
-        updated_at: await this.dateTimeProxy.new(),
+        created_at: this.dateTimeProxy.new(),
+        updated_at: this.dateTimeProxy.new(),
         deleted_at: null,
         from: 'Debio Network',
-        to: order.customerId,
+        to: order.sellerId,
       };
       this.notificationService.insert(labPaymentNotification);
       this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);

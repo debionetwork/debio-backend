@@ -71,7 +71,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
           role: 'Lab',
           entity_type: 'Genetic Testing Order',
           entity: 'Order Failed',
-          description: `You’ve got ${rewardLab} DAI from the quality control fee.`,
+          description: `You've received ${rewardLab} DAI as quality control fees for ${order.id}.`,
           read: false,
           created_at: this.dateTimeProxy.new(),
           updated_at: this.dateTimeProxy.new(),
