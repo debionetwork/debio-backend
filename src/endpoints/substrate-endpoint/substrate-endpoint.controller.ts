@@ -57,10 +57,6 @@ export class SubstrateController {
   @ApiQuery({ name: 'region' })
   @ApiQuery({ name: 'city' })
   @ApiQuery({ name: 'category' })
-  @ApiQuery({
-    name: 'service_flow',
-    enum: ['RequestTest', 'StakingRequestService'],
-  })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
   async findByCountryCityCategory(
@@ -77,7 +73,6 @@ export class SubstrateController {
       region,
       city,
       category,
-      service_flow,
       Number(page),
       Number(size),
     );
