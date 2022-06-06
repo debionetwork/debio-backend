@@ -15,9 +15,8 @@ export class GeneticAnalysisOrderCreatedHandler
   constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: GeneticAnalysisOrderCreatedCommand) {
-    await this.logger.log('Genetic Analysis Order Created!');
-
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
+    await this.logger.log(`Genetic Analysis Order Created With GA Order ID: ${geneticAnalysisOrder.id}!`);
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =
