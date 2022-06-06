@@ -112,28 +112,29 @@ export class OrderFulfilledHandler
         );
         const servicePrice = +order.prices[0].value * debioToDai;
 
-        // Write Logging Notification Customer Reward From Request Service
-        const customerNotificationInput: NotificationDto = {
-          role: 'Customer',
-          entity_type: 'Order',
-          entity: 'OrderFulfilled',
-          description: `Congrats! You’ve got ${servicePrice} DBIO as a reward for completing the request test for ${order.id} from the service requested`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: order.customerId,
-        };
-
         // Send reward to customer
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.customerId,
           convertToDbioUnitString(servicePrice),
-          () =>
-            this.callbackInsertNotificationLogging(customerNotificationInput),
+          () => {
+            // Write Logging Notification Customer Reward From Request Service
+            const customerNotificationInput: NotificationDto = {
+              role: 'Customer',
+              entity_type: 'Order',
+              entity: 'OrderFulfilled',
+              description: `Congrats! You’ve got ${servicePrice} DBIO as a reward for completing the request test for ${order.id} from the service requested`,
+              read: false,
+              created_at: this.dateTimeProxy.new(),
+              updated_at: this.dateTimeProxy.new(),
+              deleted_at: null,
+              from: 'Debio Network',
+              to: order.customerId,
+            };
+
+            this.callbackInsertNotificationLogging(customerNotificationInput);
+          },
         );
 
         await queryServiceInvoiceByOrderId(
@@ -152,27 +153,29 @@ export class OrderFulfilledHandler
         };
         await this.rewardService.insert(dataCustomerLoggingInput);
 
-        // Write Logging Notification Lab Reward From Request Service
-        const labNotificationInput: NotificationDto = {
-          role: 'Lab',
-          entity_type: 'Reward',
-          entity: 'OrderFulfilled',
-          description: `Congrats! You’ve got ${servicePrice} DBIO as a reward for completing the request test for ${order.id} from the service requested`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: order.sellerId,
-        };
-
         // Send reward to lab
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.sellerId,
           convertToDbioUnitString(servicePrice / 10),
-          () => this.callbackInsertNotificationLogging(labNotificationInput),
+          () => {
+            // Write Logging Notification Lab Reward From Request Service
+            const labNotificationInput: NotificationDto = {
+              role: 'Lab',
+              entity_type: 'Reward',
+              entity: 'Request Service Staking',
+              description: `Congrats! You’ve received ${servicePrice} DBIO for completing the request test for ${order.dnaSampleTrackingId} from the service requested.`,
+              read: false,
+              created_at: this.dateTimeProxy.new(),
+              updated_at: this.dateTimeProxy.new(),
+              deleted_at: null,
+              from: 'Debio Network',
+              to: order.sellerId,
+            };
+
+            this.callbackInsertNotificationLogging(labNotificationInput);
+          },
         );
 
         // Write Logging Reward Lab
