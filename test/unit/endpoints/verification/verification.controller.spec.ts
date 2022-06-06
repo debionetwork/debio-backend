@@ -10,7 +10,7 @@ describe('Verification Controller Unit Tests', () => {
 
   const verificationServiceMockFactory: () => MockType<VerificationService> =
     jest.fn(() => ({
-      vericationLab: jest.fn((entity) => entity),
+      verificationLab: jest.fn((entity) => entity),
       verificationGeneticAnalyst: jest.fn((entity) => entity),
     }));
   let verificationServiceMock: MockType<VerificationService>;
@@ -76,7 +76,7 @@ describe('Verification Controller Unit Tests', () => {
     const API_KEY = 'DEBIO_API_KEY';
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'VERIFICATION_STATUS';
-    verificationServiceMock.vericationLab.mockImplementation(() =>
+    verificationServiceMock.verificationLab.mockImplementation(() =>
       Promise.reject(EXPECTED_RESULT),
     );
 

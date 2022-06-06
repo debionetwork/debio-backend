@@ -146,7 +146,7 @@ describe('Verification Service Unit Tests', () => {
     dateTimeProxyMock.now.mockReturnValue(NOW);
 
     // Act
-    await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
+    await verificationService.verificationLab(ACCOUNT_ID, VERIFICATION_STATUS);
 
     // Assert
     expect(updateLabVerificationStatus).toHaveBeenCalledTimes(1);
@@ -195,7 +195,7 @@ describe('Verification Service Unit Tests', () => {
     dateTimeProxyMock.now.mockReturnValue(NOW);
 
     // Act
-    await verificationService.vericationLab(ACCOUNT_ID, VERIFICATION_STATUS);
+    await verificationService.verificationLab(ACCOUNT_ID, VERIFICATION_STATUS);
 
     // Assert
     expect(updateLabVerificationStatus).toHaveBeenCalledTimes(1);

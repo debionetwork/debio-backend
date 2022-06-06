@@ -21,7 +21,7 @@ export class VerificationService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async vericationLab(substrateAddress: string, verificationStatus: string) {
+  async verificationLab(substrateAddress: string, verificationStatus: string) {
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
       this.subtrateService.api as any,
