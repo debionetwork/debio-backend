@@ -22,7 +22,9 @@ export class GeneticAnalystStakedHandler
 
   async execute(command: GeneticAnalystStakedCommand) {
     const geneticAnalyst = command.geneticAnalyst.normalize();
-    await this.logger.log(`Genetic Analyst Staked With GA ID: ${geneticAnalyst.accountId}!`);
+    await this.logger.log(
+      `Genetic Analyst Staked With GA ID: ${geneticAnalyst.accountId}!`,
+    );
 
     try {
       const isGeneticAnalystHasBeenInsert =

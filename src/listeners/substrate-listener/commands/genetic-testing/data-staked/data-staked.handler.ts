@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DebioConversionService,
@@ -15,6 +15,9 @@ import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 @Injectable()
 @CommandHandler(DataStakedCommand)
 export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
+  private readonly logger: Logger = new Logger(
+    DataStakedCommand.name,
+  );
   constructor(
     private readonly rewardService: RewardService,
     private readonly exchangeCacheService: DebioConversionService,
@@ -23,6 +26,8 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
 
   async execute(command: DataStakedCommand) {
     const dataStaked = command.dataStaked;
+    
+    await this.logger.log(`Data Staked With Hash Data Bounty: ${dataStaked.hashDataBounty}!`)
     const dataOrder = await (
       await this.substrateService.api.query.orders.orders(dataStaked.orderId)
     ).toJSON();
