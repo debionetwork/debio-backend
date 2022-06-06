@@ -23,7 +23,9 @@ export class ServiceRequestUnstakedHandler
 
   async execute(command: ServiceRequestUnstakedCommand) {
     const serviceRequest = command.request.normalize();
-    await this.logger.log(`Service Request Unstaked With Hash: ${serviceRequest.hash}!`);
+    await this.logger.log(
+      `Service Request Unstaked With Hash: ${serviceRequest.hash}!`,
+    );
 
     try {
       const serviceRequestParent =

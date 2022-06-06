@@ -23,7 +23,9 @@ export class ServiceRequestWaitingForUnstakedHandler
 
   async execute(command: ServiceRequestWaitingForUnstakedCommand) {
     const serviceRequest = command.request.normalize();
-    await this.logger.log(`Service Request Waiting For Unstaked With Hash: ${serviceRequest.hash}!`);
+    await this.logger.log(
+      `Service Request Waiting For Unstaked With Hash: ${serviceRequest.hash}!`,
+    );
 
     try {
       const serviceRequestParent =

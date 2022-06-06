@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   LabRegister,
@@ -15,6 +15,9 @@ import { ServiceCreatedCommand } from './service-created.command';
 export class ServiceCreatedHandler
   implements ICommandHandler<ServiceCreatedCommand>
 {
+  private readonly logger: Logger = new Logger(
+    ServiceCreatedCommand.name,
+  );
   constructor(
     private readonly process: ProcessEnvProxy,
     private readonly substrateService: SubstrateService,
@@ -23,6 +26,7 @@ export class ServiceCreatedHandler
 
   async execute(command: ServiceCreatedCommand) {
     const service: Service = command.services;
+    await this.logger.log(`Lab ID: ${service.ownerId} Service Created With ID: ${service.id}`)
     const lab: Lab = await queryLabById(
       this.substrateService.api as any,
       service.ownerId,
