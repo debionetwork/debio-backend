@@ -24,6 +24,7 @@ export class LabRegisteredHandler
 
   async execute(command: LabRegisteredCommand) {
     const lab = command.lab.normalize();
+    await this.logger.log(`Lab ID: ${lab.accountId} is Registered!`)
     const stakingLogging: TransactionLoggingDto = {
       address: lab.accountId,
       amount: lab.stakeAmount,
