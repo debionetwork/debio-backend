@@ -15,9 +15,8 @@ export class GeneticAnalysisRejectedHandler
   constructor(private readonly substrateService: SubstrateService) {}
 
   async execute(command: GeneticAnalysisRejectedCommand) {
-    await this.logger.log('Genetic Analysis Rejected!');
-
     const geneticAnalysis = command.geneticAnalysis.normalize();
+    await this.logger.log(`Genetic Analysis Rejected With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`);
 
     try {
       await setGeneticAnalysisOrderRefunded(

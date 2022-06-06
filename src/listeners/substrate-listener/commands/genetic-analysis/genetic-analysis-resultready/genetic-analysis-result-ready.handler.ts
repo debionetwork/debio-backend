@@ -15,9 +15,8 @@ export class GeneticAnalysisResultReadyHandler
   constructor(private readonly substrateService: SubstrateService) {}
 
   async execute(command: GeneticAnalysisResultReadyCommand) {
-    await this.logger.log('Genetic Analysis Result Ready!');
-
     const geneticAnalysis = command.geneticAnalysis.normalize();
+    await this.logger.log(`Genetic Analysis Result Ready With Tracking ID: ${geneticAnalysis.geneticAnalysisTrackingId}!`);
 
     try {
       await setGeneticAnalysisOrderFulfilled(
