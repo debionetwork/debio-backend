@@ -45,6 +45,23 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.api as any,
       this.substrateService.pair,
       order.id,
+      async () => {
+        // QC notification to lab
+        const labNotification: NotificationDto = {
+          role: 'Lab',
+          entity_type: 'Genetic Testing Order',
+          entity: 'Order Failed',
+          description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: order.sellerId,
+        };
+
+        await this.notificationService.insert(labNotification);
+      },
     );
   }
 
@@ -65,22 +82,6 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.pair,
       order.sellerId,
       rewardLab.toString(),
-      async () => {
-        // insert notification
-        const labNotification: NotificationDto = {
-          role: 'Lab',
-          entity_type: 'Genetic Testing Order',
-          entity: 'Order Failed',
-          description: `You've received ${rewardLab} DAI as quality control fees for ${order.id}.`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: null,
-          to: order.sellerId,
-        };
-        await this.notificationService.insert(labNotification);
-      },
     );
   }
 }

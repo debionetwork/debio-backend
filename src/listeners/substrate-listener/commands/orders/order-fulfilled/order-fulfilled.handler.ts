@@ -173,13 +173,6 @@ export class OrderFulfilledHandler
       }
       await this.escrowService.orderFulfilled(order);
 
-      this.logger.log('OrderFulfilled Event');
-      this.logger.log(`labEthAddress: ${labEthAddress}`);
-      this.logger.log(`amountToForward: ${amountToForward}`);
-      const tx = await this.escrowService.forwardPaymentToSeller(
-        labEthAddress,
-        amountToForward,
-      );
       // Write Logging Notification Customer Reward From Request Service
       const labPaymentNotification: NotificationDto = {
         role: 'Lab',
@@ -193,8 +186,12 @@ export class OrderFulfilledHandler
         from: 'Debio Network',
         to: order.sellerId,
       };
-      this.notificationService.insert(labPaymentNotification);
-      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
+
+      await this.notificationService.insert(labPaymentNotification);
+
+      this.logger.log('OrderFulfilled Event');
+      this.logger.log(`labEthAddress: ${labEthAddress}`);
+      this.logger.log(`amountToForward: ${amountToForward}`);
     } catch (err) {
       await this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);

@@ -355,7 +355,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(2);
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).toHaveBeenCalled();
+    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();

@@ -55,7 +55,7 @@ export class ServiceRequestCreatedHandler
       created_at: await this.dateTimeProxy.new(),
       updated_at: await this.dateTimeProxy.new(),
       deleted_at: null,
-      from: null,
+      from: 'Debio Network',
       to: serviceRequest.requesterAddress,
     };
 

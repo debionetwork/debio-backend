@@ -59,7 +59,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           created_at: this.dateTimeProxy.new(),
           updated_at: this.dateTimeProxy.new(),
           deleted_at: null,
-          from: null,
+          from: 'Debio Network',
           to: order.sellerId,
         };
         await this.notificationService.insert(notificationNewOrder);
