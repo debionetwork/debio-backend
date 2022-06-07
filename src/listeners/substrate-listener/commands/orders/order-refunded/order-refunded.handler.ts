@@ -51,12 +51,12 @@ export class OrderRefundedHandler
           role: 'Customer',
           entity_type: 'Genetic Testing Order',
           entity: 'Order Refunded',
-          description: `Your service fee from ${order.id} has been refunded, kindly check your account balance.`,
+          description: `Your service fee from ${order.dnaSampleTrackingId} has been refunded, kindly check your account balance.`,
           read: false,
           created_at: this.dateTimeProxy.new(),
           updated_at: this.dateTimeProxy.new(),
           deleted_at: null,
-          from: null,
+          from: 'Debio Network',
           to: order.customerId,
         };
         await this.loggingService.create(orderLogging);

@@ -22,6 +22,7 @@ import { NotificationService } from '../../../../../../../src/endpoints/notifica
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     jest
@@ -47,6 +48,7 @@ describe('Order Refunded Handler Event', () => {
 
     orderRefundedHandler = module.get(OrderRefundedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -144,6 +146,21 @@ describe('Order Refunded Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       orderLogging,
+    );
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Customer',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Refunded',
+        description: `Your service fee from ${
+          ORDER.toHuman().dnaSampleTrackingId
+        } has been refunded, kindly check your account balance.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ORDER.toHuman().customerId,
+      }),
     );
   });
 });
