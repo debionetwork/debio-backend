@@ -287,6 +287,42 @@ export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
   };
 }
 
+export function createMockGeneticAnalystService() {
+  return {
+    toHuman: jest.fn(() => ({
+      id: 'string',
+      ownerId: 'string',
+      info: {
+        name: 'string',
+        pricesByCurrency: [
+          {
+            currency: 'string',
+            totalPrice: 1,
+            priceComponents: [
+              {
+                component: 'string',
+                value: 1,
+              },
+            ],
+            additionalPrices: [
+              {
+                component: 'string',
+                value: 1,
+              },
+            ],
+          },
+        ],
+        expectedDuration: {
+          duration: 'string',
+          durationType: 'string',
+        },
+        description: 'string',
+        testResultSample: 'string',
+      },
+    })),
+  };
+}
+
 export function mockBlockNumber(): BlockMetaData {
   return {
     blockHash: 'string',

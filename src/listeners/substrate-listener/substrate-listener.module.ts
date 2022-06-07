@@ -23,6 +23,7 @@ import { NotificationModule } from '../../endpoints/notification/notification.mo
 import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
+import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
     ...LabCommandHandlers,
     ...BlockCommandHandlers,
     ...BlockQueryHandlers,
+    ...GeneticAnalystServiceCommandHandler,
   ],
 })
 export class SubstrateListenerModule {}
