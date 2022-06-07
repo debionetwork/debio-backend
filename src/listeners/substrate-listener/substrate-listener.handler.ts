@@ -14,6 +14,8 @@ import {
   ServiceRequestProcessedCommand,
   ServiceRequestUnstakedCommand,
   ServiceRequestWaitingForUnstakedCommand,
+  ServiceRequestStakingAmountIncreasedCommand,
+  ServiceRequestStakingAmountExcessRefundedCommand,
 } from './commands/service-request';
 import {
   OrderCancelledCommand,
@@ -55,6 +57,9 @@ const eventRoutes = {
     ServiceRequestProcessed: ServiceRequestProcessedCommand,
     ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
     ServiceRequestWaitingForUnstaked: ServiceRequestWaitingForUnstakedCommand,
+    StakingAmountIncreased: ServiceRequestStakingAmountIncreasedCommand,
+    StakingAmountExcessRefunded:
+      ServiceRequestStakingAmountExcessRefundedCommand,
   },
   orders: {
     OrderCreated: OrderCreatedCommand,
