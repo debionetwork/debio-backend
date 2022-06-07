@@ -61,10 +61,10 @@ describe('DNA Sample Result Ready Handler Event', () => {
         role: 'Customer',
         entity_type: 'Genetic Testing Tracking',
         entity: 'Order Fulfilled',
-        description: `Congrats! Your test results for ${dnaSample.orderId} are out. See your test details.`,
+        description: `Your test results for ${dnaSample.orderId} are out. Click here to see your order details.`,
         read: false,
         deleted_at: null,
-        from: null,
+        from: 'Debio Network',
         to: dnaSample.ownerId,
       }),
     );
