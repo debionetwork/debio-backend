@@ -15,13 +15,14 @@ export class GeneticAnalysisService {
         body: {
           query: {
             match: {
-              genetic_analysis_tracking_id: {
+              genetic_analyst_tracking_id: {
                 query: genetic_analyst_tracking_id,
               },
             },
           },
         },
       });
+
       hitsGeneticAnalysis = geneticAnalysis.body.hits.hits;
     } catch (error) {
       if (error?.body?.error?.type !== 'index_not_found_exception') {

@@ -196,24 +196,24 @@ describe('Order Fulfilled Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(queryEthAdressByAccountIdSpy).toHaveBeenCalled();
-    expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledWith(
+    expect(queryEthAdressByAccountIdSpy).not.toHaveBeenCalled();
+    expect(queryEthAdressByAccountIdSpy).not.toHaveBeenCalledWith(
       substrateServiceMock.api,
       ORDER.toHuman().sellerId,
     );
-    expect(queryOrderDetailByOrderIDSpy).toHaveBeenCalled();
-    expect(queryServiceByIdSpy).toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).toHaveBeenCalled();
-    expect(debioConversionServiceMock.getExchange).toHaveBeenCalled();
-    expect(sendRewardsSpy).toHaveBeenCalled();
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalled();
-    expect(queryServiceInvoiceByOrderIdSpy).toHaveBeenCalled();
-    expect(rewardServiceMock.insert).toHaveBeenCalled();
-    expect(sendRewardsSpy).toHaveBeenCalledTimes(2);
-    expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
-    expect(rewardServiceMock.insert).toHaveBeenCalledTimes(2);
-    expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).toHaveBeenCalled();
+    expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
+    expect(queryServiceByIdSpy).not.toHaveBeenCalled();
+    expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
+    expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
+    expect(sendRewardsSpy).not.toHaveBeenCalled();
+    expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
+    expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
+    expect(rewardServiceMock.insert).not.toHaveBeenCalled();
+    expect(sendRewardsSpy).not.toHaveBeenCalled();
+    expect(convertToDbioUnitStringSpy).not.toHaveBeenCalled();
+    expect(rewardServiceMock.insert).not.toHaveBeenCalled();
+    expect(escrowServiceMock.orderFulfilled).not.toHaveBeenCalled();
+    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
@@ -355,7 +355,7 @@ describe('Order Fulfilled Handler Event', () => {
     expect(convertToDbioUnitStringSpy).toHaveBeenCalledTimes(2);
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(2);
     expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).toHaveBeenCalled();
+    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
@@ -605,13 +605,13 @@ describe('Order Fulfilled Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByOrderId,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(queryEthAdressByAccountIdSpy).toHaveBeenCalled();
-    expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledWith(
-      substrateServiceMock.api,
-      ORDER.toHuman().sellerId,
-    );
-    expect(queryOrderDetailByOrderIDSpy).toHaveBeenCalled();
-    expect(queryServiceByIdSpy).toHaveBeenCalled();
+    // expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledTimes(1);
+    // expect(queryEthAdressByAccountIdSpy).toHaveBeenCalledWith(
+    //   substrateServiceMock.api,
+    //   ORDER.toHuman().sellerId,
+    // );
+    expect(queryOrderDetailByOrderIDSpy).not.toHaveBeenCalled();
+    expect(queryServiceByIdSpy).not.toHaveBeenCalled();
     expect(queryServiceInvoiceByOrderIdSpy).not.toHaveBeenCalled();
     expect(debioConversionServiceMock.getExchange).not.toHaveBeenCalled();
     expect(sendRewardsSpy).not.toHaveBeenCalled();
@@ -621,8 +621,8 @@ describe('Order Fulfilled Handler Event', () => {
     expect(sendRewardsSpy).not.toHaveBeenCalledTimes(2);
     expect(convertToDbioUnitStringSpy).not.toHaveBeenCalledTimes(2);
     expect(rewardServiceMock.insert).not.toHaveBeenCalledTimes(2);
-    expect(escrowServiceMock.orderFulfilled).toHaveBeenCalled();
-    expect(escrowServiceMock.forwardPaymentToSeller).toHaveBeenCalled();
+    expect(escrowServiceMock.orderFulfilled).not.toHaveBeenCalled();
+    expect(escrowServiceMock.forwardPaymentToSeller).not.toHaveBeenCalled();
 
     queryEthAdressByAccountIdSpy.mockClear();
     queryOrderDetailByOrderIDSpy.mockClear();
