@@ -1,6 +1,7 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
 import { DateTimeProxy, SentryInterceptor } from '../../common';
+import { ApiResponse } from '@nestjs/swagger';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('gcs')
@@ -11,6 +12,15 @@ export class CloudStorageController {
   ) {}
 
   @Get('/signed-url')
+  @ApiResponse({
+    description: 'Get signedUrl',
+    status: 200,
+    schema: {
+      example: {
+        signedUrl: 'https://.......',
+      },
+    },
+  })
   async GetSignedUrl(
     @Query('filename') filename: string,
     @Query('action') action: 'read' | 'write',
