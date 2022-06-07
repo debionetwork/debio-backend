@@ -15,9 +15,10 @@ export class GeneticAnalysisOrderRefundedHandler
   constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: GeneticAnalysisOrderRefundedCommand) {
-    await this.logger.log('Genetic Analysis Order Refunded!');
-
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
+    await this.logger.log(
+      `Genetic Analysis Order Refunded With GA Order ID: ${geneticAnalysisOrder.id}!`,
+    );
 
     try {
       const isGeneticAnalysisOrderHasBeenInsert =

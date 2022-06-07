@@ -33,11 +33,6 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
                   'services.info.category': { query: category },
                 },
               },
-              {
-                match_phrase_prefix: {
-                  'services.service_flow': { query: service_flow },
-                },
-              },
             ],
           },
         },
@@ -143,7 +138,6 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
         'XX',
         'XX',
         'XX',
-        false,
         1,
         10,
       ),
@@ -167,15 +161,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      labServiceMock.getByCountryCityCategory(
-        'XX',
-        'XX',
-        'XX',
-        'XX',
-        false,
-        1,
-        10,
-      ),
+      labServiceMock.getByCountryCityCategory('XX', 'XX', 'XX', 'XX', 1, 10),
     ).resolves.toEqual({
       result: RESULT,
     });
@@ -197,15 +183,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
 
     // Assert
     expect(
-      labServiceMock.getByCountryCityCategory(
-        'XX',
-        'XX',
-        'XX',
-        'XX',
-        false,
-        1,
-        10,
-      ),
+      labServiceMock.getByCountryCityCategory('XX', 'XX', 'XX', 'XX', 1, 10),
     ).rejects.toMatchObject(ERROR_RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });

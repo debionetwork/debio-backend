@@ -17,9 +17,8 @@ export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
   ) {}
 
   async execute(command: LabUnstakedCommand) {
-    await this.logger.log('Lab Unstaked Successful!');
-
     const lab = command.lab.normalize();
+    await this.logger.log(`Lab ID: ${lab.accountId} Unstaked Successful!`);
 
     try {
       const isLabHasBeenInsert =
