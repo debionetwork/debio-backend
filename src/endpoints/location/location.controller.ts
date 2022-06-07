@@ -1,9 +1,10 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../common/interceptors';
 import { CityService } from './city.service';
 import { CountryService } from './country.service';
 import { StateService } from './state.service';
+import { locationResponse } from './models/response';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('location')
@@ -15,6 +16,18 @@ export class LocationController {
   ) {}
 
   @Get()
+  @ApiOperation({
+    description: `Get list of Location : country, region, or city.\n
+    description: \n
+    1. { country_code: null, state_code: null, city_code: null }                 : get response data list of county. \n
+    2. { country_code: <country_code>, state_code: null, city_code: null }       : get response data list of state.\n
+    3. { country_code: <coutry_code>, state_code: <state_code>, city_code: null }: get response data list of city_code.\n
+    4. { country_code: null, state_code: null, city_code: <city_code> }          : get response data of city.`,
+  })
+  @ApiResponse({
+    description: 'List of location',
+    schema: { example: locationResponse },
+  })
   @ApiQuery({ name: 'country_code', required: false })
   @ApiQuery({ name: 'state_code', required: false })
   @ApiQuery({ name: 'city_id', required: false })
