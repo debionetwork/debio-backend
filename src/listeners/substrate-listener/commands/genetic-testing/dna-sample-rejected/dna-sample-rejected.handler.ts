@@ -22,12 +22,12 @@ export class DnaSampleRejectedCommandHandler
       role: 'Customer',
       entity_type: 'Genetic Testing Tracking',
       entity: 'QC Failed',
-      description: `Your sample from ${dnaSample.orderId} has been rejected. See your test details.`,
+      description: `Your sample from ${dnaSample.trackingId} has been rejected. Click here to see your order details.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),
       deleted_at: null,
-      from: null,
+      from: 'Debio Network',
       to: dnaSample.ownerId,
     };
 
