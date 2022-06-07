@@ -68,7 +68,7 @@ export class VerificationService {
             created_at: this.dateTimeProxy.new(),
             updated_at: this.dateTimeProxy.new(),
             deleted_at: null,
-            from: null,
+            from: 'Debio Network',
             to: substrateAddress,
           };
 
