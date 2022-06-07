@@ -90,10 +90,9 @@ describe.only('Substrate Service Unit Test', () => {
 
     // Assert
     expect(apiPromiseSpy).toHaveBeenCalledTimes(2);
-    expect(mockFunction).toHaveBeenCalledTimes(8);
+    expect(mockFunction).toHaveBeenCalledTimes(6);
     expect(mockFunction).toHaveBeenCalledWith('connected');
     expect(mockFunction).toHaveBeenCalledWith('disconnected');
-    expect(mockFunction).toHaveBeenCalledWith('manual disconnect');
     expect(mockFunction).toHaveBeenCalledWith('error');
   });
 });
