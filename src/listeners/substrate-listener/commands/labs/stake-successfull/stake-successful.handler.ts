@@ -19,9 +19,8 @@ export class LabStakeSuccessfullHandler
   ) {}
 
   async execute(command: LabStakeSuccessfulCommand) {
-    await this.logger.log('Lab Stake Successful!');
-
     const lab = command.labs.normalize();
+    await this.logger.log(`Lab ID: ${lab.accountId} Stake Successful!`);
 
     try {
       const isLabHasBeenInsert =

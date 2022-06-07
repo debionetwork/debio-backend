@@ -24,7 +24,7 @@ export class GeneticAnalystVerificationStatusHandler
     const geneticAnalyst = command.geneticAnalyst.normalize();
 
     await this.logger.log(
-      `Genetic Analyst Verification Status ${geneticAnalyst.verificationStatus}!`,
+      `Genetic Analyst ID: ${geneticAnalyst.accountId} Verify Status ${geneticAnalyst.verificationStatus}!`,
     );
 
     try {

@@ -21,10 +21,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   ) {}
 
   async execute(command: OrderFailedCommand) {
-    await this.logger.log('OrderFailed!');
-
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
 
     if (order.orderFlow === 'StakingRequestService') {
       await finalizeRequest(
