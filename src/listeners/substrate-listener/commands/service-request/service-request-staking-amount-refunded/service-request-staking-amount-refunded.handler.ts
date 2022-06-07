@@ -22,7 +22,7 @@ export class ServiceRequestStakingAmountRefundedHandler
       role: 'Customer',
       entity_type: 'Request Service Staking',
       entity: 'Requested Service Unstaked',
-      description: `Your stake amount from staking ID ${requestId} has been refunded, kindly check your balance.`,
+      description: `Your staked amount from staking ID ${requestId} has been refunded, kindly check your balance.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),

@@ -65,7 +65,7 @@ describe('Service Request Staking Amount Refunded Handler Event', () => {
         role: 'Customer',
         entity_type: 'Request Service Staking',
         entity: 'Requested Service Unstaked',
-        description: `Your stake amount from staking ID ${REQUEST_ID} has been refunded, kindly check your balance.`,
+        description: `Your staked amount from staking ID ${REQUEST_ID} has been refunded, kindly check your balance.`,
         from: 'Debio Network',
         to: REQUESTER_ID,
       }),
