@@ -13,10 +13,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderPaidCommand) {
-    await this.logger.log('OrderPaid!');
-
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
