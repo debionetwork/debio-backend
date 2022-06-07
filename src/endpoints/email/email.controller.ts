@@ -1,5 +1,5 @@
 import { Controller, Param, Post, Res } from '@nestjs/common';
-import { ApiParam } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
   LabRegister,
   labToLabRegister,
@@ -25,6 +25,17 @@ export class EmailEndpointController {
 
   @Post('registered-lab/:lab_id')
   @ApiParam({ name: 'lab_id' })
+  @ApiOperation({
+    description: 'send email to Debio Team when lab registered successful.',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        message: 'Sending Email.',
+      },
+    },
+  })
   async sendMailRegisteredLab(
     @Param('lab_id') lab_id: string,
     @Res() response: Response,
