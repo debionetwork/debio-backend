@@ -2,33 +2,11 @@ import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CountryService } from '../../location/country.service';
 import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
-
-interface RequestsByCountry {
-  country: string;
-  totalRequests: number;
-  totalValue: string;
-  services: Array<ServiceInterface>;
-}
-
-interface CurrencyValueInterface {
-  dbio: number;
-  dai: number;
-  usd: number;
-}
-interface ServiceInterface {
-  category: string;
-  regionCode: string;
-  city: string;
-  totalRequests: number;
-  totalValue: CurrencyValueInterface;
-}
-interface RequestByCountryDictInterface {
-  totalRequests: number;
-  totalValue: string | number;
-  services: {
-    [id: string]: ServiceInterface;
-  };
-}
+import {
+  RequestByCountryDictInterface,
+  RequestsByCountry,
+  ServiceInterface,
+} from '../interface/service-request.interface';
 
 @Injectable()
 export class ServiceRequestService {
@@ -89,6 +67,8 @@ export class ServiceRequestService {
           };
         }
         for (const service of service_request) {
+          const serviceLocationIdentity =
+            service.region + '-' + service.city + '-' + service.category;
           const value = Number(service.amount.split(',').join('')) / 10 ** 18;
           requestByCountryDict[country].totalRequests += 1;
           const currValueByCountry = Number(
@@ -97,35 +77,31 @@ export class ServiceRequestService {
           requestByCountryDict[country].totalValue = currValueByCountry + value;
 
           if (
-            !requestByCountryDict[country]['services'][
-              service.region + '-' + service.city + '-' + service.category
-            ]
+            !requestByCountryDict[country]['services'][serviceLocationIdentity]
           ) {
-            requestByCountryDict[country]['services'][
-              service.region + '-' + service.city + '-' + service.category
-            ] = {
-              category: service.category,
-              regionCode: service.region,
-              city: service.city,
-              totalRequests: 0,
-              totalValue: {
-                dbio: 0,
-                dai: 0,
-                usd: 0,
-              },
-            };
+            requestByCountryDict[country]['services'][serviceLocationIdentity] =
+              {
+                category: service.category,
+                regionCode: service.region,
+                city: service.city,
+                totalRequests: 0,
+                totalValue: {
+                  dbio: 0,
+                  dai: 0,
+                  usd: 0,
+                },
+              };
           }
 
           requestByCountryDict[country]['services'][
-            service.region + '-' + service.city + '-' + service.category
+            serviceLocationIdentity
           ].totalRequests += 1;
           const currValueByCountryServiceCategoryDai = Number(
-            requestByCountryDict[country]['services'][
-              service.region + '-' + service.city + '-' + service.category
-            ].totalValue.dbio,
+            requestByCountryDict[country]['services'][serviceLocationIdentity]
+              .totalValue.dbio,
           );
           requestByCountryDict[country]['services'][
-            service.region + '-' + service.city + '-' + service.category
+            serviceLocationIdentity
           ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
         }
       }
