@@ -108,7 +108,6 @@ jobs:
             PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.DEV_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_TIMER
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.DEV_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -171,7 +170,6 @@ jobs:
               --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
-              --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
               --set-string ingress.className=nginx \
@@ -279,7 +277,6 @@ jobs:
             PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.TESTNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -342,7 +339,6 @@ jobs:
               --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
-              --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
               --set-string ingress.className=nginx \
@@ -450,7 +446,6 @@ jobs:
             PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -513,7 +508,6 @@ jobs:
               --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
-              --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
               --set-string ingress.className=nginx \
@@ -621,7 +615,6 @@ jobs:
             PINATA_PIN_POLICY_REGION_REPL_COUNT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/PINATA_PIN_POLICY_REGION_REPL_COUNT
             UNSTAKE_INTERVAL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_INTERVAL
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
-            GOOGLE_APPLICATION_CREDENTIALS:${{ secrets.MAINNET_GCP_PROJECT_ID }}/GOOGLE_APPLICATION_CREDENTIALS
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
@@ -684,7 +677,6 @@ jobs:
               --set-string config.pinata.pinPolicyRegionReplCount=${{ steps.secrets.outputs.PINATA_PIN_POLICY_REGION_REPL_COUNT }} \
               --set-string config.unstake.interval=${{ steps.secrets.outputs.UNSTAKE_INTERVAL }} \
               --set-string config.unstake.timer=${{ steps.secrets.outputs.UNSTAKE_TIMER }} \
-              --set-string config.google.serviceAccountBase64=${{ steps.secrets.outputs.GOOGLE_APPLICATION_CREDENTIALS }} \
               --set-string config.healthcheck=http://localhost:3000/health/ping \
               --set ingress.enabled=true \
               --set-string ingress.className=nginx \
