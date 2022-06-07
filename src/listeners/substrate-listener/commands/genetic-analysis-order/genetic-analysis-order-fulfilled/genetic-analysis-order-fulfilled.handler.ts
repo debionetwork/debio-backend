@@ -69,7 +69,9 @@ export class GeneticAnalysisOrderFulfilledHandler
           entity_type: 'Genetic Analysis Order',
           entity: 'Order Fulfilled',
           description: `You've received ${+geneticAnalysisOrder.prices[0]
-            .value} DBIO for completing the requested analysis for <Order ID>.`,
+            .value} DBIO for completing the requested analysis for ${
+            geneticAnalysisOrder.geneticAnalysisdTrackingId
+          }.`,
           read: false,
           created_at: this.dateTimeProxy.new(),
           updated_at: this.dateTimeProxy.new(),
