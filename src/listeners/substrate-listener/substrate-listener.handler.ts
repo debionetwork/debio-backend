@@ -172,17 +172,18 @@ export class SubstrateListenerHandler implements OnModuleInit {
             blockNumber: currentBlockNumber,
             blockHash: blockHash.toString(),
           };
+          this.logger.log(`Handle Event Block: ${blockMetaData.blockNumber}`);
 
           for (let i = 0; i < events.length; i++) {
             const { event } = events[i];
             await this.handleEvent(blockMetaData, event);
           }
-
-          await this.substrate.api.isReady;
+          // await this.substrate.api.isReady;
 
           // sync block
           // TODO await this.syncBlock(currentBlock);
-          await this.listenToNewBlock();
+
+          // await this.listenToNewBlock();
         } catch (err) {
           this.logger.log(
             `Handling listen to event catch : ${err.name}, ${err.message}, ${err.stack}`,

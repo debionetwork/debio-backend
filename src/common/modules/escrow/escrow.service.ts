@@ -3,7 +3,12 @@ import { WalletSigner } from 'nestjs-ethers';
 import { EthereumService, ProcessEnvProxy, SubstrateService } from '../..';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
+import AsyncLock from 'async-lock';
 
+const lock = new AsyncLock();
+const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';
+
+let nonce = 0;
 @Injectable()
 export class EscrowService {
   constructor(
@@ -11,6 +16,16 @@ export class EscrowService {
     private readonly substrateService: SubstrateService,
     private readonly ethereumService: EthereumService,
   ) {}
+  private escrowWallet;
+  private provider;
+
+  async onModuleInit(): Promise<void> {
+    this.provider = await this.ethereumService.getEthersProvider();
+    this.escrowWallet = await new ethers.Wallet(
+      this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      this.provider,
+    );
+  }
 
   async createOrder(request) {
     console.log('[createOrder] request: ', request);
@@ -43,17 +58,42 @@ export class EscrowService {
   }
 
   async orderFulfilled(order): Promise<void> {
-    try {
-      const tokenContract = this.ethereumService.getEscrowSmartContract();
-      const wallet: WalletSigner = await this.ethereumService.createWallet(
-        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
-      );
-      const tokenContractWithSigner = tokenContract.connect(wallet);
-      const tx = await tokenContractWithSigner.fulfillOrder(order.id);
-      console.log('fullfilled order customerId :', order.customerId, ' ->', tx);
-    } catch (error) {
-      console.log(error);
-    }
+    let currentNonce;
+    lock
+      .acquire(ESCROW_WALLET_LOCK_KEY, async () => {
+        const _nonce = await this.provider.getTransactionCount(
+          this.escrowWallet.address,
+        );
+        nonce = nonce > _nonce ? nonce : _nonce;
+        const feeData = await this.provider.getFeeData();
+        const gasPrice = feeData.gasPrice;
+        const tokenContract = this.ethereumService.getEscrowSmartContract();
+        const tokenContractWithSigner = tokenContract.connect(
+          this.escrowWallet,
+        );
+        const tx = await tokenContractWithSigner.fulfillOrder(order.id, {
+          nonce,
+          gasPrice,
+        });
+        currentNonce = nonce;
+        this.provider.waitForTransaction(tx.hash).then((_tx) => {
+          console.log(
+            'fullfilled order customerId :',
+            order.customerId,
+            ' ->',
+            _tx,
+          );
+        });
+        nonce += 1;
+      })
+      .then(function () {
+        console.log(
+          `[fulfillOrder] Sent transaction for nonce: ${currentNonce}`,
+        );
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   async setOrderPaidWithSubstrate(orderId: string): Promise<void> {

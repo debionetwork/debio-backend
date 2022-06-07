@@ -6,7 +6,7 @@ import {
   Res,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SentryInterceptor, ProcessEnvProxy } from '../../common';
 import { VerificationService } from './verification.service';
@@ -25,6 +25,7 @@ export class VerificationController {
     name: 'verification_status',
     enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
   })
+  @ApiOperation({ description: 'verification lab.' })
   async updateStatusLab(
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
@@ -53,6 +54,7 @@ export class VerificationController {
 
   @Post('/genetic-analysts')
   @ApiQuery({ name: 'account_id' })
+  @ApiOperation({ description: 'verification genetic analyst.' })
   @ApiQuery({
     name: 'verification_status',
     enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],

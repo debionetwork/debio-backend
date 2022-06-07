@@ -43,6 +43,7 @@ export class OrderFulfilledHandler
 
   async execute(command: OrderFulfilledCommand) {
     await this.logger.log('Order Fulfilled!');
+
     const order: Order = command.orders;
     order.normalize();
 
@@ -53,7 +54,6 @@ export class OrderFulfilledHandler
       const orderHistory = await this.loggingService.getLoggingByOrderId(
         order.id,
       );
-
       // Logging data input
       const orderLogging: TransactionLoggingDto = {
         address: order.customerId,
@@ -171,18 +171,11 @@ export class OrderFulfilledHandler
         };
         await this.rewardService.insert(dataLabLoggingInput);
       }
-
       await this.escrowService.orderFulfilled(order);
 
       this.logger.log('OrderFulfilled Event');
-      this.logger.log('Forwarding payment to lab');
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);
-      const tx = await this.escrowService.forwardPaymentToSeller(
-        labEthAddress,
-        amountToForward,
-      );
-      this.logger.log(`Forward payment transaction sent | tx -> ${tx}`);
     } catch (err) {
       await this.logger.log(err);
       this.logger.log(`Forward payment failed | err -> ${err}`);

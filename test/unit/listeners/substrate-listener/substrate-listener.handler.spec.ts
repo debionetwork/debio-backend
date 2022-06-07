@@ -105,7 +105,7 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(getBlockHashSpy).toBeCalledWith(NUMBER);
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledTimes(1);
+    expect(loggerSpy).toHaveBeenCalledTimes(2);
     expect(loggerSpy).toHaveBeenCalledWith(
       `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
     );
@@ -140,7 +140,7 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(getBlockHashSpy).toBeCalledWith(NUMBER);
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledTimes(1);
+    expect(loggerSpy).toHaveBeenCalledTimes(2);
     expect(loggerSpy).toHaveBeenCalledWith(
       `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
     );
@@ -180,7 +180,7 @@ describe('Substrate Listener Handler Unit Test', () => {
     expect(getBlockHashSpy).toBeCalledWith(NUMBER);
     expect(blockSpy).toHaveBeenCalledTimes(1);
     expect(blockHashSpy).toHaveBeenCalledTimes(1);
-    expect(loggerSpy).toHaveBeenCalledTimes(2);
+    expect(loggerSpy).toHaveBeenCalledTimes(3);
     expect(loggerSpy).toHaveBeenCalledWith(
       `Event listener catch error ${ERROR_MOCK.name}, ${ERROR_MOCK.message}, ${ERROR_MOCK.stack}`,
     );
