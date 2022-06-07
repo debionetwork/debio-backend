@@ -24,10 +24,9 @@ export class OrderCreatedHandler
   ) {}
 
   async execute(command: OrderCreatedCommand) {
-    await this.logger.log('OrderCreated!');
-
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`OrderCreated With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
@@ -55,7 +54,7 @@ export class OrderCreatedHandler
         created_at: await this.dateTimeProxy.new(),
         updated_at: await this.dateTimeProxy.new(),
         deleted_at: null,
-        from: null,
+        from: 'Debio Network',
         to: order.customerId,
       };
 

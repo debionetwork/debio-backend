@@ -1,16 +1,22 @@
-import { SubstrateService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  SubstrateService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisRejectedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysis,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisRejectedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 jest.mock(
   '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders',
@@ -29,6 +35,14 @@ describe('Genetic Analysis Rejected Handler Event', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
         },
         GeneticAnalysisRejectedHandler,
       ],
@@ -74,6 +88,7 @@ describe('Genetic Analysis Rejected Handler Event', () => {
       substrateServiceMock.api,
       substrateServiceMock.pair,
       requestData.toHuman().geneticAnalysisTrackingId,
+      expect.any(Function),
     );
   });
 });

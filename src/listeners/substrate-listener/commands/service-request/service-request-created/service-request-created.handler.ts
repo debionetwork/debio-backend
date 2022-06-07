@@ -33,8 +33,10 @@ export class ServiceRequestCreatedHandler
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
-    await this.logger.log('Service Request Created!');
     const serviceRequest = command.request.normalize();
+    await this.logger.log(
+      `Service Request Created With Hash: ${serviceRequest.hash}!`,
+    );
     const stakingLogging: TransactionLoggingDto = {
       address: serviceRequest.requesterAddress,
       amount: serviceRequest.stakingAmount,
@@ -55,7 +57,7 @@ export class ServiceRequestCreatedHandler
       created_at: await this.dateTimeProxy.new(),
       updated_at: await this.dateTimeProxy.new(),
       deleted_at: null,
-      from: null,
+      from: 'Debio Network',
       to: serviceRequest.requesterAddress,
     };
 
