@@ -133,10 +133,10 @@ describe('Service Request Created Handler Event', () => {
         role: 'Customer',
         entity_type: 'Request Service Staking',
         entity: 'Requested Service Available',
-        description: `Congrats! Your requested service is available now. See your stake service.`,
+        description: `Congrats! Your requested service is available now. Click here to see your order details.`,
         read: false,
         deleted_at: null,
-        from: null,
+        from: 'Debio Network',
         to: requestData[1].toHuman().requesterAddress,
       }),
     );

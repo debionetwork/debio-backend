@@ -22,12 +22,12 @@ export class ServiceRequestClaimedCommandHandler
       role: 'Customer',
       entity_type: 'Request Service Staking',
       entity: 'Requested Service Available',
-      description: `Congrats! Your requested service is available now. See your stake service.`,
+      description: `Congrats! Your requested service is available now. Click here to see your order details.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),
       deleted_at: null,
-      from: null,
+      from: 'Debio Network',
       to: requestData.requesterAddress,
     };
 
