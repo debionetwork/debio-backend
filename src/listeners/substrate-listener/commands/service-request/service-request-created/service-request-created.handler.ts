@@ -33,8 +33,10 @@ export class ServiceRequestCreatedHandler
   ) {}
 
   async execute(command: ServiceRequestCreatedCommand) {
-    await this.logger.log('Service Request Created!');
     const serviceRequest = command.request.normalize();
+    await this.logger.log(
+      `Service Request Created With Hash: ${serviceRequest.hash}!`,
+    );
     const stakingLogging: TransactionLoggingDto = {
       address: serviceRequest.requesterAddress,
       amount: serviceRequest.stakingAmount,

@@ -42,10 +42,9 @@ export class OrderFulfilledHandler
   ) {}
 
   async execute(command: OrderFulfilledCommand) {
-    await this.logger.log('Order Fulfilled!');
-
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`Order Fulfilled With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =

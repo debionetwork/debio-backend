@@ -11,7 +11,6 @@ export class LabService {
     region: string,
     city: string,
     category: string,
-    service_flow: boolean,
     page: number,
     size: number,
   ) {
@@ -31,11 +30,6 @@ export class LabService {
                   'services.info.category': { query: category },
                 },
               },
-              {
-                match_phrase_prefix: {
-                  'services.service_flow': { query: service_flow },
-                },
-              },
             ],
           },
         },
@@ -49,9 +43,7 @@ export class LabService {
       const labs = await this.elasticsearchService.search(searchObj);
       labs.body.hits.hits.forEach((lab) => {
         lab._source.services = lab._source.services.filter(
-          (serviceFilter) =>
-            serviceFilter.info['category'] === category &&
-            serviceFilter.service_flow === service_flow,
+          (serviceFilter) => serviceFilter.info['category'] === category,
         );
         lab._source.services.forEach((labService) => {
           labService.lab_detail = lab._source.info;

@@ -22,10 +22,9 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
   ) {}
 
   async execute(command: OrderPaidCommand) {
-    await this.logger.log('OrderPaid!');
-
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`OrderPaid with Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =

@@ -15,9 +15,9 @@ export class OrderRefundedHandler
   constructor(private readonly loggingService: TransactionLoggingService) {}
 
   async execute(command: OrderRefundedCommand) {
-    await this.logger.log('OrderRefunded!');
     const order: Order = command.orders;
     order.normalize();
+    await this.logger.log(`OrderRefunded With Order ID: ${order.id}!`);
 
     try {
       const isOrderHasBeenInsert =
