@@ -54,7 +54,7 @@ export class OrderCreatedHandler
         created_at: await this.dateTimeProxy.new(),
         updated_at: await this.dateTimeProxy.new(),
         deleted_at: null,
-        from: null,
+        from: 'Debio Network',
         to: order.customerId,
       };
 

@@ -172,6 +172,22 @@ export class OrderFulfilledHandler
       }
       await this.escrowService.orderFulfilled(order);
 
+      // Write Logging Notification Customer Reward From Request Service
+      const labPaymentNotification: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Fulfilled',
+        description: `You've received ${amountToForward} DAI for completeing the requested test for ${order.id}.`,
+        read: false,
+        created_at: this.dateTimeProxy.new(),
+        updated_at: this.dateTimeProxy.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: order.sellerId,
+      };
+
+      await this.notificationService.insert(labPaymentNotification);
+
       this.logger.log('OrderFulfilled Event');
       this.logger.log(`labEthAddress: ${labEthAddress}`);
       this.logger.log(`amountToForward: ${amountToForward}`);

@@ -1,17 +1,23 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-paid/order-paid.handler';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
@@ -26,6 +32,14 @@ describe('Order Paid Handler Event', () => {
         {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         OrderPaidHandler,
       ],
