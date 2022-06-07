@@ -196,9 +196,9 @@ jobs:
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.dev.debio.network \
               --set-string resources.requests.cpu=300m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=512Mi \
+              --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
@@ -367,9 +367,9 @@ jobs:
               --set-string ingress.tls[0].secretName=debio-backend-tls \
               --set-string ingress.tls[0].hosts[0]=api.testnet.debio.network \
               --set-string resources.requests.cpu=300m \
-              --set-string resources.requests.memory=256Mi \
+              --set-string resources.requests.memory=512Mi \
               --set-string resources.limits.cpu=500m \
-              --set-string resources.limits.memory=512Mi \
+              --set-string resources.limits.memory=1024Mi \
               --set replicaCount=1 \
               --set autoscaling.enabled=true \
               --set autoscaling.minReplicas=1 \
