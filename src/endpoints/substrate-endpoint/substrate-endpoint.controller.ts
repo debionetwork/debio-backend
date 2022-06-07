@@ -436,7 +436,7 @@ export class SubstrateController {
             role: payload.role,
             entity_type: 'Reward',
             entity: 'Wallet Binding',
-            description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
+            description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
             read: false,
             created_at: this.dateTime.new(),
             updated_at: this.dateTime.new(),
@@ -445,7 +445,7 @@ export class SubstrateController {
             to: accountId,
           };
 
-          this.notificationService.insert(walletBindingNotification);
+          await this.notificationService.insert(walletBindingNotification);
         },
       );
 

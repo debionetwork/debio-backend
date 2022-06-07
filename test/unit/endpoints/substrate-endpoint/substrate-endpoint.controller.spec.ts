@@ -516,7 +516,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       role: 'Customer',
       entity_type: 'Reward',
       entity: 'Wallet Binding',
-      description: `Congrats! You've got 0.01 DBIO from wallet binding.`,
+      description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
       read: false,
       created_at: dateTimeProxyMock.new(),
       updated_at: dateTimeProxyMock.new(),
