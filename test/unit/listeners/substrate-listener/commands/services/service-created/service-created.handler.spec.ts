@@ -10,6 +10,7 @@ import { ServiceCreatedHandler } from '../../../../../../../src/listeners/substr
 import {
   dateTimeProxyMockFactory,
   mailerManagerMockFactory,
+  mockBlockNumber,
   MockType,
   notificationServiceMockFactory,
   substrateServiceMockFactory,
@@ -17,10 +18,12 @@ import {
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
 
 describe('Service Created Handler Event', () => {
   let serviceCreatedHandle: ServiceCreatedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let mailerManagerMock: MockType<MailerManager>;
 
   const createMockService = (
@@ -28,16 +31,15 @@ describe('Service Created Handler Event', () => {
     serviceFlow: ServiceFlow,
   ) => {
     return [
-      {},
       {
         toHuman: jest.fn(() => ({
           id: 'string',
-          owner_id: 'string',
+          ownerId: 'string',
           currency: 'string',
           price: 'string',
-          qc_price: 'string',
+          qcPrice: 'string',
           info: serviceInfo,
-          service_flow: serviceFlow,
+          serviceFlow: serviceFlow,
         })),
       },
     ];
@@ -75,6 +77,7 @@ describe('Service Created Handler Event', () => {
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);
     mailerManagerMock = module.get(MailerManager); // eslint-disable-line
+    notificationServiceMock = module.get(NotificationService);
   });
 
   it('ServiceCreatedHandler must defined', () => {
@@ -88,7 +91,24 @@ describe('Service Created Handler Event', () => {
       name: 'string',
       category: 'string',
       description: 'string',
-      pricesByCurrency: [],
+      pricesByCurrency: [
+        {
+          currency: 'string',
+          totalPrice: 'string',
+          priceComponents: [
+            {
+              component: 'string',
+              value: 'string',
+            },
+          ],
+          additionalPrices: [
+            {
+              component: 'string',
+              value: 'string',
+            },
+          ],
+        },
+      ],
       expectedDuration: {
         duration: 'XX',
         durationType: 'XX',
@@ -101,8 +121,28 @@ describe('Service Created Handler Event', () => {
     };
     const serviceData = createMockService(serviceInfo, ServiceFlow.RequestTest);
 
+    const service = serviceData[0].toHuman();
+
     when(labSpy)
-      .calledWith(substrateServiceMock.api, serviceData['owner_id'])
+      .calledWith(substrateServiceMock.api, service.ownerId)
       .mockReturnValue({ order_id: 1 });
+
+    const serviceCreatedCommand: ServiceCreatedCommand =
+      new ServiceCreatedCommand(serviceData, mockBlockNumber());
+    await serviceCreatedHandle.execute(serviceCreatedCommand);
+
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Lab',
+        entity_type: 'Lab',
+        entity: 'Add service',
+        description: `You've successfully added your new service - ${service.info.name}.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: service.ownerId,
+      }),
+    );
   });
 });

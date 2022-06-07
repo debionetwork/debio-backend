@@ -50,14 +50,15 @@ export class ServiceCreatedHandler
       role: 'Lab',
       entity_type: 'Lab',
       entity: 'Add service',
-      description: `Congrats! You have successfully added your new service - ${service.info.name}.`,
+      description: `You've successfully added your new service - ${service.info.name}.`,
       read: false,
       created_at: this.dateTimeProxy.new(),
       updated_at: this.dateTimeProxy.new(),
       deleted_at: null,
-      from: null,
+      from: 'Debio Network',
       to: service.ownerId,
     };
+
     await this.notificationService.insert(notificationInput);
   }
 }
