@@ -4,7 +4,7 @@ import { RewardService } from '../../../../../src/common';
 import { MockType, repositoryMockFactory } from '../../../mock';
 import { Repository } from 'typeorm';
 import { Reward } from '../../../../../src/common/modules/reward/models/reward.entity';
-import { RewardDto } from 'src/common/modules/reward/dto/reward.dto';
+import { RewardDto } from '../../../../../src/common/modules/reward/dto/reward.dto';
 
 describe('Reward Service Unit Tests', () => {
   let rewardService: RewardService;

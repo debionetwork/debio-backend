@@ -93,7 +93,7 @@ describe('Verification Service Unit Tests', () => {
     expect(verificationService).toBeDefined();
   });
 
-  it('shoul update genetic analyst status', async () => {
+  it('should update genetic analyst status', async () => {
     const ACCOUNT_ID = 'ACCOUNT_ID';
     const VERIFICATION_STATUS = 'Verified';
 
@@ -162,9 +162,9 @@ describe('Verification Service Unit Tests', () => {
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'Lab',
-        entity_type: 'Submit account registration and verification',
-        entity: 'registration and verification',
-        description: `You've successfully submitted your account verification.`,
+        entity_type: 'Verification',
+        entity: 'Account rejected',
+        description: 'Your account verification has been rejected.',
         read: false,
         deleted_at: null,
         from: 'Debio Network',
@@ -209,13 +209,25 @@ describe('Verification Service Unit Tests', () => {
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(2);
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'Lab',
-        entity_type: 'Submit account registration and verification',
-        entity: 'registration and verification',
-        description: `You've successfully submitted your account verification.`,
+        entity_type: 'Verification',
+        entity: 'Account verified',
+        description: 'Congrats! Your account has been verified.',
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ACCOUNT_ID,
+      }),
+    );
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Lab',
+        entity_type: 'Reward',
+        entity: 'Lab verified',
+        description: 'Congrats! You’ve got 2 DBIO from account verification.',
         read: false,
         deleted_at: null,
         from: 'Debio Network',
