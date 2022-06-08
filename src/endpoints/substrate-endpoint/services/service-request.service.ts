@@ -2,12 +2,11 @@ import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CountryService } from '../../location/country.service';
 import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
-
-interface RequestsByCountry {
-  country: string;
-  totalRequests: number;
-  totalValue: string;
-}
+import {
+  RequestByCountryDictInterface,
+  RequestsByCountry,
+  ServiceInterface,
+} from '../interface/service-request.interface';
 
 @Injectable()
 export class ServiceRequestService {
@@ -25,28 +24,16 @@ export class ServiceRequestService {
   ): Promise<Array<RequestsByCountry>> {
     const requestByCountryList: Array<RequestsByCountry> = [];
 
-    let startIndex = 0;
-    let endIndex = 0;
-
     try {
       const exchangeBalance = await this.exchangeCacheService.getExchange();
       const serviceRequests = await this.elasticsearchService.search({
-        index: 'create-service-request',
+        index: 'country-service-request',
         body: {
-          query: {
-            bool: {
-              must: {
-                match: {
-                  'request.status': { query: 'Open' },
-                },
-              },
-            },
-          },
-          from: 0,
-          size: 10000,
+          from: page ? (page - 1) * size : 0,
+          size: size ? size : 10000,
           sort: [
             {
-              'request.country.keyword': {
+              'country.keyword': {
                 unmapped_type: 'keyword',
                 order: 'asc',
               },
@@ -64,114 +51,89 @@ export class ServiceRequestService {
       const oneDbioEqualToUsd = exchangeBalance?.dbioToUsd || undefined;
 
       // Accumulate totalRequests and totalValue by country
-      const requestByCountryDict = {};
+      const requestByCountryDict: {
+        [country: string]: RequestByCountryDictInterface;
+      } = {};
       for (const req of hits) {
         const {
-          _source: { request },
+          _source: { country, service_request },
         } = req;
 
-        if (!requestByCountryDict[request.country]) {
-          requestByCountryDict[request.country] = {
+        if (!requestByCountryDict[country]) {
+          requestByCountryDict[country] = {
             totalRequests: 0,
             totalValue: 0,
             services: {},
           };
-
-          endIndex++;
         }
+        for (const service of service_request) {
+          const serviceLocationIdentity =
+            service.region + '-' + service.city + '-' + service.category;
+          const value = Number(service.amount.split(',').join('')) / 10 ** 18;
+          requestByCountryDict[country].totalRequests += 1;
+          const currValueByCountry = Number(
+            requestByCountryDict[country].totalValue,
+          );
+          requestByCountryDict[country].totalValue = currValueByCountry + value;
 
-        const value =
-          Number(request.staking_amount.split(',').join('')) / 10 ** 18;
-        requestByCountryDict[request.country].totalRequests += 1;
-        const currValueByCountry = Number(
-          requestByCountryDict[request.country].totalValue,
-        );
-        requestByCountryDict[request.country].totalValue =
-          currValueByCountry + value;
+          if (
+            !requestByCountryDict[country]['services'][serviceLocationIdentity]
+          ) {
+            requestByCountryDict[country]['services'][serviceLocationIdentity] =
+              {
+                category: service.category,
+                regionCode: service.region,
+                city: service.city,
+                totalRequests: 0,
+                totalValue: {
+                  dbio: 0,
+                  dai: 0,
+                  usd: 0,
+                },
+              };
+          }
 
-        if (
-          !requestByCountryDict[request.country]['services'][
-            request.region + '-' + request.city + '-' + request.service_category
-          ]
-        ) {
-          requestByCountryDict[request.country]['services'][
-            request.region + '-' + request.city + '-' + request.service_category
-          ] = {
-            category: request.service_category,
-            regionCode: request.region,
-            city: request.city,
-            totalRequests: 0,
-            totalValue: {
-              dbio: 0,
-              dai: 0,
-              usd: 0,
-            },
-          };
+          requestByCountryDict[country]['services'][
+            serviceLocationIdentity
+          ].totalRequests += 1;
+          const currValueByCountryServiceCategoryDai = Number(
+            requestByCountryDict[country]['services'][serviceLocationIdentity]
+              .totalValue.dbio,
+          );
+          requestByCountryDict[country]['services'][
+            serviceLocationIdentity
+          ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
         }
-
-        requestByCountryDict[request.country]['services'][
-          request.region + '-' + request.city + '-' + request.service_category
-        ].totalRequests += 1;
-        const currValueByCountryServiceCategoryDai = Number(
-          requestByCountryDict[request.country]['services'][
-            request.region + '-' + request.city + '-' + request.service_category
-          ].totalValue.dbio,
-        );
-
-        requestByCountryDict[request.country]['services'][
-          request.region + '-' + request.city + '-' + request.service_category
-        ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
       }
-
-      if (page && size) {
-        startIndex = (page - 1) * size;
-        endIndex = startIndex + (size - 1);
-      }
-
-      // Restructure data into array
-      let index = 0;
 
       for (const countryCode in requestByCountryDict) {
-        if (index >= startIndex && index <= endIndex) {
-          const countryObj = await this.countryService.getByIso2Code(
-            countryCode,
-          );
-          if (!countryObj) {
-            continue;
-          }
-          requestByCountryDict[countryCode]['totalValue'] = {
-            dbio: requestByCountryDict[countryCode]['totalValue'],
-            dai:
-              requestByCountryDict[countryCode]['totalValue'] *
-                oneDbioEqualToDai || 'Conversion Error',
-            usd:
-              requestByCountryDict[countryCode]['totalValue'] *
-                oneDbioEqualToUsd || 'Conversion Error',
-          };
-          const { name } = countryObj;
-          const { totalRequests, services } = requestByCountryDict[countryCode];
-          const { totalValue } = requestByCountryDict[countryCode];
-
-          const servicesArr = Object.values(services).map((s: any) => ({
-            ...s,
-            totalValue: {
-              dbio: s.totalValue.dbio,
-              dai: s.totalValue.dbio * oneDbioEqualToDai || 'Conversion Error',
-              usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
-            },
-          }));
-
-          const requestByCountry = {
-            countryId: countryCode,
-            country: name,
-            totalRequests,
-            totalValue,
-            services: servicesArr,
-          };
-
-          requestByCountryList.push(requestByCountry);
+        const countryObj = await this.countryService.getByIso2Code(countryCode);
+        if (!countryObj) {
+          continue;
         }
-        index++;
+        const { name } = countryObj;
+        const { totalRequests, services } = requestByCountryDict[countryCode];
+        const { totalValue } = requestByCountryDict[countryCode];
+
+        const servicesArr: Array<ServiceInterface> = Object.values(
+          services,
+        ).map((s: any) => ({
+          ...s,
+          totalValue: {
+            dbio: s.totalValue.dbio,
+            dai: s.totalValue.dbio * oneDbioEqualToDai || 'Conversion Error',
+            usd: s.totalValue.dbio * oneDbioEqualToUsd || 'Conversion Error',
+          },
+        }));
+
+        const requestByCountry: RequestsByCountry = {
+          country: name,
+          services: servicesArr,
+          totalRequests: totalRequests,
+          totalValue: totalValue as string,
+        };
+
+        requestByCountryList.push(requestByCountry);
       }
     } catch (error) {
       if (error?.body?.error?.type === 'index_not_found_exception') {
