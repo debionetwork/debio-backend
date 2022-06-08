@@ -1,5 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { dateTimeProxyMockFactory, MockType } from '../../mock';
+import {
+  dateTimeProxyMockFactory,
+  MockType,
+  notificationServiceMockFactory,
+} from '../../mock';
 import { when } from 'jest-when';
 import { RewardService } from '../../../../src/common/modules/reward/reward.service';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
@@ -11,6 +15,7 @@ import {
   updateLabVerificationStatus,
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
+import { NotificationService } from '../../../../src/endpoints/notification/notification.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
@@ -60,6 +65,10 @@ describe('Verification Service Unit Tests', () => {
         { provide: RewardService, useFactory: rewardServiceMockFactory },
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
       ],
     }).compile();
 
