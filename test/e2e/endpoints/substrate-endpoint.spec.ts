@@ -152,6 +152,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     const ETH_ADDRESS =
       '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75';
     const data: WalletBindingDTO = {
+      role: 'Customer',
       accountId: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
       ethAddress:
         '0xf5b6b9e7b3eb3dcd5b70df779fe3ef28ca4332c73d3fcbe9d6021863996bea75',
