@@ -247,7 +247,7 @@ module.exports = async () => {
     refresh: 'wait_for',
     id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
     body: {
-      genetic_analysis_tracking_id: 'EKBZDLPMWE3CN32I10EKB',
+      genetic_analyst_tracking_id: 'EKBZDLPMWE3CN32I10EKB',
       genetic_analyst_id: '5DcWiG6XUcBtoG9XRRoay3LRzGWATbNuWppYyPfeMDEYaeYN',
       owner_id: '5GH6Kqaz3ZewWvDCZPkTnsRezUf2Q7zZ5GmC4XFLNqKdVwA7',
       report_link: 'aaaa',

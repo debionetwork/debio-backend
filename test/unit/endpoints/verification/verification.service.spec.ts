@@ -19,16 +19,16 @@ import { NotificationService } from '../../../../src/endpoints/notification/noti
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
-  sendRewards: jest.fn((_param1, _param2, _param3, _param4, param5) =>
-    param5(),
+  sendRewards: jest.fn(
+    (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   updateLabVerificationStatus: jest.fn(
     // eslint-disable-next-line
-    (_param1, _param2, _param3, _param4, param5) => param5(),
+    (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   updateGeneticAnalystVerificationStatus: jest.fn(
     // eslint-disable-next-line
-    (_param1, _param2, _param3, _param4, param5) => param5(),
+    (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   convertToDbioUnitString: jest.fn(),
 }));
@@ -37,7 +37,7 @@ describe('Verification Service Unit Tests', () => {
   let verificationService: VerificationService;
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-
+  let notificationServiceMock: MockType<NotificationService>;
   let substrateServiceMock: MockType<SubstrateService>;
 
   const API = 'API';
@@ -76,6 +76,7 @@ describe('Verification Service Unit Tests', () => {
     rewardServiceMock = module.get(RewardService);
 
     dateTimeProxyMock = module.get(DateTimeProxy);
+    notificationServiceMock = module.get(NotificationService);
 
     substrateServiceMock = module.get(SubstrateService);
     Reflect.set(substrateServiceMock, 'api', API);
@@ -107,7 +108,19 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
-      expect.any(Function),
+    );
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'GA',
+        entity_type: 'Submit account registration and verification',
+        entity: 'registration and verification',
+        description: `You've successfully submitted your account verification.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ACCOUNT_ID,
+      }),
     );
   });
 
@@ -115,7 +128,7 @@ describe('Verification Service Unit Tests', () => {
     // Arrange
     const NOW = 0;
     const ACCOUNT_ID = 'ACCOUNT_ID';
-    const VERIFICATION_STATUS = 'Unverified';
+    const VERIFICATION_STATUS = 'Rejected';
 
     const PARAM: RewardDto = {
       address: ACCOUNT_ID,
@@ -142,10 +155,22 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
-      expect.any(Function),
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Lab',
+        entity_type: 'Submit account registration and verification',
+        entity: 'registration and verification',
+        description: `You've successfully submitted your account verification.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ACCOUNT_ID,
+      }),
+    );
   });
 
   it('should send reward', async () => {
@@ -179,11 +204,23 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
-      expect.any(Function),
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(1);
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Lab',
+        entity_type: 'Submit account registration and verification',
+        entity: 'registration and verification',
+        description: `You've successfully submitted your account verification.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ACCOUNT_ID,
+      }),
+    );
   });
 });
