@@ -269,6 +269,22 @@ export function createMockLab() {
   };
 }
 
+export function createMockDnaSample() {
+  return {
+    toHuman: jest.fn(() => ({
+      trackingId: 'string',
+      labId: 'string',
+      ownerId: 'string',
+      status: 'Registered',
+      orderId: 'string',
+      rejectedTitle: 'string',
+      rejectedDescription: 'string',
+      createdAt: 0,
+      updatedAt: 0,
+    })),
+  };
+}
+
 export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
   return {
     toHuman: jest.fn(() => ({
@@ -283,6 +299,42 @@ export function createMockGeneticAnalysis(status: GeneticAnalysisStatus) {
       createdAt: '1',
       updatedAt: '1',
       status: status,
+    })),
+  };
+}
+
+export function createMockGeneticAnalystService() {
+  return {
+    toHuman: jest.fn(() => ({
+      id: 'string',
+      ownerId: 'string',
+      info: {
+        name: 'string',
+        pricesByCurrency: [
+          {
+            currency: 'string',
+            totalPrice: 1,
+            priceComponents: [
+              {
+                component: 'string',
+                value: 1,
+              },
+            ],
+            additionalPrices: [
+              {
+                component: 'string',
+                value: 1,
+              },
+            ],
+          },
+        ],
+        expectedDuration: {
+          duration: 'string',
+          durationType: 'string',
+        },
+        description: 'string',
+        testResultSample: 'string',
+      },
     })),
   };
 }

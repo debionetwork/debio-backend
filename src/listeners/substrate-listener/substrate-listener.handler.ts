@@ -10,6 +10,7 @@ import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
 import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
 import {
+  ServiceRequestClaimedCommand,
   ServiceRequestCreatedCommand,
   ServiceRequestProcessedCommand,
   ServiceRequestUnstakedCommand,
@@ -47,12 +48,14 @@ import {
   LabStakeSuccessfulCommand,
   LabUnstakedCommand,
 } from './commands/labs';
+import { GeneticAnalystServiceCreatedCommand } from './commands/genetic-analyst-services';
 
 const eventRoutes = {
   services: {
     ServiceCreated: ServiceCreatedCommand,
   },
   serviceRequest: {
+    ServiceRequestClaimed: ServiceRequestClaimedCommand,
     ServiceRequestCreated: ServiceRequestCreatedCommand,
     ServiceRequestProcessed: ServiceRequestProcessedCommand,
     ServiceRequestUnstaked: ServiceRequestUnstakedCommand,
@@ -88,6 +91,9 @@ const eventRoutes = {
     GeneticAnalystUnstakeSuccessful: GeneticAnalystUnstakedCommand,
     GeneticAnalystUpdateVerificationStatus:
       GeneticAnalystVerificationStatusCommand,
+  },
+  geneticAnalystServices: {
+    GeneticAnalystServiceCreated: GeneticAnalystServiceCreatedCommand,
   },
   labs: {
     LabRegistered: LabRegisteredCommand,

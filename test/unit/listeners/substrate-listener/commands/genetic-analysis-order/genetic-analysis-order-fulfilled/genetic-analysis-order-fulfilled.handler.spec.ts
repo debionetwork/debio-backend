@@ -1,18 +1,25 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderFulfilledCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { when } from 'jest-when';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Genetic Analysis Order Fulfilled Handler Event', () => {
+  let notificationServiceMock: MockType<NotificationService>;
   let geneticAnalysisOrderFulfilledHandler: GeneticAnalysisOrderFulfilledHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
@@ -23,6 +30,14 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
         GeneticAnalysisOrderFulfilledHandler,
       ],
     }).compile();
@@ -31,6 +46,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       GeneticAnalysisOrderFulfilledHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -58,9 +74,17 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
+    const RESULT_LOGGING_HISTORY = {
+      id: 1,
+    };
+
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 15)
       .mockReturnValue(RESULT_STATUS);
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+      .calledWith(GA_ORDER.toHuman().id)
+      .mockReturnValue(RESULT_LOGGING_HISTORY);
 
     const geneticAnalysisOrders: GeneticAnalysisOrderFulfilledCommand =
       new GeneticAnalysisOrderFulfilledCommand([GA_ORDER], mockBlockNumber());
@@ -91,9 +115,17 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     RESULT_TRANSACTION.transaction_status = 0;
     RESULT_TRANSACTION.transaction_hash = 'string';
 
+    const RESULT_LOGGING_HISTORY = {
+      id: 1,
+    };
+
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 15)
       .mockReturnValue(RESULT_STATUS);
+
+    when(transactionLoggingServiceMock.getLoggingByOrderId)
+      .calledWith(GA_ORDER.toHuman().id)
+      .mockReturnValue(RESULT_LOGGING_HISTORY);
 
     const geneticAnalysisOrderFulfilledCommand: GeneticAnalysisOrderFulfilledCommand =
       new GeneticAnalysisOrderFulfilledCommand([GA_ORDER], mockBlockNumber());
@@ -104,5 +136,21 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     const transactionLogging = await transactionLoggingServiceMock.create();
     expect(transactionLogging).toEqual(undefined);
     expect(transactionLoggingServiceMock.create).toBeCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toBeCalledWith(
+      expect.objectContaining({
+        role: 'GA',
+        entity_type: 'Genetic Analysis Order',
+        entity: 'Order Fulfilled',
+        description: `You've received ${+GA_ORDER.toHuman().prices[0]
+          .value} DBIO for completing the requested analysis for ${
+          GA_ORDER.toHuman().geneticAnalysisTrackingId
+        }.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: GA_ORDER.toHuman().sellerId,
+      }),
+    );
   });
 });
