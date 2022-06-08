@@ -1,21 +1,28 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { OrderRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-refunded/order-refunded.handler';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     jest
@@ -27,12 +34,21 @@ describe('Order Refunded Handler Event', () => {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
+        },
         OrderRefundedHandler,
       ],
     }).compile();
 
     orderRefundedHandler = module.get(OrderRefundedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -130,6 +146,21 @@ describe('Order Refunded Handler Event', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
       orderLogging,
+    );
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        role: 'Customer',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Refunded',
+        description: `Your service fee from ${
+          ORDER.toHuman().dnaSampleTrackingId
+        } has been refunded, kindly check your account balance.`,
+        read: false,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: ORDER.toHuman().customerId,
+      }),
     );
   });
 });
