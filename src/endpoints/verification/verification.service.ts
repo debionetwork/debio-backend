@@ -9,6 +9,8 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { NotificationService } from '../notification/notification.service';
+import { NotificationDto } from '../notification/dto/notification.dto';
 
 @Injectable()
 export class VerificationService {
@@ -16,23 +18,33 @@ export class VerificationService {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly rewardService: RewardService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async vericationLab(substrateAddress: string, verificationStatus: string) {
     // Update Status Lab to Verified
-    const updateLabVerificationStatusPromise = new Promise(
-      // eslint-disable-next-line
-      (resolve, _reject) => {
-        updateLabVerificationStatus(
-          this.subtrateService.api as any,
-          this.subtrateService.pair,
-          substrateAddress,
-          <VerificationStatus>verificationStatus,
-          () => resolve('resolved'),
-        );
+    await updateLabVerificationStatus(
+      this.subtrateService.api as any,
+      this.subtrateService.pair,
+      substrateAddress,
+      <VerificationStatus>verificationStatus,
+      async () => {
+        const testResultNotification: NotificationDto = {
+          role: 'Lab',
+          entity_type: 'Submit account registration and verification',
+          entity: 'registration and verification',
+          description: `You've successfully submitted your account verification.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: substrateAddress,
+        };
+
+        await this.notificationService.insert(testResultNotification);
       },
     );
-    await updateLabVerificationStatusPromise;
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
@@ -67,19 +79,28 @@ export class VerificationService {
     accountId: string,
     verificationStatus: string,
   ) {
-    const updateGeneticAnalystVerificationStatusPromise = new Promise(
-      // eslint-disable-next-line
-      (resolve, _reject) => {
-        updateGeneticAnalystVerificationStatus(
-          this.subtrateService.api as any,
-          this.subtrateService.pair,
-          accountId,
-          <VerificationStatus>verificationStatus,
-          () => resolve('resolved'),
-        );
+    await updateGeneticAnalystVerificationStatus(
+      this.subtrateService.api as any,
+      this.subtrateService.pair,
+      accountId,
+      <VerificationStatus>verificationStatus,
+      async () => {
+        const testResultNotification: NotificationDto = {
+          role: 'GA',
+          entity_type: 'Submit account registration and verification',
+          entity: 'registration and verification',
+          description: `You've successfully submitted your account verification.`,
+          read: false,
+          created_at: this.dateTimeProxy.new(),
+          updated_at: this.dateTimeProxy.new(),
+          deleted_at: null,
+          from: 'Debio Network',
+          to: accountId,
+        };
+
+        await this.notificationService.insert(testResultNotification);
       },
     );
-    await updateGeneticAnalystVerificationStatusPromise;
 
     return { message: `${accountId} is ${verificationStatus}` };
   }
