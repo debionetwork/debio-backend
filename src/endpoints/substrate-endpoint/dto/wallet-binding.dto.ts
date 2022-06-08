@@ -6,4 +6,7 @@ export class WalletBindingDTO {
 
   @ApiProperty({ type: String })
   ethAddress: any;
+
+  @ApiProperty({ type: String })
+  role: 'Customer' | 'Lab' | 'GA';
 }
