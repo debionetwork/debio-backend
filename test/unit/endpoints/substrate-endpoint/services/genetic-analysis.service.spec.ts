@@ -14,7 +14,7 @@ describe('Substrate Indexer Genetic Analysis Service Unit Testing', () => {
       body: {
         query: {
           match: {
-            genetic_analyst_tracking_id: {
+            genetic_analysis_tracking_id: {
               query: genetic_analysis_tracking_id,
             },
           },
