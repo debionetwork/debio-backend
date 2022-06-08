@@ -6,7 +6,7 @@ export class GeneticAnalysisService {
   private readonly logger: Logger = new Logger(GeneticAnalysisService.name);
   constructor(private readonly elasticSearchService: ElasticsearchService) {}
 
-  async getGeneticAnalysisByTrackingId(genetic_analyst_tracking_id: string) {
+  async getGeneticAnalysisByTrackingId(genetic_analysis_tracking_id: string) {
     let hitsGeneticAnalysis = [];
 
     try {
@@ -15,8 +15,8 @@ export class GeneticAnalysisService {
         body: {
           query: {
             match: {
-              genetic_analyst_tracking_id: {
-                query: genetic_analyst_tracking_id,
+              genetic_analysis_tracking_id: {
+                query: genetic_analysis_tracking_id,
               },
             },
           },
