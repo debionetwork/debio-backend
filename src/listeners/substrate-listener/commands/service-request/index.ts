@@ -4,6 +4,7 @@ export * from './service-request-unstaked/service-request-unstaked.command';
 export * from './service-request-waiting-for-unstaked/service-request-waiting-for-unstaked.command';
 export * from './service-request-excess/service-request-excess.command';
 export * from './service-request-partial/service-request-partial.command';
+export * from './service-request-claimed/service-request-claimed.command';
 
 import { ServiceRequestCreatedHandler } from './service-request-created/service-request-created.handler';
 import { ServiceRequestProcessedHandler } from './service-request-processed/service-request-processed.handler';
@@ -11,6 +12,7 @@ import { ServiceRequestUnstakedHandler } from './service-request-unstaked/servic
 import { ServiceRequestWaitingForUnstakedHandler } from './service-request-waiting-for-unstaked/service-request-waiting-for-unstaked.handler';
 import { ServiceRequestStakingAmountIncreasedHandler } from './service-request-partial/service-request-partial.handler';
 import { ServiceRequestStakingAmountExcessRefunded } from './service-request-excess/service-request-excess.handler';
+import { ServiceRequestClaimedCommandHandler } from './service-request-claimed/service-request-claimed.handler';
 
 export const ServiceRequestCommandHandlers = [
   ServiceRequestCreatedHandler,
@@ -19,4 +21,5 @@ export const ServiceRequestCommandHandlers = [
   ServiceRequestWaitingForUnstakedHandler,
   ServiceRequestStakingAmountIncreasedHandler,
   ServiceRequestStakingAmountExcessRefunded,
+  ServiceRequestClaimedCommandHandler,
 ];
