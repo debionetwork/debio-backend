@@ -19,7 +19,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "npm run test:unit",
-    "test:unit": "jest --config ./test/unit/jest-unit.json",
+    "test:unit": "jest --config ./test/unit/jest-unit.json --runInBand",
     "test:watch": "jest --config ./test/unit/jest-unit.json --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@aginix/nestjs-gcloud-storage": "^1.2.0",
-    "@debionetwork/polkadot-provider": "0.0.10",
+    "@debionetwork/polkadot-provider": "0.0.11",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs-query/query-typeorm": "^0.28.1",
