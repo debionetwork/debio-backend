@@ -109,30 +109,31 @@ export class OrderFulfilledHandler
         const debioToDai = Number(
           (await this.exchangeCacheService.getExchange())['dbioToDai'],
         );
-        const servicePrice = +order.prices[0].value * debioToDai;
-
-        // Write Logging Notification Customer Reward From Request Service
-        const customerNotificationInput: NotificationDto = {
-          role: 'Customer',
-          entity_type: 'Order',
-          entity: 'OrderFulfilled',
-          description: `Congrats! You’ve got ${servicePrice} DBIO as a reward for completing the request test for ${order.id} from the service requested`,
-          read: false,
-          created_at: await this.dateTimeProxy.new(),
-          updated_at: await this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: order.customerId,
-        };
+        const totalPrice = amountToForward * debioToDai;
 
         // Send reward to customer
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.customerId,
-          convertToDbioUnitString(servicePrice),
-          () =>
-            this.callbackInsertNotificationLogging(customerNotificationInput),
+          convertToDbioUnitString(totalPrice),
+          () => {
+            // Write Logging Notification Customer Reward From Request Service
+            const customerNotificationInput: NotificationDto = {
+              role: 'Customer',
+              entity_type: 'Order',
+              entity: 'OrderFulfilled',
+              description: `Congrats! You’ve received ${totalPrice} DBIO as a reward for completing the request test for ${order.dnaSampleTrackingId} from the service requested, kindly check your balance.`,
+              read: false,
+              created_at: this.dateTimeProxy.new(),
+              updated_at: this.dateTimeProxy.new(),
+              deleted_at: null,
+              from: 'Debio Network',
+              to: order.customerId,
+            };
+
+            this.callbackInsertNotificationLogging(customerNotificationInput);
+          },
         );
 
         await queryServiceInvoiceByOrderId(
@@ -144,7 +145,7 @@ export class OrderFulfilledHandler
         const dataCustomerLoggingInput: RewardDto = {
           address: order.customerId,
           ref_number: order.id,
-          reward_amount: servicePrice,
+          reward_amount: totalPrice,
           reward_type: 'Customer Stake Request Service',
           currency: 'DBIO',
           created_at: new Date(),
@@ -155,15 +156,36 @@ export class OrderFulfilledHandler
         await sendRewards(
           this.substrateService.api as any,
           this.substrateService.pair,
-          order.customerId,
-          convertToDbioUnitString(servicePrice / 10),
+          order.sellerId,
+          convertToDbioUnitString(totalPrice / 10),
+          () => {
+            // Write Logging Notification Lab Reward From Request Service
+            const labNotificationInput: NotificationDto = {
+              role: 'Lab',
+              entity_type: 'Reward',
+              entity: 'Request Service Staking',
+              description: `Congrats! You’ve received ${
+                totalPrice / 10
+              } DBIO for completing the request test for ${
+                order.dnaSampleTrackingId
+              } from the service requested.`,
+              read: false,
+              created_at: this.dateTimeProxy.new(),
+              updated_at: this.dateTimeProxy.new(),
+              deleted_at: null,
+              from: 'Debio Network',
+              to: order.sellerId,
+            };
+
+            this.callbackInsertNotificationLogging(labNotificationInput);
+          },
         );
 
         // Write Logging Reward Lab
         const dataLabLoggingInput: RewardDto = {
           address: order.customerId,
           ref_number: order.id,
-          reward_amount: servicePrice / 10,
+          reward_amount: totalPrice / 10,
           reward_type: 'Lab Provide Requested Service',
           currency: 'DBIO',
           created_at: new Date(),
