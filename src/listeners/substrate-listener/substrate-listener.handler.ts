@@ -48,7 +48,11 @@ import {
   LabUnstakedCommand,
 } from './commands/labs';
 import { GeneticAnalystServiceCreatedCommand } from './commands/genetic-analyst-services';
-import { DataStakedCommand, DnaSampleRejectedCommand, DnaSampleResultReadyCommand } from './commands/genetic-testing';
+import {
+  DataStakedCommand,
+  DnaSampleRejectedCommand,
+  DnaSampleResultReadyCommand,
+} from './commands/genetic-testing';
 
 const eventRoutes = {
   services: {
