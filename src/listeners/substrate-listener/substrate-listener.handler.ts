@@ -8,7 +8,6 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { BlockMetaData } from './models/block-metadata.event-model';
 import { ServiceCreatedCommand } from './commands/services/service-created/service-created.command';
-import { DataStakedCommand } from './commands/genetic-testing/data-staked/data-staked.command';
 import {
   ServiceRequestClaimedCommand,
   ServiceRequestCreatedCommand,
@@ -49,6 +48,11 @@ import {
   LabUnstakedCommand,
 } from './commands/labs';
 import { GeneticAnalystServiceCreatedCommand } from './commands/genetic-analyst-services';
+import {
+  DataStakedCommand,
+  DnaSampleRejectedCommand,
+  DnaSampleResultReadyCommand,
+} from './commands/genetic-testing';
 
 const eventRoutes = {
   services: {
@@ -74,6 +78,8 @@ const eventRoutes = {
   },
   geneticTesting: {
     DataStaked: DataStakedCommand,
+    DnaSampleResultReady: DnaSampleResultReadyCommand,
+    DnaSampleRejected: DnaSampleRejectedCommand,
   },
   geneticAnalysisOrders: {
     GeneticAnalysisOrderPaid: GeneticAnalysisOrderPaidCommand,
