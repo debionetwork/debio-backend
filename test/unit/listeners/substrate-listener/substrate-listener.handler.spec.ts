@@ -17,7 +17,7 @@ import {
   TO_HUMAN_MOCK,
 } from './substrate-listener.mock.data';
 import { Logger } from '@nestjs/common';
-import { BlockMetaData } from 'src/listeners/substrate-listener/models/block-metadata.event-model';
+import { BlockMetaData } from '../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 
 const eventsSpy = jest.spyOn(API_MOCK.query.system, 'events');
 const getBlockSpy = jest.spyOn(API_MOCK.rpc.chain, 'getBlock');

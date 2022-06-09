@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RatingModule } from '../../../src/endpoints/rating/rating.module';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
-import { CreateRatingDto } from 'src/endpoints/rating/dto/create-rating.dto';
+import { CreateRatingDto } from '../../../src/endpoints/rating/dto/create-rating.dto';
 import { dummyCredentials } from '../config';
 
 describe('Rating Controller (e2e)', () => {

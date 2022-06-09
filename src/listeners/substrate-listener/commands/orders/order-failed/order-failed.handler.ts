@@ -44,24 +44,22 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.api as any,
       this.substrateService.pair,
       order.id,
-      async () => {
-        // QC notification to lab
-        const labNotification: NotificationDto = {
-          role: 'Lab',
-          entity_type: 'Genetic Testing Order',
-          entity: 'Order Failed',
-          description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: order.sellerId,
-        };
-
-        await this.notificationService.insert(labNotification);
-      },
     );
+    // QC notification to lab
+    const labNotification: NotificationDto = {
+      role: 'Lab',
+      entity_type: 'Genetic Testing Order',
+      entity: 'Order Failed',
+      description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
+      read: false,
+      created_at: this.dateTimeProxy.new(),
+      updated_at: this.dateTimeProxy.new(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: order.sellerId,
+    };
+
+    await this.notificationService.insert(labNotification);
   }
 
   callbackSendReward(order: Order): void {
