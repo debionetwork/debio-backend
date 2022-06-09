@@ -14,7 +14,7 @@ export class MailerManager {
     this.mailerService.sendMail({
       to: to,
       subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
-      template: './customer-staking-request-service',
+      template: 'customer-staking-request-service',
       context: context,
     });
   }
@@ -38,7 +38,7 @@ export class MailerManager {
       this.mailerService.sendMail({
         to: to,
         subject: `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`,
-        template: './lab-register',
+        template: 'lab-register',
         context: {
           profile_image: context.profile_image,
           email: context.email,
