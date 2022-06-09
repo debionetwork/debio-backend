@@ -28,23 +28,24 @@ export class VerificationService {
       this.subtrateService.pair,
       substrateAddress,
       <VerificationStatus>verificationStatus,
-      async () => {
-        const testResultNotification: NotificationDto = {
-          role: 'Lab',
-          entity_type: 'Submit account registration and verification',
-          entity: 'registration and verification',
-          description: `You've successfully submitted your account verification.`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: substrateAddress,
-        };
-
-        await this.notificationService.insert(testResultNotification);
-      },
     );
+
+    const verificationLabNotificationTime = this.dateTimeProxy.new();
+
+    const testResultNotification: NotificationDto = {
+      role: 'Lab',
+      entity_type: 'Submit account registration and verification',
+      entity: 'registration and verification',
+      description: `You've successfully submitted your account verification.`,
+      read: false,
+      created_at: verificationLabNotificationTime,
+      updated_at: verificationLabNotificationTime,
+      deleted_at: null,
+      from: 'Debio Network',
+      to: substrateAddress,
+    };
+
+    await this.notificationService.insert(testResultNotification);
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
@@ -84,23 +85,24 @@ export class VerificationService {
       this.subtrateService.pair,
       accountId,
       <VerificationStatus>verificationStatus,
-      async () => {
-        const testResultNotification: NotificationDto = {
-          role: 'GA',
-          entity_type: 'Submit account registration and verification',
-          entity: 'registration and verification',
-          description: `You've successfully submitted your account verification.`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: accountId,
-        };
-
-        await this.notificationService.insert(testResultNotification);
-      },
     );
+
+    const gaNotificationTime = this.dateTimeProxy.new();
+
+    const testResultNotification: NotificationDto = {
+      role: 'GA',
+      entity_type: 'Submit account registration and verification',
+      entity: 'registration and verification',
+      description: `You've successfully submitted your account verification.`,
+      read: false,
+      created_at: gaNotificationTime,
+      updated_at: gaNotificationTime,
+      deleted_at: null,
+      from: 'Debio Network',
+      to: accountId,
+    };
+
+    await this.notificationService.insert(testResultNotification);
 
     return { message: `${accountId} is ${verificationStatus}` };
   }
