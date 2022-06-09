@@ -5,7 +5,7 @@ export const geneticAnalysisOrdersDataMock = {
   customerBoxPublicKey: 'string',
   sellerId: 'string',
   geneticDataId: 'string',
-  geneticAnalysisdTrackingId: 'string',
+  geneticAnalysisTrackingId: 'string',
   currency: 'DAI',
   prices: [
     {
