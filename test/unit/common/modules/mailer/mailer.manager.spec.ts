@@ -34,7 +34,7 @@ describe('Mailer Manager Unit Tests', () => {
     const EXPECTED_PARAMS = {
       to: TO,
       subject: `New Service Request - ${CONTEXT.service_name} - ${CONTEXT.city}, ${CONTEXT.state}, ${CONTEXT.country}`,
-      template: './customer-staking-request-service',
+      template: 'customer-staking-request-service',
       context: CONTEXT,
     };
 
@@ -54,7 +54,7 @@ describe('Mailer Manager Unit Tests', () => {
     const EXPECTED_PARAMS = {
       to: TO,
       subject: `New Lab Register – ${CONTEXT.lab_name} - ${CONTEXT.city}, ${CONTEXT.state}, ${CONTEXT.country}`,
-      template: './lab-register',
+      template: 'lab-register',
       context: {
         profile_image: CONTEXT.profile_image,
         email: CONTEXT.email,
