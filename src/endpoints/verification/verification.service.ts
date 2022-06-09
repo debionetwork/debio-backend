@@ -21,7 +21,8 @@ export class VerificationService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  async vericationLab(substrateAddress: string, verificationStatus: string) {
+  async verificationLab(substrateAddress: string, verificationStatus: string) {
+    const currentTime = this.dateTimeProxy.new();
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
       this.subtrateService.api as any,
@@ -30,37 +31,65 @@ export class VerificationService {
       <VerificationStatus>verificationStatus,
     );
 
-    const verificationLabNotificationTime = this.dateTimeProxy.new();
-
-    const testResultNotification: NotificationDto = {
+    // insert notification
+    const notificationInput: NotificationDto = {
       role: 'Lab',
-      entity_type: 'Submit account registration and verification',
-      entity: 'registration and verification',
-      description: `You've successfully submitted your account verification.`,
+      entity_type: 'Verification',
+      entity: '',
+      description: '',
       read: false,
-      created_at: verificationLabNotificationTime,
-      updated_at: verificationLabNotificationTime,
+      created_at: currentTime,
+      updated_at: currentTime,
       deleted_at: null,
       from: 'Debio Network',
       to: substrateAddress,
     };
 
-    await this.notificationService.insert(testResultNotification);
+    switch (verificationStatus) {
+      case VerificationStatus.Verified:
+        notificationInput.entity = 'Account verified';
+        notificationInput.description =
+          'Congrats! Your account has been verified.';
+        break;
+      case VerificationStatus.Revoked:
+        notificationInput.entity = 'Account revoked';
+        notificationInput.description = 'Your account has been revoked.';
+        break;
+      case VerificationStatus.Rejected:
+        notificationInput.entity = 'Account rejected';
+        notificationInput.description =
+          'Your account verification has been rejected.';
+        break;
+    }
+
+    await this.notificationService.insert(notificationInput);
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
       const reward = 2;
       // eslint-disable-next-line
-      const sendRewardsPromise = new Promise((resolve, _reject) => {
-        sendRewards(
-          this.subtrateService.api as any,
-          this.subtrateService.pair,
-          substrateAddress,
-          convertToDbioUnitString(reward),
-          () => resolve('resolved'),
-        );
-      });
-      await sendRewardsPromise;
+      await sendRewards(
+        this.subtrateService.api as any,
+        this.subtrateService.pair,
+        substrateAddress,
+        convertToDbioUnitString(reward),
+      );
+
+      // insert notification
+      const notificationInput: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Reward',
+        entity: 'Lab verified',
+        description: 'Congrats! You’ve got 2 DBIO from account verification.',
+        read: false,
+        created_at: currentTime,
+        updated_at: currentTime,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: substrateAddress,
+      };
+
+      await this.notificationService.insert(notificationInput);
 
       //Write to Reward Logging
       const dataInput: RewardDto = {
@@ -80,6 +109,7 @@ export class VerificationService {
     accountId: string,
     verificationStatus: string,
   ) {
+    const currentTime = this.dateTimeProxy.new();
     await updateGeneticAnalystVerificationStatus(
       this.subtrateService.api as any,
       this.subtrateService.pair,

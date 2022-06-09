@@ -7,7 +7,7 @@ import {
   TransactionLoggingService,
 } from '../../../../../common';
 import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from 'src/endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountIncreasedCommand)

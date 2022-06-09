@@ -36,7 +36,7 @@ export class VerificationController {
       if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
         return response.status(401).send('debio-api-key header is required');
       }
-      await this.verificationService.vericationLab(
+      await this.verificationService.verificationLab(
         account_id,
         verification_status,
       );
