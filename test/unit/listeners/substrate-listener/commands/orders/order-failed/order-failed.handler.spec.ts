@@ -80,7 +80,6 @@ describe('Order Failed Handler Event', () => {
       substrateServiceMock.api,
       substrateServiceMock.pair,
       orderCancelledCommand.orders.id,
-      expect.any(Function),
     );
   });
 });
