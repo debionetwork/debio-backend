@@ -8,6 +8,8 @@ import {
   DateTimeModule,
   TransactionLoggingModule,
   SubstrateModule,
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
 } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
@@ -19,12 +21,16 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
   imports: [
     LocationModule,
     DebioConversionModule,
+    GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        node: googleSecretManagerService.elasticsearchNode,
         auth: {
-          username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD,
+          username: googleSecretManagerService.elasticsearchUsername,
+          password: googleSecretManagerService.elasticsearchPassword,
         },
       }),
     }),

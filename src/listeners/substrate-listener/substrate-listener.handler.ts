@@ -1,5 +1,9 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { ProcessEnvProxy, SubstrateService } from '../../common';
+import {
+  GoogleSecretManagerService,
+  ProcessEnvProxy,
+  SubstrateService,
+} from '../../common';
 import { Header, Event } from '@polkadot/types/interfaces';
 import {
   SetLastSubstrateBlockCommand,
@@ -124,7 +128,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
     private readonly substrate: SubstrateService,
     private readonly commandBus: CommandBus,
     private queryBus: QueryBus,
-    private process: ProcessEnvProxy,
+    private googleSecretManagerService: GoogleSecretManagerService,
   ) {}
 
   async onModuleInit() {
@@ -231,7 +235,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
           );
 
           // check if env is development
-          if (this.process.env.NODE_ENV === 'development') {
+          if (this.googleSecretManagerService.nodeEnv === 'development') {
             this.lastBlock = await this.queryBus.execute(
               new GetLastSubstrateBlockQuery(),
             );

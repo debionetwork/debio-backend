@@ -2,29 +2,39 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { join } from 'path';
+import {
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+} from '../google-secret-manager';
 import { MailerManager } from './mailer.manager';
 
 require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
-    MailerModule.forRoot({
-      transport: {
-        host: 'smtp.gmail.com',
-        secure: false,
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.PASS_EMAIL,
+    GoogleSecretManagerModule,
+    MailerModule.forRootAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          secure: false,
+          auth: {
+            user: googleSecretManagerService.email,
+            pass: googleSecretManagerService.passEmail,
+          },
         },
-      },
-      template: {
-        dir: join(__dirname, 'templates'),
-        adapter: new HandlebarsAdapter({
-          colNum: (value) => parseInt(value) + 1,
-        }), // or new PugAdapter() or new EjsAdapter()
-        options: {
-          strict: true,
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter({
+            colNum: (value) => parseInt(value) + 1,
+          }), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
         },
-      },
+      }),
     }),
   ],
   providers: [MailerManager],

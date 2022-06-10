@@ -3,6 +3,8 @@ import { EscrowModule } from '../../common/modules/escrow/escrow.module';
 import {
   DateTimeModule,
   DebioConversionModule,
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
   MailModule,
   NotificationModule,
   ProcessEnvModule,
@@ -36,12 +38,16 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     CqrsModule,
     DateTimeModule,
     NotificationModule,
+    GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        node: googleSecretManagerService.elasticsearchNode,
         auth: {
-          username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD,
+          username: googleSecretManagerService.elasticsearchUsername,
+          password: googleSecretManagerService.elasticsearchPassword,
         },
       }),
     }),

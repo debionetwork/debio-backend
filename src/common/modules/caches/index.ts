@@ -1,16 +1,26 @@
 import { CacheModule, Module } from '@nestjs/common';
 import { CachesService } from './caches.service';
 import * as redisStore from 'cache-manager-redis-store';
+import {
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+} from '../google-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
-    CacheModule.register({
-      store: redisStore,
-      host: process.env.HOST_REDIS,
-      port: process.env.PORT_REDIS,
-      auth_pass: process.env.REDIS_PASSWORD,
+    GoogleSecretManagerModule,
+    CacheModule.registerAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        store: redisStore,
+        host: googleSecretManagerService.hostRedis,
+        port: googleSecretManagerService.portRedis,
+        auth_pass: googleSecretManagerService.redisPassword,
+      }),
     }),
   ],
   providers: [CachesService],

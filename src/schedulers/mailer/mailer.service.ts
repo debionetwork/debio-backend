@@ -6,6 +6,7 @@ import {
   SubstrateService,
   labToLabRegister,
   LabRegister,
+  GoogleSecretManagerService,
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
 
@@ -14,6 +15,7 @@ export class MailerService {
   private logger: Logger = new Logger(MailerService.name);
   private isRunning = false;
   constructor(
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly mailerManager: MailerManager,
     private readonly emailNotificationService: EmailNotificationService,
     private readonly substrateService: SubstrateService,
@@ -41,7 +43,7 @@ export class MailerService {
         );
 
         await this.mailerManager.sendLabRegistrationEmail(
-          process.env.EMAILS.split(','),
+          this.googleSecretManagerService.emails.split(','),
           labRegister,
         );
 

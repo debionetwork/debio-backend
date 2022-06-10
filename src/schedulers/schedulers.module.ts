@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import {
   EmailNotificationModule,
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
   MailModule,
   ProcessEnvModule,
   SubstrateModule,
@@ -12,12 +14,16 @@ import { UnstakedService } from './unstaked/unstaked.service';
 
 @Module({
   imports: [
+    GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        node: googleSecretManagerService.elasticsearchNode,
         auth: {
-          username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD,
+          username: googleSecretManagerService.elasticsearchUsername,
+          password: googleSecretManagerService.elasticsearchPassword,
         },
       }),
     }),

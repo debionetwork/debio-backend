@@ -4,6 +4,7 @@ import { ServiceRequestCreatedCommand } from './service-request-created.command'
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  GoogleSecretManagerService,
   MailerManager,
   NotificationService,
   ProcessEnvProxy,
@@ -23,7 +24,7 @@ export class ServiceRequestCreatedHandler
   );
 
   constructor(
-    private readonly process: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly loggingService: TransactionLoggingService,
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
@@ -105,7 +106,7 @@ export class ServiceRequestCreatedHandler
     };
 
     await this.mailerManager.sendCustomerStakingRequestServiceEmail(
-      this.process.env.EMAILS.split(','),
+      this.googleSecretManagerService.emails.split(','),
       context,
     );
   }

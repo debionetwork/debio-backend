@@ -20,7 +20,11 @@ import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
-import { CachesModule, DateTimeModule } from './common';
+import {
+  CachesModule,
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+} from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
@@ -33,29 +37,38 @@ require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.HOST_POSTGRES,
-      port: 5432,
-      username: process.env.USERNAME_POSTGRES,
-      password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_POSTGRES,
-      entities: [LabRating, TransactionRequest],
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        type: 'postgres',
+        host: googleSecretManagerService.hostPostgres,
+        port: 5432,
+        username: googleSecretManagerService.usernamePostgres,
+        password: googleSecretManagerService.passwordPostgres,
+        database: googleSecretManagerService.dbPostgres,
+        entities: [LabRating, TransactionRequest],
+        autoLoadEntities: true,
+      }),
     }),
-    TypeOrmModule.forRoot({
-      name: 'dbLocation',
-      type: 'postgres',
-      host: process.env.HOST_POSTGRES,
-      port: 5432,
-      username: process.env.USERNAME_POSTGRES,
-      password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_LOCATIONS,
-      entities: [...LocationEntities],
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        name: 'dbLocation',
+        type: 'postgres',
+        host: googleSecretManagerService.hostPostgres,
+        port: 5432,
+        username: googleSecretManagerService.usernamePostgres,
+        password: googleSecretManagerService.passwordPostgres,
+        database: googleSecretManagerService.dbLocations,
+        entities: [...LocationEntities],
+        autoLoadEntities: true,
+      }),
     }),
     AuthenticationModule,
-    DateTimeModule,
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,
@@ -78,6 +91,7 @@ require('dotenv').config(); // eslint-disable-line
     NotificationEndpointModule,
     DnaCollectionModule,
     SubstrateListenerModule,
+    GoogleSecretManagerModule,
   ],
 })
 export class AppModule {}

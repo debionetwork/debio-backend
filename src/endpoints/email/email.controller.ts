@@ -9,6 +9,7 @@ import { Response } from 'express';
 import {
   EmailNotification,
   EmailNotificationService,
+  GoogleSecretManagerService,
   ProcessEnvProxy,
   SubstrateService,
 } from '../../common';
@@ -17,7 +18,7 @@ import { queryLabById } from '@debionetwork/polkadot-provider';
 @Controller('email')
 export class EmailEndpointController {
   constructor(
-    private readonly process: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
     private readonly emailNotificationService: EmailNotificationService,
@@ -52,7 +53,7 @@ export class EmailEndpointController {
     );
 
     const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-      this.process.env.EMAILS.split(','),
+      this.googleSecretManagerService.emails.split(','),
       labRegister,
     );
 

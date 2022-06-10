@@ -5,13 +5,16 @@ import * as Sentry from '@sentry/node';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 import helmet = require('helmet');
+import { GoogleSecretManagerService } from './common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.enableCors();
 
-  if (process.env.SWAGGER_ENABLE === 'true') {
+  const googleSecretManagerService = app.get(GoogleSecretManagerService);
+
+  if (googleSecretManagerService.swaggerEnable === 'true') {
     const config = new DocumentBuilder()
       .setTitle('Debio API')
       .setDescription('the Debio API Documentation')
@@ -22,7 +25,7 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  const SENTRY_DSN = process.env.SENTRY_DSN;
+  const SENTRY_DSN = googleSecretManagerService.sentryDsn;
 
   if (SENTRY_DSN) {
     Sentry.init({
@@ -31,6 +34,6 @@ async function bootstrap() {
   }
 
   await cryptoWaitReady();
-  await app.listen(process.env.PORT);
+  await app.listen(googleSecretManagerService.port);
 }
 bootstrap();

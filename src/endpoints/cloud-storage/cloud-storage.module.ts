@@ -1,16 +1,26 @@
 import { Module } from '@nestjs/common';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
-import { DateTimeModule } from '../../common';
+import {
+  DateTimeModule,
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+} from '../../common';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
-    GCloudStorageModule.withConfig({
-      defaultBucketname: process.env.BUCKET_NAME,
-      storageBaseUri: process.env.STORAGE_BASE_URI,
-      predefinedAcl: 'private',
+    GoogleSecretManagerModule,
+    GCloudStorageModule.withConfigAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        defaultBucketname: googleSecretManagerService.bucketName,
+        storageBaseUri: googleSecretManagerService.storageBaseUri,
+        predefinedAcl: 'private',
+      }),
     }),
     DateTimeModule,
   ],

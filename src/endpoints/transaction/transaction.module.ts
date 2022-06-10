@@ -1,18 +1,26 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { TransactionLoggingModule } from '../../common';
+import {
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+  TransactionLoggingModule,
+} from '../../common';
 import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
 
 @Module({
   imports: [
     TransactionLoggingModule,
+    GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      useFactory: async () => ({
-        node: process.env.ELASTICSEARCH_NODE,
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        node: googleSecretManagerService.elasticsearchNode,
         auth: {
-          username: process.env.ELASTICSEARCH_USERNAME,
-          password: process.env.ELASTICSEARCH_PASSWORD,
+          username: googleSecretManagerService.elasticsearchUsername,
+          password: googleSecretManagerService.elasticsearchPassword,
         },
       }),
     }),

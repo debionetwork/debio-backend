@@ -1,20 +1,25 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { ProcessEnvProxy } from '../proxies';
+import { GoogleSecretManagerService } from '../google-secret-manager';
 
 @Injectable()
 export class DebioConversionService {
   private readonly logger: Logger = new Logger(DebioConversionService.name);
-  constructor(private readonly process: ProcessEnvProxy) {}
+  constructor(
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
+  ) {}
 
   async getExchange() {
     try {
-      const res = await axios.get(`${this.process.env.REDIS_STORE_URL}/cache`, {
-        auth: {
-          username: this.process.env.REDIS_STORE_USERNAME,
-          password: this.process.env.REDIS_STORE_PASSWORD,
+      const res = await axios.get(
+        `${this.googleSecretManagerService.redisStoreUrl}/cache`,
+        {
+          auth: {
+            username: this.googleSecretManagerService.redisStoreUsername,
+            password: this.googleSecretManagerService.redisStorePassword,
+          },
         },
-      });
+      );
 
       return res.data;
     } catch (error) {

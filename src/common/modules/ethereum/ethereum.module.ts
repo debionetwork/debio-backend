@@ -3,12 +3,22 @@ import { EthersModule } from 'nestjs-ethers';
 import { EthereumService } from './ethereum.service';
 import { CachesModule } from '../caches';
 import { ProcessEnvModule } from '../proxies';
+import {
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+} from '../google-secret-manager';
 
 @Module({
   imports: [
-    EthersModule.forRoot({
-      network: process.env.WEB3_RPC,
-      useDefaultProvider: true,
+    GoogleSecretManagerModule,
+    EthersModule.forRootAsync({
+      inject: [GoogleSecretManagerService],
+      useFactory: async (
+        googleSecretManagerService: GoogleSecretManagerService,
+      ) => ({
+        network: googleSecretManagerService.web3RPC,
+        useDefaultProvider: true,
+      }),
     }),
     CachesModule,
     ProcessEnvModule,

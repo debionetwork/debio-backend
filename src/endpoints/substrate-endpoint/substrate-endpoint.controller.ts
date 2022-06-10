@@ -31,7 +31,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import {
   DateTimeProxy,
-  ProcessEnvProxy,
+  GoogleSecretManagerService,
   SubstrateService,
   TransactionLoggingService,
 } from '../../common';
@@ -57,7 +57,7 @@ export class SubstrateController {
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
     private readonly transactionLoggingService: TransactionLoggingService,
-    private readonly process: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
@@ -386,7 +386,7 @@ export class SubstrateController {
     @Body() payload: WalletBindingDTO,
     @Res() response: Response,
   ) {
-    if (debioApiKey != this.process.env.DEBIO_API_KEY) {
+    if (debioApiKey !== this.googleSecretManagerService.debioApiKey) {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;
@@ -457,7 +457,7 @@ export class SubstrateController {
   ) {
     const { genetic_analysis_order_id } = geneticOrderId;
 
-    if (debioApiKey != this.process.env.DEBIO_API_KEY) {
+    if (debioApiKey != this.googleSecretManagerService.debioApiKey) {
       return response.status(401).send('debio-api-key header is required');
     }
 

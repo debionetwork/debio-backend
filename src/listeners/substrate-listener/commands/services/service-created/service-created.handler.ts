@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DateTimeProxy,
+  GoogleSecretManagerService,
   LabRegister,
   labToLabRegister,
   MailerManager,
@@ -20,7 +21,7 @@ export class ServiceCreatedHandler
 {
   private readonly logger: Logger = new Logger(ServiceCreatedCommand.name);
   constructor(
-    private readonly process: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly notificationService: NotificationService,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
@@ -44,7 +45,7 @@ export class ServiceCreatedHandler
         lab,
       );
       this.mailerManager.sendLabRegistrationEmail(
-        this.process.env.EMAILS.split(','),
+        this.googleSecretManagerService.emails.split(','),
         labRegister,
       );
     }
