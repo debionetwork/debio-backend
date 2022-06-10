@@ -426,28 +426,27 @@ export class SubstrateController {
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line
-      sendRewards(
+      await sendRewards(
         this.substrateService.api as any,
         this.substrateService.pair,
         accountId,
         (rewardAmount * dbioUnit).toString(),
-        async () => {
-          const walletBindingNotification: NotificationDto = {
-            role: payload.role,
-            entity_type: 'Reward',
-            entity: 'Wallet Binding',
-            description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
-            read: false,
-            created_at: this.dateTime.new(),
-            updated_at: this.dateTime.new(),
-            deleted_at: null,
-            from: 'Debio Network',
-            to: accountId,
-          };
-
-          await this.notificationService.insert(walletBindingNotification);
-        },
       );
+
+      const walletBindingNotification: NotificationDto = {
+        role: payload.role,
+        entity_type: 'Reward',
+        entity: 'Wallet Binding',
+        description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
+        read: false,
+        created_at: this.dateTime.new(),
+        updated_at: this.dateTime.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: accountId,
+      };
+
+      await this.notificationService.insert(walletBindingNotification);
 
       reward = rewardAmount;
 
