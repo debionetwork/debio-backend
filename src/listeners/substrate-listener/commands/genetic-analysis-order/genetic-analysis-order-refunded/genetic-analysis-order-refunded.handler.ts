@@ -57,10 +57,10 @@ export class GeneticAnalysisOrderRefundedHandler
         transaction_type: 3,
       };
 
-      if (!isGeneticAnalysisOrderHasBeenInsert) {
+      // if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.notificationService.insert(notificationInput);
-      }
+      // }
     } catch (error) {
       await this.logger.log(error);
     }
