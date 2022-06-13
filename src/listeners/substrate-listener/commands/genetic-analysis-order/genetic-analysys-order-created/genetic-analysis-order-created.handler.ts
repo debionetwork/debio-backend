@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { TransactionLoggingService, DateTimeProxy } from '../../../../../common';
+import {
+  TransactionLoggingService,
+  DateTimeProxy,
+} from '../../../../../common';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
 import { NotificationService } from '../../../../../endpoints/notification/notification.service';
 import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
@@ -18,7 +21,7 @@ export class GeneticAnalysisOrderCreatedHandler
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: GeneticAnalysisOrderCreatedCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
@@ -59,7 +62,7 @@ export class GeneticAnalysisOrderCreatedHandler
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
-        await this.notificationService.insert(notificationInput)
+        await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
       await this.logger.log(error);

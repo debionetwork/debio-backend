@@ -1,5 +1,8 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { TransactionLoggingService, DateTimeProxy } from '../../../../../../../src/common';
+import {
+  TransactionLoggingService,
+  DateTimeProxy,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
