@@ -6,7 +6,7 @@ import {
 } from '@nestjs/terminus';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
-import { Connection, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import {
   ElasticsearchHealthIndicator,
   SubstrateHealthIndicator,

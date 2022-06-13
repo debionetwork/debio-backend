@@ -23,8 +23,8 @@ export class CityService extends TypeOrmQueryService<City> {
   }
 
   getOneCity(id: number) {
-    return this.cityRepository.findOneByOrFail({
-      id,
+    return this.cityRepository.findOneOrFail({
+      where: { id: id },
     });
   }
 }
