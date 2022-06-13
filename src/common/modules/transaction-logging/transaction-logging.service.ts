@@ -36,7 +36,7 @@ export class TransactionLoggingService {
     return this.transactionRequestRepository.findOne({
       where: {
         ref_number,
-        parent_id: 0,
+        parent_id: BigInt(0),
       },
     });
   }
