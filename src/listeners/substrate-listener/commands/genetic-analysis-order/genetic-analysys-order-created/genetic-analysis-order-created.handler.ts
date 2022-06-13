@@ -48,12 +48,12 @@ export class GeneticAnalysisOrderCreatedHandler
         role: 'Customer',
         entity_type: 'Genetic Analysis Orders',
         entity: 'Order Created',
-        description: `Congrats! You have been submitted your account verification.`,
+        description: `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
         read: false,
         created_at: await this.dateTimeProxy.new(),
         updated_at: await this.dateTimeProxy.new(),
         deleted_at: null,
-        from: geneticAnalysisOrder.id,
+        from: geneticAnalysisOrder.customerId,
         to: 'Debio Network',
       };
 
