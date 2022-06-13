@@ -26,7 +26,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install Dependencies
-        run: npm install --force
+        run: npm install
       - name: Run Linter
         run: npm run lint
       - name: Run Unit Tests
