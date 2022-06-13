@@ -23,7 +23,7 @@
     "test:watch": "jest --config ./test/unit/jest-unit.json --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/e2e/jest-e2e.json --runInBand --detectOpenHandles --forceExit",
+    "test:e2e": "jest --config ./test/e2e/jest-e2e.json --runInBand --forceExit",
     "test:e2e:watch": "jest --config ./test/e2e/jest-e2e.json --watch"
   },
   "dependencies": {
@@ -65,7 +65,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.1.6",
-    "typeorm": "^0.2.37"
+    "typeorm": "^0.3.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
