@@ -6,7 +6,7 @@ import {
   MemoryHealthIndicator,
   DiskHealthIndicator,
 } from '@nestjs/terminus';
-import { InjectDataSource } from '@nestjs/typeorm';
+import { InjectConnection } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import {
   ElasticsearchHealthIndicator,
@@ -24,9 +24,9 @@ export class HealthController {
     private disk: DiskHealthIndicator,
     private elasticSearch: ElasticsearchHealthIndicator,
     private substrate: SubstrateHealthIndicator,
-    @InjectDataSource('dbLocation')
+    @InjectConnection('dbLocation')
     private dbLocationConnection: DataSource,
-    @InjectDataSource()
+    @InjectConnection()
     private defaultConnection: DataSource,
   ) {}
 
