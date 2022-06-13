@@ -13,7 +13,7 @@ import { DataStakingDto } from './dto/data-staking.dto';
 import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeProxy } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
-import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from './dto/data-token-to-dataset-mapping.dto';
 import { SentryInterceptor } from '../../common';
 

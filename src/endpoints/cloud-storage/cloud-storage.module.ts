@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
 import { DateTimeModule } from '../../common';
 
