@@ -27,7 +27,7 @@ export class TransactionRequest {
   ref_number: string;
 
   @Column({ type: 'bigint' })
-  parent_id: bigint;
+  parent_id: string;
 
   @Column()
   transaction_hash: string;
