@@ -109,7 +109,6 @@ export class VerificationService {
     accountId: string,
     verificationStatus: string,
   ) {
-    const currentTime = this.dateTimeProxy.new();
     await updateGeneticAnalystVerificationStatus(
       this.subtrateService.api as any,
       this.subtrateService.pair,

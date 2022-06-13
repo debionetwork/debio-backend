@@ -1,5 +1,8 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
@@ -46,7 +49,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     notificationServiceMock = module.get(NotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
-    
+
     await module.init();
   });
 

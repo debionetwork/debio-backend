@@ -1,7 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { DateTimeProxy, TransactionLoggingService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../common';
 import { GeneticAnalysisOrderRefundedCommand } from './genetic-analysis-order-refunded.command';
 import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
 import { NotificationService } from '../../../../../endpoints/notification/notification.service';
@@ -17,7 +20,7 @@ export class GeneticAnalysisOrderRefundedHandler
     private readonly loggingService: TransactionLoggingService,
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
-    ) {}
+  ) {}
 
   async execute(command: GeneticAnalysisOrderRefundedCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
@@ -57,10 +60,10 @@ export class GeneticAnalysisOrderRefundedHandler
         transaction_type: 3,
       };
 
-      // if (!isGeneticAnalysisOrderHasBeenInsert) {
+      if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.notificationService.insert(notificationInput);
-      // }
+      }
     } catch (error) {
       await this.logger.log(error);
     }
