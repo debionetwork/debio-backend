@@ -22,8 +22,8 @@ export async function connectionRetries(
   for (let i = 0; i < retries; i++) {
     try {
       return await func();
-    } catch {
-      if (i == retries - 1) break;
+    } catch (e) {
+      if (i == retries - 1) throw e;
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }

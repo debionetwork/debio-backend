@@ -1,11 +1,17 @@
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  TransactionLoggingService,
+  DateTimeProxy,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 import {
   createMockGeneticAnalysisOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisOrderCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysys-order-created/genetic-analysis-order-created.handler';
@@ -15,6 +21,8 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Genetic Analysis Order Created Handler Event', () => {
   let geneticAnalysisOrderCreatedHandler: GeneticAnalysisOrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,6 +30,14 @@ describe('Genetic Analysis Order Created Handler Event', () => {
         {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalysisOrderCreatedHandler,
       ],
@@ -31,6 +47,8 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       GeneticAnalysisOrderCreatedHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
@@ -70,6 +88,7 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).not.toBeCalled();
   });
 
   it('should called logging service create', async () => {
@@ -105,5 +124,6 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 });

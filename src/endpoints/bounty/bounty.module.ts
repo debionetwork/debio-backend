@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
-import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 
 @Module({
   imports: [

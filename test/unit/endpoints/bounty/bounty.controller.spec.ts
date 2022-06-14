@@ -14,7 +14,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../../src/common';
 import { DataTokenToDatasetMapping } from '../../../../src/endpoints/bounty/models/data-token-to-dataset-mapping.entity';
-import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from '../../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
 
 describe('Bounty Controller Unit Tests', () => {

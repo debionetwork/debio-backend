@@ -1,8 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { TransactionLoggingService } from '../../../../../common';
+import {
+  TransactionLoggingService,
+  DateTimeProxy,
+} from '../../../../../common';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
+import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCreatedCommand)
@@ -12,7 +17,11 @@ export class GeneticAnalysisOrderCreatedHandler
   private readonly logger: Logger = new Logger(
     GeneticAnalysisOrderCreatedCommand.name,
   );
-  constructor(private readonly loggingService: TransactionLoggingService) {}
+  constructor(
+    private readonly loggingService: TransactionLoggingService,
+    private readonly notificationService: NotificationService,
+    private readonly dateTimeProxy: DateTimeProxy,
+  ) {}
 
   async execute(command: GeneticAnalysisOrderCreatedCommand) {
     const geneticAnalysisOrder = command.geneticAnalysisOrders.normalize();
@@ -38,8 +47,22 @@ export class GeneticAnalysisOrderCreatedHandler
         transaction_type: 3,
       };
 
+      const notificationInput: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'Genetic Analysis Orders',
+        entity: 'Order Created',
+        description: `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
+        read: false,
+        created_at: await this.dateTimeProxy.new(),
+        updated_at: await this.dateTimeProxy.new(),
+        deleted_at: null,
+        from: geneticAnalysisOrder.customerId,
+        to: 'Debio Network',
+      };
+
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
+        await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
       await this.logger.log(error);

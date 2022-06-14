@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
-import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
 import { DateTimeProxy, SentryInterceptor } from '../../common';
 import { ApiResponse } from '@nestjs/swagger';
 

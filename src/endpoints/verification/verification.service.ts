@@ -22,7 +22,7 @@ export class VerificationService {
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {
-    const currentTime = this.dateTimeProxy.new();
+    const currentTime = this.dateTimeProxy.new(); // eslint-disable-line
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
       this.subtrateService.api as any,
@@ -109,7 +109,6 @@ export class VerificationService {
     accountId: string,
     verificationStatus: string,
   ) {
-    const currentTime = this.dateTimeProxy.new();
     await updateGeneticAnalystVerificationStatus(
       this.subtrateService.api as any,
       this.subtrateService.pair,

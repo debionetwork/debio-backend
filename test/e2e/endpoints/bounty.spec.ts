@@ -9,7 +9,7 @@ import { DataTokenToDatasetMapping } from '../../../src/endpoints/bounty/models/
 import { dummyCredentials } from '../config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingDto } from '../../../src/endpoints/bounty/dto/data-staking.dto';
-import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from '../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
 
 describe('Bounty Controller (e2e)', () => {

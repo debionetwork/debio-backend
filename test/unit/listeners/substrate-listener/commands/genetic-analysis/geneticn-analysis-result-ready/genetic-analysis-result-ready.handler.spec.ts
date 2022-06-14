@@ -1,14 +1,20 @@
-import { SubstrateService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  SubstrateService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysis,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
 
@@ -22,6 +28,8 @@ jest.mock(
 describe('Genetic Analysis ResultReady Handler Event', () => {
   let geneticAnalysisResultReadyHandler: GeneticAnalysisResultReadyHandler;
   let substrateServiceMock: MockType<SubstrateService>;
+  let notificationServiceMock: MockType<NotificationService>;
+  let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +37,14 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalysisResultReadyHandler,
       ],
@@ -38,6 +54,8 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       GeneticAnalysisResultReadyHandler,
     );
     substrateServiceMock = module.get(SubstrateService);
+    notificationServiceMock = module.get(NotificationService);
+    dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();
   });
@@ -80,5 +98,6 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       substrateServiceMock.pair,
       requestData.toHuman().geneticAnalysisTrackingId,
     );
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 });

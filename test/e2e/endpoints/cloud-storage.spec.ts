@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
-import { GCloudStorageModule } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageModule } from '../../../src/endpoints/cloud-storage/cloud-storage.module';
 
 describe('Cloud Controller (e2e)', () => {
