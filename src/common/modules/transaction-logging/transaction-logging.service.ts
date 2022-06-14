@@ -33,16 +33,20 @@ export class TransactionLoggingService {
   }
 
   getLoggingByOrderId(ref_number: string) {
-    return this.transactionRequestRepository.findOneBy({
-      ref_number,
-      parent_id: BigInt(0),
+    return this.transactionRequestRepository.findOne({
+      where: {
+        ref_number,
+        parent_id: BigInt(0),
+      },
     });
   }
 
   getLoggingByHashAndStatus(ref_number: string, transaction_status: number) {
-    return this.transactionRequestRepository.findOneBy({
-      ref_number,
-      transaction_status,
+    return this.transactionRequestRepository.findOne({
+      where: {
+        ref_number,
+        transaction_status,
+      },
     });
   }
 }
