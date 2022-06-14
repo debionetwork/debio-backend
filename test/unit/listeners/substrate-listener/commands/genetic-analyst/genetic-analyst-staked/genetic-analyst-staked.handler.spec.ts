@@ -13,7 +13,6 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalystStakedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-staked/genetic-analyst-staked.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 describe('Genetic Analyst Staked Handler Event', () => {
   let geneticAnalystStakedHandler: GeneticAnalystStakedHandler;
@@ -51,17 +50,6 @@ describe('Genetic Analyst Staked Handler Event', () => {
     const geneticAnalyst = createMockGeneticAnalyst();
 
     const RESULT_STATUS = true;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(geneticAnalyst.toHuman().accountId, 19)
@@ -80,18 +68,6 @@ describe('Genetic Analyst Staked Handler Event', () => {
   it('should called logging service create', async () => {
     // Arrange
     const geneticAnalyst = createMockGeneticAnalyst();
-
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus).calledWith(
       geneticAnalyst.toHuman().accountId,

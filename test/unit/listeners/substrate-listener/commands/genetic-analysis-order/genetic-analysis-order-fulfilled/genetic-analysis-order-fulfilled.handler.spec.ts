@@ -15,7 +15,6 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Genetic Analysis Order Fulfilled Handler Event', () => {
@@ -62,17 +61,6 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     );
 
     const RESULT_STATUS = true;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     const RESULT_LOGGING_HISTORY = {
       id: 1,
@@ -103,17 +91,6 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
     );
 
     const RESULT_STATUS = undefined;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     const RESULT_LOGGING_HISTORY = {
       id: 1,

@@ -66,7 +66,7 @@ describe('Transaction Logging Service Unit Tests', () => {
     const EXPECTED_PARAM = {
       where: {
         ref_number: REF_NUMBER,
-        parent_id: BigInt(0),
+        parent_id: BigInt(0).toString(),
       },
     };
     const RESULT = 0;
