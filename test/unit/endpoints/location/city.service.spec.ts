@@ -69,11 +69,13 @@ describe('City Service Unit Tests', () => {
         city: 'City 2',
       },
     ];
-    repositoryMock.findOneOrFail.mockReturnValue(RESULTS);
+    repositoryMock.findOneByOrFail.mockReturnValue(RESULTS);
 
     // Assert
     expect(cityService.getOneCity(ID)).toEqual(RESULTS);
-    expect(repositoryMock.findOneOrFail).toHaveBeenCalledWith(ID);
-    expect(repositoryMock.findOneOrFail).toHaveBeenCalled();
+    expect(repositoryMock.findOneByOrFail).toHaveBeenCalledWith({
+      id: ID,
+    });
+    expect(repositoryMock.findOneByOrFail).toHaveBeenCalled();
   });
 });
