@@ -31,23 +31,22 @@ export class GeneticAnalysisRejectedHandler
         this.substrateService.api as any,
         this.substrateService.pair,
         geneticAnalysis.geneticAnalysisOrderId,
-        async () => {
-          const orderRefundedNotification: NotificationDto = {
-            role: 'Customer',
-            entity_type: 'Genetic Analysis Tracking',
-            entity: 'Order Rejected',
-            description: `Your sample from ${geneticAnalysis.geneticAnalysisOrderId} has been rejected. Click here to see your order details.`,
-            read: false,
-            created_at: this.dateTimeProxy.new(),
-            updated_at: this.dateTimeProxy.new(),
-            deleted_at: null,
-            from: 'Debio Network',
-            to: geneticAnalysis.ownerId,
-          };
-
-          this.notificationService.insert(orderRefundedNotification);
-        },
       );
+
+      const orderRefundedNotification: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'Genetic Analysis Tracking',
+        entity: 'Order Rejected',
+        description: `Your sample from ${geneticAnalysis.geneticAnalysisOrderId} has been rejected. Click here to see your order details.`,
+        read: false,
+        created_at: this.dateTimeProxy.new(),
+        updated_at: this.dateTimeProxy.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: geneticAnalysis.ownerId,
+      };
+
+      await this.notificationService.insert(orderRefundedNotification);
     } catch (error) {
       await this.logger.log(error);
     }

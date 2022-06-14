@@ -62,8 +62,8 @@ export class GeneticAnalysisOrderCreatedHandler
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
-        await this.notificationService.insert(notificationInput);
       }
+      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

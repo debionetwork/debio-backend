@@ -9,8 +9,8 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { NotificationService } from '../notification/notification.service';
 import { NotificationDto } from '../notification/dto/notification.dto';
+import { NotificationService } from '../notification/notification.service';
 
 @Injectable()
 export class VerificationService {
@@ -132,6 +132,57 @@ export class VerificationService {
     };
 
     await this.notificationService.insert(testResultNotification);
+    const currDateTime = this.dateTimeProxy.new();
+
+    const notificationAccountVerification: NotificationDto = {
+      role: 'GA',
+      entity_type: 'Verification',
+      entity: '',
+      description: '',
+      read: false,
+      created_at: currDateTime,
+      updated_at: currDateTime,
+      deleted_at: null,
+      from: 'Debio Network',
+      to: accountId,
+    };
+
+    switch (verificationStatus) {
+      case VerificationStatus.Verified:
+        notificationAccountVerification.entity = `Account verified`;
+        notificationAccountVerification.description = `Congrats! Your account has been verified.`;
+        break;
+      case VerificationStatus.Rejected:
+        notificationAccountVerification.entity = `Account rejected`;
+        notificationAccountVerification.description = `Your account verification has been rejected.`;
+        break;
+      case VerificationStatus.Revoked:
+        notificationAccountVerification.entity = `Account revoked`;
+        notificationAccountVerification.description = `Your account has been revoked.`;
+        break;
+    }
+
+    if (verificationStatus !== VerificationStatus.Unverified) {
+      this.notificationService.insert(notificationAccountVerification);
+    }
+
+    if (verificationStatus === VerificationStatus.Verified) {
+      const notificationRewardVerified: NotificationDto = {
+        role: 'GA',
+        entity_type: 'Reward',
+        entity: 'Account verified',
+        description:
+          'Congrats! You’ve received 2 DBIO from account verification.',
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: accountId,
+      };
+
+      this.notificationService.insert(notificationRewardVerified);
+    }
 
     return { message: `${accountId} is ${verificationStatus}` };
   }
