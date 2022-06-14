@@ -10,7 +10,6 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalysisOrderCancelledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-cancelled/genetic-analysis-order-cancelled.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 describe('Genetic Analysis Order Cancelled Handler Event', () => {
   let geneticAnalysisOrderCancelledHandler: GeneticAnalysisOrderCancelledHandler;
@@ -46,17 +45,6 @@ describe('Genetic Analysis Order Cancelled Handler Event', () => {
     );
 
     const RESULT_STATUS = true;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 17)
@@ -79,17 +67,6 @@ describe('Genetic Analysis Order Cancelled Handler Event', () => {
     );
 
     const RESULT_STATUS = { id: 1 };
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 17)
