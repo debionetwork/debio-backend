@@ -6,13 +6,13 @@ import {
 } from '@nestjs/terminus';
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 import {
   ElasticsearchHealthIndicator,
   SubstrateHealthIndicator,
 } from '../../../../src/common';
 import { HealthController } from '../../../../src/endpoints/health/health.controller';
-import { getConnectionToken } from '@nestjs/typeorm';
+import { getDataSourceToken } from '@nestjs/typeorm';
 
 describe('Health Controller Unit Tests', () => {
   let controller: HealthController;
@@ -22,8 +22,8 @@ describe('Health Controller Unit Tests', () => {
   let diskHealthIndicatorMock: MockType<DiskHealthIndicator>;
   let elasticsearchHealthIndicatorMock: MockType<ElasticsearchHealthIndicator>;
   let substrateHealthIndicatorMock: MockType<SubstrateHealthIndicator>;
-  let dbLocationConnectionMock: Connection;
-  let defaultConnectionMock: Connection;
+  let dbLocationConnectionMock: DataSource;
+  let defaultConnectionMock: DataSource;
 
   const healthCheckServiceMockFactory: () => MockType<HealthCheckService> =
     jest.fn(() => ({
@@ -56,9 +56,9 @@ describe('Health Controller Unit Tests', () => {
     }));
 
   const CONN_MOCK = 'CONN';
-  class ConnectionMock {
-    dbLocationConnection = CONN_MOCK;
-    defaultConnection = CONN_MOCK;
+  class DataSourceMock {
+    dbLocationDataSource = CONN_MOCK;
+    defaultDataSource = CONN_MOCK;
   }
 
   beforeEach(async () => {
@@ -89,8 +89,8 @@ describe('Health Controller Unit Tests', () => {
           provide: SubstrateHealthIndicator,
           useFactory: substrateHealthIndicatorMockFactory,
         },
-        { provide: getConnectionToken('dbLocation'), useClass: ConnectionMock },
-        { provide: Connection, useClass: ConnectionMock },
+        { provide: getDataSourceToken('dbLocation'), useClass: DataSourceMock },
+        { provide: DataSource, useClass: DataSourceMock },
       ],
     }).compile();
 
@@ -101,8 +101,8 @@ describe('Health Controller Unit Tests', () => {
     diskHealthIndicatorMock = module.get(DiskHealthIndicator);
     elasticsearchHealthIndicatorMock = module.get(ElasticsearchHealthIndicator);
     substrateHealthIndicatorMock = module.get(SubstrateHealthIndicator);
-    defaultConnectionMock = module.get(Connection);
-    dbLocationConnectionMock = module.get(getConnectionToken('dbLocation'));
+    defaultConnectionMock = module.get(DataSource);
+    dbLocationConnectionMock = module.get(getDataSourceToken('dbLocation'));
   });
 
   it('should be defined', () => {
