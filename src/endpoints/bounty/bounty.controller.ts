@@ -44,7 +44,9 @@ export class BountyController {
   @Get('/staked-files')
   async StakedFiles(@Query('tokenId') tokenId: string) {
     const mappings = await this.dataTokenToDatasetMapping.find({
-      token_id: tokenId,
+      where: {
+        token_id: tokenId,
+      },
     });
 
     const res: DataTokenToDatasetMappingDto[] = [];
