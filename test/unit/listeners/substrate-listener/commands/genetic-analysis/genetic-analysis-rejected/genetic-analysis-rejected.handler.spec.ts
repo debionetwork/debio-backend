@@ -28,6 +28,7 @@ jest.mock(
 describe('Genetic Analysis Rejected Handler Event', () => {
   let geneticAnalysisRejectedHandler: GeneticAnalysisRejectedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -50,6 +51,7 @@ describe('Genetic Analysis Rejected Handler Event', () => {
 
     geneticAnalysisRejectedHandler = module.get(GeneticAnalysisRejectedHandler);
     substrateServiceMock = module.get(SubstrateService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -88,7 +90,7 @@ describe('Genetic Analysis Rejected Handler Event', () => {
       substrateServiceMock.api,
       substrateServiceMock.pair,
       requestData.toHuman().geneticAnalysisTrackingId,
-      expect.any(Function),
     );
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });
