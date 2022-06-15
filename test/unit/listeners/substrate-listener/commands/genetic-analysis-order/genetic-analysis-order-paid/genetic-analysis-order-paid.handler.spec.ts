@@ -1,19 +1,26 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {
   let geneticAnalysisOrderPaidHandler: GeneticAnalysisOrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,6 +28,14 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
         {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalysisOrderPaidHandler,
       ],
@@ -30,6 +45,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
       GeneticAnalysisOrderPaidHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -58,6 +74,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 
   it('should called logging service paid', async () => {
@@ -81,5 +98,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });

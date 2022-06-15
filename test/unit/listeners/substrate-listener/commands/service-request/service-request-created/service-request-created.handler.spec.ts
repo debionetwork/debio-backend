@@ -128,7 +128,7 @@ describe('Service Request Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(notificationServiceMock.insert).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 
   it('should called transactionLoggingServiceMock create if status false', async () => {
@@ -140,6 +140,13 @@ describe('Service Request Created Handler Event', () => {
       .calledWith(requestData[1].toHuman().hash_, 7)
       .mockReturnValue(TRANSACTION_STATUS);
 
+    const spyEmail = jest
+      .spyOn(
+        serviceRequesCreatedHandler,
+        '_sendEmailNotificationServiceRequestCreated',
+      )
+      .mockImplementation();
+
     const serviceRequestCreatedCommand: ServiceRequestCreatedCommand =
       new ServiceRequestCreatedCommand(requestData, mockBlockNumber());
 
@@ -148,6 +155,7 @@ describe('Service Request Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(spyEmail).toHaveBeenCalled();
     expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });

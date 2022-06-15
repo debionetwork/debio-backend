@@ -69,9 +69,9 @@ export class ServiceRequestCreatedHandler
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
-        await this.notificationService.insert(notificationInput);
         await this._sendEmailNotificationServiceRequestCreated(command);
       }
+      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

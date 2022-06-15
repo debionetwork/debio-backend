@@ -47,23 +47,21 @@ export class OrderRefundedHandler
         transaction_type: 1,
       };
       if (!isOrderHasBeenInsert) {
-        const customerOrderRefundedNotification: NotificationDto = {
-          role: 'Customer',
-          entity_type: 'Genetic Testing Order',
-          entity: 'Order Refunded',
-          description: `Your service fee from ${order.dnaSampleTrackingId} has been refunded, kindly check your account balance.`,
-          read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
-          deleted_at: null,
-          from: 'Debio Network',
-          to: order.customerId,
-        };
         await this.loggingService.create(orderLogging);
-        await this.notificationService.insert(
-          customerOrderRefundedNotification,
-        );
       }
+      const customerOrderRefundedNotification: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Refunded',
+        description: `Your service fee from ${order.dnaSampleTrackingId} has been refunded, kindly check your account balance.`,
+        read: false,
+        created_at: this.dateTimeProxy.new(),
+        updated_at: this.dateTimeProxy.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: order.customerId,
+      };
+      await this.notificationService.insert(customerOrderRefundedNotification);
     } catch (error) {
       await this.logger.log(error);
     }

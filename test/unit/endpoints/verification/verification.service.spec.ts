@@ -109,7 +109,7 @@ describe('Verification Service Unit Tests', () => {
       ACCOUNT_ID,
       VERIFICATION_STATUS,
     );
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(3);
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'GA',
