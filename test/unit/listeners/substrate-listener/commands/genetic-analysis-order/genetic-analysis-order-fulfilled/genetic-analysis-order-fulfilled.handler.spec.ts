@@ -15,10 +15,10 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 
 describe('Genetic Analysis Order Fulfilled Handler Event', () => {
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let geneticAnalysisOrderFulfilledHandler: GeneticAnalysisOrderFulfilledHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
 
@@ -30,7 +30,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -45,7 +45,7 @@ describe('Genetic Analysis Order Fulfilled Handler Event', () => {
       GeneticAnalysisOrderFulfilledHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
 
     await module.init();
   });

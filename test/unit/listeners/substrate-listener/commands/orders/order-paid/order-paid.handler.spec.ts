@@ -17,7 +17,7 @@ import { OrderPaidHandler } from '../../../../../../../src/listeners/substrate-l
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 
 describe('Order Paid Handler Event', () => {
   let orderPaidHandler: OrderPaidHandler;
@@ -34,7 +34,7 @@ describe('Order Paid Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {

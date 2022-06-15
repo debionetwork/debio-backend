@@ -15,12 +15,12 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {
   let geneticAnalysisOrderPaidHandler: GeneticAnalysisOrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,7 +30,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -45,7 +45,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
       GeneticAnalysisOrderPaidHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
 
     await module.init();
   });

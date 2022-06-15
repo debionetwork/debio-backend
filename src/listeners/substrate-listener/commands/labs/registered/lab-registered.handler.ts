@@ -4,10 +4,10 @@ import { LabRegisteredCommand } from './lab-registered.command';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  DebioNotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
@@ -18,7 +18,7 @@ export class LabRegisteredHandler
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -36,19 +36,6 @@ export class LabRegisteredHandler
       transaction_type: 7, // Lab
     };
 
-    const notificationInput: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Labs',
-      entity: 'LabRegistered',
-      description: `Congrats! You have been submitted your account verification.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: lab.accountId,
-      to: 'Admin',
-    };
-
     try {
       const isLabHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -58,6 +45,22 @@ export class LabRegisteredHandler
       if (!isLabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
+      const notificationInput: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Labs',
+        entity: 'LabRegistered',
+        description: `Congrats! You have been submitted your account verification.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: lab.accountId,
+        to: 'Admin',
+      };
+
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);

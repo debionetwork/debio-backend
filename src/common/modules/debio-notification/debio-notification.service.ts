@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DateTimeProxy } from '../../common';
+import { DateTimeProxy } from '../proxies/date-time/date-time.proxy';
 import { Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
 
 @Injectable()
-export class NotificationService {
+export class DebioNotificationService {
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,

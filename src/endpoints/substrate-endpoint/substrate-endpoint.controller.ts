@@ -30,10 +30,14 @@ import {
   setGeneticAnalysisOrderPaid,
   dbioUnit,
 } from '@debionetwork/polkadot-provider';
-import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
+import {
+  DateTimeProxy,
+  DebioNotificationService,
+  ProcessEnvProxy,
+  SubstrateService,
+} from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
-import { NotificationService } from '../notification/notification.service';
-import { NotificationDto } from '../notification/dto/notification.dto';
+import { NotificationDto } from '../../common/modules/debio-notification/dto/notification.dto';
 import {
   labsResponse,
   orderByCustomerId,
@@ -60,7 +64,7 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
   ) {}
 
   @Get('/labs')
@@ -431,23 +435,22 @@ export class SubstrateController {
         this.substrateService.pair,
         accountId,
         (rewardAmount * dbioUnit).toString(),
-        async () => {
-          const walletBindingNotification: NotificationDto = {
-            role: payload.role,
-            entity_type: 'Reward',
-            entity: 'Wallet Binding',
-            description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
-            read: false,
-            created_at: this.dateTime.new(),
-            updated_at: this.dateTime.new(),
-            deleted_at: null,
-            from: 'Debio Network',
-            to: accountId,
-          };
-
-          await this.notificationService.insert(walletBindingNotification);
-        },
       );
+
+      const walletBindingNotification: NotificationDto = {
+        role: payload.role,
+        entity_type: 'Reward',
+        entity: 'Wallet Binding',
+        description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
+        read: false,
+        created_at: this.dateTime.new(),
+        updated_at: this.dateTime.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: accountId,
+      };
+
+      await this.notificationService.insert(walletBindingNotification);
 
       reward = rewardAmount;
 

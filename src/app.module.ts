@@ -21,7 +21,7 @@ import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
-import { CachesModule } from './common';
+import { CachesModule, DateTimeModule } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
@@ -53,6 +53,7 @@ require('dotenv').config(); // eslint-disable-line
       entities: [...LocationEntities],
       autoLoadEntities: true,
     }),
+    DateTimeModule,
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,

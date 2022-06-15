@@ -22,7 +22,7 @@ import {
 } from '../../../../../mock';
 import { OrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-fulfilled/order-fulfilled.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
@@ -41,7 +41,7 @@ describe('Order Fulfilled Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let debioConversionServiceMock: MockType<DebioConversionService>;
   let rewardServiceMock: MockType<RewardService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
@@ -71,7 +71,7 @@ describe('Order Fulfilled Handler Event', () => {
           useFactory: rewardServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -88,7 +88,7 @@ describe('Order Fulfilled Handler Event', () => {
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     debioConversionServiceMock = module.get(DebioConversionService);
     rewardServiceMock = module.get(RewardService);
-    notificationServiceMock = module.get(NotificationService); // eslint-disable-line
+    notificationServiceMock = module.get(DebioNotificationService); // eslint-disable-line
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

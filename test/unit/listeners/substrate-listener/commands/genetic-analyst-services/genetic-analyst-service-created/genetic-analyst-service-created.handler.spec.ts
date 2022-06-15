@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DateTimeProxy } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { GeneticAnalystServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.command';
 import { GeneticAnalystServiceCreatedCommandHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analyst-services/genetic-analyst-service-created/genetic-analyst-service-created.handler';
 import {
@@ -12,14 +12,14 @@ import {
 } from '../../../../../mock';
 
 describe('Genetic Analyst Service Created Handler Event', () => {
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let geneticAnalystServiceCreatedHandler: MockType<GeneticAnalystServiceCreatedCommandHandler>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -30,7 +30,7 @@ describe('Genetic Analyst Service Created Handler Event', () => {
       ],
     }).compile();
 
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
     geneticAnalystServiceCreatedHandler = module.get(
       GeneticAnalystServiceCreatedCommandHandler,
     );

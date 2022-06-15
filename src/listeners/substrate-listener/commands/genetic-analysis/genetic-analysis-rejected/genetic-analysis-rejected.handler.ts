@@ -1,10 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, SubstrateService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  DebioNotificationService,
+  SubstrateService,
+} from '../../../../../common';
 import { setGeneticAnalysisOrderRefunded } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisRejectedCommand } from './genetic-analysis-rejected.command';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisRejectedCommand)
@@ -17,7 +20,7 @@ export class GeneticAnalysisRejectedHandler
   constructor(
     private readonly substrateService: SubstrateService,
     private readonly dateTimeProxy: DateTimeProxy,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
   ) {}
 
   async execute(command: GeneticAnalysisRejectedCommand) {
@@ -33,14 +36,16 @@ export class GeneticAnalysisRejectedHandler
         geneticAnalysis.geneticAnalysisOrderId,
       );
 
+      const currDate = this.dateTimeProxy.new();
+
       const orderRefundedNotification: NotificationDto = {
         role: 'Customer',
         entity_type: 'Genetic Analysis Tracking',
         entity: 'Order Rejected',
         description: `Your sample from ${geneticAnalysis.geneticAnalysisOrderId} has been rejected. Click here to see your order details.`,
         read: false,
-        created_at: this.dateTimeProxy.new(),
-        updated_at: this.dateTimeProxy.new(),
+        created_at: currDate,
+        updated_at: currDate,
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalysis.ownerId,

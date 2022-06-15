@@ -4,6 +4,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DateTimeModule,
+  DebioNotificationModule,
   ProcessEnvProxy,
   RewardModule,
   SubstrateModule,
@@ -48,6 +49,7 @@ describe('Verification Controller (e2e)', () => {
         SubstrateModule,
         RewardModule,
         DateTimeModule,
+        DebioNotificationModule,
       ],
       providers: [
         {

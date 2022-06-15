@@ -2,7 +2,7 @@ import {
   TransactionLoggingService,
   DateTimeProxy,
 } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -21,7 +21,7 @@ import { TransactionRequest } from '../../../../../../../src/common/modules/tran
 describe('Order Created Handler Event', () => {
   let orderCreatedHandler: OrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   beforeEach(async () => {
@@ -32,7 +32,7 @@ describe('Order Created Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -45,7 +45,7 @@ describe('Order Created Handler Event', () => {
 
     orderCreatedHandler = module.get(OrderCreatedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

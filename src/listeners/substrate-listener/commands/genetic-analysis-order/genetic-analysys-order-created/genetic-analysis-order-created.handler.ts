@@ -4,10 +4,10 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 import {
   TransactionLoggingService,
   DateTimeProxy,
+  DebioNotificationService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCreatedCommand)
@@ -19,7 +19,7 @@ export class GeneticAnalysisOrderCreatedHandler
   );
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -47,22 +47,25 @@ export class GeneticAnalysisOrderCreatedHandler
         transaction_type: 3,
       };
 
+      if (!isGeneticAnalysisOrderHasBeenInsert) {
+        await this.loggingService.create(geneticAnalysisOrderLogging);
+      }
+
+      const currDateTime = this.dateTimeProxy.new();
+
       const notificationInput: NotificationDto = {
         role: 'Customer',
         entity_type: 'Genetic Analysis Orders',
         entity: 'Order Created',
         description: `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
         read: false,
-        created_at: await this.dateTimeProxy.new(),
-        updated_at: await this.dateTimeProxy.new(),
+        created_at: currDateTime,
+        updated_at: currDateTime,
         deleted_at: null,
         from: geneticAnalysisOrder.customerId,
         to: 'Debio Network',
       };
 
-      if (!isGeneticAnalysisOrderHasBeenInsert) {
-        await this.loggingService.create(geneticAnalysisOrderLogging);
-      }
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);

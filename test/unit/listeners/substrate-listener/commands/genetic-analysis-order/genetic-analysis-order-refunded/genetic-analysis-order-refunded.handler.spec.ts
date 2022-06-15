@@ -5,7 +5,7 @@ import {
 } from '../../../../../../../src/common';
 import { GeneticAnalysisOrderRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
@@ -20,7 +20,7 @@ import { when } from 'jest-when';
 describe('Genetic Analysis Order Refunded Handler Event', () => {
   let geneticAnalysisOrderRefundedHandler: GeneticAnalysisOrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -46,7 +46,7 @@ describe('Genetic Analysis Order Refunded Handler Event', () => {
       GeneticAnalysisOrderRefundedHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

@@ -18,7 +18,7 @@ import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
 import { CountryService } from '../../../../../../../src/endpoints/location/country.service';
 import { StateService } from '../../../../../../../src/endpoints/location/state.service';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
@@ -29,7 +29,7 @@ describe('Service Request Created Handler Event', () => {
   let countryServiceMock: MockType<CountryService>;
   let stateServiceMock: MockType<StateService>;
   let mailerManagerMock: MockType<MailerManager>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
 
   const createMockRequest = (requestStatus: RequestStatus) => {
@@ -88,7 +88,7 @@ describe('Service Request Created Handler Event', () => {
           useFactory: mailerManagerMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -104,7 +104,7 @@ describe('Service Request Created Handler Event', () => {
     countryServiceMock = module.get(CountryService); // eslint-disable-line
     stateServiceMock = module.get(StateService); // eslint-disable-line
     mailerManagerMock = module.get(MailerManager); // eslint-disable-line
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
   });
 

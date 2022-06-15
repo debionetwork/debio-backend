@@ -5,13 +5,13 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 import {
   DateTimeProxy,
   MailerManager,
+  DebioNotificationService,
   ProcessEnvProxy,
   TransactionLoggingService,
 } from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -28,7 +28,7 @@ export class ServiceRequestCreatedHandler
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
     private readonly mailerManager: MailerManager,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -48,19 +48,6 @@ export class ServiceRequestCreatedHandler
       transaction_type: 2,
     };
 
-    const notificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'ServiceRequest',
-      entity: 'ServiceRequestCreated',
-      description: `Congrats! Your requested service with staking ID ${serviceRequest.hash} has been submitted.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: serviceRequest.requesterAddress,
-    };
-
     try {
       const isServiceRequestHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -71,6 +58,22 @@ export class ServiceRequestCreatedHandler
         await this.loggingService.create(stakingLogging);
         await this._sendEmailNotificationServiceRequestCreated(command);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
+      const notificationInput: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'ServiceRequest',
+        entity: 'ServiceRequestCreated',
+        description: `Congrats! Your requested service with staking ID ${serviceRequest.hash} has been submitted.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: serviceRequest.requesterAddress,
+      };
+
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);

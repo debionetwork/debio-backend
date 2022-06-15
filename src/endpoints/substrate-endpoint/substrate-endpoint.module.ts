@@ -8,13 +8,13 @@ import {
   DateTimeModule,
   RewardModule,
   SubstrateModule,
+  DebioNotificationModule,
 } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
-import { NotificationModule } from '../notification/notification.module';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { NotificationModule } from '../notification/notification.module';
     SubstrateModule,
     RewardModule,
     DateTimeModule,
-    NotificationModule,
+    DebioNotificationModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [SubstrateController],

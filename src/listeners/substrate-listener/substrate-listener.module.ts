@@ -4,6 +4,7 @@ import {
   DateTimeModule,
   DebioConversionModule,
   MailModule,
+  DebioNotificationModule,
   ProcessEnvModule,
   RewardModule,
   SubstrateModule,
@@ -19,7 +20,6 @@ import { SubstrateListenerHandler } from './substrate-listener.handler';
 import { OrderCommandHandlers } from './commands/orders';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LocationModule } from '../../endpoints/location/location.module';
-import { NotificationModule } from '../../endpoints/notification/notification.module';
 import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
@@ -37,7 +37,7 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     MailModule,
     CqrsModule,
     DateTimeModule,
-    NotificationModule,
+    DebioNotificationModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,

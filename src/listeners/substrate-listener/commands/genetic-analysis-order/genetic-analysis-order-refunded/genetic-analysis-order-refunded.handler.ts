@@ -3,11 +3,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  DebioNotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderRefundedCommand } from './genetic-analysis-order-refunded.command';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderRefundedCommand)
 export class GeneticAnalysisOrderRefundedHandler
@@ -18,7 +18,7 @@ export class GeneticAnalysisOrderRefundedHandler
   );
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -27,19 +27,6 @@ export class GeneticAnalysisOrderRefundedHandler
     await this.logger.log(
       `Genetic Analysis Order Refunded With GA Order ID: ${geneticAnalysisOrder.id}!`,
     );
-
-    const notificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'Genetic Analysis Orders',
-      entity: 'Order Refunded',
-      description: `Your service analysis fee from ${geneticAnalysisOrder.id} has been refunded, kindly check your account balance.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: geneticAnalysisOrder.customerId,
-    };
     try {
       const isGeneticAnalysisOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -63,6 +50,22 @@ export class GeneticAnalysisOrderRefundedHandler
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
+      const notificationInput: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'Genetic Analysis Orders',
+        entity: 'Order Refunded',
+        description: `Your service analysis fee from ${geneticAnalysisOrder.id} has been refunded, kindly check your account balance.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: geneticAnalysisOrder.customerId,
+      };
+
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);

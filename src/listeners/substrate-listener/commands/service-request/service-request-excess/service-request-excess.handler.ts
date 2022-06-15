@@ -4,10 +4,10 @@ import { ServiceRequestStakingAmountExcessRefundedCommand } from './service-requ
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  DebioNotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountExcessRefundedCommand)
@@ -20,7 +20,7 @@ export class ServiceRequestStakingAmountExcessRefunded
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -42,19 +42,6 @@ export class ServiceRequestStakingAmountExcessRefunded
       transaction_type: 2,
     };
 
-    const notificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'ServiceRequest',
-      entity: 'ServiceRequestStakingAmountExessRefunded',
-      description: `Your over payment staking service request with ID ${serviceRequest[1]} has been refunded.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: null,
-      to: serviceRequest.requesterAddress,
-    };
-
     try {
       const isServiceRequestHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -63,6 +50,22 @@ export class ServiceRequestStakingAmountExcessRefunded
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
+
+        const currDateTime = this.dateTimeProxy.new();
+
+        const notificationInput: NotificationDto = {
+          role: 'Customer',
+          entity_type: 'ServiceRequest',
+          entity: 'ServiceRequestStakingAmountExessRefunded',
+          description: `Your over payment staking service request with ID ${serviceRequest[1]} has been refunded.`,
+          read: false,
+          created_at: currDateTime,
+          updated_at: currDateTime,
+          deleted_at: null,
+          from: null,
+          to: serviceRequest.requesterAddress,
+        };
+
         await this.notificationService.insert(notificationInput);
       }
     } catch (error) {

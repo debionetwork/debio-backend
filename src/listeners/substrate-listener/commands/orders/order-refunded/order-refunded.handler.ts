@@ -3,12 +3,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderRefundedCommand } from './order-refunded.command';
 import {
   DateTimeProxy,
+  DebioNotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderRefundedCommand)
@@ -19,7 +19,7 @@ export class OrderRefundedHandler
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
+    private readonly notificationService: DebioNotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -49,14 +49,17 @@ export class OrderRefundedHandler
       if (!isOrderHasBeenInsert) {
         await this.loggingService.create(orderLogging);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
       const customerOrderRefundedNotification: NotificationDto = {
         role: 'Customer',
         entity_type: 'Genetic Testing Order',
         entity: 'Order Refunded',
         description: `Your service fee from ${order.dnaSampleTrackingId} has been refunded, kindly check your account balance.`,
         read: false,
-        created_at: this.dateTimeProxy.new(),
-        updated_at: this.dateTimeProxy.new(),
+        created_at: currDateTime,
+        updated_at: currDateTime,
         deleted_at: null,
         from: 'Debio Network',
         to: order.customerId,

@@ -16,7 +16,7 @@ import {
 import { GeneticAnalysisRejectedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-rejected/genetic-analysis-rejected.handler';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 
 jest.mock(
   '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders',
@@ -28,7 +28,7 @@ jest.mock(
 describe('Genetic Analysis Rejected Handler Event', () => {
   let geneticAnalysisRejectedHandler: GeneticAnalysisRejectedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,7 +42,7 @@ describe('Genetic Analysis Rejected Handler Event', () => {
           useFactory: dateTimeProxyMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         GeneticAnalysisRejectedHandler,
@@ -51,7 +51,7 @@ describe('Genetic Analysis Rejected Handler Event', () => {
 
     geneticAnalysisRejectedHandler = module.get(GeneticAnalysisRejectedHandler);
     substrateServiceMock = module.get(SubstrateService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
 
     await module.init();
   });

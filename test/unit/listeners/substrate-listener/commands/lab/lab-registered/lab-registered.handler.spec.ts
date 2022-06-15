@@ -2,7 +2,7 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { LabRegisteredCommand } from '../../../../../../../src/listeners/substrate-listener/commands/labs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
@@ -18,7 +18,7 @@ import { when } from 'jest-when';
 
 describe('Lab Registered Handler Event', () => {
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
   let labRegisteredHandler: LabRegisteredHandler;
 
@@ -30,7 +30,7 @@ describe('Lab Registered Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -43,7 +43,7 @@ describe('Lab Registered Handler Event', () => {
 
     labRegisteredHandler = module.get(LabRegisteredHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

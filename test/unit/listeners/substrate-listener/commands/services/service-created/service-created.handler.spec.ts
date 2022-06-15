@@ -17,13 +17,13 @@ import {
 } from '../../../../../mock';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
 import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
 
 describe('Service Created Handler Event', () => {
   let serviceCreatedHandle: ServiceCreatedHandler;
   let substrateServiceMock: MockType<SubstrateService>;
-  let notificationServiceMock: MockType<NotificationService>;
+  let notificationServiceMock: MockType<DebioNotificationService>;
   let mailerManagerMock: MockType<MailerManager>;
 
   const createMockService = (
@@ -63,7 +63,7 @@ describe('Service Created Handler Event', () => {
           useFactory: mailerManagerMockFactory,
         },
         {
-          provide: NotificationService,
+          provide: DebioNotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -77,7 +77,7 @@ describe('Service Created Handler Event', () => {
     serviceCreatedHandle = module.get(ServiceCreatedHandler);
     substrateServiceMock = module.get(SubstrateService);
     mailerManagerMock = module.get(MailerManager); // eslint-disable-line
-    notificationServiceMock = module.get(NotificationService);
+    notificationServiceMock = module.get(DebioNotificationService);
   });
 
   it('ServiceCreatedHandler must defined', () => {
