@@ -63,8 +63,8 @@ export class ServiceRequestStakingAmountIncreasedHandler
         );
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
-        await this.notificationService.insert(notificationInput);
       }
+      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

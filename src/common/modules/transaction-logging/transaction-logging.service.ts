@@ -17,7 +17,7 @@ export class TransactionLoggingService {
     logging.amount = +data.amount;
     logging.created_at = data.created_at;
     logging.currency = data.currency;
-    logging.parent_id = data.parent_id;
+    logging.parent_id = data.parent_id.toString();
     logging.ref_number = data.ref_number;
     logging.transaction_type = data.transaction_type;
     logging.transaction_status = data.transaction_status;
@@ -36,7 +36,7 @@ export class TransactionLoggingService {
     return this.transactionRequestRepository.findOne({
       where: {
         ref_number,
-        parent_id: 0,
+        parent_id: BigInt(0).toString(),
       },
     });
   }

@@ -426,7 +426,7 @@ export class SubstrateController {
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line
-      sendRewards(
+      await sendRewards(
         this.substrateService.api as any,
         this.substrateService.pair,
         accountId,

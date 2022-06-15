@@ -13,7 +13,6 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalystVerificationStatusHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 
 describe('Genetic Analyst Verification Status Handler Event', () => {
   let geneticAnalystVerificationStatusHandler: GeneticAnalystVerificationStatusHandler;
@@ -53,17 +52,6 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     const geneticAnalyst = createMockGeneticAnalyst();
 
     const RESULT_STATUS = true;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(geneticAnalyst.toHuman().accountId, 14)
@@ -90,17 +78,6 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     geneticAnalyst.toHuman().verificationStatus = 'Rejected';
 
     const RESULT_STATUS = { id: 1 };
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(geneticAnalyst.toHuman().accountId, 14)
@@ -126,17 +103,6 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     geneticAnalyst.toHuman().verificationStatus = 'Verified';
 
     const RESULT_STATUS = { id: 1 };
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(geneticAnalyst.toHuman().accountId, 14)
@@ -162,17 +128,6 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     geneticAnalyst.toHuman().verificationStatus = 'Revoked';
 
     const RESULT_STATUS = { id: 1 };
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(geneticAnalyst.toHuman().accountId, 14)

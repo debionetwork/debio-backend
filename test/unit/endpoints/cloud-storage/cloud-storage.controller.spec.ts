@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GCloudStorageService } from '@aginix/nestjs-gcloud-storage';
+import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from '../../../../src/endpoints/cloud-storage/cloud-storage.controller';
 import {
   dateTimeProxyMockFactory,

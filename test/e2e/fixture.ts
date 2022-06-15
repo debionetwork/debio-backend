@@ -102,7 +102,7 @@ module.exports = async () => {
       transaction_status: 20,
       created_at: new Date(),
       ref_number: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
-      parent_id: BigInt(0),
+      parent_id: BigInt(0).toString(),
       transaction_hash: '',
     })
     .execute();

@@ -1,20 +1,26 @@
-import { TransactionLoggingService } from '../../../../../../../src/common';
+import {
+  DateTimeProxy,
+  TransactionLoggingService,
+} from '../../../../../../../src/common';
 import { GeneticAnalysisOrderStatus } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   createMockGeneticAnalysisOrder,
+  dateTimeProxyMockFactory,
   mockBlockNumber,
   MockType,
+  notificationServiceMockFactory,
   transactionLoggingServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisOrderPaidHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid/genetic-analysis-order-paid.handler';
 import { when } from 'jest-when';
-import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
+import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
 
 describe('Genetic Analysis Order Paid Handler Event', () => {
   let geneticAnalysisOrderPaidHandler: GeneticAnalysisOrderPaidHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,6 +28,14 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
         {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: DateTimeProxy,
+          useFactory: dateTimeProxyMockFactory,
         },
         GeneticAnalysisOrderPaidHandler,
       ],
@@ -31,6 +45,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
       GeneticAnalysisOrderPaidHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -46,17 +61,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
     );
 
     const RESULT_STATUS = true;
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(0);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 14)
@@ -70,6 +74,7 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 
   it('should called logging service paid', async () => {
@@ -79,17 +84,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
     );
 
     const RESULT_STATUS = { id: 1 };
-    const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
-    RESULT_TRANSACTION.id = BigInt(0);
-    RESULT_TRANSACTION.address = 'string';
-    RESULT_TRANSACTION.amount = 0;
-    RESULT_TRANSACTION.created_at = new Date();
-    RESULT_TRANSACTION.currency = 'string';
-    RESULT_TRANSACTION.parent_id = BigInt(1);
-    RESULT_TRANSACTION.ref_number = 'string';
-    RESULT_TRANSACTION.transaction_type = 0;
-    RESULT_TRANSACTION.transaction_status = 0;
-    RESULT_TRANSACTION.transaction_hash = 'string';
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
       .calledWith(GA_ORDER.toHuman().id, 14)
@@ -104,5 +98,6 @@ describe('Genetic Analysis Order Paid Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalled();
   });
 });

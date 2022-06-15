@@ -64,6 +64,7 @@ export class GeneticAnalysisOrderFulfilledHandler
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.loggingService.create(serviceChargeLogging);
+
         const receivePaymentNotification: NotificationDto = {
           role: 'GA',
           entity_type: 'Genetic Analysis Order',

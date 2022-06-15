@@ -47,7 +47,7 @@ describe('Transaction Logging Service Unit Tests', () => {
     EXPECTED_PARAM.amount = TRN_DTO.amount;
     EXPECTED_PARAM.created_at = TRN_DTO.created_at;
     EXPECTED_PARAM.currency = TRN_DTO.currency;
-    EXPECTED_PARAM.parent_id = TRN_DTO.parent_id;
+    EXPECTED_PARAM.parent_id = TRN_DTO.parent_id.toString();
     EXPECTED_PARAM.ref_number = TRN_DTO.ref_number;
     EXPECTED_PARAM.transaction_type = TRN_DTO.transaction_type;
     EXPECTED_PARAM.transaction_status = TRN_DTO.transaction_status;
@@ -66,7 +66,7 @@ describe('Transaction Logging Service Unit Tests', () => {
     const EXPECTED_PARAM = {
       where: {
         ref_number: REF_NUMBER,
-        parent_id: 0,
+        parent_id: BigInt(0).toString(),
       },
     };
     const RESULT = 0;
@@ -112,7 +112,7 @@ describe('Transaction Logging Service Unit Tests', () => {
     EXPECTED_PARAM.amount = 0;
     EXPECTED_PARAM.created_at = new Date();
     EXPECTED_PARAM.currency = 'string';
-    EXPECTED_PARAM.parent_id = BigInt(0);
+    EXPECTED_PARAM.parent_id = BigInt(0).toString();
     EXPECTED_PARAM.ref_number = 'string';
     EXPECTED_PARAM.transaction_type = 0;
     EXPECTED_PARAM.transaction_status = 0;

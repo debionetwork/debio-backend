@@ -69,11 +69,14 @@ describe('City Service Unit Tests', () => {
         city: 'City 2',
       },
     ];
+    const CALLED_WITH = {
+      where: { id: ID },
+    };
     repositoryMock.findOneOrFail.mockReturnValue(RESULTS);
 
     // Assert
     expect(cityService.getOneCity(ID)).toEqual(RESULTS);
-    expect(repositoryMock.findOneOrFail).toHaveBeenCalledWith(ID);
+    expect(repositoryMock.findOneOrFail).toHaveBeenCalledWith(CALLED_WITH);
     expect(repositoryMock.findOneOrFail).toHaveBeenCalled();
   });
 });
