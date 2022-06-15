@@ -18,7 +18,6 @@ export class LabRegisteredHandler
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -36,19 +35,6 @@ export class LabRegisteredHandler
       transaction_type: 7, // Lab
     };
 
-    const notificationInput: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Labs',
-      entity: 'LabRegistered',
-      description: `Congrats! You have been submitted your account verification.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: lab.accountId,
-      to: 'Admin',
-    };
-
     try {
       const isLabHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -57,7 +43,6 @@ export class LabRegisteredHandler
         );
       if (!isLabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
-        await this.notificationService.insert(notificationInput);
       }
     } catch (error) {
       await this.logger.log(error);
