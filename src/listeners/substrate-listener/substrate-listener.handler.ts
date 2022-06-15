@@ -47,6 +47,7 @@ import {
   LabRetrieveUnstakeAmountCommand,
   LabStakeSuccessfulCommand,
   LabUnstakedCommand,
+  LabUpdateVerificationStatusCommand,
 } from './commands/labs';
 import { GeneticAnalystServiceCreatedCommand } from './commands/genetic-analyst-services';
 import {
@@ -108,6 +109,7 @@ const eventRoutes = {
     LabStakeSuccessful: LabStakeSuccessfulCommand,
     LabUnstakeSuccessful: LabUnstakedCommand,
     LabRetrieveUnstakeAmount: LabRetrieveUnstakeAmountCommand,
+    LabUpdateVerificationStatus: LabUpdateVerificationStatusCommand,
   },
 };
 

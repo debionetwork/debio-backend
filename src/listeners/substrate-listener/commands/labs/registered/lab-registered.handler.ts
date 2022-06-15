@@ -6,8 +6,6 @@ import {
   DateTimeProxy,
   TransactionLoggingService,
 } from '../../../../../common';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
