@@ -42,7 +42,6 @@ export class LabRegisteredHandler
       if (!isLabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
       }
-      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

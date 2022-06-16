@@ -31,41 +31,24 @@ export class VerificationService {
       <VerificationStatus>verificationStatus,
     );
 
-    // insert notification
-    const notificationInput: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Verification',
-      entity: '',
-      description: '',
-      read: false,
-      created_at: currentTime,
-      updated_at: currentTime,
-      deleted_at: null,
-      from: 'Debio Network',
-      to: substrateAddress,
-    };
-
-    switch (verificationStatus) {
-      case VerificationStatus.Verified:
-        notificationInput.entity = 'Account verified';
-        notificationInput.description =
-          'Congrats! Your account has been verified.';
-        break;
-      case VerificationStatus.Revoked:
-        notificationInput.entity = 'Account revoked';
-        notificationInput.description = 'Your account has been revoked.';
-        break;
-      case VerificationStatus.Rejected:
-        notificationInput.entity = 'Account rejected';
-        notificationInput.description =
-          'Your account verification has been rejected.';
-        break;
-    }
-
-    await this.notificationService.insert(notificationInput);
-
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
+
+      const notificationRegistration: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Submit Account Registration and Verification',
+        entity: `Registration and Verification`,
+        description: `You've successfully submitted your account verification.`,
+        read: false,
+        created_at: await this.dateTimeProxy.new(),
+        updated_at: await this.dateTimeProxy.new(),
+        deleted_at: null,
+        from: 'Debio Network',
+        to: substrateAddress,
+      };
+      
+      await this.notificationService.insert(notificationRegistration);
+
       const reward = 2;
       // eslint-disable-next-line
       await sendRewards(
@@ -76,7 +59,7 @@ export class VerificationService {
       );
 
       // insert notification
-      const notificationInput: NotificationDto = {
+      const notificationReward: NotificationDto = {
         role: 'Lab',
         entity_type: 'Reward',
         entity: 'Lab verified',
@@ -89,7 +72,7 @@ export class VerificationService {
         to: substrateAddress,
       };
 
-      await this.notificationService.insert(notificationInput);
+      await this.notificationService.insert(notificationReward);
 
       //Write to Reward Logging
       const dataInput: RewardDto = {
