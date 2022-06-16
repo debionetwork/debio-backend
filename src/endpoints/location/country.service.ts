@@ -1,4 +1,3 @@
-import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -6,13 +5,11 @@ import { Repository } from 'typeorm';
 import { Country } from './models/country.entity';
 
 @Injectable()
-export class CountryService extends TypeOrmQueryService<Country> {
+export class CountryService {
   constructor(
     @InjectRepository(Country, 'dbLocation')
     private readonly countryRepository: Repository<Country>,
-  ) {
-    super(countryRepository);
-  }
+  ) {}
 
   async getAll() {
     return await this.countryRepository.find({
