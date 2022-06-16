@@ -8,6 +8,7 @@ import {
   emailNotificationServiceMockFactory,
   mailerManagerMockFactory,
   MockType,
+  notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../test/unit/mock';
 import { EmailEndpointController } from '../../../../src/endpoints/email/email.controller';
@@ -15,11 +16,13 @@ import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
+import { NotificationService } from '../../../../src/endpoints/notification/notification.service';
 
 describe('Email Controller', () => {
   let emailEndpointControllerMock: EmailEndpointController;
   let mailerManageMock: MockType<MailerManager>;
   let substrateServiceMock: MockType<SubstrateService>;
+  let notificationService: NotificationService// eslint-disable-line
   const EMAILS = 'email';
 
   class ProcessEnvProxyMock {
@@ -47,6 +50,10 @@ describe('Email Controller', () => {
           provide: EmailNotificationService,
           useFactory: emailNotificationServiceMockFactory,
         },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
+        },
       ],
     }).compile();
 
@@ -55,6 +62,7 @@ describe('Email Controller', () => {
     );
     mailerManageMock = module.get(MailerManager);
     substrateServiceMock = module.get(SubstrateService);
+    notificationService = module.get(NotificationService);// eslint-disable-line
   });
 
   it('should be defined', () => {

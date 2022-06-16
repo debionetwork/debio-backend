@@ -33,21 +33,6 @@ export class VerificationService {
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
-      const notificationRegistration: NotificationDto = {
-        role: 'Lab',
-        entity_type: 'Submit Account Registration and Verification',
-        entity: `Registration and Verification`,
-        description: `You've successfully submitted your account verification.`,
-        read: false,
-        created_at: await this.dateTimeProxy.new(),
-        updated_at: await this.dateTimeProxy.new(),
-        deleted_at: null,
-        from: 'Debio Network',
-        to: substrateAddress,
-      };
-
-      await this.notificationService.insert(notificationRegistration);
-
       const reward = 2;
       // eslint-disable-next-line
       await sendRewards(

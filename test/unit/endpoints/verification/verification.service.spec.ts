@@ -197,19 +197,7 @@ describe('Verification Service Unit Tests', () => {
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(2);
-    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        role: 'Lab',
-        entity_type: 'Submit Account Registration and Verification',
-        entity: 'Registration and Verification',
-        description: `You've successfully submitted your account verification.`,
-        read: false,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: ACCOUNT_ID,
-      }),
-    );
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'Lab',
