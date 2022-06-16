@@ -15,5 +15,5 @@ export const LabCommandHandlers = [
   LabStakeSuccessfullHandler,
   labUnstakedHandler,
   LabRetrieveUnstakeAmountHandler,
-  LabUpdateVerificationStatusHandler
+  LabUpdateVerificationStatusHandler,
 ];

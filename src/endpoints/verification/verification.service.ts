@@ -33,7 +33,6 @@ export class VerificationService {
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
-
       const notificationRegistration: NotificationDto = {
         role: 'Lab',
         entity_type: 'Submit Account Registration and Verification',
@@ -46,7 +45,7 @@ export class VerificationService {
         from: 'Debio Network',
         to: substrateAddress,
       };
-      
+
       await this.notificationService.insert(notificationRegistration);
 
       const reward = 2;

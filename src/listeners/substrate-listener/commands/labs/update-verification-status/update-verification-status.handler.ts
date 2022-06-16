@@ -1,8 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import {
-  DateTimeProxy,
-} from '../../../../../common';
+import { DateTimeProxy } from '../../../../../common';
 import { LabUpdateVerificationStatusCommand } from './update-verification-status.command';
 import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
 import { NotificationService } from '../../../../../endpoints/notification/notification.service';
@@ -11,7 +9,9 @@ import { NotificationService } from '../../../../../endpoints/notification/notif
 export class LabUpdateVerificationStatusHandler
   implements ICommandHandler<LabUpdateVerificationStatusCommand>
 {
-  private readonly logger: Logger = new Logger(LabUpdateVerificationStatusCommand.name);
+  private readonly logger: Logger = new Logger(
+    LabUpdateVerificationStatusCommand.name,
+  );
   constructor(
     private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
@@ -19,7 +19,9 @@ export class LabUpdateVerificationStatusHandler
 
   async execute(command: LabUpdateVerificationStatusCommand) {
     const lab = command.labs.normalize();
-    await this.logger.log(`Lab ID: ${lab.accountId} Update Verification Status ${lab.verificationStatus}!`);
+    await this.logger.log(
+      `Lab ID: ${lab.accountId} Update Verification Status ${lab.verificationStatus}!`,
+    );
 
     const notificationInput: NotificationDto = {
       role: 'Lab',
@@ -34,11 +36,12 @@ export class LabUpdateVerificationStatusHandler
       to: lab.accountId,
     };
 
-    if(lab.verificationStatus == 'Verified'){
-      notificationInput.description = 'Congrats! ' + notificationInput.description;
+    if (lab.verificationStatus == 'Verified') {
+      notificationInput.description =
+        'Congrats! ' + notificationInput.description;
     }
     try {
-      await this.notificationService.insert(notificationInput)
+      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }
