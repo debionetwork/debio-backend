@@ -158,19 +158,7 @@ describe('Verification Service Unit Tests', () => {
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        role: 'Lab',
-        entity_type: 'Verification',
-        entity: 'Account rejected',
-        description: 'Your account verification has been rejected.',
-        read: false,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: ACCOUNT_ID,
-      }),
-    );
+    expect(notificationServiceMock.insert).not.toBeCalled();
   });
 
   it('should send reward', async () => {
@@ -213,9 +201,9 @@ describe('Verification Service Unit Tests', () => {
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'Lab',
-        entity_type: 'Verification',
-        entity: 'Account verified',
-        description: 'Congrats! Your account has been verified.',
+        entity_type: 'Submit Account Registration and Verification',
+        entity: 'Registration and Verification',
+        description: `You've successfully submitted your account verification.`,
         read: false,
         deleted_at: null,
         from: 'Debio Network',
@@ -227,7 +215,7 @@ describe('Verification Service Unit Tests', () => {
         role: 'Lab',
         entity_type: 'Reward',
         entity: 'Lab verified',
-        description: 'Congrats! You’ve got 2 DBIO from account verification.',
+        description: `Congrats! You’ve got 2 DBIO from account verification.`,
         read: false,
         deleted_at: null,
         from: 'Debio Network',
