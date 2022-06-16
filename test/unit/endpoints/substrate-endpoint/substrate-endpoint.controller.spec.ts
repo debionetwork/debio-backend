@@ -35,12 +35,12 @@ jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
   // eslint-disable-next-line
-  adminSetEthAddress: jest.fn((_param1, _param2, _param3, _param4, param5) =>
-    param5(),
+  adminSetEthAddress: jest.fn(
+    (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   // eslint-disable-next-line
-  sendRewards: jest.fn((_param1, _param2, _param3, _param4, param5) =>
-    param5(),
+  sendRewards: jest.fn(
+    (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   setGeneticAnalysisOrderPaid: jest.fn(),
 }));
@@ -509,7 +509,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       'PAIR',
       DTO.accountId,
       (REWARD * DBIO_UNIT).toString(),
-      expect.any(Function),
     );
     expect(notificationServiceMock.insert).toHaveBeenCalled();
     expect(notificationServiceMock.insert).toHaveBeenCalledWith({
