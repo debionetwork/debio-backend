@@ -5,7 +5,7 @@ import { dnaCollectionCategories } from './models/response';
 import { DnaCollectionService } from './dna-collection.service';
 
 @UseInterceptors(SentryInterceptor)
-@Controller('dna-collection-category')
+@Controller('dna-collection-process')
 export class DnaCollectionController {
   constructor(private readonly dnaCollectionService: DnaCollectionService) {}
 
