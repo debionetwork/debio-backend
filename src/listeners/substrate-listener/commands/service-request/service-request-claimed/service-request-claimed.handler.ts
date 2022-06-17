@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
 import { ServiceRequestClaimedCommand } from './service-request-claimed.command';
-import { DateTimeProxy } from '../../../../../common';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestClaimedCommand)
@@ -18,14 +17,16 @@ export class ServiceRequestClaimedCommandHandler
   async execute(command: ServiceRequestClaimedCommand) {
     const requestData = command.request.normalize();
 
+    const currDateTime = this.dateTimeProxy.new();
+
     const serviceAvailableNotificationInput: NotificationDto = {
       role: 'Customer',
       entity_type: 'Request Service Staking',
       entity: 'Requested Service Available',
       description: `Congrats! Your requested service is available now. Click here to see your order details.`,
       read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
+      created_at: currDateTime,
+      updated_at: currDateTime,
       deleted_at: null,
       from: 'Debio Network',
       to: requestData.requesterAddress,

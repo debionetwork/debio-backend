@@ -2,7 +2,7 @@ import {
   TransactionLoggingService,
   DateTimeProxy,
 } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Test, TestingModule } from '@nestjs/testing';

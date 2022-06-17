@@ -2,15 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderFailedCommand } from './order-failed.command';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
-import { DateTimeProxy, SubstrateService } from '../../../../../common';
+import {
+  DateTimeProxy,
+  NotificationService,
+  SubstrateService,
+} from '../../../../../common';
 import {
   Order,
   setOrderRefunded,
   finalizeRequest,
   sendRewards,
 } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
@@ -45,6 +48,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       this.substrateService.pair,
       order.id,
     );
+
+    const currDateTime = this.dateTimeProxy.new();
+
     // QC notification to lab
     const labNotification: NotificationDto = {
       role: 'Lab',
@@ -52,8 +58,8 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
       entity: 'Order Failed',
       description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
       read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
+      created_at: currDateTime,
+      updated_at: currDateTime,
       deleted_at: null,
       from: 'Debio Network',
       to: order.sellerId,

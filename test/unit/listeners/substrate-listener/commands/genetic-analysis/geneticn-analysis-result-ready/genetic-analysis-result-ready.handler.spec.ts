@@ -14,7 +14,7 @@ import {
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
 

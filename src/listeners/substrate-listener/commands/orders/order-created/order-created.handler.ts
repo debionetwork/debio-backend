@@ -3,12 +3,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderCreatedCommand } from './order-created.command';
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderCreatedCommand)
@@ -44,22 +44,25 @@ export class OrderCreatedHandler
         transaction_type: 1,
       };
 
-      // insert notification
-      const notificationInput: NotificationDto = {
-        role: 'Customer',
-        entity_type: 'Order',
-        entity: 'OrderCreated',
-        description: `Congrats! Your requested test for ${order.id} has been submitted.`,
-        read: false,
-        created_at: await this.dateTimeProxy.new(),
-        updated_at: await this.dateTimeProxy.new(),
-        deleted_at: null,
-        from: 'Debio Network',
-        to: order.customerId,
-      };
-
       if (!isOrderHasBeenInsert) {
         await this.loggingService.create(orderLogging);
+
+        const currDateTime = this.dateTimeProxy.new();
+
+        // insert notification
+        const notificationInput: NotificationDto = {
+          role: 'Customer',
+          entity_type: 'Order',
+          entity: 'OrderCreated',
+          description: `Congrats! Your requested test for ${order.id} has been submitted.`,
+          read: false,
+          created_at: currDateTime,
+          updated_at: currDateTime,
+          deleted_at: null,
+          from: 'Debio Network',
+          to: order.customerId,
+        };
+
         await this.notificationService.insert(notificationInput);
       }
     } catch (error) {

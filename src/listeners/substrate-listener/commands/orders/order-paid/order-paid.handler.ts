@@ -3,12 +3,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -48,6 +48,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
 
         await this.loggingService.create(orderLogging);
 
+        const currDateTime = this.dateTimeProxy.new();
+
         // notification to lab
         const notificationNewOrder: NotificationDto = {
           role: 'Lab',
@@ -55,8 +57,8 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
           entity: 'New Order',
           description: `A new order (${order.id}) is awaiting process.`,
           read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
+          created_at: currDateTime,
+          updated_at: currDateTime,
           deleted_at: null,
           from: 'Debio Network',
           to: order.sellerId,

@@ -1,5 +1,5 @@
 import { DateTimeProxy } from '../../../../../../../src/common';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import {
   createMockDnaSample,
   dateTimeProxyMockFactory,

@@ -3,11 +3,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderFulfilledCommand } from './genetic-analysis-order-fulfilled.command';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderFulfilledCommand)
@@ -65,6 +65,8 @@ export class GeneticAnalysisOrderFulfilledHandler
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.loggingService.create(serviceChargeLogging);
 
+        const currDate = this.dateTimeProxy.new();
+
         const receivePaymentNotification: NotificationDto = {
           role: 'GA',
           entity_type: 'Genetic Analysis Order',
@@ -74,8 +76,8 @@ export class GeneticAnalysisOrderFulfilledHandler
             geneticAnalysisOrder.geneticAnalysisTrackingId
           }.`,
           read: false,
-          created_at: this.dateTimeProxy.new(),
-          updated_at: this.dateTimeProxy.new(),
+          created_at: currDate,
+          updated_at: currDate,
           deleted_at: null,
           from: 'Debio Network',
           to: geneticAnalysisOrder.sellerId,

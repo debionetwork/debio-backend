@@ -17,7 +17,7 @@ import {
 } from '../../../../../mock';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import { ServiceCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/services';
 
 describe('Service Created Handler Event', () => {

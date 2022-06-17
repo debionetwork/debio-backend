@@ -18,7 +18,7 @@ import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
 import { CountryService } from '../../../../../../../src/endpoints/location/country.service';
 import { StateService } from '../../../../../../../src/endpoints/location/state.service';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';

@@ -4,8 +4,10 @@ import { LabRegisteredCommand } from './lab-registered.command';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(LabRegisteredCommand)
@@ -42,6 +44,23 @@ export class LabRegisteredHandler
       if (!isLabHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
+      const notificationInput: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Labs',
+        entity: 'LabRegistered',
+        description: `Congrats! You have been submitted your account verification.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: lab.accountId,
+        to: 'Admin',
+      };
+
+      await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);
     }

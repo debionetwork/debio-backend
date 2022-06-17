@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy } from '../../../../../common';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
 import { GeneticAnalystServiceCreatedCommand } from './genetic-analyst-service-created.command';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalystServiceCreatedCommand)
@@ -21,20 +20,22 @@ export class GeneticAnalystServiceCreatedCommandHandler
   async execute(command: GeneticAnalystServiceCreatedCommand) {
     const geneticAnalystService = command.geneticAnalystService;
     try {
+      const currDateTime = this.dateTimeProxy.new();
+
       const geneticAnalystServiceNotification: NotificationDto = {
         role: 'GA',
         entity_type: 'Genetic Analyst',
         entity: 'Add service',
         description: `You've successfully added your new service - ${geneticAnalystService.info.name}.`,
         read: false,
-        created_at: this.dateTimeProxy.new(),
-        updated_at: this.dateTimeProxy.new(),
+        created_at: currDateTime,
+        updated_at: currDateTime,
         deleted_at: null,
         from: 'Debio Network',
         to: geneticAnalystService.ownerId,
       };
 
-      this.notificationService.insert(geneticAnalystServiceNotification);
+      await this.notificationService.insert(geneticAnalystServiceNotification);
     } catch (error) {
       this.logger.log(error);
     }
