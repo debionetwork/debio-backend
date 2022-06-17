@@ -91,7 +91,9 @@ module.exports = async () => {
     .execute();
   console.log('`Specialization Category` data injection successful! ✅');
 
-  console.log('Injecting `DNA Collection Process Category` into debio-postgres 💉...');
+  console.log(
+    'Injecting `DNA Collection Process Category` into debio-postgres 💉...',
+  );
 
   await dbPostgresMigration
     .createQueryBuilder()
@@ -100,9 +102,9 @@ module.exports = async () => {
     .values(dnaCollectionList)
     .execute();
   console.log('`EMR Category` data injection successful! ✅');
-  
+
   console.log('Injecting `DNA Collection Process` into debio-postgres 💉...');
-  
+
   await dbPostgresMigration
     .createQueryBuilder()
     .insert()

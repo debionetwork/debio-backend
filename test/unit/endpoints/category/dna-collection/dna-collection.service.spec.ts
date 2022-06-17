@@ -34,11 +34,11 @@ describe('Dna Collection Service Unit Tests', () => {
     const categories = [
       {
         name: 'Example 1',
-        collectionProcces: 'example 1'
+        collectionProcces: 'example 1',
       },
       {
         name: 'Example 2',
-        collectionProcces: 'example 2'
+        collectionProcces: 'example 2',
       },
     ];
     repositoryMock.find.mockReturnValue(categories);
