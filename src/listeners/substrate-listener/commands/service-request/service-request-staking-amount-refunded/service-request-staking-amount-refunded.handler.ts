@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, DebioNotificationService } from '../../../../../common';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
 import { ServiceRequestStakingAmountRefundedCommand } from './service-request-staking-amount-refunded.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountRefundedCommand)
@@ -11,7 +11,7 @@ export class ServiceRequestStakingAmountRefundedHandler
 {
   constructor(
     private readonly dateTimeProxy: DateTimeProxy,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async execute(command: ServiceRequestStakingAmountRefundedCommand) {

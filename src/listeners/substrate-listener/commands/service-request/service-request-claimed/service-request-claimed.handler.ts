@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ServiceRequestClaimedCommand } from './service-request-claimed.command';
-import { DateTimeProxy, DebioNotificationService } from '../../../../../common';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestClaimedCommand)
@@ -10,7 +10,7 @@ export class ServiceRequestClaimedCommandHandler
   implements ICommandHandler<ServiceRequestClaimedCommand>
 {
   constructor(
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

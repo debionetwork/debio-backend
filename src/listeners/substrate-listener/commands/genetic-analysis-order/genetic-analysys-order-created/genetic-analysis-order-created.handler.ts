@@ -4,10 +4,10 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 import {
   TransactionLoggingService,
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderCreatedCommand } from './genetic-analysis-order-created.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderCreatedCommand)
@@ -19,7 +19,7 @@ export class GeneticAnalysisOrderCreatedHandler
   );
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

@@ -5,7 +5,7 @@ import {
 } from '../../../../../../../src/common';
 import { GeneticAnalysisOrderCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import { Test, TestingModule } from '@nestjs/testing';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import {
   createMockGeneticAnalysisOrder,
   dateTimeProxyMockFactory,
@@ -20,7 +20,7 @@ import { when } from 'jest-when';
 describe('Genetic Analysis Order Created Handler Event', () => {
   let geneticAnalysisOrderCreatedHandler: GeneticAnalysisOrderCreatedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
@@ -31,7 +31,7 @@ describe('Genetic Analysis Order Created Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -46,7 +46,7 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       GeneticAnalysisOrderCreatedHandler,
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

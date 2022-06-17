@@ -4,7 +4,7 @@ import {
   DateTimeModule,
   DebioConversionModule,
   MailModule,
-  DebioNotificationModule,
+  NotificationModule,
   ProcessEnvModule,
   RewardModule,
   SubstrateModule,
@@ -37,7 +37,7 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     MailModule,
     CqrsModule,
     DateTimeModule,
-    DebioNotificationModule,
+    NotificationModule,
     ElasticsearchModule.registerAsync({
       useFactory: async () => ({
         node: process.env.ELASTICSEARCH_NODE,

@@ -15,7 +15,7 @@ import {
   updateLabVerificationStatus,
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
-import { DebioNotificationService } from '../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
@@ -37,7 +37,7 @@ describe('Verification Service Unit Tests', () => {
   let verificationService: VerificationService;
   let rewardServiceMock: MockType<RewardService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let substrateServiceMock: MockType<SubstrateService>;
 
   const API = 'API';
@@ -66,7 +66,7 @@ describe('Verification Service Unit Tests', () => {
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
       ],
@@ -76,7 +76,7 @@ describe('Verification Service Unit Tests', () => {
     rewardServiceMock = module.get(RewardService);
 
     dateTimeProxyMock = module.get(DateTimeProxy);
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
 
     substrateServiceMock = module.get(SubstrateService);
     Reflect.set(substrateServiceMock, 'api', API);

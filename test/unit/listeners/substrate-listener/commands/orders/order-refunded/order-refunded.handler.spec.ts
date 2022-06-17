@@ -17,12 +17,12 @@ import { OrderRefundedHandler } from '../../../../../../../src/listeners/substra
 import { when } from 'jest-when';
 import { TransactionLoggingDto } from '../../../../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionRequest } from '../../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 
 describe('Order Refunded Handler Event', () => {
   let orderRefundedHandler: OrderRefundedHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   beforeEach(async () => {
     jest
@@ -35,7 +35,7 @@ describe('Order Refunded Handler Event', () => {
           useFactory: transactionLoggingServiceMockFactory,
         },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -48,7 +48,7 @@ describe('Order Refunded Handler Event', () => {
 
     orderRefundedHandler = module.get(OrderRefundedHandler);
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });

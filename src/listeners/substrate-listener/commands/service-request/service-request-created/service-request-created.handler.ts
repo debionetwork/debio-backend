@@ -5,13 +5,13 @@ import { TransactionLoggingDto } from '../../../../../common/modules/transaction
 import {
   DateTimeProxy,
   MailerManager,
-  DebioNotificationService,
+  NotificationService,
   ProcessEnvProxy,
   TransactionLoggingService,
 } from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -28,7 +28,7 @@ export class ServiceRequestCreatedHandler
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
     private readonly mailerManager: MailerManager,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

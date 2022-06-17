@@ -3,11 +3,11 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { GeneticAnalysisOrderFulfilledCommand } from './genetic-analysis-order-fulfilled.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisOrderFulfilledCommand)
@@ -19,7 +19,7 @@ export class GeneticAnalysisOrderFulfilledHandler
   );
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

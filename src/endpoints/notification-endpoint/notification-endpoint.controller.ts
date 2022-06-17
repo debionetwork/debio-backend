@@ -1,13 +1,13 @@
 import { Controller, Get, Param, Put, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../common';
-import { notificationData } from '../../common/modules/debio-notification/models/response';
-import { DebioNotificationService } from '../../common/modules/debio-notification/debio-notification.service';
+import { notificationData } from '../../common/modules/notification/models/response';
+import { NotificationService } from '../../common/modules/notification/notification.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('notification')
-export class NotificationController {
-  constructor(private readonly notificationService: DebioNotificationService) {}
+export class NotificationEndpointController {
+  constructor(private readonly notificationService: NotificationService) {}
 
   @Get(':to_id')
   @ApiParam({ name: 'to_id' })

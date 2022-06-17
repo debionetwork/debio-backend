@@ -4,7 +4,7 @@ import { OrderFailedCommand } from './order-failed.command';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   SubstrateService,
 } from '../../../../../common';
 import {
@@ -13,7 +13,7 @@ import {
   finalizeRequest,
   sendRewards,
 } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderFailedCommand)
@@ -23,7 +23,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   constructor(
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

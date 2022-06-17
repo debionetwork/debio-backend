@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DateTimeProxy, DebioNotificationService } from '../../../../../common';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
 import { GeneticAnalystServiceCreatedCommand } from './genetic-analyst-service-created.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalystServiceCreatedCommand)
@@ -13,7 +13,7 @@ export class GeneticAnalystServiceCreatedCommandHandler
     GeneticAnalystServiceCreatedCommandHandler.name,
   );
   constructor(
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

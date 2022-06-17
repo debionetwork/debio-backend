@@ -1,27 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import {
-  DateTimeProxy,
-  DebioNotificationService,
-} from '../../../../../src/common';
+import { DateTimeProxy, NotificationService } from '../../../../../src/common';
 import {
   dateTimeProxyMockFactory,
   MockType,
   repositoryMockFactory,
 } from '../../../mock';
 import { Repository } from 'typeorm';
-import { Notification } from '../../../../../src/common/modules/debio-notification/models/notification.entity';
-import { NotificationDto } from '../../../../../src/common/modules/debio-notification/dto/notification.dto';
+import { Notification } from '../../../../../src/common/modules/notification/models/notification.entity';
+import { NotificationDto } from '../../../../../src/common/modules/notification/dto/notification.dto';
 
 describe('Debio Notification Service Unit Tests', () => {
-  let debioNotificationService: DebioNotificationService;
+  let debioNotificationService: NotificationService;
   let repositoryMock: MockType<Repository<Notification>>;
 
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        DebioNotificationService,
+        NotificationService,
         {
           provide: getRepositoryToken(Notification),
           useFactory: repositoryMockFactory,
@@ -32,7 +29,7 @@ describe('Debio Notification Service Unit Tests', () => {
         },
       ],
     }).compile();
-    debioNotificationService = module.get(DebioNotificationService);
+    debioNotificationService = module.get(NotificationService);
     repositoryMock = module.get(getRepositoryToken(Notification));
   });
 

@@ -5,7 +5,7 @@ import { OrderFulfilledCommand } from './order-fulfilled.command';
 import {
   DateTimeProxy,
   DebioConversionService,
-  DebioNotificationService,
+  NotificationService,
   RewardService,
   SubstrateService,
   TransactionLoggingService,
@@ -22,7 +22,7 @@ import {
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -37,7 +37,7 @@ export class OrderFulfilledHandler
     private readonly rewardService: RewardService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

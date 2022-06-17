@@ -17,7 +17,7 @@ import { OrderStatus } from '@debionetwork/polkadot-provider';
 import { OrderFailedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/orders/order-failed/order-failed.handler';
 import { EscrowService } from '../../../../../../../src/common/modules/escrow/escrow.service';
 import * as ordersCommand from '@debionetwork/polkadot-provider/lib/command/labs/orders';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 
 describe('Order Failed Handler Event', () => {
   let orderFailedHandler: OrderFailedHandler;
@@ -36,7 +36,7 @@ describe('Order Failed Handler Event', () => {
           useFactory: escrowServiceMockFactory,
         },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {

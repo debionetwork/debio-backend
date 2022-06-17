@@ -4,10 +4,10 @@ import { ServiceRequestStakingAmountIncreasedCommand } from './service-request-p
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountIncreasedCommand)
@@ -20,7 +20,7 @@ export class ServiceRequestStakingAmountIncreasedHandler
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

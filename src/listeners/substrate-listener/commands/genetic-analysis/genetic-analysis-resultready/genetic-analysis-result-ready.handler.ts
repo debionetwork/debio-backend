@@ -2,12 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   SubstrateService,
 } from '../../../../../common';
 import { setGeneticAnalysisOrderFulfilled } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisResultReadyCommand } from './genetic-analysis-result-ready.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisResultReadyCommand)
@@ -19,7 +19,7 @@ export class GeneticAnalysisResultReadyHandler
   );
   constructor(
     private readonly substrateService: SubstrateService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

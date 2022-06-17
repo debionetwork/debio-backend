@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
-import { DebioNotificationService } from '../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
 import { LabService } from '../../../../src/endpoints/substrate-endpoint/services/lab.service';
 import { ServiceService } from '../../../../src/endpoints/substrate-endpoint/services/service.service';
 import {
@@ -55,7 +55,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -122,7 +122,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         { provide: ServiceService, useFactory: serviceServiceMockFactory },
         { provide: OrderService, useFactory: orderServiceMockFactory },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -152,7 +152,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
     geneticAnalysisOrderMock = module.get(GeneticAnalysisOrderService);
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
   });
 
   it('should be defined', () => {

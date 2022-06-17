@@ -6,13 +6,13 @@ import {
 } from '../../../../../mock';
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestStakingAmountRefundedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.handler';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import { ServiceRequestStakingAmountRefundedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-staking-amount-refunded/service-request-staking-amount-refunded.command';
 import { DateTimeProxy } from '../../../../../../../src/common';
 
 describe('Service Request Staking Amount Refunded Handler Event', () => {
   let serviceRequesStakingAmountRefundedHandler: ServiceRequestStakingAmountRefundedHandler;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
 
   function mockBlockNumber(): BlockMetaData {
     return {
@@ -25,7 +25,7 @@ describe('Service Request Staking Amount Refunded Handler Event', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -39,7 +39,7 @@ describe('Service Request Staking Amount Refunded Handler Event', () => {
     serviceRequesStakingAmountRefundedHandler = module.get(
       ServiceRequestStakingAmountRefundedHandler,
     );
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
   });
 
   it('ServiceRequestStakingAmountRefundedHandler must defined', () => {

@@ -16,7 +16,7 @@ import { SpecializationCategory } from '../../src/endpoints/category/specializat
 import { emrList } from './endpoints/category/emr.mock.data';
 import { serviceList } from './endpoints/category/service.mock.data';
 import { specializationList } from './endpoints/category/specialization.mock.data';
-import { Notification } from '../../src/common/modules/debio-notification/models/notification.entity';
+import { Notification } from '../../src/common/modules/notification/models/notification.entity';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({

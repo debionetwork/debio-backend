@@ -3,7 +3,7 @@ import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   SubstrateService,
 } from '../../common';
 import {
@@ -13,7 +13,7 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { NotificationDto } from '../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 export class VerificationService {
@@ -21,7 +21,7 @@ export class VerificationService {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly rewardService: RewardService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {

@@ -1,5 +1,5 @@
 import { DateTimeProxy } from '../../../../../../../src/common';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import {
   createMockDnaSample,
   dateTimeProxyMockFactory,
@@ -12,7 +12,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DnaSampleRejectedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 
 describe('DNA Sample Rejected Handler Event', () => {
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
   let dnaSampleRejectedHandler: MockType<DnaSampleRejectedCommandHandler>;
 
@@ -20,7 +20,7 @@ describe('DNA Sample Rejected Handler Event', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -31,7 +31,7 @@ describe('DNA Sample Rejected Handler Event', () => {
       ],
     }).compile();
 
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
     dnaSampleRejectedHandler = module.get(DnaSampleRejectedCommandHandler);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 

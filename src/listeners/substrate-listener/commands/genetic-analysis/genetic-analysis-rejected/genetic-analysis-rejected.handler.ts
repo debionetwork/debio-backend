@@ -2,12 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   SubstrateService,
 } from '../../../../../common';
 import { setGeneticAnalysisOrderRefunded } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisRejectedCommand } from './genetic-analysis-rejected.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(GeneticAnalysisRejectedCommand)
@@ -20,7 +20,7 @@ export class GeneticAnalysisRejectedHandler
   constructor(
     private readonly substrateService: SubstrateService,
     private readonly dateTimeProxy: DateTimeProxy,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   async execute(command: GeneticAnalysisRejectedCommand) {

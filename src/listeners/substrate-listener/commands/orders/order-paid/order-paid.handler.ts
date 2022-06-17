@@ -3,12 +3,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { OrderPaidCommand } from './order-paid.command';
 import {
   DateTimeProxy,
-  DebioNotificationService,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { Order } from '@debionetwork/polkadot-provider';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderPaidCommand)
@@ -17,7 +17,7 @@ export class OrderPaidHandler implements ICommandHandler<OrderPaidCommand> {
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

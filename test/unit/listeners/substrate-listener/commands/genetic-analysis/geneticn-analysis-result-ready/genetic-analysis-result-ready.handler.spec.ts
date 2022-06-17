@@ -14,7 +14,7 @@ import {
   substrateServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalysisResultReadyHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis/genetic-analysis-resultready/genetic-analysis-result-ready.handler';
-import { DebioNotificationService } from '../../../../../../../src/common/modules/debio-notification/debio-notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 import * as geneticAnalysisOrderCommand from '@debionetwork/polkadot-provider/lib/command/genetic-analyst/genetic-analysis-orders';
 import { when } from 'jest-when';
 
@@ -28,7 +28,7 @@ jest.mock(
 describe('Genetic Analysis ResultReady Handler Event', () => {
   let geneticAnalysisResultReadyHandler: GeneticAnalysisResultReadyHandler;
   let substrateServiceMock: MockType<SubstrateService>;
-  let notificationServiceMock: MockType<DebioNotificationService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
@@ -39,7 +39,7 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
           useFactory: substrateServiceMockFactory,
         },
         {
-          provide: DebioNotificationService,
+          provide: NotificationService,
           useFactory: notificationServiceMockFactory,
         },
         {
@@ -54,7 +54,7 @@ describe('Genetic Analysis ResultReady Handler Event', () => {
       GeneticAnalysisResultReadyHandler,
     );
     substrateServiceMock = module.get(SubstrateService);
-    notificationServiceMock = module.get(DebioNotificationService);
+    notificationServiceMock = module.get(NotificationService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
 
     await module.init();

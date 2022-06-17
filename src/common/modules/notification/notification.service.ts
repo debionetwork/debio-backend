@@ -6,7 +6,7 @@ import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
 
 @Injectable()
-export class DebioNotificationService {
+export class NotificationService {
   constructor(
     @InjectRepository(Notification)
     private readonly notificationRepository: Repository<Notification>,

@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DnaSampleResultReadyCommand } from './dna-sample-result-ready.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
-import { DateTimeProxy, DebioNotificationService } from '../../../../../common';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class DnaSampleResultReadyCommandHandler
   implements ICommandHandler<DnaSampleResultReadyCommand>
 {
   constructor(
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

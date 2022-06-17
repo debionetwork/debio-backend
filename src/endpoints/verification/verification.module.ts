@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DateTimeModule, DebioNotificationModule } from '../../common';
+import { DateTimeModule, NotificationModule } from '../../common';
 import { RewardModule } from '../../common/modules/reward/reward.module';
 import { ProcessEnvModule, SubstrateModule } from '../../common';
 import { VerificationController } from './verification.controller';
@@ -11,7 +11,7 @@ import { VerificationService } from './verification.service';
     RewardModule,
     DateTimeModule,
     ProcessEnvModule,
-    DebioNotificationModule,
+    NotificationModule,
   ],
   controllers: [VerificationController],
   providers: [VerificationService],

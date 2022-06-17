@@ -5,13 +5,13 @@ import {
   LabRegister,
   labToLabRegister,
   MailerManager,
-  DebioNotificationService,
+  NotificationService,
   ProcessEnvProxy,
   SubstrateService,
 } from '../../../../../common';
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
-import { NotificationDto } from '../../../../../common/modules/debio-notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceCreatedCommand)
@@ -21,7 +21,7 @@ export class ServiceCreatedHandler
   private readonly logger: Logger = new Logger(ServiceCreatedCommand.name);
   constructor(
     private readonly process: ProcessEnvProxy,
-    private readonly notificationService: DebioNotificationService,
+    private readonly notificationService: NotificationService,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
     private readonly dateTimeProxy: DateTimeProxy,
