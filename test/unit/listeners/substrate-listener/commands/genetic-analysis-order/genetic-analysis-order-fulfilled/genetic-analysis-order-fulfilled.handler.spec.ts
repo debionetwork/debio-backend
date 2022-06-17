@@ -15,7 +15,7 @@ import {
 } from '../../../../../mock';
 import { GeneticAnalysisOrderFulfilledHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-fulfilled/genetic-analysis-order-fulfilled.handler';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../../../../src/common/modules/notification/notification.service';
 
 describe('Genetic Analysis Order Fulfilled Handler Event', () => {
   let notificationServiceMock: MockType<NotificationService>;

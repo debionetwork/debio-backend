@@ -4,10 +4,10 @@ import { ServiceRequestStakingAmountIncreasedCommand } from './service-request-p
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../common';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceRequestStakingAmountIncreasedCommand)
@@ -42,19 +42,6 @@ export class ServiceRequestStakingAmountIncreasedHandler
       transaction_type: 2,
     };
 
-    const notificationInput: NotificationDto = {
-      role: 'Customer',
-      entity_type: 'ServiceRequest',
-      entity: 'ServiceRequestStakingAmountIncreased',
-      description: `Your partial payment staking service request with ID ${serviceRequest[1]} has been increased.`,
-      read: false,
-      created_at: await this.dateTimeProxy.new(),
-      updated_at: await this.dateTimeProxy.new(),
-      deleted_at: null,
-      from: null,
-      to: serviceRequest.requesterAddress,
-    };
-
     try {
       const isServiceRequestHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
@@ -64,6 +51,22 @@ export class ServiceRequestStakingAmountIncreasedHandler
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
       }
+
+      const currDateTime = this.dateTimeProxy.new();
+
+      const notificationInput: NotificationDto = {
+        role: 'Customer',
+        entity_type: 'ServiceRequest',
+        entity: 'ServiceRequestStakingAmountIncreased',
+        description: `Your partial payment staking service request with ID ${serviceRequest[1]} has been increased.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: null,
+        to: serviceRequest.requesterAddress,
+      };
+
       await this.notificationService.insert(notificationInput);
     } catch (error) {
       await this.logger.log(error);

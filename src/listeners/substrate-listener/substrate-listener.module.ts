@@ -4,6 +4,7 @@ import {
   DateTimeModule,
   DebioConversionModule,
   MailModule,
+  NotificationModule,
   ProcessEnvModule,
   RewardModule,
   SubstrateModule,
@@ -19,7 +20,6 @@ import { SubstrateListenerHandler } from './substrate-listener.handler';
 import { OrderCommandHandlers } from './commands/orders';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LocationModule } from '../../endpoints/location/location.module';
-import { NotificationModule } from '../../endpoints/notification/notification.module';
 import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';

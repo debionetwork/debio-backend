@@ -15,7 +15,7 @@ import {
   updateLabVerificationStatus,
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
-import { NotificationService } from '../../../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line

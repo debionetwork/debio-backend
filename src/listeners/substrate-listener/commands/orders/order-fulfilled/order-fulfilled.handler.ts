@@ -5,6 +5,7 @@ import { OrderFulfilledCommand } from './order-fulfilled.command';
 import {
   DateTimeProxy,
   DebioConversionService,
+  NotificationService,
   RewardService,
   SubstrateService,
   TransactionLoggingService,
@@ -21,8 +22,7 @@ import {
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(OrderFulfilledCommand)
@@ -194,6 +194,8 @@ export class OrderFulfilledHandler
       }
       await this.escrowService.orderFulfilled(order);
 
+      const currDateTime = this.dateTimeProxy.new();
+
       // Write Logging Notification Customer Reward From Request Service
       const labPaymentNotification: NotificationDto = {
         role: 'Lab',
@@ -201,8 +203,8 @@ export class OrderFulfilledHandler
         entity: 'Order Fulfilled',
         description: `You've received ${amountToForward} DAI for completeing the requested test for ${order.id}.`,
         read: false,
-        created_at: this.dateTimeProxy.new(),
-        updated_at: this.dateTimeProxy.new(),
+        created_at: currDateTime,
+        updated_at: currDateTime,
         deleted_at: null,
         from: 'Debio Network',
         to: order.sellerId,

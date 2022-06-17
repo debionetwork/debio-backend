@@ -1,12 +1,12 @@
 import { Controller, Get, Param, Put, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../common';
-import { notificationData } from './models/response';
-import { NotificationService } from './notification.service';
+import { notificationData } from '../../common/modules/notification/models/response';
+import { NotificationService } from '../../common/modules/notification/notification.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('notification')
-export class NotificationController {
+export class NotificationEndpointController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @Get(':to_id')

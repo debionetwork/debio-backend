@@ -28,7 +28,7 @@ import {
   queryLastGeneticAnalysisOrderByCustomerId,
 } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
-import { NotificationModule } from '../../../src/endpoints/notification/notification.module';
+import { NotificationEndpointModule } from '../../../src/endpoints/notification-endpoint/notification-endpoint.module';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -77,7 +77,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         SubstrateModule,
         RewardModule,
         DateTimeModule,
-        NotificationModule,
+        NotificationEndpointModule,
       ],
     }).compile();
 

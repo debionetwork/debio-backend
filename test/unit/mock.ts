@@ -24,7 +24,7 @@ import { BlockMetaData } from '../../src/listeners/substrate-listener/models/blo
 import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { NotificationService } from '../../src/endpoints/notification/notification.service';
+import { NotificationService } from '../../src/common/modules/notification/notification.service';
 
 export function mockFunction(args) {} // eslint-disable-line
 

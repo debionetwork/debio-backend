@@ -5,13 +5,13 @@ import {
   LabRegister,
   labToLabRegister,
   MailerManager,
+  NotificationService,
   ProcessEnvProxy,
   SubstrateService,
 } from '../../../../../common';
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 @CommandHandler(ServiceCreatedCommand)
@@ -49,6 +49,8 @@ export class ServiceCreatedHandler
       );
     }
 
+    const currDateTime = this.dateTimeProxy.new();
+
     // insert notification
     const notificationInput: NotificationDto = {
       role: 'Lab',
@@ -56,8 +58,8 @@ export class ServiceCreatedHandler
       entity: 'Add service',
       description: `You've successfully added your new service - ${service.info.name}.`,
       read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
+      created_at: currDateTime,
+      updated_at: currDateTime,
       deleted_at: null,
       from: 'Debio Network',
       to: service.ownerId,

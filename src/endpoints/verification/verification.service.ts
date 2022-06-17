@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
-import { DateTimeProxy, SubstrateService } from '../../common';
+import {
+  DateTimeProxy,
+  NotificationService,
+  SubstrateService,
+} from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
@@ -9,8 +13,7 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { NotificationDto } from '../notification/dto/notification.dto';
-import { NotificationService } from '../notification/notification.service';
+import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 export class VerificationService {
@@ -62,7 +65,9 @@ export class VerificationService {
         break;
     }
 
-    await this.notificationService.insert(notificationInput);
+    if (verificationStatus !== VerificationStatus.Unverified) {
+      await this.notificationService.insert(notificationInput);
+    }
 
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
@@ -163,7 +168,7 @@ export class VerificationService {
     }
 
     if (verificationStatus !== VerificationStatus.Unverified) {
-      this.notificationService.insert(notificationAccountVerification);
+      await this.notificationService.insert(notificationAccountVerification);
     }
 
     if (verificationStatus === VerificationStatus.Verified) {
@@ -181,7 +186,7 @@ export class VerificationService {
         to: accountId,
       };
 
-      this.notificationService.insert(notificationRewardVerified);
+      await this.notificationService.insert(notificationRewardVerified);
     }
 
     return { message: `${accountId} is ${verificationStatus}` };

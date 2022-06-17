@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DnaSampleRejectedCommand } from './dna-sample-rejected.command';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
-import { DateTimeProxy } from '../../../../../common';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
+import { DateTimeProxy, NotificationService } from '../../../../../common';
 
 @Injectable()
 @CommandHandler(DnaSampleRejectedCommand)
@@ -18,14 +17,16 @@ export class DnaSampleRejectedCommandHandler
   async execute(command: DnaSampleRejectedCommand) {
     const dnaSample = command.dnaSample;
 
+    const currDateTime = this.dateTimeProxy.new();
+
     const sampleRejectedNotification: NotificationDto = {
       role: 'Customer',
       entity_type: 'Genetic Testing Tracking',
       entity: 'QC Failed',
       description: `Your sample from ${dnaSample.trackingId} has been rejected. Click here to see your order details.`,
       read: false,
-      created_at: this.dateTimeProxy.new(),
-      updated_at: this.dateTimeProxy.new(),
+      created_at: currDateTime,
+      updated_at: currDateTime,
       deleted_at: null,
       from: 'Debio Network',
       to: dnaSample.ownerId,
