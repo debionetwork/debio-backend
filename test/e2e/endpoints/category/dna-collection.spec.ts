@@ -38,7 +38,7 @@ describe('Dna Collection Process Category (e2e)', () => {
     expect(body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          category: dnaCollectionList[0].name,
+          name: dnaCollectionList[0].name,
         }),
       ]),
     );
