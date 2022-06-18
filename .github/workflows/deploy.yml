@@ -213,8 +213,8 @@ jobs:
         shell: bash
         run: |
           curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.SLEUTH_WEBHOOK }} \
+          -d environment=${{ steps.secrets.outputs.DEV_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
 
   deploy-beta-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'beta')"
@@ -394,8 +394,8 @@ jobs:
         shell: bash
         run: |
           curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.SLEUTH_WEBHOOK }} \
+          -d environment=${{ steps.secrets.outputs.TESTNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
 
   deploy-pre-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'rc')"
@@ -575,8 +575,8 @@ jobs:
         shell: bash
         run: |
           curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.SLEUTH_WEBHOOK }} \
+          -d environment=${{ steps.secrets.outputs.MAINNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
 
   deploy-release:
     if: "startsWith(github.ref, 'refs/tags/') && !github.event.release.prerelease"
@@ -756,5 +756,5 @@ jobs:
         shell: bash
         run: |
           curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.SLEUTH_WEBHOOK }} \
+          -d environment=${{ steps.secrets.outputs.MAINNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
