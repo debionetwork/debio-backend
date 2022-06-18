@@ -13,8 +13,8 @@ import {
   SubstrateService,
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
-import { NotificationService } from '../notification/notification.service';
-import { NotificationDto } from '../notification/dto/notification.dto';
+import { NotificationService } from '../../common/modules/notification/notification.service';
+import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 
 @Controller('email')
 export class EmailEndpointController {
@@ -85,7 +85,6 @@ export class EmailEndpointController {
     };
 
     await this.notificationService.insert(notificationRegistration);
-
 
     response.status(200).send({
       message: 'Sending Email.',

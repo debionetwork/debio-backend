@@ -18,6 +18,7 @@ export class LabRegisteredHandler
 
   constructor(
     private readonly loggingService: TransactionLoggingService,
+    private readonly notificationService: NotificationService,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 

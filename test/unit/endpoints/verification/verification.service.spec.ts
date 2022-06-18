@@ -158,7 +158,7 @@ describe('Verification Service Unit Tests', () => {
     );
     expect(rewardServiceMock.insert).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
-    expect(notificationServiceMock.insert).not.toBeCalled();
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
   });
 
   it('should send reward', async () => {
@@ -197,7 +197,7 @@ describe('Verification Service Unit Tests', () => {
     expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
+    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(2);
     expect(notificationServiceMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         role: 'Lab',

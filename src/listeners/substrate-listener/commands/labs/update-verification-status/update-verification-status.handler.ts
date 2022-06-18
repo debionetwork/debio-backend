@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DateTimeProxy } from '../../../../../common';
 import { LabUpdateVerificationStatusCommand } from './update-verification-status.command';
-import { NotificationDto } from '../../../../../endpoints/notification/dto/notification.dto';
-import { NotificationService } from '../../../../../endpoints/notification/notification.service';
+import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
+import { NotificationService } from '../../../../../common/modules/notification/notification.service';
 @Injectable()
 @CommandHandler(LabUpdateVerificationStatusCommand)
 export class LabUpdateVerificationStatusHandler
