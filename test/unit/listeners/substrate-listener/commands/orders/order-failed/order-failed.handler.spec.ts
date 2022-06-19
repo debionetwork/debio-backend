@@ -79,6 +79,7 @@ describe('Order Failed Handler Event', () => {
     );
 
     await orderFailedHandler.execute(orderCancelledCommand);
+    expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(
       orderCancelledCommand.orders.id,

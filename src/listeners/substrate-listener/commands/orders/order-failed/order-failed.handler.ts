@@ -6,7 +6,7 @@ import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
-  TransactionLoggingService
+  TransactionLoggingService,
 } from '../../../../../common';
 import {
   Order,
@@ -36,7 +36,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
 
     try {
       const isOrderHasBeenInsert =
-      await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
+        await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
 
       if (order.orderFlow === 'StakingRequestService') {
         await finalizeRequest(
@@ -56,9 +56,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         this.substrateService.pair,
         order.id,
       );
-  
+
       const currDateTime = this.dateTimeProxy.new();
-  
+
       // QC notification to lab
       const labNotification: NotificationDto = {
         role: 'Lab',
@@ -72,12 +72,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
         from: 'Debio Network',
         to: order.sellerId,
       };
-  
+
       await this.notificationService.insert(labNotification);
-    } catch (error) {
-      
-    }
-    
+    } catch (error) {}
   }
 
   callbackSendReward(order: Order): void {

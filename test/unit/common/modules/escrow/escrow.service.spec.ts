@@ -68,33 +68,33 @@ describe('Escrow Service Unit Tests', () => {
   });
 
   it('should refund order', async () => {
-   // Arrange
-   const ORDER_ID = 'ID';
-   const CUSTOMER_ID = 'ID';
-   const ORDER = {
-     id: ORDER_ID,
-     customerId: CUSTOMER_ID,
-   };
-   const TOKEN_CONTRACT_SIGNER_MOCK = {
-     refundOrder: jest.fn(),
-   };
-   const SMART_CONTRACT_MOCK = {
-     connect: jest.fn(),
-   };
-   const WALLET_MOCK = 'WALLET';
-   ethereumServiceMock.getEscrowSmartContract.mockReturnValue(
-     SMART_CONTRACT_MOCK,
-   );
-   ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
-   SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
-   TOKEN_CONTRACT_SIGNER_MOCK.refundOrder.mockReturnValue('BALANCE');
+    // Arrange
+    const ORDER_ID = 'ID';
+    const CUSTOMER_ID = 'ID';
+    const ORDER = {
+      id: ORDER_ID,
+      customerId: CUSTOMER_ID,
+    };
+    const TOKEN_CONTRACT_SIGNER_MOCK = {
+      refundOrder: jest.fn(),
+    };
+    const SMART_CONTRACT_MOCK = {
+      connect: jest.fn(),
+    };
+    const WALLET_MOCK = 'WALLET';
+    ethereumServiceMock.getEscrowSmartContract.mockReturnValue(
+      SMART_CONTRACT_MOCK,
+    );
+    ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
+    SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
+    TOKEN_CONTRACT_SIGNER_MOCK.refundOrder.mockReturnValue('BALANCE');
 
-   // Act
-   await escrowService.refundOrder(ORDER);
+    // Act
+    await escrowService.refundOrder(ORDER);
 
-   // Assert
-   expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
-   expect(ethereumServiceMock.createWallet).not.toBeCalled();
+    // Assert
+    expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
+    expect(ethereumServiceMock.createWallet).not.toBeCalled();
   });
 
   it('should fulfill order', async () => {
