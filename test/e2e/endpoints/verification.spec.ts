@@ -12,7 +12,7 @@ import {
 } from '../../../src/common';
 import { VerificationModule } from '../../../src/endpoints/verification/verification.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity
+import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../config';
 
 describe('Verification Controller (e2e)', () => {
