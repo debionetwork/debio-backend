@@ -54,7 +54,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       parent_id:BigInt(0),
       ref_number: dataOrder['id'],
       transaction_type: 8,
-      transaction_status: 33,
+      transaction_status: 34,
     };
     await this.transactionLoggingService.create(dataCustomerLoggingInput);
   }
