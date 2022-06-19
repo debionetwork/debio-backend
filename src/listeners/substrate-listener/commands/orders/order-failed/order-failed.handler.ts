@@ -6,6 +6,7 @@ import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
+  TransactionLoggingService
 } from '../../../../../common';
 import {
   Order,
@@ -21,6 +22,7 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
   private readonly logger: Logger = new Logger(OrderFailedCommand.name);
 
   constructor(
+    private readonly loggingService: TransactionLoggingService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
     private readonly notificationService: NotificationService,
@@ -32,40 +34,50 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
     order.normalize();
     await this.logger.log(`OrderFailed With Order ID: ${order.id}!`);
 
-    if (order.orderFlow === 'StakingRequestService') {
-      await finalizeRequest(
+    try {
+      const isOrderHasBeenInsert =
+      await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
+
+      if (order.orderFlow === 'StakingRequestService') {
+        await finalizeRequest(
+          this.substrateService.api as any,
+          this.substrateService.pair,
+          order.id,
+          false,
+          () => this.callbackSendReward(order),
+        );
+      }
+      if (isOrderHasBeenInsert) {
+        return;
+      }
+      await this.escrowService.refundOrder(order.id);
+      await setOrderRefunded(
         this.substrateService.api as any,
         this.substrateService.pair,
         order.id,
-        false,
-        () => this.callbackSendReward(order),
       );
+  
+      const currDateTime = this.dateTimeProxy.new();
+  
+      // QC notification to lab
+      const labNotification: NotificationDto = {
+        role: 'Lab',
+        entity_type: 'Genetic Testing Order',
+        entity: 'Order Failed',
+        description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
+        read: false,
+        created_at: currDateTime,
+        updated_at: currDateTime,
+        deleted_at: null,
+        from: 'Debio Network',
+        to: order.sellerId,
+      };
+  
+      await this.notificationService.insert(labNotification);
+    } catch (error) {
+      
     }
-
-    await this.escrowService.refundOrder(order.id);
-    await setOrderRefunded(
-      this.substrateService.api as any,
-      this.substrateService.pair,
-      order.id,
-    );
-
-    const currDateTime = this.dateTimeProxy.new();
-
-    // QC notification to lab
-    const labNotification: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Genetic Testing Order',
-      entity: 'Order Failed',
-      description: `You've received ${order.additionalPrices[0]} DAI as quality control fees for ${order.dnaSampleTrackingId}.`,
-      read: false,
-      created_at: currDateTime,
-      updated_at: currDateTime,
-      deleted_at: null,
-      from: 'Debio Network',
-      to: order.sellerId,
-    };
-
-    await this.notificationService.insert(labNotification);
+    
   }
 
   callbackSendReward(order: Order): void {
