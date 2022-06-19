@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EscrowService } from '../../../../src/common/modules/escrow/escrow.service';
 import { EthereumListenerHandler } from '../../../../src/listeners/ethereum-listener/ethereum-listener.handler';
-import { EthereumService, TransactionLoggingService } from '../../../../src/common';
+import {
+  EthereumService,
+  TransactionLoggingService,
+} from '../../../../src/common';
 import { transactionLoggingServiceMockFactory } from '../../../../test/unit/mock';
 
 describe('Ethereum Listener Handler Unit Test', () => {
@@ -77,7 +80,7 @@ describe('Ethereum Listener Handler Unit Test', () => {
         EthereumListenerHandler,
         escrowServiceProvider,
         ethereumServiceProvider,
-        { 
+        {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
         },
@@ -136,15 +139,15 @@ describe('Ethereum Listener Handler Unit Test', () => {
 
     expect(smartContractOnEventType).toEqual('OrderFulfilled');
     expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
-    expect(transactionLoggingService.getLoggingByHashAndStatus).toHaveBeenCalledWith(
-      ORDER_ID,
-    );
+    expect(
+      transactionLoggingService.getLoggingByHashAndStatus,
+    ).toHaveBeenCalledWith(ORDER_ID);
 
     expect(smartContractOnEventType).toEqual('OrderRefunded');
     expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
-    expect(transactionLoggingService.getLoggingByHashAndStatus).toHaveBeenCalledWith(
-      ORDER_ID,
-    );
+    expect(
+      transactionLoggingService.getLoggingByHashAndStatus,
+    ).toHaveBeenCalledWith(ORDER_ID);
   });
 
   it('should sync one block', async () => {

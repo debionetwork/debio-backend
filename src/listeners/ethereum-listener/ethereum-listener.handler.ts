@@ -28,31 +28,51 @@ export class EthereumListenerHandler implements OnModuleInit {
     });
 
     escrowContract.on('OrderPaid', async (order, event) => {
-      await this.logger.log(`Order Paid Contract Event With Order Id: ${order.orderId}`)
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`)
+      await this.logger.log(
+        `Order Paid Contract Event With Order Id: ${order.orderId}`,
+      );
+      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
 
     escrowContract.on('OrderFulfilled', async (order, event) => {
-      await this.logger.log(`Order Fulfilled Contract Event With Order Id: ${order.orderId}`)
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`)
+      await this.logger.log(
+        `Order Fulfilled Contract Event With Order Id: ${order.orderId}`,
+      );
+      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
       //Update transaction_hash to DB
-      const loggingFulfilled = await this.transactioLoggingService.getLoggingByHashAndStatus(order.orderId, 3);
+      const loggingFulfilled =
+        await this.transactioLoggingService.getLoggingByHashAndStatus(
+          order.orderId,
+          3,
+        );
 
-      if(loggingFulfilled){
-        await this.transactioLoggingService.updateHash(loggingFulfilled,event.transactionHash);
+      if (loggingFulfilled) {
+        await this.transactioLoggingService.updateHash(
+          loggingFulfilled,
+          event.transactionHash,
+        );
       }
     });
 
     escrowContract.on('OrderRefunded', async (order, event) => {
-      await this.logger.log(`Order Refunded Contract Event With Order Id: ${order.orderId}`)
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`)
+      await this.logger.log(
+        `Order Refunded Contract Event With Order Id: ${order.orderId}`,
+      );
+      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
       //Update transaction_hash to DB
 
-      const loggingRefunded = await this.transactioLoggingService.getLoggingByHashAndStatus(order.orderId, 4);
+      const loggingRefunded =
+        await this.transactioLoggingService.getLoggingByHashAndStatus(
+          order.orderId,
+          4,
+        );
 
-      if(loggingRefunded){
-        await this.transactioLoggingService.updateHash(loggingRefunded,event.transactionHash);
+      if (loggingRefunded) {
+        await this.transactioLoggingService.updateHash(
+          loggingRefunded,
+          event.transactionHash,
+        );
       }
     });
   }
