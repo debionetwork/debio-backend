@@ -82,12 +82,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       provideRequestService: jest.fn(),
     }));
 
-  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = jest.fn(
-    () => ({
+  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
+    jest.fn(() => ({
       getRewardBindingByAccountId: jest.fn(),
       create: jest.fn(),
-    }),
-  );
+    }));
 
   const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> =
     jest.fn(() => ({
@@ -129,7 +128,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           provide: ServiceRequestService,
           useFactory: serviceRequestServiceMockFactory,
         },
-        { provide: TransactionLoggingService, useFactory: transactionLoggingServiceMockFactory },
+        {
+          provide: TransactionLoggingService,
+          useFactory: transactionLoggingServiceMockFactory,
+        },
         {
           provide: GeneticAnalysisService,
           useFactory: geneticAnalysisMockfactory,
@@ -483,7 +485,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(false);
-    transactionLoggingServiceMock.getRewardBindingByAccountId.mockReturnValue(false);
+    transactionLoggingServiceMock.getRewardBindingByAccountId.mockReturnValue(
+      false,
+    );
     dateTimeProxyMock.new.mockReturnValue(1);
 
     // Assert

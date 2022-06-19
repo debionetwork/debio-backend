@@ -3,7 +3,7 @@ import {
   DateTimeProxy,
   NotificationService,
   SubstrateService,
-  TransactionLoggingService
+  TransactionLoggingService,
 } from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
@@ -102,7 +102,7 @@ export class VerificationService {
         amount: 2,
         created_at: new Date(this.dateTimeProxy.now()),
         currency: 'DBIO',
-        parent_id:BigInt(0),
+        parent_id: BigInt(0),
         ref_number: '-',
         transaction_type: 8,
         transaction_status: 35,

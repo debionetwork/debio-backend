@@ -72,7 +72,9 @@ export class OrderFulfilledHandler
       );
 
       if ((labEthAddress as Option<any>).isNone) {
-        await this.logger.log(`Eth address by account id: ${order.customerId} is none!`)
+        await this.logger.log(
+          `Eth address by account id: ${order.customerId} is none!`,
+        );
         return null;
       }
 
@@ -143,7 +145,7 @@ export class OrderFulfilledHandler
           amount: totalPrice,
           created_at: new Date(),
           currency: 'DBIO',
-          parent_id:BigInt(0),
+          parent_id: BigInt(0),
           ref_number: order.id,
           transaction_type: 8,
           transaction_status: 36,
@@ -185,7 +187,7 @@ export class OrderFulfilledHandler
           amount: totalPrice / 10,
           created_at: new Date(),
           currency: 'DBIO',
-          parent_id:BigInt(0),
+          parent_id: BigInt(0),
           ref_number: order.id,
           transaction_type: 8,
           transaction_status: 37,

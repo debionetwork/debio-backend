@@ -51,7 +51,7 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       amount: rewardPrice,
       created_at: new Date(),
       currency: 'DBIO',
-      parent_id:BigInt(0),
+      parent_id: BigInt(0),
       ref_number: dataOrder['id'],
       transaction_type: 8,
       transaction_status: 34,

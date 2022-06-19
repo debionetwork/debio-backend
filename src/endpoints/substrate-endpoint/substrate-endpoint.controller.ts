@@ -400,7 +400,7 @@ export class SubstrateController {
       amount: rewardAmount,
       created_at: this.dateTime.new(),
       currency: 'DBIO',
-      parent_id:BigInt(0),
+      parent_id: BigInt(0),
       ref_number: '-',
       transaction_type: 8,
       transaction_status: 33,
@@ -428,7 +428,9 @@ export class SubstrateController {
     }
 
     const isRewardHasBeenSend =
-      await this.transactionLoggingService.getRewardBindingByAccountId(accountId);
+      await this.transactionLoggingService.getRewardBindingByAccountId(
+        accountId,
+      );
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line

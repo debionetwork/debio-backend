@@ -6,7 +6,6 @@ import {
   TransactionLoggingService,
   DebioConversionService,
   MailerManager,
-  RewardService,
   EmailNotificationService,
 } from '../../src/common';
 import {
@@ -138,13 +137,6 @@ export const escrowServiceMockFactory: () => MockType<EscrowService> = jest.fn(
     orderFulfilled: jest.fn(),
     setOrderPaidWithSubstrate: jest.fn(),
     forwardPaymentToSeller: jest.fn(),
-  }),
-);
-
-export const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
-  () => ({
-    insert: jest.fn(),
-    getRewardBindingByAccountId: jest.fn(),
   }),
 );
 

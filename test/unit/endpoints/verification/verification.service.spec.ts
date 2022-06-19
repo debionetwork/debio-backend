@@ -51,18 +51,20 @@ describe('Verification Service Unit Tests', () => {
     }),
   );
 
-  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> = jest.fn(
-    () => ({
+  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
+    jest.fn(() => ({
       create: jest.fn((entity) => entity),
-    }),
-  );
+    }));
 
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         VerificationService,
-        { provide: TransactionLoggingService, useFactory: transactionLoggingServiceMockFactory },
+        {
+          provide: TransactionLoggingService,
+          useFactory: transactionLoggingServiceMockFactory,
+        },
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         {
@@ -135,7 +137,7 @@ describe('Verification Service Unit Tests', () => {
       amount: 2,
       created_at: new Date(NOW),
       currency: 'DBIO',
-      parent_id:BigInt(0),
+      parent_id: BigInt(0),
       ref_number: '-',
       transaction_type: 8,
       transaction_status: 35,
@@ -174,7 +176,7 @@ describe('Verification Service Unit Tests', () => {
       amount: REWARD_AMOUNT,
       created_at: new Date(NOW),
       currency: 'DBIO',
-      parent_id:BigInt(0),
+      parent_id: BigInt(0),
       ref_number: '-',
       transaction_type: 8,
       transaction_status: 35,
