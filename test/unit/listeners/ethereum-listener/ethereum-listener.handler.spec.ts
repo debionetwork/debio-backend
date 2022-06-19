@@ -1,12 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EscrowService } from '../../../../src/common/modules/escrow/escrow.service';
 import { EthereumListenerHandler } from '../../../../src/listeners/ethereum-listener/ethereum-listener.handler';
-import { EthereumService } from '../../../../src/common';
+import { EthereumService, TransactionLoggingService } from '../../../../src/common';
+import { transactionLoggingServiceMockFactory } from '../../../../test/unit/mock';
 
 describe('Ethereum Listener Handler Unit Test', () => {
   let ethereumListenerHandler: EthereumListenerHandler;
   let ethereumService: EthereumService;
   let escrowService: EscrowService;
+  let transactionLoggingService: TransactionLoggingService;
 
   let providerOnEventType = '';
   let smartContractOnEventType = '';
@@ -73,18 +75,21 @@ describe('Ethereum Listener Handler Unit Test', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EthereumListenerHandler,
-        EscrowService,
         escrowServiceProvider,
-        EthereumService,
         ethereumServiceProvider,
+        { 
+          provide: TransactionLoggingService,
+          useFactory: transactionLoggingServiceMockFactory,
+        },
       ],
     }).compile();
 
     ethereumListenerHandler = module.get<EthereumListenerHandler>(
       EthereumListenerHandler,
     );
-    ethereumService = module.get<EthereumService>(EthereumService);
-    escrowService = module.get<EscrowService>(EscrowService);
+    ethereumService = module.get(EthereumService);
+    escrowService = module.get(EscrowService);
+    transactionLoggingService = module.get(TransactionLoggingService);
 
     providerOnEventType = '';
     smartContractOnEventType = '';
@@ -100,6 +105,10 @@ describe('Ethereum Listener Handler Unit Test', () => {
 
   it('should be defined', () => {
     expect(escrowService).toBeDefined();
+  });
+
+  it('should be defined', () => {
+    expect(transactionLoggingService).toBeDefined();
   });
 
   it('should start listening to events', async () => {
@@ -122,6 +131,18 @@ describe('Ethereum Listener Handler Unit Test', () => {
     expect(smartContractOnEventType).toEqual('OrderPaid');
     expect(escrowService.setOrderPaidWithSubstrate).toBeCalled();
     expect(escrowService.setOrderPaidWithSubstrate).toHaveBeenCalledWith(
+      ORDER_ID,
+    );
+
+    expect(smartContractOnEventType).toEqual('OrderFulfilled');
+    expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
+    expect(transactionLoggingService.getLoggingByHashAndStatus).toHaveBeenCalledWith(
+      ORDER_ID,
+    );
+
+    expect(smartContractOnEventType).toEqual('OrderRefunded');
+    expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
+    expect(transactionLoggingService.getLoggingByHashAndStatus).toHaveBeenCalledWith(
       ORDER_ID,
     );
   });
