@@ -13,7 +13,6 @@ import { CloudStorageModule } from './endpoints/cloud-storage/cloud-storage.modu
 import { BountyModule } from './endpoints/bounty/bounty.module';
 import { EmrModule } from './endpoints/category/emr/emr.module';
 import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
-import { RewardModule } from './common/modules/reward/reward.module';
 import { VerificationModule } from './endpoints/verification/verification.module';
 import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -59,7 +58,6 @@ require('dotenv').config(); // eslint-disable-line
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,
-    RewardModule,
     RatingModule,
     EmrModule,
     ServiceCategoryModule,

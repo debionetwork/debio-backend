@@ -7,7 +7,6 @@ import {
 import { when } from 'jest-when';
 import { TransactionLoggingService } from '../../../../src/common/modules/transaction-logging/transaction-logging.service';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
-import { RewardDto } from '../../../../src/common/modules/reward/dto/reward.dto';
 import { DateTimeProxy, SubstrateService } from '../../../../src/common';
 import {
   convertToDbioUnitString,
@@ -131,13 +130,15 @@ describe('Verification Service Unit Tests', () => {
     const ACCOUNT_ID = 'ACCOUNT_ID';
     const VERIFICATION_STATUS = 'Rejected';
 
-    const PARAM: RewardDto = {
+    const PARAM: TransactionLoggingDto = {
       address: ACCOUNT_ID,
-      ref_number: '-',
-      reward_amount: 2,
-      reward_type: 'Lab Verified',
-      currency: 'DBIO',
+      amount: 2,
       created_at: new Date(NOW),
+      currency: 'DBIO',
+      parent_id:BigInt(0),
+      ref_number: '-',
+      transaction_type: 8,
+      transaction_status: 35,
     };
 
     const EXPECTED_RESULTS = 'EXPECTED_RESULTS';

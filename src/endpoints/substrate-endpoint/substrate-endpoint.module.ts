@@ -6,7 +6,7 @@ import { OrderService } from './services/order.service';
 import {
   DebioConversionModule,
   DateTimeModule,
-  RewardModule,
+  TransactionLoggingModule,
   SubstrateModule,
   NotificationModule,
 } from '../../common';
@@ -30,7 +30,7 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
       }),
     }),
     SubstrateModule,
-    RewardModule,
+    TransactionLoggingModule,
     DateTimeModule,
     NotificationModule,
   ],

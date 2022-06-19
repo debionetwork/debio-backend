@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DateTimeModule, NotificationModule } from '../../common';
-import { RewardModule } from '../../common/modules/reward/reward.module';
+import { TransactionLoggingModule } from '../../common/modules/transaction-logging/transaction-logging.module';
 import { ProcessEnvModule, SubstrateModule } from '../../common';
 import { VerificationController } from './verification.controller';
 import { VerificationService } from './verification.service';
@@ -8,7 +8,7 @@ import { VerificationService } from './verification.service';
 @Module({
   imports: [
     SubstrateModule,
-    RewardModule,
+    TransactionLoggingModule,
     DateTimeModule,
     ProcessEnvModule,
     NotificationModule,
