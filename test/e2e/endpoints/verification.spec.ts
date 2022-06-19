@@ -6,13 +6,13 @@ import {
   DateTimeModule,
   NotificationModule,
   ProcessEnvProxy,
-  RewardModule,
+  TransactionLoggingModule,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
 import { VerificationModule } from '../../../src/endpoints/verification/verification.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Reward } from '../../../src/common/modules/reward/models/reward.entity';
+import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity
 import { dummyCredentials } from '../config';
 
 describe('Verification Controller (e2e)', () => {
@@ -42,12 +42,12 @@ describe('Verification Controller (e2e)', () => {
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
-          entities: [Reward],
+          entities: [TransactionRequest],
           autoLoadEntities: true,
         }),
         VerificationModule,
         SubstrateModule,
-        RewardModule,
+        TransactionLoggingModule,
         DateTimeModule,
         NotificationModule,
       ],
