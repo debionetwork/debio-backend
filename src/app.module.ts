@@ -48,7 +48,7 @@ require('dotenv').config(); // eslint-disable-line
         await googleSecretManagerService.accessAndAccessSecret();
         return {
           type: 'postgres',
-          host: '35.187.247.150', // TODO: must check secret manager
+          host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager
           port: 5432,
           username: googleSecretManagerService.usernamePostgres,
           password: googleSecretManagerService.passwordPostgres,
@@ -68,7 +68,7 @@ require('dotenv').config(); // eslint-disable-line
         await googleSecretManagerService.accessAndAccessSecret();
         return {
           type: 'postgres',
-          host: '35.187.247.150', // TODO: must check secret manager
+          host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager
           port: 5432,
           username: googleSecretManagerService.usernamePostgres,
           password: googleSecretManagerService.passwordPostgres,
@@ -78,6 +78,7 @@ require('dotenv').config(); // eslint-disable-line
         };
       },
     }),
+    AuthenticationModule,
     DateTimeModule,
     CloudStorageModule,
     LocationModule,
