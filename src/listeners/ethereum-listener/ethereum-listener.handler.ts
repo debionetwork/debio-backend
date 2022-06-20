@@ -1,12 +1,15 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { EthereumService } from '../../common/modules/ethereum/ethereum.service';
 import { EscrowService } from '../../common/modules/escrow/escrow.service';
+import { TransactionLoggingService } from '../../common';
 
 @Injectable()
 export class EthereumListenerHandler implements OnModuleInit {
+  private readonly logger: Logger = new Logger(EthereumListenerHandler.name);
   constructor(
     private readonly ethereumService: EthereumService,
     private readonly escrowService: EscrowService,
+    private readonly transactioLoggingService: TransactionLoggingService,
   ) {}
 
   async onModuleInit() {
@@ -24,8 +27,59 @@ export class EthereumListenerHandler implements OnModuleInit {
       await this.ethereumService.setLastBlock(blockNum);
     });
 
-    escrowContract.on('OrderPaid', async (order) => {
+    escrowContract.on('OrderPaid', async (order, event) => {
+      await this.logger.log(
+        `Order Paid Contract Event With Order Id: ${order.orderId}`,
+      );
+      if (event?.transactionHash) {
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
+    });
+
+    escrowContract.on('OrderFulfilled', async (order, event) => {
+      await this.logger.log(
+        `Order Fulfilled Contract Event With Order Id: ${order.orderId}`,
+      );
+      if (event?.transactionHash) {
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
+      //Update transaction_hash to DB
+      const loggingFulfilled =
+        await this.transactioLoggingService.getLoggingByHashAndStatus(
+          order.orderId,
+          3,
+        );
+
+      if (loggingFulfilled) {
+        await this.transactioLoggingService.updateHash(
+          loggingFulfilled,
+          event.transactionHash,
+        );
+      }
+    });
+
+    escrowContract.on('OrderRefunded', async (order, event) => {
+      await this.logger.log(
+        `Order Refunded Contract Event With Order Id: ${order.orderId}`,
+      );
+      if (event?.transactionHash) {
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
+      //Update transaction_hash to DB
+
+      const loggingRefunded =
+        await this.transactioLoggingService.getLoggingByHashAndStatus(
+          order.orderId,
+          4,
+        );
+
+      if (loggingRefunded) {
+        await this.transactioLoggingService.updateHash(
+          loggingRefunded,
+          event.transactionHash,
+        );
+      }
     });
   }
 
