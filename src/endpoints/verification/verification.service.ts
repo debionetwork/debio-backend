@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
 import { RewardService } from '../../common/modules/reward/reward.service';
-import {
-  DateTimeProxy,
-  NotificationService,
-  SubstrateService,
-} from '../../common';
+import { DateTimeProxy, SubstrateService } from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
@@ -20,7 +16,6 @@ export class VerificationService {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly rewardService: RewardService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {

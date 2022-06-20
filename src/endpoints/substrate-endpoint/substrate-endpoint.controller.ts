@@ -30,12 +30,7 @@ import {
   setGeneticAnalysisOrderPaid,
   dbioUnit,
 } from '@debionetwork/polkadot-provider';
-import {
-  DateTimeProxy,
-  NotificationService,
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../../common';
+import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 import {
   labsResponse,
@@ -63,7 +58,6 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/labs')
