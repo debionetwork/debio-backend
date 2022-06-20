@@ -1,17 +1,14 @@
-import { TypeOrmQueryService } from '@nestjs-query/query-typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { City } from './models/city.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class CityService extends TypeOrmQueryService<City> {
+export class CityService {
   constructor(
     @InjectRepository(City, 'dbLocation')
     private readonly cityRepository: Repository<City>,
-  ) {
-    super(cityRepository);
-  }
+  ) {}
 
   getAllCity(country_code: string, state_code: string) {
     return this.cityRepository.find({

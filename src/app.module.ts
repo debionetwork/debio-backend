@@ -26,6 +26,7 @@ import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-l
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
+import { AuthenticationModule } from './endpoints/authentication/authentication.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -53,6 +54,7 @@ require('dotenv').config(); // eslint-disable-line
       entities: [...LocationEntities],
       autoLoadEntities: true,
     }),
+    AuthenticationModule,
     DateTimeModule,
     CloudStorageModule,
     LocationModule,
