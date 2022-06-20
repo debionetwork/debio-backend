@@ -8,7 +8,6 @@ import {
   emailNotificationServiceMockFactory,
   mailerManagerMockFactory,
   MockType,
-  notificationServiceMockFactory,
   substrateServiceMockFactory,
 } from '../../../../test/unit/mock';
 import { EmailEndpointController } from '../../../../src/endpoints/email/email.controller';
@@ -16,7 +15,6 @@ import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
-import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
 
 describe('Email Controller', () => {
   let emailEndpointControllerMock: EmailEndpointController;
@@ -48,10 +46,6 @@ describe('Email Controller', () => {
         {
           provide: EmailNotificationService,
           useFactory: emailNotificationServiceMockFactory,
-        },
-        {
-          provide: NotificationService,
-          useFactory: notificationServiceMockFactory,
         },
       ],
     }).compile();

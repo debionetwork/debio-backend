@@ -13,8 +13,6 @@ import {
   SubstrateService,
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
-import { NotificationService } from '../../common/modules/notification/notification.service';
-import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 
 @Controller('email')
 export class EmailEndpointController {
@@ -23,7 +21,6 @@ export class EmailEndpointController {
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
     private readonly emailNotificationService: EmailNotificationService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   @Post('registered-lab/:lab_id')
@@ -70,21 +67,6 @@ export class EmailEndpointController {
     dataInput.created_at = new Date();
 
     await this.emailNotificationService.insertEmailNotification(dataInput);
-
-    const notificationRegistration: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Submit Account Registration and Verification',
-      entity: `Registration and Verification`,
-      description: `You've successfully submitted your account verification.`,
-      read: false,
-      created_at: await new Date(),
-      updated_at: await new Date(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: lab_id,
-    };
-
-    await this.notificationService.insert(notificationRegistration);
 
     response.status(200).send({
       message: 'Sending Email.',
