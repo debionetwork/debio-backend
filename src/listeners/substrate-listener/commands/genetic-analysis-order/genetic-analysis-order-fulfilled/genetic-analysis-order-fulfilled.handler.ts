@@ -57,7 +57,7 @@ export class GeneticAnalysisOrderFulfilledHandler
         currency: geneticAnalysisOrder.currency.toUpperCase(),
         parent_id: BigInt(geneticAnalysisOrderHistory.id),
         ref_number: geneticAnalysisOrder.id,
-        transaction_status: 28,
+        transaction_status: 32,
         transaction_type: 3,
       };
 
