@@ -64,6 +64,7 @@ describe('Ethereum Listener Handler Unit Test', () => {
           smartContractOnEventType = type;
           const orderEventMock = {
             orderId: ORDER_ID,
+            transactionHash: 'string'
           };
           fn(orderEventMock);
         },
