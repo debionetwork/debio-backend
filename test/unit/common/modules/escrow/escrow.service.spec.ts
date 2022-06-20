@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   EthereumService,
-  ProcessEnvProxy,
+  GoogleSecretManagerService,
   SubstrateService,
 } from '../../../../../src/common';
 import {
@@ -43,8 +43,8 @@ describe('Escrow Service Unit Tests', () => {
   let ethereumServiceMock: MockType<EthereumService>;
 
   const DEBIO_ESCROW_PRIVATE_KEY = 'PRIVKEY';
-  class ProcessEnvProxyMock {
-    env = { DEBIO_ESCROW_PRIVATE_KEY };
+  class GoogleSecretManagerServiceMock {
+    debioEscrowPrivateKey = DEBIO_ESCROW_PRIVATE_KEY;
   }
 
   beforeEach(async () => {
@@ -53,7 +53,10 @@ describe('Escrow Service Unit Tests', () => {
         EscrowService,
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: EthereumService, useFactory: ethereumServiceMockFactory },
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

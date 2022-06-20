@@ -1,52 +1,45 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 
 @Injectable()
-export class GoogleSecretManagerService implements OnModuleInit {
+export class GoogleSecretManagerService {
   private readonly logger: Logger = new Logger(GoogleSecretManagerService.name);
   private client: SecretManagerServiceClient;
   private envList: Map<string, string> = new Map<string, string>();
+  private readConfig = true;
+
   constructor() {
     this.client = new SecretManagerServiceClient();
   }
 
-  onModuleInit() {
-    this.createAndAccessSecret();
-  }
-
-  async createAndAccessSecret() {
+  async accessAndAccessSecret() {
+    if (!this.readConfig) return;
     try {
-      const parent = 'projects/debio-network-development'; // Project for which to manage secrets.
-
-      // const [version] = await this.client.accessSecretVersion({
-      //   name: parent,
-      // });
-
-      // console.log(`Payload: ${version.payload.data.toString()}`)
+      const parent = 'projects/debio-network-development'; // TODO: change
 
       const [secrets] = await this.client.listSecrets({
         parent: parent,
       });
 
-      secrets.forEach(async (secret) => {
+      for (let i = 0; i < secrets.length; i++) {
+        const secret = secrets[i];
         const arrPath = secret.name.split('/');
         const envId = arrPath.at(-1);
         const [version] = await this.client.accessSecretVersion({
           name: `${secret.name}/versions/latest`,
         });
-
-        this.envList.set(envId, version.payload.data.toString());
-        console.log(
-          `${secret.name} - Payload: ${version.payload.data.toString()}`,
-        );
-      });
+        const value = version.payload.data.toString();
+        this.envList.set(envId, value);
+      }
     } catch (err) {
       this.logger.log(err);
+    } finally {
+      this.readConfig = false;
     }
   }
 
   get hostPostgres() {
-    return this.envList.get('HOST_POSTGRES');
+    return this.envList.get('POSTGRES_HOST');
   }
 
   get port() {
@@ -54,11 +47,11 @@ export class GoogleSecretManagerService implements OnModuleInit {
   }
 
   get usernamePostgres() {
-    return this.envList.get('USERNAME_POSTGRES');
+    return this.envList.get('POSTGRES_USERNAME');
   }
 
   get passwordPostgres() {
-    return this.envList.get('PASSWORD_POSTGRES');
+    return this.envList.get('POSTGRES_PASSWORD');
   }
 
   get dbPostgres() {
@@ -142,11 +135,11 @@ export class GoogleSecretManagerService implements OnModuleInit {
   }
 
   get hostRedis() {
-    return this.envList.get('HOST_REDIS');
+    return this.envList.get('REDIS_HOST');
   }
 
   get portRedis() {
-    return this.envList.get('PORT_REDIS');
+    return this.envList.get('REDIS_PORT');
   }
 
   get redisPassword() {
@@ -206,7 +199,7 @@ export class GoogleSecretManagerService implements OnModuleInit {
   }
 
   get pinataPrivateKey() {
-    return this.envList.get('PINATA_PRIVATE_KEY');
+    return this.envList.get('PINATA_SECRET_KEY');
   }
 
   get swaggerEnable() {

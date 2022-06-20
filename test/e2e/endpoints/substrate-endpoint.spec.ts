@@ -8,6 +8,7 @@ import { LocationModule } from '../../../src/endpoints/location/location.module'
 import {
   DebioConversionModule,
   TransactionLoggingModule,
+  GoogleSecretManagerService,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
@@ -46,6 +47,14 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     error: jest.fn(),
   };
 
+  const googleSecretManagerService = {
+    accessAndAccessSecret: () => undefined,
+    elasticsearchNode: process.env.ELASTICSEARCH_NODE,
+    elasticsearchUsername: process.env.ELASTICSEARCH_USERNAME,
+    elasticsearchPassword: process.env.ELASTICSEARCH_PASSWORD,
+    debioApiKey: process.env.DEBIO_API_KEY,
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
@@ -79,7 +88,10 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         DateTimeModule,
         NotificationEndpointModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useValue(googleSecretManagerService)
+      .compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();

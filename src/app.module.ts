@@ -22,6 +22,7 @@ import { EmailEndpointModule } from './endpoints/email/email.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 import {
   CachesModule,
+  DateTimeModule,
   GoogleSecretManagerModule,
   GoogleSecretManagerService,
 } from './common';
@@ -36,39 +37,48 @@ require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
+    GoogleSecretManagerModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        type: 'postgres',
-        host: googleSecretManagerService.hostPostgres,
-        port: 5432,
-        username: googleSecretManagerService.usernamePostgres,
-        password: googleSecretManagerService.passwordPostgres,
-        database: googleSecretManagerService.dbPostgres,
-        entities: [LabRating, TransactionRequest],
-        autoLoadEntities: true,
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          type: 'postgres',
+          host: '35.187.247.150', // TODO: must check secret manager
+          port: 5432,
+          username: googleSecretManagerService.usernamePostgres,
+          password: googleSecretManagerService.passwordPostgres,
+          database: googleSecretManagerService.dbPostgres,
+          entities: [LabRating, TransactionRequest],
+          autoLoadEntities: true,
+        };
+      },
     }),
     TypeOrmModule.forRootAsync({
+      name: 'dbLocation',
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        name: 'dbLocation',
-        type: 'postgres',
-        host: googleSecretManagerService.hostPostgres,
-        port: 5432,
-        username: googleSecretManagerService.usernamePostgres,
-        password: googleSecretManagerService.passwordPostgres,
-        database: googleSecretManagerService.dbLocations,
-        entities: [...LocationEntities],
-        autoLoadEntities: true,
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          type: 'postgres',
+          host: '35.187.247.150', // TODO: must check secret manager
+          port: 5432,
+          username: googleSecretManagerService.usernamePostgres,
+          password: googleSecretManagerService.passwordPostgres,
+          database: googleSecretManagerService.dbLocations,
+          entities: [...LocationEntities],
+          autoLoadEntities: true,
+        };
+      },
     }),
-    AuthenticationModule,
+    DateTimeModule,
     CloudStorageModule,
     LocationModule,
     EmailEndpointModule,
@@ -91,7 +101,6 @@ require('dotenv').config(); // eslint-disable-line
     NotificationEndpointModule,
     DnaCollectionModule,
     SubstrateListenerModule,
-    GoogleSecretManagerModule,
   ],
 })
 export class AppModule {}

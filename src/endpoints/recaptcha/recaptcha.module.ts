@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../../common';
+import { GoogleSecretManagerModule, ProcessEnvModule } from '../../common';
 import { RecaptchaController } from './recaptcha.controller';
 
 @Module({
-  imports: [ProcessEnvModule],
+  imports: [ProcessEnvModule, GoogleSecretManagerModule],
   controllers: [RecaptchaController],
 })
 export class RecaptchaModule {}

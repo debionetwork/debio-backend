@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import axios from 'axios';
 import { Response } from 'express';
-import { GoogleSecretManagerService, ProcessEnvProxy } from '../../common';
+import { GoogleSecretManagerService } from '../../common';
 import { SentryInterceptor } from '../../common/interceptors';
 
 @UseInterceptors(SentryInterceptor)

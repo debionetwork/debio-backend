@@ -1,7 +1,6 @@
 import { Controller, Headers, Get, Res, UseInterceptors } from '@nestjs/common';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { ProcessEnvProxy } from '../../common/modules/proxies';
 import { GoogleSecretManagerService, SentryInterceptor } from '../../common';
 import { pinataJwtPayload } from './pinata-jwt.model';
 

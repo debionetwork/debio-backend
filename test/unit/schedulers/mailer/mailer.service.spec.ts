@@ -5,10 +5,12 @@ import {
   mailerManagerMockFactory,
   emailNotificationServiceMockFactory,
   substrateServiceMockFactory,
+  googleSecretManagerServiceMockFactory,
 } from '../../mock';
 import { MailerService } from '../../../../src/schedulers/mailer/mailer.service';
 import {
   EmailNotificationService,
+  GoogleSecretManagerService,
   MailerManager,
   SubstrateService,
 } from '../../../../src/common';
@@ -33,6 +35,10 @@ describe('MailerService', () => {
         {
           provide: SubstrateService,
           useFactory: substrateServiceMockFactory,
+        },
+        {
+          provide: GoogleSecretManagerService,
+          useFactory: googleSecretManagerServiceMockFactory,
         },
       ],
     }).compile();

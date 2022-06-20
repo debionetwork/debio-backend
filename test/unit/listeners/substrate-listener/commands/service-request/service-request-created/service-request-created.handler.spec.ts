@@ -7,12 +7,14 @@ import {
   transactionLoggingServiceMockFactory,
   notificationServiceMockFactory,
   dateTimeProxyMockFactory,
+  googleSecretManagerServiceMockFactory,
 } from '../../../../../mock';
 import {
   MailerManager,
   ProcessEnvProxy,
   TransactionLoggingService,
   DateTimeProxy,
+  GoogleSecretManagerService,
 } from '../../../../../../../src/common';
 import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
@@ -94,6 +96,10 @@ describe('Service Request Created Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: GoogleSecretManagerService,
+          useFactory: googleSecretManagerServiceMockFactory,
         },
         ServiceRequestCreatedHandler,
       ],

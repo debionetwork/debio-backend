@@ -7,7 +7,6 @@ import {
   GoogleSecretManagerService,
   MailerManager,
   NotificationService,
-  ProcessEnvProxy,
   TransactionLoggingService,
 } from '../../../../../common';
 import { CountryService } from '../../../../../endpoints/location/country.service';

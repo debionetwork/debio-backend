@@ -3,23 +3,26 @@ import { Response } from 'express';
 import MockAdapter from 'axios-mock-adapter';
 import { TestingModule, Test } from '@nestjs/testing';
 import { RecaptchaController } from '../../../../src/endpoints/recaptcha/recaptcha.controller';
-import { ProcessEnvProxy } from '../../../../src/common';
+import { GoogleSecretManagerService } from '../../../../src/common';
 
 describe('Recaptcha Controller Unit Tests', () => {
   let recaptchaController: RecaptchaController;
   const axiosMock = new MockAdapter(axios);
 
   const RECAPTCHA_SECRET_KEY = 'KEY';
-  class ProcessEnvProxyMock {
-    env = {
-      RECAPTCHA_SECRET_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    recaptchaSecretKey = RECAPTCHA_SECRET_KEY;
   }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RecaptchaController],
-      providers: [{ provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock }],
+      providers: [
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
+      ],
     }).compile();
 
     recaptchaController = module.get<RecaptchaController>(RecaptchaController);

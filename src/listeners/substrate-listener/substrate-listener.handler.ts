@@ -1,9 +1,5 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import {
-  GoogleSecretManagerService,
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../../common';
+import { GoogleSecretManagerService, SubstrateService } from '../../common';
 import { Header, Event } from '@polkadot/types/interfaces';
 import {
   SetLastSubstrateBlockCommand,

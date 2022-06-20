@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DateTimeProxy,
+  GoogleSecretManagerService,
   MailerManager,
   ProcessEnvProxy,
   SubstrateService,
@@ -9,6 +10,7 @@ import { ServiceFlow, ServiceInfo } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/services/service-created/service-created.handler';
 import {
   dateTimeProxyMockFactory,
+  googleSecretManagerServiceMockFactory,
   mailerManagerMockFactory,
   mockBlockNumber,
   MockType,
@@ -69,6 +71,10 @@ describe('Service Created Handler Event', () => {
         {
           provide: DateTimeProxy,
           useFactory: dateTimeProxyMockFactory,
+        },
+        {
+          provide: GoogleSecretManagerService,
+          useFactory: googleSecretManagerServiceMockFactory,
         },
         ServiceCreatedHandler,
       ],

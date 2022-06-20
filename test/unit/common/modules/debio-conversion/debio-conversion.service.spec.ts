@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DebioConversionService,
-  ProcessEnvProxy,
+  GoogleSecretManagerService,
 } from '../../../../../src/common';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
@@ -13,8 +13,10 @@ describe('Debio Conversion Service Unit Tests', () => {
   const REDIS_STORE_URL = 'URL';
   const REDIS_STORE_USERNAME = 'REDIS_STORE_USERNAME';
   const REDIS_STORE_PASSWORD = 'REDIS_STORE_PASSWORD';
-  class ProcessEnvProxyMock {
-    env = { REDIS_STORE_URL, REDIS_STORE_USERNAME, REDIS_STORE_PASSWORD };
+  class GoogleSecretManagerServiceMock {
+    redisStoreUrl = REDIS_STORE_URL;
+    redisStoreUsername = REDIS_STORE_USERNAME;
+    redisStorePassword = REDIS_STORE_PASSWORD;
   }
 
   // Arrange before each iteration
@@ -22,7 +24,10 @@ describe('Debio Conversion Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DebioConversionService,
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

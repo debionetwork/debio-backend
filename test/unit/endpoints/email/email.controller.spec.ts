@@ -3,9 +3,11 @@ import {
   MailerManager,
   SubstrateService,
   ProcessEnvProxy,
+  GoogleSecretManagerService,
 } from '../../../../src/common';
 import {
   emailNotificationServiceMockFactory,
+  googleSecretManagerServiceMockFactory,
   mailerManagerMockFactory,
   MockType,
   substrateServiceMockFactory,
@@ -46,6 +48,10 @@ describe('Email Controller', () => {
         {
           provide: EmailNotificationService,
           useFactory: emailNotificationServiceMockFactory,
+        },
+        {
+          provide: GoogleSecretManagerService,
+          useFactory: googleSecretManagerServiceMockFactory,
         },
       ],
     }).compile();

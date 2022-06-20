@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   CachesService,
   EthereumService,
-  ProcessEnvProxy,
+  GoogleSecretManagerService,
 } from '../../../../../src/common';
 import { cachesServiceMockFactory, MockType } from '../../../mock';
 import { EthersContract, EthersSigner } from 'nestjs-ethers';
@@ -45,17 +45,11 @@ describe.only('EthereumService', () => {
     createWallet: jest.fn(),
   }));
 
-  const ETHEREUM_RPC = 'RPC';
   const WEB3_RPC_HTTPS = 'RPC';
   const ESCROW_CONTRACT_ADDRESS = 'ADDR';
-  const COINMARKETCAP_API_KEY = 'KEY';
-  class ProcessEnvProxyMock {
-    env = {
-      ETHEREUM_RPC,
-      WEB3_RPC_HTTPS,
-      ESCROW_CONTRACT_ADDRESS,
-      COINMARKETCAP_API_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    web3RPCHttp = WEB3_RPC_HTTPS;
+    escrowContractAddress = ESCROW_CONTRACT_ADDRESS;
   }
 
   beforeAll(async () => {
@@ -65,7 +59,10 @@ describe.only('EthereumService', () => {
         { provide: CachesService, useFactory: cachesServiceMockFactory },
         { provide: EthersContract, useFactory: ethersContractMockFactory },
         { provide: EthersSigner, useFactory: ethersSignerMockFactory },
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

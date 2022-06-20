@@ -13,16 +13,20 @@ import { TransactionService } from './transaction.service';
     TransactionLoggingModule,
     GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        node: googleSecretManagerService.elasticsearchNode,
-        auth: {
-          username: googleSecretManagerService.elasticsearchUsername,
-          password: googleSecretManagerService.elasticsearchPassword,
-        },
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          node: googleSecretManagerService.elasticsearchNode,
+          auth: {
+            username: googleSecretManagerService.elasticsearchUsername,
+            password: googleSecretManagerService.elasticsearchPassword,
+          },
+        };
+      },
     }),
   ],
   controllers: [TransactionController],

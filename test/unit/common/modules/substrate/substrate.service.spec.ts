@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { mockFunction } from '../../../mock';
-import { ProcessEnvProxy, SubstrateService } from '../../../../../src/common';
+import {
+  GoogleSecretManagerService,
+  SubstrateService,
+} from '../../../../../src/common';
 import { ApiPromise, Keyring } from '@polkadot/api';
 
 jest.mock('../../../mock', () => ({
@@ -15,18 +18,19 @@ describe.only('Substrate Service Unit Test', () => {
 
   const SUBSTRATE_URL = 'URL';
   const ADMIN_SUBSTRATE_MNEMONIC = 'ADDR';
-  class ProcessEnvProxyMock {
-    env = {
-      SUBSTRATE_URL,
-      ADMIN_SUBSTRATE_MNEMONIC,
-    };
+  class GoogleSecretManagerServiceMock {
+    substrateUrl = SUBSTRATE_URL;
+    adminSubstrateMnemonic = ADMIN_SUBSTRATE_MNEMONIC;
   }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SubstrateService,
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

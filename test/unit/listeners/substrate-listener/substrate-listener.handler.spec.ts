@@ -1,6 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubstrateListenerHandler } from '../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import {
+  GoogleSecretManagerService,
+  ProcessEnvProxy,
+  SubstrateService,
+} from '../../../../src/common';
 import { MockType, substrateServiceMockFactory } from '../../mock';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -44,10 +48,8 @@ describe('Substrate Listener Handler Unit Test', () => {
   }));
 
   const NODE_ENV = 'development';
-  class ProcessEnvProxyMock {
-    env = {
-      NODE_ENV,
-    };
+  class GoogleSecretManagerServiceMock {
+    nodeEnv = NODE_ENV;
   }
 
   beforeEach(async () => {
@@ -57,7 +59,10 @@ describe('Substrate Listener Handler Unit Test', () => {
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: QueryBus, useFactory: queryBusMockFactory },
         { provide: CommandBus, useFactory: commandBusMockFactory },
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

@@ -10,7 +10,6 @@ import {
   EmailNotification,
   EmailNotificationService,
   GoogleSecretManagerService,
-  ProcessEnvProxy,
   SubstrateService,
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';

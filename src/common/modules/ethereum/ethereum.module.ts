@@ -12,13 +12,17 @@ import {
   imports: [
     GoogleSecretManagerModule,
     EthersModule.forRootAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        network: googleSecretManagerService.web3RPC,
-        useDefaultProvider: true,
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          network: googleSecretManagerService.web3RPC,
+          useDefaultProvider: true,
+        };
+      },
     }),
     CachesModule,
     ProcessEnvModule,

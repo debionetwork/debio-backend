@@ -12,16 +12,20 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
     TerminusModule,
     GoogleSecretManagerModule,
     ElasticsearchModule.registerAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        node: googleSecretManagerService.elasticsearchNode,
-        auth: {
-          username: googleSecretManagerService.elasticsearchUsername,
-          password: googleSecretManagerService.elasticsearchPassword,
-        },
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          node: googleSecretManagerService.elasticsearchNode,
+          auth: {
+            username: googleSecretManagerService.elasticsearchUsername,
+            password: googleSecretManagerService.elasticsearchPassword,
+          },
+        };
+      },
     }),
   ],
   exports: [ElasticsearchModule, ElasticsearchHealthIndicator],

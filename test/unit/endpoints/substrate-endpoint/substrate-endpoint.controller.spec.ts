@@ -17,8 +17,8 @@ import {
 } from '../../../../src/endpoints/substrate-endpoint/services';
 import {
   DateTimeProxy,
-  ProcessEnvProxy,
   TransactionLoggingService,
+  GoogleSecretManagerService,
   SubstrateService,
 } from '../../../../src/common';
 import { WalletBindingDTO } from '../../../../src/endpoints/substrate-endpoint/dto';
@@ -99,10 +99,8 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       getGeneticAnalysisOrderById: jest.fn(),
     }));
 
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    debioApiKey = DEBIO_API_KEY;
   }
 
   class SubstrateServiceMock {
@@ -140,7 +138,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: geneticAnalysisOrderMockfactory,
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
-import { ProcessEnvProxy } from '../../../../src/common';
+import { GoogleSecretManagerService } from '../../../../src/common';
 import { Response } from 'express';
 import { AuthenticationController } from '../../../../src/endpoints/authentication/authentication.controller';
 import { pinataJwtPayload } from '../../../../src/endpoints/authentication/pinata-jwt.model';
@@ -21,23 +21,21 @@ describe('Authentication Controller Unit Tests', () => {
   const API_KEY = 'DEBIO_API_KEY';
   const PINATA_SECRET_KEY = 'PINATA_SECRET_KEY';
   const PINATA_PRIVATE_KEY = 'PINATA_PRIVATE_KEY';
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY: API_KEY,
-      PINATA_SECRET_KEY: PINATA_SECRET_KEY,
-      PINATA_PRIVATE_KEY: PINATA_PRIVATE_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    debioApiKey = API_KEY;
+    pinataSecretKey = PINATA_SECRET_KEY;
+    pinataPrivateKey = PINATA_PRIVATE_KEY;
   }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthenticationController],
       providers: [
-        {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
-        },
         { provide: JwtService, useFactory: jwtServiceMockFactory },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

@@ -12,15 +12,19 @@ require('dotenv').config(); // eslint-disable-line
   imports: [
     GoogleSecretManagerModule,
     CacheModule.registerAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        store: redisStore,
-        host: googleSecretManagerService.hostRedis,
-        port: googleSecretManagerService.portRedis,
-        auth_pass: googleSecretManagerService.redisPassword,
-      }),
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          store: redisStore,
+          host: googleSecretManagerService.hostRedis,
+          port: googleSecretManagerService.portRedis,
+          auth_pass: googleSecretManagerService.redisPassword,
+        };
+      },
     }),
   ],
   providers: [CachesService],

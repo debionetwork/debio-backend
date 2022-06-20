@@ -13,28 +13,32 @@ require('dotenv').config(); // eslint-disable-line
   imports: [
     GoogleSecretManagerModule,
     MailerModule.forRootAsync({
+      imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
-      ) => ({
-        transport: {
-          host: 'smtp.gmail.com',
-          secure: false,
-          auth: {
-            user: googleSecretManagerService.email,
-            pass: googleSecretManagerService.passEmail,
+      ) => {
+        await googleSecretManagerService.accessAndAccessSecret();
+        return {
+          transport: {
+            host: 'smtp.gmail.com',
+            secure: false,
+            auth: {
+              user: googleSecretManagerService.email,
+              pass: googleSecretManagerService.passEmail,
+            },
           },
-        },
-        template: {
-          dir: join(__dirname, 'templates'),
-          adapter: new HandlebarsAdapter({
-            colNum: (value) => parseInt(value) + 1,
-          }), // or new PugAdapter() or new EjsAdapter()
-          options: {
-            strict: true,
+          template: {
+            dir: join(__dirname, 'templates'),
+            adapter: new HandlebarsAdapter({
+              colNum: (value) => parseInt(value) + 1,
+            }), // or new PugAdapter() or new EjsAdapter()
+            options: {
+              strict: true,
+            },
           },
-        },
-      }),
+        };
+      },
     }),
   ],
   providers: [MailerManager],
