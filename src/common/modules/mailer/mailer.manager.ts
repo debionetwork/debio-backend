@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
+require('dotenv').config(); // eslint-disable-line
 
 @Injectable()
 export class MailerManager {
@@ -11,6 +12,10 @@ export class MailerManager {
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
+    let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
+    if (process.env.HOST_POSTGRES == 'localhost') {
+      subject = `Testing Notification Email`;
+    }
     this.mailerService.sendMail({
       to: to,
       subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
