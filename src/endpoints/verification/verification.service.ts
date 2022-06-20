@@ -13,7 +13,6 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
 export class VerificationService {
