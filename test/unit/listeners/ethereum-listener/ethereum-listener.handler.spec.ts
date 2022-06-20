@@ -64,7 +64,7 @@ describe('Ethereum Listener Handler Unit Test', () => {
           smartContractOnEventType = type;
           const orderEventMock = {
             orderId: ORDER_ID,
-            transactionHash: 'string'
+            transactionHash: 'string',
           };
           fn(orderEventMock);
         },
@@ -132,23 +132,16 @@ describe('Ethereum Listener Handler Unit Test', () => {
     expect(ethereumService.setLastBlock).toBeCalledTimes(2);
     expect(ethereumService.setLastBlock).toHaveBeenCalledWith(BLOCK_NUM);
 
-    expect(smartContractOnEventType).toEqual('OrderPaid');
-    expect(escrowService.setOrderPaidWithSubstrate).toBeCalled();
-    expect(escrowService.setOrderPaidWithSubstrate).toHaveBeenCalledWith(
-      ORDER_ID,
-    );
-
-    expect(smartContractOnEventType).toEqual('OrderFulfilled');
-    expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
-    expect(
-      transactionLoggingService.getLoggingByHashAndStatus,
-    ).toHaveBeenCalledWith(ORDER_ID);
-
     expect(smartContractOnEventType).toEqual('OrderRefunded');
-    expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
     expect(
       transactionLoggingService.getLoggingByHashAndStatus,
-    ).toHaveBeenCalledWith(ORDER_ID);
+    ).toHaveBeenCalledTimes(2);
+    expect(
+      transactionLoggingService.getLoggingByHashAndStatus,
+    ).toHaveBeenCalledWith(ORDER_ID, 3);
+    expect(
+      transactionLoggingService.getLoggingByHashAndStatus,
+    ).toHaveBeenCalledWith(ORDER_ID, 4);
   });
 
   it('should sync one block', async () => {
