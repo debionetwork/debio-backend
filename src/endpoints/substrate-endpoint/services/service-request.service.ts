@@ -81,6 +81,7 @@ export class ServiceRequestService {
           ) {
             requestByCountryDict[country]['services'][serviceLocationIdentity] =
               {
+                countryCode: country,
                 category: service.category,
                 regionCode: service.region,
                 city: service.city,
