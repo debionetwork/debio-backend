@@ -55,7 +55,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
-  let notificationServiceMock: MockType<NotificationService>;
 
   const DEBIO_API_KEY = 'KEY';
 
@@ -152,7 +151,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
     geneticAnalysisOrderMock = module.get(GeneticAnalysisOrderService);
-    notificationServiceMock = module.get(NotificationService);
   });
 
   it('should be defined', () => {
@@ -510,19 +508,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       DTO.accountId,
       (REWARD * DBIO_UNIT).toString(),
     );
-    expect(notificationServiceMock.insert).toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toHaveBeenCalledWith({
-      role: 'Customer',
-      entity_type: 'Reward',
-      entity: 'Wallet Binding',
-      description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
-      read: false,
-      created_at: dateTimeProxyMock.new(),
-      updated_at: dateTimeProxyMock.new(),
-      deleted_at: null,
-      from: 'Debio Network',
-      to: DTO.accountId,
-    });
     expect(rewardServiceMock.insert).toHaveBeenCalled();
     expect(rewardServiceMock.insert).toHaveBeenCalledWith({
       address: DTO.accountId,
