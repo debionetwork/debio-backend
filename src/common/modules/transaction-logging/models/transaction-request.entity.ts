@@ -14,7 +14,9 @@ export class TransactionRequest {
   @Column()
   transaction_type: number;
 
-  @Column()
+  @Column({
+    type: 'decimal',
+  })
   amount: number;
 
   @Column()
@@ -29,6 +31,8 @@ export class TransactionRequest {
   @Column({ type: 'bigint' })
   parent_id: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   transaction_hash: string;
 }

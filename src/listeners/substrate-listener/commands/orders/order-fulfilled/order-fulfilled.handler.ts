@@ -6,7 +6,6 @@ import {
   DateTimeProxy,
   DebioConversionService,
   NotificationService,
-  RewardService,
   SubstrateService,
   TransactionLoggingService,
 } from '../../../../../common';
@@ -21,7 +20,6 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { EscrowService } from '../../../../../common/modules/escrow/escrow.service';
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
-import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
 import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
 
 @Injectable()
@@ -34,7 +32,6 @@ export class OrderFulfilledHandler
   constructor(
     private readonly loggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
-    private readonly rewardService: RewardService,
     private readonly escrowService: EscrowService,
     private readonly substrateService: SubstrateService,
     private readonly notificationService: NotificationService,
@@ -69,14 +66,15 @@ export class OrderFulfilledHandler
       if (isOrderHasBeenInsert) {
         return;
       }
-      await this.loggingService.create(orderLogging);
-
       const labEthAddress: any = await queryEthAdressByAccountId(
         this.substrateService.api as any,
         order['sellerId'],
       );
 
       if ((labEthAddress as Option<any>).isNone) {
+        await this.logger.log(
+          `Eth address by account id: ${order.customerId} is none!`,
+        );
         return null;
       }
 
@@ -142,15 +140,17 @@ export class OrderFulfilledHandler
         );
 
         // Write Logging Reward Customer Staking Request Service
-        const dataCustomerLoggingInput: RewardDto = {
+        const dataCustomerLoggingInput: TransactionLoggingDto = {
           address: order.customerId,
-          ref_number: order.id,
-          reward_amount: totalPrice,
-          reward_type: 'Customer Stake Request Service',
-          currency: 'DBIO',
+          amount: totalPrice,
           created_at: new Date(),
+          currency: 'DBIO',
+          parent_id: BigInt(0),
+          ref_number: order.id,
+          transaction_type: 8,
+          transaction_status: 36,
         };
-        await this.rewardService.insert(dataCustomerLoggingInput);
+        await this.loggingService.create(dataCustomerLoggingInput);
 
         // Send reward to lab
         await sendRewards(
@@ -182,17 +182,20 @@ export class OrderFulfilledHandler
         );
 
         // Write Logging Reward Lab
-        const dataLabLoggingInput: RewardDto = {
+        const dataLabLoggingInput: TransactionLoggingDto = {
           address: order.customerId,
-          ref_number: order.id,
-          reward_amount: totalPrice / 10,
-          reward_type: 'Lab Provide Requested Service',
-          currency: 'DBIO',
+          amount: totalPrice / 10,
           created_at: new Date(),
+          currency: 'DBIO',
+          parent_id: BigInt(0),
+          ref_number: order.id,
+          transaction_type: 8,
+          transaction_status: 37,
         };
-        await this.rewardService.insert(dataLabLoggingInput);
+        await this.loggingService.create(dataLabLoggingInput);
       }
       await this.escrowService.orderFulfilled(order);
+      await this.loggingService.create(orderLogging);
 
       const currDateTime = this.dateTimeProxy.new();
 

@@ -37,9 +37,9 @@ export class OrderFailedHandler implements ICommandHandler<OrderFailedCommand> {
     try {
       const isOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(order.id, 4);
-      
+
       if (order.orderFlow === 'StakingRequestService') {
-      await finalizeRequest(
+        await finalizeRequest(
           this.substrateService.api as any,
           this.substrateService.pair,
           order.id,

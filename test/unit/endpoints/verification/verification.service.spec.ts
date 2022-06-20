@@ -5,9 +5,8 @@ import {
   notificationServiceMockFactory,
 } from '../../mock';
 import { when } from 'jest-when';
-import { RewardService } from '../../../../src/common/modules/reward/reward.service';
+import { TransactionLoggingService } from '../../../../src/common/modules/transaction-logging/transaction-logging.service';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
-import { RewardDto } from '../../../../src/common/modules/reward/dto/reward.dto';
 import { DateTimeProxy, SubstrateService } from '../../../../src/common';
 import {
   convertToDbioUnitString,
@@ -16,6 +15,7 @@ import {
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
+import { TransactionLoggingDto } from 'src/common/modules/transaction-logging/dto/transaction-logging.dto';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
@@ -35,7 +35,7 @@ jest.mock('@debionetwork/polkadot-provider', () => ({
 
 describe('Verification Service Unit Tests', () => {
   let verificationService: VerificationService;
-  let rewardServiceMock: MockType<RewardService>;
+  let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let substrateServiceMock: MockType<SubstrateService>;
 
@@ -50,18 +50,20 @@ describe('Verification Service Unit Tests', () => {
     }),
   );
 
-  const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
-    () => ({
-      insert: jest.fn((entity) => entity),
-    }),
-  );
+  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
+    jest.fn(() => ({
+      create: jest.fn((entity) => entity),
+    }));
 
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         VerificationService,
-        { provide: RewardService, useFactory: rewardServiceMockFactory },
+        {
+          provide: TransactionLoggingService,
+          useFactory: transactionLoggingServiceMockFactory,
+        },
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         {
@@ -72,7 +74,7 @@ describe('Verification Service Unit Tests', () => {
     }).compile();
 
     verificationService = module.get(VerificationService);
-    rewardServiceMock = module.get(RewardService);
+    transactionLoggingServiceMock = module.get(TransactionLoggingService);
 
     dateTimeProxyMock = module.get(DateTimeProxy);
 
@@ -115,17 +117,19 @@ describe('Verification Service Unit Tests', () => {
     const ACCOUNT_ID = 'ACCOUNT_ID';
     const VERIFICATION_STATUS = 'Rejected';
 
-    const PARAM: RewardDto = {
+    const PARAM: TransactionLoggingDto = {
       address: ACCOUNT_ID,
-      ref_number: '-',
-      reward_amount: 2,
-      reward_type: 'Lab Verified',
-      currency: 'DBIO',
+      amount: 2,
       created_at: new Date(NOW),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: '-',
+      transaction_type: 8,
+      transaction_status: 35,
     };
 
     const EXPECTED_RESULTS = 'EXPECTED_RESULTS';
-    when(rewardServiceMock.insert)
+    when(transactionLoggingServiceMock.create)
       .calledWith(PARAM)
       .mockReturnValue(EXPECTED_RESULTS);
     dateTimeProxyMock.now.mockReturnValue(NOW);
@@ -141,7 +145,7 @@ describe('Verification Service Unit Tests', () => {
       ACCOUNT_ID,
       VERIFICATION_STATUS,
     );
-    expect(rewardServiceMock.insert).toHaveBeenCalledTimes(0);
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
   });
 
@@ -151,17 +155,19 @@ describe('Verification Service Unit Tests', () => {
     const ACCOUNT_ID = 'ACCOUNT_ID';
     const VERIFICATION_STATUS = 'Verified';
     const REWARD_AMOUNT = 2;
-    const PARAM: RewardDto = {
+    const PARAM: TransactionLoggingDto = {
       address: ACCOUNT_ID,
-      ref_number: '-',
-      reward_amount: REWARD_AMOUNT,
-      reward_type: 'Lab Verified',
-      currency: 'DBIO',
+      amount: REWARD_AMOUNT,
       created_at: new Date(NOW),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: '-',
+      transaction_type: 8,
+      transaction_status: 35,
     };
 
     const EXPECTED_RESULTS = 'EXPECTED_RESULTS';
-    when(rewardServiceMock.insert)
+    when(transactionLoggingServiceMock.create)
       .calledWith(PARAM)
       .mockReturnValue(EXPECTED_RESULTS);
     dateTimeProxyMock.now.mockReturnValue(NOW);
@@ -177,8 +183,8 @@ describe('Verification Service Unit Tests', () => {
       ACCOUNT_ID,
       VERIFICATION_STATUS,
     );
-    expect(rewardServiceMock.insert).toHaveBeenCalledTimes(1);
-    expect(rewardServiceMock.insert).toHaveBeenCalledWith(PARAM);
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(1);
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
   });

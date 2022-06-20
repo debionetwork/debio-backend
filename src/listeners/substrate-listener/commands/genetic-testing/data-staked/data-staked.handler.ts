@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DebioConversionService,
-  RewardService,
+  TransactionLoggingService,
   SubstrateService,
 } from '../../../../../common';
 import {
@@ -10,14 +10,14 @@ import {
   sendRewards,
 } from '@debionetwork/polkadot-provider';
 import { DataStakedCommand } from './data-staked.command';
-import { RewardDto } from '../../../../../common/modules/reward/dto/reward.dto';
+import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 @CommandHandler(DataStakedCommand)
 export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
   private readonly logger: Logger = new Logger(DataStakedCommand.name);
   constructor(
-    private readonly rewardService: RewardService,
+    private readonly transactionLoggingService: TransactionLoggingService,
     private readonly exchangeCacheService: DebioConversionService,
     private readonly substrateService: SubstrateService,
   ) {}
@@ -45,15 +45,17 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
       convertToDbioUnitString(rewardPrice),
     );
 
-    // Write Logging Reward Customer Staking Request Service
-    const dataCustomerLoggingInput: RewardDto = {
+    // Write Transaction Logging Reward Customer Staking Request Service
+    const dataCustomerLoggingInput: TransactionLoggingDto = {
       address: dataOrder['customerId'],
-      ref_number: dataOrder['id'],
-      reward_amount: rewardPrice,
-      reward_type: 'Customer Add Data as Bounty',
-      currency: 'DBIO',
+      amount: rewardPrice,
       created_at: new Date(),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: dataOrder['id'],
+      transaction_type: 8,
+      transaction_status: 34,
     };
-    await this.rewardService.insert(dataCustomerLoggingInput);
+    await this.transactionLoggingService.create(dataCustomerLoggingInput);
   }
 }

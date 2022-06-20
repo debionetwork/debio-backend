@@ -6,7 +6,6 @@ import {
   MailModule,
   NotificationModule,
   ProcessEnvModule,
-  RewardModule,
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../common';
@@ -33,7 +32,6 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     TransactionLoggingModule,
     SubstrateModule,
     DebioConversionModule,
-    RewardModule,
     MailModule,
     CqrsModule,
     DateTimeModule,

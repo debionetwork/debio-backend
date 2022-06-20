@@ -49,4 +49,13 @@ export class TransactionLoggingService {
       },
     });
   }
+
+  getRewardBindingByAccountId(accountId) {
+    return this.transactionRequestRepository.findOne({
+      where: {
+        transaction_status: 33,
+        address: accountId,
+      },
+    });
+  }
 }

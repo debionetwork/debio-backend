@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
-import { RewardService } from '../../common/modules/reward/reward.service';
-import { DateTimeProxy, SubstrateService } from '../../common';
+import {
+  DateTimeProxy,
+  SubstrateService,
+  TransactionLoggingService,
+} from '../../common';
 import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
@@ -9,17 +11,17 @@ import {
   updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
+import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
 export class VerificationService {
   constructor(
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
-    private readonly rewardService: RewardService,
+    private readonly transactionLoggingService: TransactionLoggingService,
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {
-    const currentTime = this.dateTimeProxy.new(); // eslint-disable-line
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
       this.subtrateService.api as any,
@@ -40,16 +42,18 @@ export class VerificationService {
       );
 
       //Write to Reward Logging
-      const dataInput: RewardDto = {
+      const dataInput: TransactionLoggingDto = {
         address: substrateAddress,
-        ref_number: '-',
-        reward_amount: 2,
-        reward_type: 'Lab Verified',
-        currency: 'DBIO',
+        amount: 2,
         created_at: new Date(this.dateTimeProxy.now()),
+        currency: 'DBIO',
+        parent_id: BigInt(0),
+        ref_number: '-',
+        transaction_type: 8,
+        transaction_status: 35,
       };
 
-      await this.rewardService.insert(dataInput);
+      await this.transactionLoggingService.create(dataInput);
     }
   }
 

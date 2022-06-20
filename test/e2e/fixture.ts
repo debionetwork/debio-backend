@@ -9,7 +9,6 @@ import { EmailNotification } from '../../src/common/modules/database/email-notif
 import { Country } from '../../src/endpoints/location/models/country.entity';
 import { State } from '../../src/endpoints/location/models/state.entity';
 import { City } from '../../src/endpoints/location/models/city.entity';
-import { Reward } from '../../src/common/modules/reward/models/reward.entity';
 import { EmrCategory } from '../../src/endpoints/category/emr/models/emr.entity';
 import { ServiceCategory } from '../../src/endpoints/category/service/models/service-category.service';
 import { SpecializationCategory } from '../../src/endpoints/category/specialization/models/specialization.entity';
@@ -47,7 +46,6 @@ module.exports = async () => {
     ...dummyCredentials,
     database: 'db_postgres',
     entities: [
-      Reward,
       LabRating,
       TransactionRequest,
       DataStakingEvents,
@@ -123,22 +121,6 @@ module.exports = async () => {
     })
     .execute();
   console.log('`Transaction Log` data injection successful! ✅');
-
-  console.log('Injecting `Reward` into debio-postgres 💉...');
-  await dbPostgresMigration
-    .createQueryBuilder()
-    .insert()
-    .into(Reward)
-    .values({
-      address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-      ref_number: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-      reward_amount: 2,
-      reward_type: 'Registered User',
-      currency: 'DBIO',
-      created_at: new Date(),
-    })
-    .execute();
-  console.log('`Reward` data injection successful! ✅');
 
   console.log('Injecting `EmailNotification` into debio-postgres 💉...');
   await dbPostgresMigration

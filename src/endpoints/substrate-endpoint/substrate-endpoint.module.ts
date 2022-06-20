@@ -6,7 +6,7 @@ import { OrderService } from './services/order.service';
 import {
   DebioConversionModule,
   DateTimeModule,
-  RewardModule,
+  TransactionLoggingModule,
   SubstrateModule,
 } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
@@ -29,7 +29,7 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
       }),
     }),
     SubstrateModule,
-    RewardModule,
+    TransactionLoggingModule,
     DateTimeModule,
   ],
   exports: [ElasticsearchModule],

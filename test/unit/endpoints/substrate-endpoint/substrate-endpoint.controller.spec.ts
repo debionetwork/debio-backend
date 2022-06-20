@@ -18,7 +18,7 @@ import {
 import {
   DateTimeProxy,
   ProcessEnvProxy,
-  RewardService,
+  TransactionLoggingService,
   SubstrateService,
 } from '../../../../src/common';
 import { WalletBindingDTO } from '../../../../src/endpoints/substrate-endpoint/dto';
@@ -50,7 +50,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let labServiceMock: MockType<LabService>;
   let serviceServiceMock: MockType<ServiceService>;
   let orderServiceMock: MockType<OrderService>;
-  let rewardServiceMock: MockType<RewardService>;
+  let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let serviceRequestMock: MockType<ServiceRequestService>;
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
@@ -81,12 +81,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       provideRequestService: jest.fn(),
     }));
 
-  const rewardServiceMockFactory: () => MockType<RewardService> = jest.fn(
-    () => ({
+  const transactionLoggingServiceMockFactory: () => MockType<TransactionLoggingService> =
+    jest.fn(() => ({
       getRewardBindingByAccountId: jest.fn(),
-      insert: jest.fn(),
-    }),
-  );
+      create: jest.fn(),
+    }));
 
   const geneticAnalysisMockfactory: () => MockType<GeneticAnalysisService> =
     jest.fn(() => ({
@@ -128,7 +127,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           provide: ServiceRequestService,
           useFactory: serviceRequestServiceMockFactory,
         },
-        { provide: RewardService, useFactory: rewardServiceMockFactory },
+        {
+          provide: TransactionLoggingService,
+          useFactory: transactionLoggingServiceMockFactory,
+        },
         {
           provide: GeneticAnalysisService,
           useFactory: geneticAnalysisMockfactory,
@@ -146,7 +148,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     labServiceMock = module.get(LabService);
     serviceServiceMock = module.get(ServiceService);
     orderServiceMock = module.get(OrderService);
-    rewardServiceMock = module.get(RewardService);
+    transactionLoggingServiceMock = module.get(TransactionLoggingService);
     dateTimeProxyMock = module.get(DateTimeProxy);
     serviceRequestMock = module.get(ServiceRequestService);
     geneticAnalysisMock = module.get(GeneticAnalysisService);
@@ -159,7 +161,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(labServiceMock).toBeDefined();
     expect(serviceServiceMock).toBeDefined();
     expect(orderServiceMock).toBeDefined();
-    expect(rewardServiceMock).toBeDefined();
+    expect(transactionLoggingServiceMock).toBeDefined();
     expect(serviceRequestMock).toBeDefined();
     expect(geneticAnalysisMock).toBeDefined();
     expect(geneticAnalysisOrderMock).toBeDefined();
@@ -481,7 +483,9 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       status: (code: number) => RESPONSE, // eslint-disable-line
     } as Response;
     (queryAccountIdByEthAddress as jest.Mock).mockReturnValue(false);
-    rewardServiceMock.getRewardBindingByAccountId.mockReturnValue(false);
+    transactionLoggingServiceMock.getRewardBindingByAccountId.mockReturnValue(
+      false,
+    );
     dateTimeProxyMock.new.mockReturnValue(1);
 
     // Assert
@@ -508,15 +512,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       DTO.accountId,
       (REWARD * DBIO_UNIT).toString(),
     );
-    expect(rewardServiceMock.insert).toHaveBeenCalled();
-    expect(rewardServiceMock.insert).toHaveBeenCalledWith({
-      address: DTO.accountId,
-      ref_number: '-',
-      reward_amount: REWARD,
-      reward_type: 'Registered User',
-      currency: 'DBIO',
-      created_at: dateTimeProxyMock.new(),
-    });
   });
 
   it('should not set genetic analysis order paid with false API key', async () => {

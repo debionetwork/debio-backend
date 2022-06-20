@@ -9,7 +9,6 @@ import {
   ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
-  NotificationModule,
 } from '../../../src/common';
 import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -45,7 +44,6 @@ describe('Email Controller (e2e)', () => {
         SubstrateModule,
         EmailNotificationModule,
         ProcessEnvModule,
-        NotificationModule,
         EmailEndpointModule,
       ],
     }).compile();

@@ -3,7 +3,6 @@ import { Transform } from 'class-transformer';
 export class TransactionLoggingDto {
   address: string;
 
-  @Transform((val) => BigInt(val.value))
   amount: number;
 
   created_at: Date;

@@ -7,14 +7,14 @@ import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
 import { LocationModule } from '../../../src/endpoints/location/location.module';
 import {
   DebioConversionModule,
-  RewardModule,
+  TransactionLoggingModule,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
-import { Reward } from '../../../src/common/modules/reward/models/reward.entity';
+import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { Country } from '../../../src/endpoints/location/models/country.entity';
 import { State } from '../../../src/endpoints/location/models/state.entity';
 import { City } from '../../../src/endpoints/location/models/city.entity';
@@ -53,7 +53,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
-          entities: [Reward],
+          entities: [TransactionRequest],
           autoLoadEntities: true,
         }),
         TypeOrmModule.forRoot({
@@ -75,7 +75,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
           }),
         }),
         SubstrateModule,
-        RewardModule,
+        TransactionLoggingModule,
         DateTimeModule,
         NotificationEndpointModule,
       ],

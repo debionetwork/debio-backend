@@ -10,8 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { RewardService } from '../../common/modules/reward/reward.service';
-import { RewardDto } from '../../common/modules/reward/dto/reward.dto';
+import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { SentryInterceptor } from '../../common/interceptors';
 import { WalletBindingDTO } from './dto/wallet-binding.dto';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -30,7 +29,12 @@ import {
   setGeneticAnalysisOrderPaid,
   dbioUnit,
 } from '@debionetwork/polkadot-provider';
-import { DateTimeProxy, ProcessEnvProxy, SubstrateService } from '../../common';
+import {
+  DateTimeProxy,
+  ProcessEnvProxy,
+  SubstrateService,
+  TransactionLoggingService,
+} from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 import {
   labsResponse,
@@ -52,7 +56,7 @@ export class SubstrateController {
     private readonly labService: LabService,
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
-    private readonly rewardService: RewardService,
+    private readonly transactionLoggingService: TransactionLoggingService,
     private readonly process: ProcessEnvProxy,
     private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
@@ -388,13 +392,15 @@ export class SubstrateController {
     const { accountId, ethAddress } = payload;
     const rewardAmount = 0.2;
 
-    const dataInput: RewardDto = {
+    const dataInput: TransactionLoggingDto = {
       address: accountId,
-      ref_number: '-',
-      reward_amount: rewardAmount,
-      reward_type: 'Registered User',
-      currency: 'DBIO',
+      amount: rewardAmount,
       created_at: this.dateTime.new(),
+      currency: 'DBIO',
+      parent_id: BigInt(0),
+      ref_number: '-',
+      transaction_type: 8,
+      transaction_status: 33,
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
@@ -419,7 +425,9 @@ export class SubstrateController {
     }
 
     const isRewardHasBeenSend =
-      await this.rewardService.getRewardBindingByAccountId(accountId);
+      await this.transactionLoggingService.getRewardBindingByAccountId(
+        accountId,
+      );
 
     if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
       // eslint-disable-next-line
@@ -432,7 +440,7 @@ export class SubstrateController {
 
       reward = rewardAmount;
 
-      await this.rewardService.insert(dataInput);
+      await this.transactionLoggingService.create(dataInput);
     }
 
     return response.status(200).send({
