@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
+require('dotenv').config(); // eslint-disable-line
 
 @Injectable()
 export class MailerManager {
@@ -11,15 +12,23 @@ export class MailerManager {
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
+    let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
+    if (process.env.HOST_POSTGRES == 'localhost') {
+      subject = `Testing New Service Request Email`;
+    }
     this.mailerService.sendMail({
       to: to,
-      subject: `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`,
+      subject: subject,
       template: 'customer-staking-request-service',
       context: context,
     });
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
+    let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
+    if (process.env.HOST_POSTGRES == 'localhost') {
+      subject = `Testing New Lab Register Email`;
+    }
     const files: any[] = [];
     context.certifications.forEach((val, idx) => {
       files.push({
@@ -37,7 +46,7 @@ export class MailerManager {
     try {
       this.mailerService.sendMail({
         to: to,
-        subject: `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`,
+        subject: subject,
         template: 'lab-register',
         context: {
           profile_image: context.profile_image,
