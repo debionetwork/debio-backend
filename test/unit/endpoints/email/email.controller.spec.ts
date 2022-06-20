@@ -20,7 +20,6 @@ describe('Email Controller', () => {
   let emailEndpointControllerMock: EmailEndpointController;
   let mailerManageMock: MockType<MailerManager>;
   let substrateServiceMock: MockType<SubstrateService>;
-  let notificationService: NotificationService; // eslint-disable-line
   const EMAILS = 'email';
 
   class ProcessEnvProxyMock {
@@ -56,7 +55,6 @@ describe('Email Controller', () => {
     );
     mailerManageMock = module.get(MailerManager);
     substrateServiceMock = module.get(SubstrateService);
-    notificationService = module.get(NotificationService); // eslint-disable-line
   });
 
   it('should be defined', () => {
