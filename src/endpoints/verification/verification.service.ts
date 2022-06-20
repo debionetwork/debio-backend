@@ -8,6 +8,7 @@ import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
   sendRewards,
+  updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
@@ -21,7 +22,6 @@ export class VerificationService {
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {
-    const currentTime = this.dateTimeProxy.new(); // eslint-disable-line
     // Update Status Lab to Verified
     await updateLabVerificationStatus(
       this.subtrateService.api as any,
