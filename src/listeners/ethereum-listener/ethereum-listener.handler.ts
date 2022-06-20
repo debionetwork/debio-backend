@@ -31,7 +31,9 @@ export class EthereumListenerHandler implements OnModuleInit {
       await this.logger.log(
         `Order Paid Contract Event With Order Id: ${order.orderId}`,
       );
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      if(event.transactionHash){
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
       await this.escrowService.setOrderPaidWithSubstrate(order.orderId);
     });
 
@@ -39,7 +41,9 @@ export class EthereumListenerHandler implements OnModuleInit {
       await this.logger.log(
         `Order Fulfilled Contract Event With Order Id: ${order.orderId}`,
       );
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      if(event.transactionHash){
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
       //Update transaction_hash to DB
       const loggingFulfilled =
         await this.transactioLoggingService.getLoggingByHashAndStatus(
@@ -59,7 +63,9 @@ export class EthereumListenerHandler implements OnModuleInit {
       await this.logger.log(
         `Order Refunded Contract Event With Order Id: ${order.orderId}`,
       );
-      await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      if(event.transactionHash){
+        await this.logger.log(`transaction Hash: ${event.transactionHash}`);
+      }
       //Update transaction_hash to DB
 
       const loggingRefunded =
