@@ -12,10 +12,12 @@ import { City } from '../../src/endpoints/location/models/city.entity';
 import { EmrCategory } from '../../src/endpoints/category/emr/models/emr.entity';
 import { ServiceCategory } from '../../src/endpoints/category/service/models/service-category.service';
 import { SpecializationCategory } from '../../src/endpoints/category/specialization/models/specialization.entity';
+import { DnaCollectionCategory } from '../../src/endpoints/category/dna-collection/models/dna-collection.entity';
 import { emrList } from './endpoints/category/emr.mock.data';
 import { serviceList } from './endpoints/category/service.mock.data';
 import { specializationList } from './endpoints/category/specialization.mock.data';
 import { Notification } from '../../src/common/modules/notification/models/notification.entity';
+import { dnaCollectionList } from './endpoints/category/dna-collection.mock.data';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({
@@ -52,6 +54,7 @@ module.exports = async () => {
       EmrCategory,
       ServiceCategory,
       SpecializationCategory,
+      DnaCollectionCategory,
       Notification,
     ],
     synchronize: true,
@@ -84,9 +87,22 @@ module.exports = async () => {
     .into(SpecializationCategory)
     .values(specializationList)
     .execute();
+  console.log('`Specialization Category` data injection successful! ✅');
+
+  console.log(
+    'Injecting `DNA Collection Process Category` into debio-postgres 💉...',
+  );
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(DnaCollectionCategory)
+    .values(dnaCollectionList)
+    .execute();
   console.log('`EMR Category` data injection successful! ✅');
 
-  console.log('Injecting `Transaction Log` into debio-postgres 💉...');
+  console.log('Injecting `DNA Collection Process` into debio-postgres 💉...');
+
   await dbPostgresMigration
     .createQueryBuilder()
     .insert()

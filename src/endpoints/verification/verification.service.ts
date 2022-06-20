@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   DateTimeProxy,
-  NotificationService,
   SubstrateService,
   TransactionLoggingService,
 } from '../../common';
@@ -9,10 +8,8 @@ import {
   updateGeneticAnalystVerificationStatus,
   convertToDbioUnitString,
   sendRewards,
-  updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
-import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
 
 @Injectable()
@@ -21,7 +18,6 @@ export class VerificationService {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly transactionLoggingService: TransactionLoggingService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {
@@ -34,41 +30,6 @@ export class VerificationService {
       <VerificationStatus>verificationStatus,
     );
 
-    // insert notification
-    const notificationInput: NotificationDto = {
-      role: 'Lab',
-      entity_type: 'Verification',
-      entity: '',
-      description: '',
-      read: false,
-      created_at: currentTime,
-      updated_at: currentTime,
-      deleted_at: null,
-      from: 'Debio Network',
-      to: substrateAddress,
-    };
-
-    switch (verificationStatus) {
-      case VerificationStatus.Verified:
-        notificationInput.entity = 'Account verified';
-        notificationInput.description =
-          'Congrats! Your account has been verified.';
-        break;
-      case VerificationStatus.Revoked:
-        notificationInput.entity = 'Account revoked';
-        notificationInput.description = 'Your account has been revoked.';
-        break;
-      case VerificationStatus.Rejected:
-        notificationInput.entity = 'Account rejected';
-        notificationInput.description =
-          'Your account verification has been rejected.';
-        break;
-    }
-
-    if (verificationStatus !== VerificationStatus.Unverified) {
-      await this.notificationService.insert(notificationInput);
-    }
-
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
       const reward = 2;
@@ -79,22 +40,6 @@ export class VerificationService {
         substrateAddress,
         convertToDbioUnitString(reward),
       );
-
-      // insert notification
-      const notificationReward: NotificationDto = {
-        role: 'Lab',
-        entity_type: 'Reward',
-        entity: 'Lab verified',
-        description: 'Congrats! You’ve got 2 DBIO from account verification.',
-        read: false,
-        created_at: currentTime,
-        updated_at: currentTime,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: substrateAddress,
-      };
-
-      await this.notificationService.insert(notificationReward);
 
       //Write to Reward Logging
       const dataInput: TransactionLoggingDto = {
@@ -122,74 +67,6 @@ export class VerificationService {
       accountId,
       <VerificationStatus>verificationStatus,
     );
-
-    const gaNotificationTime = this.dateTimeProxy.new();
-
-    const testResultNotification: NotificationDto = {
-      role: 'GA',
-      entity_type: 'Submit account registration and verification',
-      entity: 'registration and verification',
-      description: `You've successfully submitted your account verification.`,
-      read: false,
-      created_at: gaNotificationTime,
-      updated_at: gaNotificationTime,
-      deleted_at: null,
-      from: 'Debio Network',
-      to: accountId,
-    };
-
-    await this.notificationService.insert(testResultNotification);
-    const currDateTime = this.dateTimeProxy.new();
-
-    const notificationAccountVerification: NotificationDto = {
-      role: 'GA',
-      entity_type: 'Verification',
-      entity: '',
-      description: '',
-      read: false,
-      created_at: currDateTime,
-      updated_at: currDateTime,
-      deleted_at: null,
-      from: 'Debio Network',
-      to: accountId,
-    };
-
-    switch (verificationStatus) {
-      case VerificationStatus.Verified:
-        notificationAccountVerification.entity = `Account verified`;
-        notificationAccountVerification.description = `Congrats! Your account has been verified.`;
-        break;
-      case VerificationStatus.Rejected:
-        notificationAccountVerification.entity = `Account rejected`;
-        notificationAccountVerification.description = `Your account verification has been rejected.`;
-        break;
-      case VerificationStatus.Revoked:
-        notificationAccountVerification.entity = `Account revoked`;
-        notificationAccountVerification.description = `Your account has been revoked.`;
-        break;
-    }
-
-    if (verificationStatus !== VerificationStatus.Unverified) {
-      await this.notificationService.insert(notificationAccountVerification);
-    }
-
-    if (verificationStatus === VerificationStatus.Verified) {
-      const notificationRewardVerified: NotificationDto = {
-        role: 'GA',
-        entity_type: 'Reward',
-        entity: 'Account verified',
-        description:
-          'Congrats! You’ve received 2 DBIO from account verification.',
-        read: false,
-        created_at: currDateTime,
-        updated_at: currDateTime,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: accountId,
-      };
-
-      await this.notificationService.insert(notificationRewardVerified);
-    }
 
     return { message: `${accountId} is ${verificationStatus}` };
   }

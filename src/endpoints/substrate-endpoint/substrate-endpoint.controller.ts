@@ -31,13 +31,11 @@ import {
 } from '@debionetwork/polkadot-provider';
 import {
   DateTimeProxy,
-  NotificationService,
   ProcessEnvProxy,
   SubstrateService,
   TransactionLoggingService,
 } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
-import { NotificationDto } from '../../common/modules/notification/dto/notification.dto';
 import {
   labsResponse,
   orderByCustomerId,
@@ -64,7 +62,6 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   @Get('/labs')
@@ -440,21 +437,6 @@ export class SubstrateController {
         accountId,
         (rewardAmount * dbioUnit).toString(),
       );
-
-      const walletBindingNotification: NotificationDto = {
-        role: payload.role,
-        entity_type: 'Reward',
-        entity: 'Wallet Binding',
-        description: `Congrats! You've got 0.1 DBIO from wallet binding.`,
-        read: false,
-        created_at: this.dateTime.new(),
-        updated_at: this.dateTime.new(),
-        deleted_at: null,
-        from: 'Debio Network',
-        to: accountId,
-      };
-
-      await this.notificationService.insert(walletBindingNotification);
 
       reward = rewardAmount;
 

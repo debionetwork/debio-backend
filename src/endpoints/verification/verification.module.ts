@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DateTimeModule, NotificationModule } from '../../common';
+import { DateTimeModule } from '../../common';
 import { TransactionLoggingModule } from '../../common/modules/transaction-logging/transaction-logging.module';
 import { ProcessEnvModule, SubstrateModule } from '../../common';
 import { VerificationController } from './verification.controller';
@@ -11,7 +11,6 @@ import { VerificationService } from './verification.service';
     TransactionLoggingModule,
     DateTimeModule,
     ProcessEnvModule,
-    NotificationModule,
   ],
   controllers: [VerificationController],
   providers: [VerificationService],

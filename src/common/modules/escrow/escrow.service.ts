@@ -32,25 +32,43 @@ export class EscrowService {
   }
 
   async refundOrder(order): Promise<void> {
-    console.log('[refundOrder] order: ', order);
-    try {
-      const provider = await this.ethereumService.getEthersProvider();
-      const tokenContract = this.ethereumService.getEscrowSmartContract();
-      const wallet = await new ethers.Wallet(
-        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
-        provider,
-      );
-      const balance = await provider.getBalance(wallet.address);
-      console.log('balance', balance.toString());
-      const tokenContractWithSigner = tokenContract.connect(wallet);
-      try {
-        await tokenContractWithSigner.refundOrder(order.id);
-      } catch (err) {
-        console.log('err', err);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    console.log('[refundOrder] order: ', order.id);
+    let currentNonce;
+    lock
+      .acquire(ESCROW_WALLET_LOCK_KEY, async () => {
+        const _nonce = await this.provider.getTransactionCount(
+          this.escrowWallet.address,
+        );
+        nonce = nonce > _nonce ? nonce : _nonce;
+        const feeData = await this.provider.getFeeData();
+        const gasPrice = feeData.gasPrice;
+        const tokenContract = this.ethereumService.getEscrowSmartContract();
+        const tokenContractWithSigner = tokenContract.connect(
+          this.escrowWallet,
+        );
+        const tx = await tokenContractWithSigner.refundOrder(order.id, {
+          nonce,
+          gasPrice,
+        });
+      currentNonce = nonce;
+        this.provider.waitForTransaction(tx.hash).then((_tx) => {
+          console.log(
+            'refunded order customerId :',
+            order.customerId,
+            '\n transactionHash: ',
+            _tx.transactionHash,
+          );
+        });
+        nonce += 1;
+      })
+      .then(function () {
+        console.log(
+          `[refundOrder] Sent transaction for nonce: ${currentNonce}`,
+        );
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
   }
 
   async cancelOrder(request) {

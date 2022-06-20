@@ -70,8 +70,10 @@ describe('Escrow Service Unit Tests', () => {
   it('should refund order', async () => {
     // Arrange
     const ORDER_ID = 'ID';
+    const CUSTOMER_ID = 'ID';
     const ORDER = {
       id: ORDER_ID,
+      customerId: CUSTOMER_ID,
     };
     const TOKEN_CONTRACT_SIGNER_MOCK = {
       refundOrder: jest.fn(),
@@ -79,37 +81,20 @@ describe('Escrow Service Unit Tests', () => {
     const SMART_CONTRACT_MOCK = {
       connect: jest.fn(),
     };
-    const PROVIDER_MOCK = {
-      getBalance: jest.fn(),
-    };
-    ethereumServiceMock.getEthersProvider.mockReturnValue(PROVIDER_MOCK);
+    const WALLET_MOCK = 'WALLET';
     ethereumServiceMock.getEscrowSmartContract.mockReturnValue(
       SMART_CONTRACT_MOCK,
     );
-    PROVIDER_MOCK.getBalance.mockReturnValue('BALANCE');
+    ethereumServiceMock.createWallet.mockReturnValue(WALLET_MOCK);
     SMART_CONTRACT_MOCK.connect.mockReturnValue(TOKEN_CONTRACT_SIGNER_MOCK);
-    const ethersWalletSpy = jest.spyOn(ethers, 'Wallet');
+    TOKEN_CONTRACT_SIGNER_MOCK.refundOrder.mockReturnValue('BALANCE');
 
     // Act
     await escrowService.refundOrder(ORDER);
 
     // Assert
-    expect(ethereumServiceMock.getEthersProvider).toHaveBeenCalledTimes(1);
-    expect(ethereumServiceMock.getEscrowSmartContract).toHaveBeenCalledTimes(1);
-    expect(ethersWalletSpy).toHaveBeenCalledWith(
-      DEBIO_ESCROW_PRIVATE_KEY,
-      PROVIDER_MOCK,
-    );
-    expect(PROVIDER_MOCK.getBalance).toHaveBeenCalledTimes(1);
-    expect(PROVIDER_MOCK.getBalance).toHaveBeenCalledWith(WALLET_ADDRESS);
-    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledTimes(1);
-    expect(SMART_CONTRACT_MOCK.connect).toHaveBeenCalledWith({
-      address: WALLET_ADDRESS,
-    });
-    expect(TOKEN_CONTRACT_SIGNER_MOCK.refundOrder).toHaveBeenCalledTimes(1);
-    expect(TOKEN_CONTRACT_SIGNER_MOCK.refundOrder).toHaveBeenCalledWith(
-      ORDER_ID,
-    );
+    expect(ethereumServiceMock.getEscrowSmartContract).not.toBeCalled();
+    expect(ethereumServiceMock.createWallet).not.toBeCalled();
   });
 
   it('should fulfill order', async () => {

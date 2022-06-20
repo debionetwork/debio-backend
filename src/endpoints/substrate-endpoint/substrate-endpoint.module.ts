@@ -8,7 +8,6 @@ import {
   DateTimeModule,
   TransactionLoggingModule,
   SubstrateModule,
-  NotificationModule,
 } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
@@ -32,7 +31,6 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
     SubstrateModule,
     TransactionLoggingModule,
     DateTimeModule,
-    NotificationModule,
   ],
   exports: [ElasticsearchModule],
   controllers: [SubstrateController],

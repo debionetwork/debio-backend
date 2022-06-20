@@ -37,7 +37,6 @@ describe('Verification Service Unit Tests', () => {
   let verificationService: VerificationService;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>;
-  let notificationServiceMock: MockType<NotificationService>;
   let substrateServiceMock: MockType<SubstrateService>;
 
   const API = 'API';
@@ -78,7 +77,6 @@ describe('Verification Service Unit Tests', () => {
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
 
     dateTimeProxyMock = module.get(DateTimeProxy);
-    notificationServiceMock = module.get(NotificationService);
 
     substrateServiceMock = module.get(SubstrateService);
     Reflect.set(substrateServiceMock, 'api', API);
@@ -110,19 +108,6 @@ describe('Verification Service Unit Tests', () => {
       PAIR,
       ACCOUNT_ID,
       VERIFICATION_STATUS,
-    );
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(3);
-    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        role: 'GA',
-        entity_type: 'Submit account registration and verification',
-        entity: 'registration and verification',
-        description: `You've successfully submitted your account verification.`,
-        read: false,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: ACCOUNT_ID,
-      }),
     );
   });
 
@@ -162,7 +147,6 @@ describe('Verification Service Unit Tests', () => {
     );
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledTimes(0);
     expect(sendRewards).toHaveBeenCalledTimes(0);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(1);
   });
 
   it('should send reward', async () => {
@@ -203,18 +187,5 @@ describe('Verification Service Unit Tests', () => {
     expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(PARAM);
     expect(sendRewards).toHaveBeenCalledTimes(1);
     expect(convertToDbioUnitString).toHaveBeenCalledTimes(1);
-    expect(notificationServiceMock.insert).toHaveBeenCalledTimes(2);
-    expect(notificationServiceMock.insert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        role: 'Lab',
-        entity_type: 'Reward',
-        entity: 'Lab verified',
-        description: `Congrats! You’ve got 2 DBIO from account verification.`,
-        read: false,
-        deleted_at: null,
-        from: 'Debio Network',
-        to: ACCOUNT_ID,
-      }),
-    );
   });
 });
