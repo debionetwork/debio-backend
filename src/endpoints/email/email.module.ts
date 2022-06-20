@@ -4,10 +4,16 @@ import {
   MailModule,
   SubstrateModule,
 } from '../../common';
+import { NotificationModule } from '../../common/modules/notification/notification.module';
 import { EmailEndpointController } from './email.controller';
 
 @Module({
-  imports: [MailModule, SubstrateModule, EmailNotificationModule],
+  imports: [
+    MailModule,
+    SubstrateModule,
+    EmailNotificationModule,
+    NotificationModule,
+  ],
   controllers: [EmailEndpointController],
 })
 export class EmailEndpointModule {}

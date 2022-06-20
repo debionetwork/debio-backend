@@ -27,6 +27,7 @@ import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
 import { AuthenticationModule } from './endpoints/authentication/authentication.module';
+import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -77,6 +78,7 @@ require('dotenv').config(); // eslint-disable-line
     TransactionModule,
     SpecializationModule,
     NotificationEndpointModule,
+    DnaCollectionModule,
     SubstrateListenerModule,
   ],
 })
