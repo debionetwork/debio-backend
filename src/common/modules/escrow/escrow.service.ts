@@ -32,7 +32,7 @@ export class EscrowService {
   }
 
   async refundOrder(order): Promise<void> {
-    console.log('[refundOrder] order: ', order);
+    console.log('[refundOrder] order: ', order.id);
     let currentNonce;
     lock
       .acquire(ESCROW_WALLET_LOCK_KEY, async () => {
@@ -50,13 +50,13 @@ export class EscrowService {
           nonce,
           gasPrice,
         });
-        currentNonce = nonce;
+      currentNonce = nonce;
         this.provider.waitForTransaction(tx.hash).then((_tx) => {
           console.log(
             'refunded order customerId :',
             order.customerId,
-            ' ->',
-            _tx,
+            '\n transactionHash: ',
+            _tx.transactionHash,
           );
         });
         nonce += 1;

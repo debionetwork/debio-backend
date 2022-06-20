@@ -82,7 +82,7 @@ describe('Order Failed Handler Event', () => {
     expect(transactionLoggingService.getLoggingByHashAndStatus).toBeCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalled();
     expect(escrowServiceMock.refundOrder).toHaveBeenCalledWith(
-      orderCancelledCommand.orders.id,
+      orderCancelledCommand.orders,
     );
     expect(refundedOrderSpy).toHaveBeenCalled();
     expect(refundedOrderSpy).toHaveBeenCalledWith(
