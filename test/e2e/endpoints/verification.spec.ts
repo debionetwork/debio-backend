@@ -4,7 +4,6 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DateTimeModule,
-  NotificationModule,
   ProcessEnvProxy,
   TransactionLoggingModule,
   SubstrateModule,
@@ -49,7 +48,6 @@ describe('Verification Controller (e2e)', () => {
         SubstrateModule,
         TransactionLoggingModule,
         DateTimeModule,
-        NotificationModule,
       ],
       providers: [
         {
