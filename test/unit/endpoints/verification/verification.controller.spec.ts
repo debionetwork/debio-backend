@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { VerificationController } from '../../../../src/endpoints/verification/verification.controller';
-import { ProcessEnvProxy } from '../../../../src/common';
+import { GoogleSecretManagerService } from '../../../../src/common';
 import httpMocks = require('node-mocks-http');
 
 describe('Verification Controller Unit Tests', () => {
@@ -15,10 +15,8 @@ describe('Verification Controller Unit Tests', () => {
     }));
   let verificationServiceMock: MockType<VerificationService>;
 
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY: 'DEBIO_API_KEY',
-    };
+  class GoogleSecretManagerServiceMock {
+    debioApiKey = 'DEBIO_API_KEY';
   }
 
   // Arrange before each iteration
@@ -27,12 +25,12 @@ describe('Verification Controller Unit Tests', () => {
       providers: [
         VerificationController,
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
-        },
-        {
           provide: VerificationService,
           useFactory: verificationServiceMockFactory,
+        },
+        {
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
       ],
     }).compile();

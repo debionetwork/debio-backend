@@ -45,7 +45,7 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           node: googleSecretManagerService.elasticsearchNode,
           auth: {

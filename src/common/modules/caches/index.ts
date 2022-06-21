@@ -17,7 +17,7 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           store: redisStore,
           host: googleSecretManagerService.hostRedis,

@@ -2,7 +2,11 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TransactionLoggingModule } from '../../../src/common';
+import {
+  GoogleSecretManagerModule,
+  GoogleSecretManagerService,
+  TransactionLoggingModule,
+} from '../../../src/common';
 import { Server } from 'http';
 import { TransactionModule } from '../../../src/endpoints/transaction/transaction.module';
 import { TransactionHashDto } from '../../../src/endpoints/transaction/dto/transaction-hash.dto';
@@ -26,17 +30,32 @@ describe('Transaction Controller (e2e)', () => {
     order_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
   };
 
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    debioApiKey = process.env.DEBIO_API_KEY;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TransactionLoggingModule,
         TransactionModule,
         ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
+          imports: [GoogleSecretManagerModule],
+          inject: [GoogleSecretManagerService],
+          useFactory: async (
+            googleSecretManagerService: GoogleSecretManagerService,
+          ) => ({
+            node: googleSecretManagerService.elasticsearchNode,
             auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
+              username: googleSecretManagerService.elasticsearchUsername,
+              password: googleSecretManagerService.elasticsearchPassword,
             },
           }),
         }),
@@ -47,7 +66,10 @@ describe('Transaction Controller (e2e)', () => {
           autoLoadEntities: true,
         }),
       ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();

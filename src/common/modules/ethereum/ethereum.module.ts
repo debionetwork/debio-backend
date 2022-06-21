@@ -17,7 +17,7 @@ import {
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           network: googleSecretManagerService.web3RPC,
           useDefaultProvider: true,

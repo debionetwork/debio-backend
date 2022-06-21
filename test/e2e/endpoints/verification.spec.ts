@@ -4,10 +4,10 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   DateTimeModule,
-  ProcessEnvProxy,
   TransactionLoggingModule,
   SubstrateModule,
   SubstrateService,
+  GoogleSecretManagerService,
 } from '../../../src/common';
 import { VerificationModule } from '../../../src/endpoints/verification/verification.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,10 +20,16 @@ describe('Verification Controller (e2e)', () => {
   let api: SubstrateService;
 
   const apiKey = 'DEBIO_API_KEY';
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY: apiKey,
-    };
+
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    debioApiKey = apiKey;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
   }
 
   global.console = {
@@ -49,13 +55,10 @@ describe('Verification Controller (e2e)', () => {
         TransactionLoggingModule,
         DateTimeModule,
       ],
-      providers: [
-        {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
-        },
-      ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     api = module.get(SubstrateService);
     app = module.createNestApplication();

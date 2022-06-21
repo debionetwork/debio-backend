@@ -14,11 +14,25 @@ import { LocationEntities } from '../../../src/endpoints/location/models';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { SubstrateService } from '../../../src/common/modules/substrate/substrate.service';
+import { GoogleSecretManagerService } from '../../../src/common';
 
 describe('Health Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
+
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+    substrateUrl = process.env.SUBSTRATE_URL;
+    email = process.env.EMAIL;
+    passEmail = process.env.PASS_EMAIL;
+  }
 
   global.console = {
     ...console,
@@ -56,7 +70,10 @@ describe('Health Controller (e2e)', () => {
         SubstrateHealthModule,
         HealthModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     api = module.get(SubstrateService);
     app = module.createNestApplication();

@@ -4,9 +4,9 @@ import { INestApplication } from '@nestjs/common';
 import {
   EmailNotification,
   EmailNotificationModule,
+  GoogleSecretManagerService,
   MailerManager,
   MailModule,
-  ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
@@ -20,6 +20,20 @@ describe('Email Controller (e2e)', () => {
   let app: INestApplication;
   let substrateService: SubstrateService;
   let mailerManager: MailerManager;
+
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+    substrateUrl = process.env.SUBSTRATE_URL;
+    email = process.env.EMAIL;
+    emails = process.env.EMAILS;
+    passEmail = process.env.PASS_EMAIL;
+  }
 
   global.console = {
     ...console,
@@ -43,10 +57,12 @@ describe('Email Controller (e2e)', () => {
         MailModule,
         SubstrateModule,
         EmailNotificationModule,
-        ProcessEnvModule,
         EmailEndpointModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     substrateService = module.get(SubstrateService);
     mailerManager = module.get(MailerManager);

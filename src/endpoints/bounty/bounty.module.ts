@@ -19,7 +19,7 @@ import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           defaultBucketname: googleSecretManagerService.bucketName,
           storageBaseUri: googleSecretManagerService.storageBaseUri,

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DateTimeModule } from '../../common';
+import { DateTimeModule, GoogleSecretManagerModule } from '../../common';
 import { TransactionLoggingModule } from '../../common/modules/transaction-logging/transaction-logging.module';
-import { ProcessEnvModule, SubstrateModule } from '../../common';
+import { SubstrateModule } from '../../common';
 import { VerificationController } from './verification.controller';
 import { VerificationService } from './verification.service';
 
@@ -10,7 +10,7 @@ import { VerificationService } from './verification.service';
     SubstrateModule,
     TransactionLoggingModule,
     DateTimeModule,
-    ProcessEnvModule,
+    GoogleSecretManagerModule,
   ],
   controllers: [VerificationController],
   providers: [VerificationService],

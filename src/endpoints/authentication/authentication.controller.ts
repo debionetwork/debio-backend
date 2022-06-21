@@ -20,11 +20,13 @@ export class AuthenticationController {
     if (!(debioApiKey === this.googleSecretManagerService.debioApiKey)) {
       return response.status(401).send('debio-api-key header is required');
     }
-
-    const signJwt = await this.jwtService.signAsync(pinataJwtPayload, {
-      secret: this.googleSecretManagerService.pinataSecretKey,
-      privateKey: this.googleSecretManagerService.pinataPrivateKey,
-    });
+    const signJwt = await this.jwtService.signAsync(
+      pinataJwtPayload(this.googleSecretManagerService),
+      {
+        secret: this.googleSecretManagerService.pinataSecretKey,
+        privateKey: this.googleSecretManagerService.pinataPrivateKey,
+      },
+    );
     return response.status(200).send({
       jwt: signJwt,
     });

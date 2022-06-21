@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { GoogleSecretManagerModule } from '../google-secret-manager';
-import { ProcessEnvModule } from '../proxies';
 import { SubstrateService } from './substrate.service';
 
 @Module({
-  imports: [ProcessEnvModule, GoogleSecretManagerModule],
+  imports: [GoogleSecretManagerModule],
   providers: [SubstrateService],
-  exports: [ProcessEnvModule, SubstrateService],
+  exports: [GoogleSecretManagerModule, SubstrateService],
 })
 export class SubstrateModule {}
 

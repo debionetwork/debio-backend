@@ -7,10 +7,11 @@ import {
   EmailNotificationService,
 } from '../../../src/common/modules/database';
 import {
-  ProcessEnvModule,
   SubstrateModule,
   MailModule,
   MailerManager,
+  GoogleSecretManagerService,
+  GoogleSecretManagerModule,
 } from '../../../src/common';
 import { MailerService } from '../../../src/schedulers/mailer/mailer.service';
 import { Keyring } from '@polkadot/api';
@@ -23,6 +24,7 @@ describe('Mailer Scheduler (e2e)', () => {
   let mailerManager: MailerManager;
   let substrateService: SubstrateService;
   let emailNotificationService: EmailNotificationService;
+  let googleSecretManagerService: GoogleSecretManagerService;
 
   let app: INestApplication;
 
@@ -35,9 +37,26 @@ describe('Mailer Scheduler (e2e)', () => {
     error: jest.fn(),
   };
 
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+    substrateUrl = process.env.SUBSTRATE_URL;
+    email = process.env.EMAIL;
+    passEmail = process.env.PASS_EMAIL;
+    emails = process.env.EMAILS;
+    unstakeTimer = process.env.UNSTAKE_TIMER;
+    unstakeInterval = process.env.UNSTAKE_INTERVAL;
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GoogleSecretManagerModule,
         TypeOrmModule.forRoot({
           name: 'default',
           ...dummyCredentials,
@@ -45,17 +64,21 @@ describe('Mailer Scheduler (e2e)', () => {
           entities: [EmailNotification],
           autoLoadEntities: true,
         }),
-        ProcessEnvModule,
         SubstrateModule,
         MailModule,
         EmailNotificationModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GoogleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     mailerManager = module.get(MailerManager);
     substrateService = module.get(SubstrateService);
     emailNotificationService = module.get(EmailNotificationService);
+    googleSecretManagerService = module.get(GoogleSecretManagerService);
     service = new MailerService(
+      googleSecretManagerService,
       mailerManager,
       emailNotificationService,
       substrateService,

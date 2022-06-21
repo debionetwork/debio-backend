@@ -45,7 +45,7 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           type: 'postgres',
           host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager
@@ -65,7 +65,7 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           type: 'postgres',
           host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager

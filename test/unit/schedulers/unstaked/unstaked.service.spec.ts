@@ -8,7 +8,10 @@ import {
   schedulerRegistryMockFactory,
 } from '../../mock';
 import { UnstakedService } from '../../../../src/schedulers/unstaked/unstaked.service';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import {
+  GoogleSecretManagerService,
+  SubstrateService,
+} from '../../../../src/common';
 import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 import * as serviceRequestQuery from '@debionetwork/polkadot-provider/lib/query/service-request';
@@ -32,11 +35,9 @@ describe('UnstakedService', () => {
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
 
-  class ProcessEnvProxyMock {
-    env = {
-      UNSTAKE_INTERVAL: INTERVAL,
-      UNSTAKE_TIMER: TIMER,
-    };
+  class GoogleSecretManagerServiceMock {
+    unstakeInterval = INTERVAL;
+    unstakeTimer = TIMER;
   }
 
   const createSearchObject = () => {
@@ -70,8 +71,8 @@ describe('UnstakedService', () => {
       providers: [
         UnstakedService,
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
         {
           provide: ElasticsearchService,

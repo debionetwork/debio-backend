@@ -11,14 +11,13 @@ require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
-    GoogleSecretManagerModule,
     GCloudStorageModule.withConfigAsync({
       imports: [GoogleSecretManagerModule],
       inject: [GoogleSecretManagerService],
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           defaultBucketname: googleSecretManagerService.bucketName,
           storageBaseUri: googleSecretManagerService.storageBaseUri,

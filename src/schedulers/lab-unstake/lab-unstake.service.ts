@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { ProcessEnvProxy, SubstrateService } from '../../common';
+import { GoogleSecretManagerService, SubstrateService } from '../../common';
 import {
   queryLabById,
   retrieveLabUnstakeAmount,
@@ -13,16 +13,18 @@ export class LabUnstakedService implements OnModuleInit {
   private isRunning = false;
   private timer: number;
   constructor(
-    private readonly processEnvProxy: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly elasticsearchService: ElasticsearchService,
     private readonly subtrateService: SubstrateService,
     private readonly schedulerRegistry: SchedulerRegistry,
   ) {}
 
   onModuleInit() {
-    this.timer = this.strToMilisecond(this.processEnvProxy.env.UNSTAKE_TIMER);
+    this.timer = this.strToMilisecond(
+      this.googleSecretManagerService.unstakeTimer,
+    );
     const unstakeInterval: number = this.strToMilisecond(
-      this.processEnvProxy.env.UNSTAKE_INTERVAL,
+      this.googleSecretManagerService.unstakeInterval,
     );
 
     const unstaked = setInterval(async () => {

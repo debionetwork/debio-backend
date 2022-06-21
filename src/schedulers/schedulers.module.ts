@@ -21,7 +21,7 @@ import { UnstakedService } from './unstaked/unstaked.service';
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           node: googleSecretManagerService.elasticsearchNode,
           auth: {

@@ -8,14 +8,14 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { SentryInterceptor, ProcessEnvProxy } from '../../common';
+import { SentryInterceptor, GoogleSecretManagerService } from '../../common';
 import { VerificationService } from './verification.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
 export class VerificationController {
   constructor(
-    private readonly processEnvProxy: ProcessEnvProxy,
+    private readonly googleSecretManagerService: GoogleSecretManagerService,
     private readonly verificationService: VerificationService,
   ) {}
 
@@ -33,7 +33,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
+      if (debioApiKey != this.googleSecretManagerService.debioApiKey) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationLab(
@@ -66,7 +66,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
+      if (debioApiKey != this.googleSecretManagerService.debioApiKey) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationGeneticAnalyst(

@@ -7,7 +7,10 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
+import {
+  GoogleSecretManagerService,
+  SubstrateService,
+} from '../../../../src/common';
 import { Lab } from '@debionetwork/polkadot-provider';
 
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -33,11 +36,9 @@ describe('LabUnstakedService', () => {
   const INTERVAL = '00:00:00:30';
   const TIMER = '6:00:00:00';
 
-  class ProcessEnvProxyMock {
-    env = {
-      UNSTAKE_INTERVAL: INTERVAL,
-      UNSTAKE_TIMER: TIMER,
-    };
+  class GoogleSecretManagerServiceMock {
+    unstakeInterval = INTERVAL;
+    unstakeTimer = TIMER;
   }
 
   const createSearchObject = () => {
@@ -71,8 +72,8 @@ describe('LabUnstakedService', () => {
       providers: [
         LabUnstakedService,
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
+          provide: GoogleSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
         {
           provide: ElasticsearchService,

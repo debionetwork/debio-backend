@@ -17,7 +17,7 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessAndAccessSecret();
+        await googleSecretManagerService.accessSecret();
         return {
           node: googleSecretManagerService.elasticsearchNode,
           auth: {

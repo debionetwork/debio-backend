@@ -7,11 +7,12 @@ import { pinataJwtPayload } from '../../../../src/endpoints/authentication/pinat
 import { JwtService } from '@nestjs/jwt';
 
 jest.mock('../../../../src/endpoints/authentication/pinata-jwt.model', () => ({
-  pinataJwtPayload: {},
+  pinataJwtPayload: jest.fn(),
 }));
 
 describe('Authentication Controller Unit Tests', () => {
   let controller: AuthenticationController;
+  let googleSecretManagerService: GoogleSecretManagerService;
   let jwtServiceMock: MockType<JwtService>;
 
   const jwtServiceMockFactory: () => MockType<JwtService> = jest.fn(() => ({
@@ -21,10 +22,24 @@ describe('Authentication Controller Unit Tests', () => {
   const API_KEY = 'DEBIO_API_KEY';
   const PINATA_SECRET_KEY = 'PINATA_SECRET_KEY';
   const PINATA_PRIVATE_KEY = 'PINATA_PRIVATE_KEY';
+  const PINATA_USER_ID = 'PINATA_USER_ID';
+  const PINATA_EMAIL = 'PINATA_EMAIL';
+  const PINATA_EMAIL_VERIFIED = 'PINATA_EMAIL_VERIFIED';
+  const PINATA_PIN_POLICY_REGION_ID = 'PINATA_PIN_POLICY_REGION_ID';
+  const PINATA_PIN_POLICY_REGION_REPL_COUNT =
+    'PINATA_PIN_POLICY_REGION_REPL_COUNT';
+  const PINATA_MFA_ENABLED = 'PINATA_MFA_ENABLED';
+
   class GoogleSecretManagerServiceMock {
     debioApiKey = API_KEY;
     pinataSecretKey = PINATA_SECRET_KEY;
     pinataPrivateKey = PINATA_PRIVATE_KEY;
+    pinataUserId = PINATA_USER_ID;
+    pinataEmail = PINATA_EMAIL;
+    pinataEmailVerified = PINATA_EMAIL_VERIFIED;
+    pinataPinPolicyRegionId = PINATA_PIN_POLICY_REGION_ID;
+    pinataPinPolicyRegionReplCount = PINATA_PIN_POLICY_REGION_REPL_COUNT;
+    pinataMfaEnabled = PINATA_MFA_ENABLED;
   }
 
   beforeEach(async () => {
@@ -39,6 +54,7 @@ describe('Authentication Controller Unit Tests', () => {
       ],
     }).compile();
 
+    googleSecretManagerService = module.get(GoogleSecretManagerService);
     controller = module.get(AuthenticationController);
     jwtServiceMock = module.get(JwtService);
   });
@@ -64,10 +80,13 @@ describe('Authentication Controller Unit Tests', () => {
       EXPECTED_RESULTS,
     );
     expect(jwtServiceMock.signAsync).toBeCalledTimes(1);
-    expect(jwtServiceMock.signAsync).toBeCalledWith(pinataJwtPayload, {
-      secret: PINATA_SECRET_KEY,
-      privateKey: PINATA_PRIVATE_KEY,
-    });
+    expect(jwtServiceMock.signAsync).toBeCalledWith(
+      pinataJwtPayload(googleSecretManagerService),
+      {
+        secret: PINATA_SECRET_KEY,
+        privateKey: PINATA_PRIVATE_KEY,
+      },
+    );
   });
 
   it('should return error', async () => {

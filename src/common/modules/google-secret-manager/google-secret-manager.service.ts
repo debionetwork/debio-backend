@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+import { ProcessEnvProxy } from '../proxies/process-env/process-env.proxy';
 
 @Injectable()
 export class GoogleSecretManagerService {
@@ -8,14 +9,14 @@ export class GoogleSecretManagerService {
   private envList: Map<string, string> = new Map<string, string>();
   private readConfig = true;
 
-  constructor() {
+  constructor(private readonly processEnvProxy: ProcessEnvProxy) {
     this.client = new SecretManagerServiceClient();
   }
 
-  async accessAndAccessSecret() {
+  async accessSecret() {
     if (!this.readConfig) return;
     try {
-      const parent = 'projects/debio-network-development'; // TODO: change
+      const parent = this.processEnvProxy.env.PARENT;
 
       const [secrets] = await this.client.listSecrets({
         parent: parent,

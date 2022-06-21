@@ -1,19 +1,23 @@
-export const pinataJwtPayload = {
+import { GoogleSecretManagerService } from '../../common';
+
+export const pinataJwtPayload = (
+  googleSecretManagerService: GoogleSecretManagerService,
+) => ({
   userInformation: {
-    id: process.env.PINATA_USER_ID,
-    email: process.env.PINATA_EMAIL,
-    email_verified: process.env.PINATA_EMAIL_VERIFIED,
+    id: googleSecretManagerService.pinataUserId,
+    email: googleSecretManagerService.pinataEmail,
+    email_verified: googleSecretManagerService.pinataEmailVerified,
     pin_policy: {
       regions: [
         {
-          id: process.env.PINATA_PIN_POLICY_REGION_ID,
+          id: googleSecretManagerService.pinataPinPolicyRegionId,
           desiredReplicationCount:
-            process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT,
+            googleSecretManagerService.pinataPinPolicyRegionReplCount,
         },
       ],
       version: 1,
     },
-    mfa_enabled: process.env.PINATA_MFA_ENABLED,
+    mfa_enabled: googleSecretManagerService.pinataMfaEnabled,
   },
   iat: Math.floor(new Date().getTime() / 1000),
-};
+});

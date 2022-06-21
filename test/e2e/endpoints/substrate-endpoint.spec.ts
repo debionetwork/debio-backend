@@ -11,6 +11,7 @@ import {
   GoogleSecretManagerService,
   SubstrateModule,
   SubstrateService,
+  GoogleSecretManagerModule,
 } from '../../../src/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -47,13 +48,17 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     error: jest.fn(),
   };
 
-  const googleSecretManagerService = {
-    accessAndAccessSecret: () => undefined,
-    elasticsearchNode: process.env.ELASTICSEARCH_NODE,
-    elasticsearchUsername: process.env.ELASTICSEARCH_USERNAME,
-    elasticsearchPassword: process.env.ELASTICSEARCH_PASSWORD,
-    debioApiKey: process.env.DEBIO_API_KEY,
-  };
+  class GoogleSecretManagerServiceMock {
+    async accessSecret() {
+      return null;
+    }
+
+    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
+    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
+    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
+    debioApiKey = process.env.DEBIO_API_KEY;
+    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -75,11 +80,15 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         LocationModule,
         DebioConversionModule,
         ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
-            node: process.env.ELASTICSEARCH_NODE,
+          imports: [GoogleSecretManagerModule],
+          inject: [GoogleSecretManagerService],
+          useFactory: async (
+            googleSecretManagerService: GoogleSecretManagerService,
+          ) => ({
+            node: googleSecretManagerService.elasticsearchNode,
             auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
+              username: googleSecretManagerService.elasticsearchUsername,
+              password: googleSecretManagerService.elasticsearchPassword,
             },
           }),
         }),
@@ -90,7 +99,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
       ],
     })
       .overrideProvider(GoogleSecretManagerService)
-      .useValue(googleSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
     app = module.createNestApplication();
