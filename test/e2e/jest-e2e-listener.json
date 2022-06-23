@@ -2,7 +2,7 @@
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
   "testEnvironment": "node",
-  "testRegex": ".spec.ts$",
+  "testRegex": ".*/listeners/.*.spec.ts$",
   "transform": {
     "^.+\\.ts$": "ts-jest",
     "node_modules/@polkadot/.+\\.tsx?$": "ts-jest",
@@ -12,7 +12,7 @@
   "transformIgnorePatterns": [
     "node_modules/(?!@polkadot/.*)"
   ],
-  "globalSetup": "./setup.ts",
+  "globalSetup": "./setup-listener.ts",
   "globalTeardown": "./teardown.ts",
   "collectCoverageFrom": [
     "**/*.(t|j)s"

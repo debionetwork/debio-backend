@@ -23,12 +23,14 @@
     "test:watch": "jest --config ./test/unit/jest-unit.json --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/e2e/jest-e2e.json --runInBand --forceExit",
+    "test:e2e": "npm run test:e2e-endpoint && npm run test:e2e-scheduler && npm run test:e2e-listener",
+    "test:e2e-endpoint": "jest --config ./test/e2e/jest-e2e-endpoint.json --runInBand --forceExit",
+    "test:e2e-scheduler": "jest --config ./test/e2e/jest-e2e-scheduler.json --runInBand --forceExit",
+    "test:e2e-listener": "jest --config ./test/e2e/jest-e2e-listener.json --runInBand --forceExit",
     "test:e2e:watch": "jest --config ./test/e2e/jest-e2e.json --watch"
   },
   "dependencies": {
     "@debionetwork/nestjs-gcloud-storage": "0.0.2",
-    "@debionetwork/polkadot-provider": "0.0.11",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs/common": "^8.0.6",
@@ -68,6 +70,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
+    "@debionetwork/polkadot-provider": "0.0.11",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
@@ -94,7 +97,8 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.10.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "webpack": "^5.73.0"
   },
   "jest": {
     "moduleFileExtensions": [
