@@ -45,17 +45,7 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
-        return {
-          type: 'postgres',
-          host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager
-          port: 5432,
-          username: googleSecretManagerService.usernamePostgres,
-          password: googleSecretManagerService.passwordPostgres,
-          database: googleSecretManagerService.dbPostgres,
-          entities: [LabRating, TransactionRequest],
-          autoLoadEntities: true,
-        };
+        return await googleSecretManagerService.postgresConfigDB();
       },
     }),
     TypeOrmModule.forRootAsync({
@@ -65,17 +55,7 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
-        return {
-          type: 'postgres',
-          host: googleSecretManagerService.hostPostgres, // TODO: must check secret manager
-          port: 5432,
-          username: googleSecretManagerService.usernamePostgres,
-          password: googleSecretManagerService.passwordPostgres,
-          database: googleSecretManagerService.dbLocations,
-          entities: [...LocationEntities],
-          autoLoadEntities: true,
-        };
+        return await googleSecretManagerService.postgresLocationConfigDB();
       },
     }),
     AuthenticationModule,

@@ -21,14 +21,7 @@ import { UnstakedService } from './unstaked/unstaked.service';
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
-        return {
-          node: googleSecretManagerService.elasticsearchNode,
-          auth: {
-            username: googleSecretManagerService.elasticsearchUsername,
-            password: googleSecretManagerService.elasticsearchPassword,
-          },
-        };
+        return await googleSecretManagerService.elasticsSearchConfig();
       },
     }),
     ProcessEnvModule,

@@ -28,14 +28,7 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
-        return {
-          node: googleSecretManagerService.elasticsearchNode,
-          auth: {
-            username: googleSecretManagerService.elasticsearchUsername,
-            password: googleSecretManagerService.elasticsearchPassword,
-          },
-        };
+        return await googleSecretManagerService.elasticsSearchConfig();
       },
     }),
     SubstrateModule,

@@ -17,11 +17,7 @@ import {
       useFactory: async (
         googleSecretManagerService: GoogleSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
-        return {
-          network: googleSecretManagerService.web3RPC,
-          useDefaultProvider: true,
-        };
+        return await googleSecretManagerService.etherConfig();
       },
     }),
     CachesModule,
