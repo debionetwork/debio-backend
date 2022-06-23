@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@debionetwork/nestjs-gcloud-storage": "0.0.2",
+    "@debionetwork/polkadot-provider": "0.0.11",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs/common": "^8.0.6",
@@ -70,7 +71,6 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.11",
-    "@debionetwork/polkadot-provider": "0.0.11",
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
