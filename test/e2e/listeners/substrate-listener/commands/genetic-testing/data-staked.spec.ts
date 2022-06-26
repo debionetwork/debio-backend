@@ -10,13 +10,18 @@ import {
 } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
 import {
   processDnaSample,
+  submitDataBountyDetails,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
 import {
   createService,
   deleteService,
 } from '@debionetwork/polkadot-provider/lib/command/labs/services';
-import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
+import {
+  queryLabById,
+  queryStakedDataByAccountId,
+  queryStakedDataByOrderId,
+} from '@debionetwork/polkadot-provider/lib/query/labs';
 import {
   queryServicesByMultipleIds,
   queryServicesCount,
@@ -59,10 +64,9 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
-import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 
-describe('Order Fulfilled Integration Tests', () => {
+describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
@@ -138,7 +142,7 @@ describe('Order Fulfilled Integration Tests', () => {
     api.disconnect();
   });
 
-  it('fulfill order event', async () => {
+  it('data staked event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -222,30 +226,49 @@ describe('Order Fulfilled Integration Tests', () => {
 
     expect((await fulfillOrderPromise).status).toEqual(OrderStatus.Fulfilled);
 
+    const submitDataBountyDetailsPromise: Promise<string[]> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        submitDataBountyDetails(api, pair, order.id, order.id, () => {
+          // Order ID as data hash on param 1
+          queryStakedDataByAccountId(api, pair.address).then((res) => {
+            resolve(res);
+          });
+        });
+      },
+    );
+
+    const stakedData = await submitDataBountyDetailsPromise;
+    expect(stakedData).toEqual(order.id);
+
+    const stakedDataByOrderId = await queryStakedDataByOrderId(api, order.id);
+    expect(stakedDataByOrderId).toEqual(order.id);
+
     const dbConnection = await createConnection({
       ...dummyCredentials,
       database: 'db_postgres',
-      entities: [Notification],
+      entities: [TransactionRequest],
       synchronize: true,
     });
 
-    const notifications = await dbConnection
-      .getRepository(Notification)
-      .createQueryBuilder('notification')
-      .where('notification.to = :to', {
-        to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    const transactionLogs = await dbConnection
+      .getRepository(TransactionRequest)
+      .createQueryBuilder('transaction_logs')
+      .where('transaction_logs.ref_number = :ref_number', {
+        ref_number: order.id,
       })
-      .where('notification.entity = :entity', { entity: 'Order Fulfilled' })
+      .where('transaction_logs.transaction_type = :transaction_type', {
+        transaction_type: 8,
+      })
+      .where('transaction_logs.transaction_status = :transaction_status', {
+        transaction_status: 34,
+      })
       .getMany();
 
-    expect(notifications.length).toEqual(1);
-    expect(notifications[0].to).toEqual(
-      '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
-    );
-    expect(notifications[0].entity).toEqual('Order Fulfilled');
-    expect(
-      notifications[0].description.includes("You've received 2e-18 DAI"),
-    ).toBeTruthy();
+    expect(transactionLogs.length).toEqual(1);
+    expect(transactionLogs[0].ref_number).toEqual(order.id);
+    expect(transactionLogs[0].transaction_type).toEqual(8);
+    expect(transactionLogs[0].transaction_status).toEqual(34);
 
     // eslint-disable-next-line
     const deletePromise: Promise<number> = new Promise((resolve, reject) => {

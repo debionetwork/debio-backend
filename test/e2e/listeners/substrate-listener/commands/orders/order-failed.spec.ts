@@ -4,19 +4,20 @@ import {
   queryLastOrderHashByCustomer,
   queryOrderDetailByOrderID,
 } from '@debionetwork/polkadot-provider/lib/query/labs/orders';
-import {
-  createOrder,
-  fulfillOrder,
-} from '@debionetwork/polkadot-provider/lib/command/labs/orders';
+import { createOrder } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
 import {
   processDnaSample,
+  rejectDnaSample,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
 import {
   createService,
   deleteService,
 } from '@debionetwork/polkadot-provider/lib/command/labs/services';
-import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
+import {
+  queryDnaSamples,
+  queryLabById,
+} from '@debionetwork/polkadot-provider/lib/query/labs';
 import {
   queryServicesByMultipleIds,
   queryServicesCount,
@@ -28,10 +29,7 @@ import {
 } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
-import {
-  Order,
-  OrderStatus,
-} from '@debionetwork/polkadot-provider/lib/models/labs/orders';
+import { Order } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
 import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
 import { DnaSampleStatus } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample-status';
 import { TestingModule } from '@nestjs/testing/testing-module';
@@ -61,8 +59,9 @@ import { SubstrateListenerHandler } from '../../../../../../src/listeners/substr
 import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
 import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
+import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
 
-describe('Order Fulfilled Integration Tests', () => {
+describe('Order Failed Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
@@ -138,7 +137,7 @@ describe('Order Fulfilled Integration Tests', () => {
     api.disconnect();
   });
 
-  it('fulfill order event', async () => {
+  it('failed order event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -206,21 +205,36 @@ describe('Order Fulfilled Integration Tests', () => {
       api,
       pair,
       order.dnaSampleTrackingId,
-      DnaSampleStatus.ResultReady,
+      DnaSampleStatus.Arrived,
     );
+    const rejectedTitle = 'REJECTED';
+    const rejectedDescription = 'REJECTED_DESCRIPTION';
 
-    const fulfillOrderPromise: Promise<Order> = new Promise(
+    const rejectDnaSamplePromise: Promise<DnaSample> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        fulfillOrder(api, pair, order.id, () => {
-          queryOrderDetailByOrderID(api, order.id).then((res) => {
-            resolve(res);
-          });
-        });
+        rejectDnaSample(
+          api,
+          pair,
+          order.dnaSampleTrackingId,
+          rejectedTitle,
+          rejectedDescription,
+          () => {
+            queryDnaSamples(api, order.dnaSampleTrackingId).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       },
     );
 
-    expect((await fulfillOrderPromise).status).toEqual(OrderStatus.Fulfilled);
+    const dnaSample = await rejectDnaSamplePromise;
+    expect(dnaSample.labId).toEqual(order.sellerId);
+    expect(dnaSample.ownerId).toEqual(order.customerId);
+    expect(dnaSample.trackingId).toEqual(order.dnaSampleTrackingId);
+    expect(dnaSample.status).toEqual(DnaSampleStatus.Rejected);
+    expect(dnaSample.rejectedTitle).toEqual(rejectedTitle);
+    expect(dnaSample.rejectedDescription).toEqual(rejectedDescription);
 
     const dbConnection = await createConnection({
       ...dummyCredentials,
@@ -235,16 +249,19 @@ describe('Order Fulfilled Integration Tests', () => {
       .where('notification.to = :to', {
         to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
       })
-      .where('notification.entity = :entity', { entity: 'Order Fulfilled' })
+      .where('notification.entity = :entity', { entity: 'Order Failed' })
       .getMany();
 
     expect(notifications.length).toEqual(1);
     expect(notifications[0].to).toEqual(
       '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
     );
-    expect(notifications[0].entity).toEqual('Order Fulfilled');
+    expect(notifications[0].entity).toEqual('Order Failed');
     expect(
-      notifications[0].description.includes("You've received 2e-18 DAI"),
+      notifications[0].description.includes("You've received"),
+    ).toBeTruthy();
+    expect(
+      notifications[0].description.includes('DAI as quality control fees for'),
     ).toBeTruthy();
 
     // eslint-disable-next-line
