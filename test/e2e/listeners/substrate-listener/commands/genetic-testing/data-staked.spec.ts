@@ -6,7 +6,6 @@ import {
 } from '@debionetwork/polkadot-provider/lib/query/labs/orders';
 import {
   createOrder,
-  fulfillOrder,
 } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
 import {
   processDnaSample,
@@ -35,7 +34,6 @@ import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
 import {
   Order,
-  OrderStatus,
 } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
 import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
 import { DnaSampleStatus } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample-status';
