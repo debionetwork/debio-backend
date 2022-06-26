@@ -7,6 +7,7 @@ import {
 } from '../../../../../common';
 import {
   convertToDbioUnitString,
+  queryOrderDetailByOrderID,
   sendRewards,
 } from '@debionetwork/polkadot-provider';
 import { DataStakedCommand } from './data-staked.command';
@@ -28,31 +29,32 @@ export class DataStakedHandler implements ICommandHandler<DataStakedCommand> {
     await this.logger.log(
       `Data Staked With Hash Data Bounty: ${dataStaked.hashDataBounty}!`,
     );
-    const dataOrder = await (
-      await this.substrateService.api.query.orders.orders(dataStaked.orderId)
-    ).toJSON();
+    const dataOrder = await queryOrderDetailByOrderID(
+      this.substrateService.api as any,
+      dataStaked.orderId,
+    );
 
     const debioToDai = Number(
       (await this.exchangeCacheService.getExchange())['dbioToDai'],
     );
-    const rewardPrice = dataOrder['price'][0].value * debioToDai;
+    const rewardPrice = +dataOrder.prices[0].value * debioToDai;
 
     //send reward
     await sendRewards(
       this.substrateService.api as any,
       this.substrateService.pair,
-      dataOrder['customer_id'],
-      convertToDbioUnitString(rewardPrice),
+      dataOrder.customerId,
+      Math.floor(+convertToDbioUnitString(rewardPrice)).toString(),
     );
 
     // Write Transaction Logging Reward Customer Staking Request Service
     const dataCustomerLoggingInput: TransactionLoggingDto = {
-      address: dataOrder['customerId'],
+      address: dataOrder.customerId,
       amount: rewardPrice,
       created_at: new Date(),
       currency: 'DBIO',
       parent_id: BigInt(0),
-      ref_number: dataOrder['id'],
+      ref_number: dataOrder.id,
       transaction_type: 8,
       transaction_status: 34,
     };

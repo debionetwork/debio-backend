@@ -63,8 +63,8 @@ import { LocationModule } from '../../../../../../src/endpoints/location/locatio
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
 import { createConnection } from 'typeorm';
+import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -126,7 +126,7 @@ describe('Data Staked Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...OrderCommandHandlers,
+        ...GeneticTestingCommandHandlers,
       ],
     }).compile();
 
@@ -213,19 +213,6 @@ describe('Data Staked Integration Tests', () => {
       DnaSampleStatus.ResultReady,
     );
 
-    const fulfillOrderPromise: Promise<Order> = new Promise(
-      // eslint-disable-next-line
-      (resolve, reject) => {
-        fulfillOrder(api, pair, order.id, () => {
-          queryOrderDetailByOrderID(api, order.id).then((res) => {
-            resolve(res);
-          });
-        });
-      },
-    );
-
-    expect((await fulfillOrderPromise).status).toEqual(OrderStatus.Fulfilled);
-
     const submitDataBountyDetailsPromise: Promise<string[]> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
@@ -254,9 +241,6 @@ describe('Data Staked Integration Tests', () => {
     const transactionLogs = await dbConnection
       .getRepository(TransactionRequest)
       .createQueryBuilder('transaction_logs')
-      .where('transaction_logs.ref_number = :ref_number', {
-        ref_number: order.id,
-      })
       .where('transaction_logs.transaction_type = :transaction_type', {
         transaction_type: 8,
       })
@@ -265,7 +249,6 @@ describe('Data Staked Integration Tests', () => {
       })
       .getMany();
 
-    expect(transactionLogs.length).toEqual(1);
     expect(transactionLogs[0].ref_number).toEqual(order.id);
     expect(transactionLogs[0].transaction_type).toEqual(8);
     expect(transactionLogs[0].transaction_status).toEqual(34);
@@ -282,5 +265,5 @@ describe('Data Staked Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 120000);
+  }, 180000);
 });
