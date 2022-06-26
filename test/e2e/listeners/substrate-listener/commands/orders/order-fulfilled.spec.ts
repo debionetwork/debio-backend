@@ -134,9 +134,11 @@ describe('Order Fulfilled Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
+  afterAll(async () => {
+    await deleteService(api, pair, service.id);
+    await deregisterLab(api, pair);
     api.disconnect();
-  });
+  }, 30000);
 
   it('fulfill order event', async () => {
     // eslint-disable-next-line
