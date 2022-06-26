@@ -12,6 +12,7 @@
   "transformIgnorePatterns": [
     "node_modules/(?!@polkadot/.*)"
   ],
+  "testSequencer": "./listener-test-sequencer.js",
   "globalSetup": "./setup-listener.ts",
   "globalTeardown": "./teardown.ts",
   "collectCoverageFrom": [

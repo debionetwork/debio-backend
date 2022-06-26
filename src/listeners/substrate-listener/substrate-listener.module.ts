@@ -52,7 +52,6 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     ...GeneticTestingCommandHandlers,
     ...ServiceRequestCommandHandlers,
     ...OrderCommandHandlers,
-    ...GeneticTestingCommandHandlers,
     ...GeneticAnalysisOrderCommandHandlers,
     ...GeneticAnalysisCommandHandlers,
     ...GeneticAnalystCommandHandlers,
