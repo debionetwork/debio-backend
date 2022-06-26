@@ -1,5 +1,4 @@
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
-import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 export class ServiceRequestStakingAmountIncreasedCommand {
   requesterId: string;
