@@ -1,0 +1,22 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".*/listeners/.*.spec.ts$",
+  "transform": {
+    "^.+\\.ts$": "ts-jest",
+    "node_modules/@polkadot/.+\\.tsx?$": "ts-jest",
+    "node_modules/@polkadot/.+\\.jsx?$": "babel-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!@polkadot/.*)"
+  ],
+  "testSequencer": "./listener-test-sequencer.js",
+  "globalSetup": "./setup-listener.ts",
+  "globalTeardown": "./teardown.ts",
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
+  ],
+  "coverageDirectory": "../coverage"
+}
