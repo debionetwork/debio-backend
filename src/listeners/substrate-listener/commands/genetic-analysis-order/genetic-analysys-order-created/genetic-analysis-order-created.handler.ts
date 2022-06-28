@@ -35,10 +35,6 @@ export class GeneticAnalysisOrderCreatedHandler
           geneticAnalysisOrder.id,
           13,
         );
-        
-      if (!isGeneticAnalysisOrderHasBeenInsert) {
-        return
-      }
 
       const geneticAnalysisOrderLogging: TransactionLoggingDto = {
         address: geneticAnalysisOrder.customerId,
@@ -63,9 +59,11 @@ export class GeneticAnalysisOrderCreatedHandler
         from: geneticAnalysisOrder.customerId,
         to: 'Debio Network',
       };
-
-      await this.loggingService.create(geneticAnalysisOrderLogging);
-      await this.notificationService.insert(notificationInput);
+        
+      if (!isGeneticAnalysisOrderHasBeenInsert) {
+        await this.loggingService.create(geneticAnalysisOrderLogging);
+        await this.notificationService.insert(notificationInput);
+      }
     } catch (error) {
       await this.logger.log(error);
     }
