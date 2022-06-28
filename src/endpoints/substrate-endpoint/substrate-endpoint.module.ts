@@ -8,27 +8,33 @@ import {
   DateTimeModule,
   TransactionLoggingModule,
   SubstrateModule,
-  GoogleSecretManagerModule,
-  GoogleSecretManagerService,
 } from '../../common';
 import { SubstrateController } from './substrate-endpoint.controller';
 import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
+import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
     LocationModule,
     DebioConversionModule,
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        return await googleSecretManagerService.elasticsSearchConfig();
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          node: gCloudSecretManagerService.getSecret('ELASTICSEARCH_NODE').toString(),
+          auth: {
+            username: gCloudSecretManagerService.getSecret('ELASTICSEARCH_USERNAME').toString(),
+            password: gCloudSecretManagerService.getSecret('ELASTICSEARCH_PASSWORD').toString(),
+          }
+        };
       },
     }),
     SubstrateModule,

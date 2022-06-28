@@ -4,25 +4,24 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingEvents } from './models/data-staking-events.entity';
 import {
   DateTimeModule,
-  GoogleSecretManagerModule,
-  GoogleSecretManagerService,
 } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
+import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     GCloudStorageModule.withConfigAsync({
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await googleSecretManagerService.accessSecret();
+        await gCloudSecretManagerService.loadSecrets();
         return {
-          defaultBucketname: googleSecretManagerService.bucketName,
-          storageBaseUri: googleSecretManagerService.storageBaseUri,
+          defaultBucketname: gCloudSecretManagerService.getSecret('BUCKET_NAME').toString(),
+          storageBaseUri: gCloudSecretManagerService.getSecret('STORAGE_BASE_URI').toString(),
           predefinedAcl: 'private',
         };
       },

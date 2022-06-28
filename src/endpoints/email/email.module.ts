@@ -1,7 +1,7 @@
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import {
   EmailNotificationModule,
-  GoogleSecretManagerModule,
   MailModule,
   SubstrateModule,
 } from '../../common';
@@ -12,7 +12,7 @@ import { EmailEndpointController } from './email.controller';
     MailModule,
     SubstrateModule,
     EmailNotificationModule,
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
   ],
   controllers: [EmailEndpointController],
 })

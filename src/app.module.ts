@@ -23,8 +23,6 @@ import { SubstrateListenerModule } from './listeners/substrate-listener/substrat
 import {
   CachesModule,
   DateTimeModule,
-  GoogleSecretManagerModule,
-  GoogleSecretManagerService,
 } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
@@ -32,28 +30,29 @@ import { SpecializationModule } from './endpoints/category/specialization/specia
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
 import { AuthenticationModule } from './endpoints/authentication/authentication.module';
 import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
+import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
         return await googleSecretManagerService.postgresConfigDB();
       },
     }),
     TypeOrmModule.forRootAsync({
       name: 'dbLocation',
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
         return await googleSecretManagerService.postgresLocationConfigDB();
       },

@@ -1,9 +1,9 @@
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
-import { GoogleSecretManagerModule } from '../../common';
 import { RecaptchaController } from './recaptcha.controller';
 
 @Module({
-  imports: [GoogleSecretManagerModule],
+  imports: [GCloudSecretManagerModule],
   controllers: [RecaptchaController],
 })
 export class RecaptchaModule {}

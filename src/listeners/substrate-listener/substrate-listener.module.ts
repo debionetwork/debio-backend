@@ -3,8 +3,6 @@ import { EscrowModule } from '../../common/modules/escrow/escrow.module';
 import {
   DateTimeModule,
   DebioConversionModule,
-  GoogleSecretManagerModule,
-  GoogleSecretManagerService,
   MailModule,
   NotificationModule,
   ProcessEnvModule,
@@ -25,6 +23,7 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
+import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -38,14 +37,21 @@ import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-
     CqrsModule,
     DateTimeModule,
     NotificationModule,
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        return await googleSecretManagerService.elasticsSearchConfig();
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          node: gCloudSecretManagerService.getSecret('ELASTICSEARCH_NODE') as string,
+          auth: {
+            username: gCloudSecretManagerService.getSecret('ELASTICSEARCH_USERNAME') as string,
+            password: gCloudSecretManagerService.getSecret('ELASTICSEARCH_PASSWORD') as string,
+          }
+        };
       },
     }),
   ],
