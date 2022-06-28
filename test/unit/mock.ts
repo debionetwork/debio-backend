@@ -209,7 +209,7 @@ export function createMockGeneticAnalysisOrder(
   };
 }
 
-export function createMockGeneticAnalyst() {
+export function createMockGeneticAnalyst(verificationStatus = 'string') {
   return {
     toHuman: jest.fn(() => ({
       accountId: 'string',
@@ -228,7 +228,7 @@ export function createMockGeneticAnalyst() {
       },
       stakeAmount: 1,
       stakeStatus: 'string',
-      verificationStatus: 'string',
+      verificationStatus: verificationStatus,
     })),
   };
 }
