@@ -110,9 +110,6 @@ jobs:
             UNSTAKE_TIMER:${{ secrets.DEV_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             SENTRY_DSN:${{ secrets.DEV_GCP_PROJECT_ID }}/SENTRY_DSN
             API_HEALTHCHECK_URL:${{ secrets.DEV_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
-            SLEUTH_API_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/SLEUTH_API_KEY
-            SLEUTH_ENVIRONMENT:${{ secrets.DEV_GCP_PROJECT_ID }}/SLEUTH_ENVIRONMENT
-            API_SLEUTH_WEBHOOK:${{ secrets.DEV_GCP_PROJECT_ID }}/API_SLEUTH_WEBHOOK
             SSH_HOST:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.DEV_GCP_PROJECT_ID }}/SSH_KEY
@@ -212,9 +209,9 @@ jobs:
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
         run: |
-          curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
+          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
+          -d environment=${{ secrets.DEV_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ secrets.API_SLEUTH_WEBHOOK }}
 
   deploy-beta-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'beta')"
@@ -291,9 +288,6 @@ jobs:
             UNSTAKE_TIMER:${{ secrets.TESTNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             SENTRY_DSN:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SENTRY_DSN
             API_HEALTHCHECK_URL:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
-            SLEUTH_API_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SLEUTH_API_KEY
-            SLEUTH_ENVIRONMENT:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SLEUTH_ENVIRONMENT
-            API_SLEUTH_WEBHOOK:${{ secrets.TESTNET_GCP_PROJECT_ID }}/API_SLEUTH_WEBHOOK
             SSH_HOST:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.TESTNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -393,9 +387,9 @@ jobs:
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
         run: |
-          curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
+          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
+          -d environment=${{ secrets.TESTNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ secrets.API_SLEUTH_WEBHOOK }}
 
   deploy-pre-release:
     if: "github.event.release.prerelease && contains(needs.compute-build-info.outputs.latest_tag, 'rc')"
@@ -472,9 +466,6 @@ jobs:
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             SENTRY_DSN:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SENTRY_DSN
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
-            SLEUTH_API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SLEUTH_API_KEY
-            SLEUTH_ENVIRONMENT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SLEUTH_ENVIRONMENT
-            API_SLEUTH_WEBHOOK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_SLEUTH_WEBHOOK
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -574,9 +565,9 @@ jobs:
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
         run: |
-          curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
+          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
+          -d environment=${{ secrets.MAINNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ secrets.API_SLEUTH_WEBHOOK }}
 
   deploy-release:
     if: "startsWith(github.ref, 'refs/tags/') && !github.event.release.prerelease"
@@ -653,9 +644,6 @@ jobs:
             UNSTAKE_TIMER:${{ secrets.MAINNET_GCP_PROJECT_ID }}/UNSTAKE_TIMER
             SENTRY_DSN:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SENTRY_DSN
             API_HEALTHCHECK_URL:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_HEALTHCHECK_URL
-            SLEUTH_API_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SLEUTH_API_KEY
-            SLEUTH_ENVIRONMENT:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SLEUTH_ENVIRONMENT
-            API_SLEUTH_WEBHOOK:${{ secrets.MAINNET_GCP_PROJECT_ID }}/API_SLEUTH_WEBHOOK
             SSH_HOST:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_HOST
             SSH_USERNAME:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_USERNAME
             SSH_KEY:${{ secrets.MAINNET_GCP_PROJECT_ID }}/SSH_KEY
@@ -755,6 +743,6 @@ jobs:
         if: "${{ env.DEPLOY == 'true' }}"
         shell: bash
         run: |
-          curl -X POST -d api_key=${{ steps.secrets.outputs.SLEUTH_API_KEY }} \
-          -d environment=${{ steps.secrets.outputs.SLEUTH_ENVIRONMENT }} \
-          -d sha=$GITHUB_SHA ${{ steps.secrets.outputs.API_SLEUTH_WEBHOOK }}
+          curl -X POST -d api_key=${{ secrets.SLEUTH_API_KEY }} \
+          -d environment=${{ secrets.MAINNET_SLEUTH_ENVIRONMENT }} \
+          -d sha=$GITHUB_SHA ${{ secrets.API_SLEUTH_WEBHOOK }}
