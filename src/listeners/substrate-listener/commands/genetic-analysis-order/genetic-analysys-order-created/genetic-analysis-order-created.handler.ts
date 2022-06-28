@@ -59,7 +59,7 @@ export class GeneticAnalysisOrderCreatedHandler
         from: geneticAnalysisOrder.customerId,
         to: 'Debio Network',
       };
-        
+
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         await this.loggingService.create(geneticAnalysisOrderLogging);
         await this.notificationService.insert(notificationInput);

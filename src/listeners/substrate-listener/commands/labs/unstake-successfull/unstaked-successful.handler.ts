@@ -41,13 +41,13 @@ export class labUnstakedHandler implements ICommandHandler<LabUnstakedCommand> {
         transaction_type: 6, // Staking Lab
       };
 
-      let isLabHasBeenInsertTenMinuteAgo = false
+      let isLabHasBeenInsertTenMinuteAgo = false;
 
-      if(isLabHasBeenInsert){
-        isLabHasBeenInsertTenMinuteAgo = (
-          Number(new Date(new Date(this.dateTimeProxy.now())).getTime()) - 
-          Number(new Date(isLabHasBeenInsert.created_at).getTime())
-        ) <= tenMinuteInMiliSecond;
+      if (isLabHasBeenInsert) {
+        isLabHasBeenInsertTenMinuteAgo =
+          Number(new Date(new Date(this.dateTimeProxy.now())).getTime()) -
+            Number(new Date(isLabHasBeenInsert.created_at).getTime()) <=
+          tenMinuteInMiliSecond;
       }
       if (!isLabHasBeenInsert || isLabHasBeenInsertTenMinuteAgo === false) {
         await this.loggingService.create(labLogging);

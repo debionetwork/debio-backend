@@ -47,12 +47,16 @@ describe('Lab Untaked Successful Handler Event', () => {
   });
 
   it('should not called logging service create', async () => {
-    jest.useRealTimers().setSystemTime(new Date('Thu Jan 24 2022 07:02:00 GMT+0700').getTime());
-    
+    jest
+      .useRealTimers()
+      .setSystemTime(new Date('Thu Jan 24 2022 07:02:00 GMT+0700').getTime());
+
     // Arrange
     const lab = createMockLab();
 
-    const RESULT_STATUS = {created_at: new Date('Thu Jan 24 2022 07:00:00 GMT+0700').getTime()};
+    const RESULT_STATUS = {
+      created_at: new Date('Thu Jan 24 2022 07:00:00 GMT+0700').getTime(),
+    };
     const RESULT_TRANSACTION: TransactionRequest = new TransactionRequest();
     RESULT_TRANSACTION.id = BigInt(0);
     RESULT_TRANSACTION.address = 'string';
