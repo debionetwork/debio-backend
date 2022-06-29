@@ -17,6 +17,12 @@ class CustomSequencer extends Sequencer {
     sequence.push(...testsArray.filter(obj => {
       return obj.path.includes('listeners/substrate-listener/commands/service-request/service-request-partial.spec.ts');
     }));
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('listeners/substrate-listener/commands/labs/stake-successful.spec.ts');
+    }));
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('listeners/substrate-listener/commands/labs/unstake-successful.spec.ts');
+    }));
 
     return sequence;
   }
