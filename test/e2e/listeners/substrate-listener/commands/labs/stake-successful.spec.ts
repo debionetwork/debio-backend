@@ -3,9 +3,10 @@ import 'regenerator-runtime/runtime';
 import { stakeLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
+import {
+  registerLab,
+} from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
-import { Order } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
@@ -30,16 +31,15 @@ import { LocationModule } from '../../../../../../src/endpoints/location/locatio
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
+import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
 import { createConnection } from 'typeorm';
-import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 
-describe('Data Staked Integration Tests', () => {
+describe('Order Failed Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
   let lab: Lab;
-  let order: Order;
 
   global.console = {
     ...console,
@@ -92,7 +92,7 @@ describe('Data Staked Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...GeneticTestingCommandHandlers,
+        ...OrderCommandHandlers,
       ],
     }).compile();
 
@@ -108,9 +108,9 @@ describe('Data Staked Integration Tests', () => {
     api.disconnect();
   });
 
-  it('lab staking event', async () => {
+  it('failed order event', async () => {
     // eslint-disable-next-line
-    const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
+    const labRegisterPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
         queryLabById(api, pair.address).then((res) => {
           resolve(res);
@@ -118,11 +118,11 @@ describe('Data Staked Integration Tests', () => {
       });
     });
 
-    lab = await labPromise;
-    expect(lab.stakeStatus).toEqual('Unstaked');
+    lab = await labRegisterPromise;
+    expect(lab.info).toEqual(labDataMock.info);
 
     // eslint-disable-next-line
-    const stakedLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
+    const labStakingPromise: Promise<Lab> = new Promise((resolve, reject) => {
       stakeLab(api, pair, () => {
         queryLabById(api, pair.address).then((res) => {
           resolve(res);
@@ -130,8 +130,8 @@ describe('Data Staked Integration Tests', () => {
       });
     });
 
-    lab = await stakedLabPromise;
-    expect(lab.stakeStatus).toEqual('Staked');
+    lab = await labStakingPromise;
+    expect(lab.accountId).toEqual(pair.address);
 
     const dbConnection = await createConnection({
       ...dummyCredentials,
@@ -140,19 +140,17 @@ describe('Data Staked Integration Tests', () => {
       synchronize: true,
     });
 
-    const transactionLogs = await dbConnection
+    const labLogging = await dbConnection
       .getRepository(TransactionRequest)
       .createQueryBuilder('transaction_logs')
       .where('transaction_logs.transaction_type = :transaction_type', {
         transaction_type: 6,
       })
-      .where('transaction_logs.transaction_status = :transaction_status', {
+      .where('notification.transaction_status = :transaction_status', {
         transaction_status: 26,
       })
       .getMany();
 
-    expect(transactionLogs[0].ref_number).toEqual(order.id);
-    expect(transactionLogs[0].transaction_type).toEqual(6);
-    expect(transactionLogs[0].transaction_status).toEqual(26);
+    expect(labLogging).toEqual('a');
   }, 180000);
 });

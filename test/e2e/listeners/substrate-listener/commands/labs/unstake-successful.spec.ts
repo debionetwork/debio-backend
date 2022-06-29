@@ -136,6 +136,7 @@ describe('Data Staked Integration Tests', () => {
     lab = await stakedLabPromise;
     expect(lab.stakeStatus).toEqual('Staked');
 
+    // eslint-disable-next-line
     const unstakedLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
       unstakeLab(api, pair, () => {
         queryLabById(api, pair.address).then((res) => {
