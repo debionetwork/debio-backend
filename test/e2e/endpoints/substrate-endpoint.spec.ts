@@ -8,10 +8,8 @@ import { LocationModule } from '../../../src/endpoints/location/location.module'
 import {
   DebioConversionModule,
   TransactionLoggingModule,
-  GoogleSecretManagerService,
   SubstrateModule,
   SubstrateService,
-  GoogleSecretManagerModule,
 } from '../../../src/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -31,6 +29,10 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
 import { NotificationEndpointModule } from '../../../src/endpoints/notification-endpoint/notification-endpoint.module';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -49,15 +51,20 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   };
 
   class GoogleSecretManagerServiceMock {
-    async accessSecret() {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['DEBIO_API_KEY', process.env.DEBIO_API_KEY],
+    ]);
+    loadSecrets() {
       return null;
     }
 
-    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
-    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
-    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
-    debioApiKey = process.env.DEBIO_API_KEY;
-    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeAll(async () => {
@@ -80,15 +87,21 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         LocationModule,
         DebioConversionModule,
         ElasticsearchModule.registerAsync({
-          imports: [GoogleSecretManagerModule],
-          inject: [GoogleSecretManagerService],
+          imports: [GCloudSecretManagerModule],
+          inject: [GCloudSecretManagerService],
           useFactory: async (
-            googleSecretManagerService: GoogleSecretManagerService,
+            gCloudSecretManagerService: GCloudSecretManagerService,
           ) => ({
-            node: googleSecretManagerService.elasticsearchNode,
+            node: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_NODE')
+              .toString(),
             auth: {
-              username: googleSecretManagerService.elasticsearchUsername,
-              password: googleSecretManagerService.elasticsearchPassword,
+              username: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_USERNAME')
+                .toString(),
+              password: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_PASSWORD')
+                .toString(),
             },
           }),
         }),
@@ -98,7 +111,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         NotificationEndpointModule,
       ],
     })
-      .overrideProvider(GoogleSecretManagerService)
+      .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 

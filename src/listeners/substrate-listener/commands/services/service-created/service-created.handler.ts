@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import {
   DateTimeProxy,
-  GoogleSecretManagerService,
   LabRegister,
   labToLabRegister,
   MailerManager,
@@ -12,6 +11,7 @@ import {
 import { Lab, queryLabById, Service } from '@debionetwork/polkadot-provider';
 import { ServiceCreatedCommand } from './service-created.command';
 import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Injectable()
 @CommandHandler(ServiceCreatedCommand)
@@ -20,7 +20,7 @@ export class ServiceCreatedHandler
 {
   private readonly logger: Logger = new Logger(ServiceCreatedCommand.name);
   constructor(
-    private readonly googleSecretManagerService: GoogleSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly notificationService: NotificationService,
     private readonly substrateService: SubstrateService,
     private readonly mailerManager: MailerManager,
@@ -44,7 +44,7 @@ export class ServiceCreatedHandler
         lab,
       );
       this.mailerManager.sendLabRegistrationEmail(
-        this.googleSecretManagerService.emails.split(','),
+        this.gCloudSecretManagerService.getSecret('EMAILS').split(','),
         labRegister,
       );
     }

@@ -20,17 +20,17 @@ import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
 import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
-import {
-  CachesModule,
-  DateTimeModule,
-} from './common';
+import { CachesModule, DateTimeModule } from './common';
 import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
 import { AuthenticationModule } from './endpoints/authentication/authentication.module';
 import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
-import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -44,7 +44,25 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        return await googleSecretManagerService.postgresConfigDB();
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          type: 'postgres',
+          host: gCloudSecretManagerService
+            .getSecret('POSTGRES_HOST')
+            .toString(), // TODO: must check secret manager
+          port: 5432,
+          username: gCloudSecretManagerService
+            .getSecret('POSTGRES_USERNAME')
+            .toString(),
+          password: gCloudSecretManagerService
+            .getSecret('POSTGRES_PASSWORD')
+            .toString(),
+          database: gCloudSecretManagerService
+            .getSecret('POSTGRES_DB')
+            .toString(),
+          entities: [LabRating, TransactionRequest],
+          autoLoadEntities: true,
+        };
       },
     }),
     TypeOrmModule.forRootAsync({
@@ -54,7 +72,25 @@ require('dotenv').config(); // eslint-disable-line
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        return await googleSecretManagerService.postgresLocationConfigDB();
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          type: 'postgres',
+          host: gCloudSecretManagerService
+            .getSecret('POSTGRES_HOST')
+            .toString(), // TODO: must check secret manager
+          port: 5432,
+          username: gCloudSecretManagerService
+            .getSecret('POSTGRES_USERNAME')
+            .toString(),
+          password: gCloudSecretManagerService
+            .getSecret('POSTGRES_PASSWORD')
+            .toString(),
+          database: gCloudSecretManagerService
+            .getSecret('LOCATION_DB')
+            .toString(),
+          entities: [...LocationEntities],
+          autoLoadEntities: true,
+        };
       },
     }),
     AuthenticationModule,

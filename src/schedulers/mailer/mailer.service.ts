@@ -43,7 +43,10 @@ export class MailerService {
         );
 
         await this.mailerManager.sendLabRegistrationEmail(
-          this.gcloudSecretManagerService.getSecret('EMAILS').toString().split(','),
+          this.gcloudSecretManagerService
+            .getSecret('EMAILS')
+            .toString()
+            .split(','),
           labRegister,
         );
 

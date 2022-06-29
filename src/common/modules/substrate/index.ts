@@ -1,11 +1,11 @@
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
-import { GoogleSecretManagerModule } from '../google-secret-manager';
 import { SubstrateService } from './substrate.service';
 
 @Module({
-  imports: [GoogleSecretManagerModule],
+  imports: [GCloudSecretManagerModule],
   providers: [SubstrateService],
-  exports: [GoogleSecretManagerModule, SubstrateService],
+  exports: [GCloudSecretManagerModule, SubstrateService],
 })
 export class SubstrateModule {}
 

@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EscrowAccounts } from './models/deposit.entity';
 import { EscrowService } from './escrow.service';
 import { EthereumModule, SubstrateModule } from '../..';
-import { GoogleSecretManagerModule } from '../google-secret-manager';
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     TypeOrmModule.forFeature([EscrowAccounts]),
     SubstrateModule,
     forwardRef(() => EthereumModule),

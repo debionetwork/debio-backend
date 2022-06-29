@@ -4,20 +4,24 @@ import { EthereumService } from './ethereum.service';
 import { CachesModule } from '../caches';
 import { ProcessEnvModule } from '../proxies';
 import {
-  GoogleSecretManagerModule,
-  GoogleSecretManagerService,
-} from '../google-secret-manager';
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
-    GoogleSecretManagerModule,
+    GCloudSecretManagerModule,
     EthersModule.forRootAsync({
-      imports: [GoogleSecretManagerModule],
-      inject: [GoogleSecretManagerService],
+      imports: [GCloudSecretManagerModule],
+      inject: [GCloudSecretManagerService],
       useFactory: async (
-        googleSecretManagerService: GoogleSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        return await googleSecretManagerService.etherConfig();
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          network: gCloudSecretManagerService.getSecret('WEB3_RPC').toString(),
+          useDefaultProvider: true,
+        };
       },
     }),
     CachesModule,

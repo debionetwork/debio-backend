@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { BountyController } from './bounty.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingEvents } from './models/data-staking-events.entity';
-import {
-  DateTimeModule,
-} from '../../common';
+import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
-import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -20,8 +21,12 @@ import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionet
       ) => {
         await gCloudSecretManagerService.loadSecrets();
         return {
-          defaultBucketname: gCloudSecretManagerService.getSecret('BUCKET_NAME').toString(),
-          storageBaseUri: gCloudSecretManagerService.getSecret('STORAGE_BASE_URI').toString(),
+          defaultBucketname: gCloudSecretManagerService
+            .getSecret('BUCKET_NAME')
+            .toString(),
+          storageBaseUri: gCloudSecretManagerService
+            .getSecret('STORAGE_BASE_URI')
+            .toString(),
           predefinedAcl: 'private',
         };
       },

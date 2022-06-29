@@ -14,7 +14,7 @@ import { LocationEntities } from '../../../src/endpoints/location/models';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { SubstrateService } from '../../../src/common/modules/substrate/substrate.service';
-import { GoogleSecretManagerService } from '../../../src/common';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Health Controller (e2e)', () => {
   let server: Server;
@@ -22,16 +22,22 @@ describe('Health Controller (e2e)', () => {
   let api: SubstrateService;
 
   class GoogleSecretManagerServiceMock {
-    async accessSecret() {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+    loadSecrets() {
       return null;
     }
-    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
-    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
-    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
-    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
-    substrateUrl = process.env.SUBSTRATE_URL;
-    email = process.env.EMAIL;
-    passEmail = process.env.PASS_EMAIL;
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   global.console = {
@@ -71,7 +77,7 @@ describe('Health Controller (e2e)', () => {
         HealthModule,
       ],
     })
-      .overrideProvider(GoogleSecretManagerService)
+      .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 

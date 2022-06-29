@@ -4,7 +4,6 @@ import { ServiceRequestCreatedCommand } from './service-request-created.command'
 import { TransactionLoggingDto } from '../../../../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import {
   DateTimeProxy,
-  GoogleSecretManagerService,
   MailerManager,
   NotificationService,
   TransactionLoggingService,
@@ -12,6 +11,7 @@ import {
 import { CountryService } from '../../../../../endpoints/location/country.service';
 import { StateService } from '../../../../../endpoints/location/state.service';
 import { NotificationDto } from '../../../../../common/modules/notification/dto/notification.dto';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Injectable()
 @CommandHandler(ServiceRequestCreatedCommand)
@@ -23,7 +23,7 @@ export class ServiceRequestCreatedHandler
   );
 
   constructor(
-    private readonly googleSecretManagerService: GoogleSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly loggingService: TransactionLoggingService,
     private readonly countryService: CountryService,
     private readonly stateService: StateService,
@@ -105,7 +105,7 @@ export class ServiceRequestCreatedHandler
     };
 
     await this.mailerManager.sendCustomerStakingRequestServiceEmail(
-      this.googleSecretManagerService.emails.split(','),
+      this.gCloudSecretManagerService.getSecret('EMAILS').split(','),
       context,
     );
   }

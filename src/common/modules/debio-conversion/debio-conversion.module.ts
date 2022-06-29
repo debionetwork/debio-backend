@@ -1,10 +1,10 @@
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
-import { GoogleSecretManagerModule } from '../google-secret-manager';
 import { ProcessEnvModule } from '../proxies';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({
-  imports: [ProcessEnvModule, GoogleSecretManagerModule],
+  imports: [ProcessEnvModule, GCloudSecretManagerModule],
   providers: [DebioConversionService],
   exports: [ProcessEnvModule, DebioConversionService],
 })

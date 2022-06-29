@@ -18,7 +18,6 @@ import {
 import {
   DateTimeProxy,
   TransactionLoggingService,
-  GoogleSecretManagerService,
   SubstrateService,
 } from '../../../../src/common';
 import { WalletBindingDTO } from '../../../../src/endpoints/substrate-endpoint/dto';
@@ -30,6 +29,7 @@ import {
   dbioUnit,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -100,7 +100,14 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     }));
 
   class GoogleSecretManagerServiceMock {
-    debioApiKey = DEBIO_API_KEY;
+    _secretsList = new Map<string, string>([['DEBIO_API_KEY', DEBIO_API_KEY]]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   class SubstrateServiceMock {
@@ -139,7 +146,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
         {
-          provide: GoogleSecretManagerService,
+          provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,
         },
       ],

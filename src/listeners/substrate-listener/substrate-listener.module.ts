@@ -23,7 +23,10 @@ import { LabCommandHandlers } from './commands/labs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BlockCommandHandlers, BlockQueryHandlers } from './blocks';
 import { GeneticAnalystServiceCommandHandler } from './commands/genetic-analyst-services';
-import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -46,11 +49,17 @@ import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionet
       ) => {
         await gCloudSecretManagerService.loadSecrets();
         return {
-          node: gCloudSecretManagerService.getSecret('ELASTICSEARCH_NODE') as string,
+          node: gCloudSecretManagerService.getSecret(
+            'ELASTICSEARCH_NODE',
+          ) as string,
           auth: {
-            username: gCloudSecretManagerService.getSecret('ELASTICSEARCH_USERNAME') as string,
-            password: gCloudSecretManagerService.getSecret('ELASTICSEARCH_PASSWORD') as string,
-          }
+            username: gCloudSecretManagerService.getSecret(
+              'ELASTICSEARCH_USERNAME',
+            ) as string,
+            password: gCloudSecretManagerService.getSecret(
+              'ELASTICSEARCH_PASSWORD',
+            ) as string,
+          },
         };
       },
     }),

@@ -14,7 +14,10 @@ import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
-import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
@@ -29,11 +32,17 @@ import { GCloudSecretManagerModule, GCloudSecretManagerService } from '@debionet
       ) => {
         await gCloudSecretManagerService.loadSecrets();
         return {
-          node: gCloudSecretManagerService.getSecret('ELASTICSEARCH_NODE').toString(),
+          node: gCloudSecretManagerService
+            .getSecret('ELASTICSEARCH_NODE')
+            .toString(),
           auth: {
-            username: gCloudSecretManagerService.getSecret('ELASTICSEARCH_USERNAME').toString(),
-            password: gCloudSecretManagerService.getSecret('ELASTICSEARCH_PASSWORD').toString(),
-          }
+            username: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_USERNAME')
+              .toString(),
+            password: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_PASSWORD')
+              .toString(),
+          },
         };
       },
     }),

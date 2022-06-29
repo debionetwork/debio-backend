@@ -3,7 +3,6 @@ import {
   MailerManager,
   SubstrateService,
   ProcessEnvProxy,
-  GoogleSecretManagerService,
 } from '../../../../src/common';
 import {
   emailNotificationServiceMockFactory,
@@ -17,6 +16,7 @@ import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as labQuery from '@debionetwork/polkadot-provider/lib/query/labs';
 import { when } from 'jest-when';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Email Controller', () => {
   let emailEndpointControllerMock: EmailEndpointController;
@@ -50,7 +50,7 @@ describe('Email Controller', () => {
           useFactory: emailNotificationServiceMockFactory,
         },
         {
-          provide: GoogleSecretManagerService,
+          provide: GCloudSecretManagerService,
           useFactory: googleSecretManagerServiceMockFactory,
         },
       ],

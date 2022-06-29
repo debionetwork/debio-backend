@@ -7,12 +7,12 @@ import {
   TransactionLoggingModule,
   SubstrateModule,
   SubstrateService,
-  GoogleSecretManagerService,
 } from '../../../src/common';
 import { VerificationModule } from '../../../src/endpoints/verification/verification.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../config';
+import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
@@ -22,14 +22,20 @@ describe('Verification Controller (e2e)', () => {
   const apiKey = 'DEBIO_API_KEY';
 
   class GoogleSecretManagerServiceMock {
-    async accessSecret() {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['DEBIO_API_KEY', apiKey],
+    ]);
+    loadSecrets() {
       return null;
     }
-    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
-    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
-    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
-    debioApiKey = apiKey;
-    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   global.console = {
@@ -56,7 +62,7 @@ describe('Verification Controller (e2e)', () => {
         DateTimeModule,
       ],
     })
-      .overrideProvider(GoogleSecretManagerService)
+      .overrideProvider(GCloudSecretManagerModule)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 

@@ -3,25 +3,31 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { CloudStorageModule } from '../../../src/endpoints/cloud-storage/cloud-storage.module';
-import { GoogleSecretManagerService } from '../../../src/common';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Cloud Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
 
   class GoogleSecretManagerServiceMock {
-    async accessSecret() {
+    _secretsList = new Map<string, string>([
+      ['BUCKET_NAME', process.env.BUCKET_NAME],
+      ['STORAGE_BASE_URI', process.env.STORAGE_BASE_URI],
+    ]);
+    loadSecrets() {
       return null;
     }
-    bucketName = process.env.BUCKET_NAME;
-    storageBaseUri = process.env.STORAGE_BASE_URI;
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [CloudStorageModule],
     })
-      .overrideProvider(GoogleSecretManagerService)
+      .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 

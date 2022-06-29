@@ -14,7 +14,6 @@ import {
   ProcessEnvProxy,
   TransactionLoggingService,
   DateTimeProxy,
-  GoogleSecretManagerService,
 } from '../../../../../../../src/common';
 import { RequestStatus } from '@debionetwork/polkadot-provider';
 import { ServiceRequestCreatedHandler } from '../../../../../../../src/listeners/substrate-listener/commands/service-request/service-request-created/service-request-created.handler';
@@ -24,6 +23,7 @@ import { NotificationService } from '../../../../../../../src/common/modules/not
 import { BlockMetaData } from '../../../../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { ServiceRequestCreatedCommand } from '../../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { when } from 'jest-when';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Service Request Created Handler Event', () => {
   let serviceRequesCreatedHandler: ServiceRequestCreatedHandler;
@@ -98,7 +98,7 @@ describe('Service Request Created Handler Event', () => {
           useFactory: dateTimeProxyMockFactory,
         },
         {
-          provide: GoogleSecretManagerService,
+          provide: GCloudSecretManagerService,
           useFactory: googleSecretManagerServiceMockFactory,
         },
         ServiceRequestCreatedHandler,

@@ -1,22 +1,28 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { GoogleSecretManagerService } from '../google-secret-manager';
 
 @Injectable()
 export class DebioConversionService {
   private readonly logger: Logger = new Logger(DebioConversionService.name);
   constructor(
-    private readonly googleSecretManagerService: GoogleSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
   ) {}
 
   async getExchange() {
     try {
       const res = await axios.get(
-        `${this.googleSecretManagerService.redisStoreUrl}/cache`,
+        `${this.gCloudSecretManagerService
+          .getSecret('REDIS_STORE_URL')
+          .toString()}/cache`,
         {
           auth: {
-            username: this.googleSecretManagerService.redisStoreUsername,
-            password: this.googleSecretManagerService.redisStorePassword,
+            username: this.gCloudSecretManagerService
+              .getSecret('REDIS_STORE_USERNAME')
+              .toString(),
+            password: this.gCloudSecretManagerService
+              .getSecret('REDIS_STORE_PASSWORD')
+              .toString(),
           },
         },
       );

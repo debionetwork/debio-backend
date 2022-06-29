@@ -232,7 +232,10 @@ export class SubstrateListenerHandler implements OnModuleInit {
           );
 
           // check if env is development
-          if (this.gCloudSecretManagerService.getSecret("NODE_ENV") === 'development') {
+          if (
+            this.gCloudSecretManagerService.getSecret('NODE_ENV') ===
+            'development'
+          ) {
             this.lastBlock = await this.queryBus.execute(
               new GetLastSubstrateBlockQuery(),
             );

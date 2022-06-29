@@ -1,10 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { SubstrateListenerHandler } from '../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import {
-  GoogleSecretManagerService,
-  ProcessEnvProxy,
-  SubstrateService,
-} from '../../../../src/common';
+import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
 import { MockType, substrateServiceMockFactory } from '../../mock';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -22,6 +18,7 @@ import {
 } from './substrate-listener.mock.data';
 import { Logger } from '@nestjs/common';
 import { BlockMetaData } from '../../../../src/listeners/substrate-listener/models/block-metadata.event-model';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const eventsSpy = jest.spyOn(API_MOCK.query.system, 'events');
 const getBlockSpy = jest.spyOn(API_MOCK.rpc.chain, 'getBlock');
@@ -49,7 +46,14 @@ describe('Substrate Listener Handler Unit Test', () => {
 
   const NODE_ENV = 'development';
   class GoogleSecretManagerServiceMock {
-    nodeEnv = NODE_ENV;
+    _secretsList = new Map<string, string>([['NODE_ENV', NODE_ENV]]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeEach(async () => {
@@ -60,7 +64,7 @@ describe('Substrate Listener Handler Unit Test', () => {
         { provide: QueryBus, useFactory: queryBusMockFactory },
         { provide: CommandBus, useFactory: commandBusMockFactory },
         {
-          provide: GoogleSecretManagerService,
+          provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,
         },
       ],

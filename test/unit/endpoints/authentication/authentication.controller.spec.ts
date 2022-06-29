@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
-import { GoogleSecretManagerService } from '../../../../src/common';
 import { Response } from 'express';
 import { AuthenticationController } from '../../../../src/endpoints/authentication/authentication.controller';
 import { pinataJwtPayload } from '../../../../src/endpoints/authentication/pinata-jwt.model';
 import { JwtService } from '@nestjs/jwt';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('../../../../src/endpoints/authentication/pinata-jwt.model', () => ({
   pinataJwtPayload: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock('../../../../src/endpoints/authentication/pinata-jwt.model', () => ({
 
 describe('Authentication Controller Unit Tests', () => {
   let controller: AuthenticationController;
-  let googleSecretManagerService: GoogleSecretManagerService;
+  let gCloudSecretManagerService: GCloudSecretManagerService;
   let jwtServiceMock: MockType<JwtService>;
 
   const jwtServiceMockFactory: () => MockType<JwtService> = jest.fn(() => ({
@@ -31,15 +31,27 @@ describe('Authentication Controller Unit Tests', () => {
   const PINATA_MFA_ENABLED = 'PINATA_MFA_ENABLED';
 
   class GoogleSecretManagerServiceMock {
-    debioApiKey = API_KEY;
-    pinataSecretKey = PINATA_SECRET_KEY;
-    pinataPrivateKey = PINATA_PRIVATE_KEY;
-    pinataUserId = PINATA_USER_ID;
-    pinataEmail = PINATA_EMAIL;
-    pinataEmailVerified = PINATA_EMAIL_VERIFIED;
-    pinataPinPolicyRegionId = PINATA_PIN_POLICY_REGION_ID;
-    pinataPinPolicyRegionReplCount = PINATA_PIN_POLICY_REGION_REPL_COUNT;
-    pinataMfaEnabled = PINATA_MFA_ENABLED;
+    _secretsList = new Map<string, string>([
+      ['DEBIO_API_KEY', API_KEY],
+      ['PINATA_SECRET_KEY', PINATA_SECRET_KEY],
+      ['PINATA_PRIVATE_KEY', PINATA_PRIVATE_KEY],
+      ['PINATA_USER_ID', PINATA_USER_ID],
+      ['PINATA_EMAIL', PINATA_EMAIL],
+      ['PINATA_EMAIL_VERIFIED', PINATA_EMAIL_VERIFIED],
+      ['PINATA_PIN_POLICY_REGION_ID', PINATA_PIN_POLICY_REGION_ID],
+      [
+        'PINATA_PIN_POLICY_REGION_REPL_COUNT',
+        PINATA_PIN_POLICY_REGION_REPL_COUNT,
+      ],
+      ['PINATA_MFA_ENABLED', PINATA_MFA_ENABLED],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeEach(async () => {
@@ -48,13 +60,13 @@ describe('Authentication Controller Unit Tests', () => {
       providers: [
         { provide: JwtService, useFactory: jwtServiceMockFactory },
         {
-          provide: GoogleSecretManagerService,
+          provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,
         },
       ],
     }).compile();
 
-    googleSecretManagerService = module.get(GoogleSecretManagerService);
+    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
     controller = module.get(AuthenticationController);
     jwtServiceMock = module.get(JwtService);
   });
@@ -81,7 +93,7 @@ describe('Authentication Controller Unit Tests', () => {
     );
     expect(jwtServiceMock.signAsync).toBeCalledTimes(1);
     expect(jwtServiceMock.signAsync).toBeCalledWith(
-      pinataJwtPayload(googleSecretManagerService),
+      pinataJwtPayload(gCloudSecretManagerService),
       {
         secret: PINATA_SECRET_KEY,
         privateKey: PINATA_PRIVATE_KEY,

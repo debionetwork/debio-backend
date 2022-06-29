@@ -4,7 +4,6 @@ import { INestApplication } from '@nestjs/common';
 import {
   EmailNotification,
   EmailNotificationModule,
-  GoogleSecretManagerService,
   MailerManager,
   MailModule,
   SubstrateModule,
@@ -14,6 +13,7 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { EmailEndpointModule } from '../../../src/endpoints/email/email.module';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Email Controller (e2e)', () => {
   let server: Server;
@@ -22,17 +22,23 @@ describe('Email Controller (e2e)', () => {
   let mailerManager: MailerManager;
 
   class GoogleSecretManagerServiceMock {
-    async accessSecret() {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['EMAIL', process.env.EMAIL],
+      ['EMAILS', process.env.EMAILS],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+    loadSecrets() {
       return null;
     }
-    elasticsearchNode = process.env.ELASTICSEARCH_NODE;
-    elasticsearchUsername = process.env.ELASTICSEARCH_USERNAME;
-    elasticsearchPassword = process.env.ELASTICSEARCH_PASSWORD;
-    adminSubstrateMnemonic = process.env.ADMIN_SUBSTRATE_MNEMONIC;
-    substrateUrl = process.env.SUBSTRATE_URL;
-    email = process.env.EMAIL;
-    emails = process.env.EMAILS;
-    passEmail = process.env.PASS_EMAIL;
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   global.console = {
@@ -60,7 +66,7 @@ describe('Email Controller (e2e)', () => {
         EmailEndpointModule,
       ],
     })
-      .overrideProvider(GoogleSecretManagerService)
+      .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 

@@ -7,7 +7,6 @@ import {
   DebioConversionService,
   MailerManager,
   EmailNotificationService,
-  GoogleSecretManagerService,
 } from '../../src/common';
 import {
   OrderStatus,
@@ -25,6 +24,7 @@ import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -373,50 +373,8 @@ export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
     addInterval: jest.fn(),
   }));
 
-export const googleSecretManagerServiceMockFactory: () => MockType<GoogleSecretManagerService> =
+export const googleSecretManagerServiceMockFactory: () => MockType<GCloudSecretManagerService> =
   jest.fn(() => ({
-    hostPostgres: jest.fn(),
-    port: jest.fn(),
-    usernamePostgres: jest.fn(),
-    passwordPostgres: jest.fn(),
-    dbPostgres: jest.fn(),
-    dbCity: jest.fn(),
-    dbLocations: jest.fn(),
-    substrateUrl: jest.fn(),
-    adminSubstrateMnemonic: jest.fn(),
-    web3RPC: jest.fn(),
-    web3RPCHttp: jest.fn(),
-    debioEscrowPrivateKey: jest.fn(),
-    escrowContractAddress: jest.fn(),
-    coinMarketCapApiKey: jest.fn(),
-    elasticsearchNode: jest.fn(),
-    recaptchaSecretKey: jest.fn(),
-    debioApiKey: jest.fn(),
-    elasticsearchUsername: jest.fn(),
-    elasticsearchPassword: jest.fn(),
-    email: jest.fn(),
-    passEmail: jest.fn(),
-    redisStoreUrl: jest.fn(),
-    redisStoreUsername: jest.fn(),
-    redisStorePassword: jest.fn(),
-    hostRedis: jest.fn(),
-    portRedis: jest.fn(),
-    redisPassword: jest.fn(),
-    bucketName: jest.fn(),
-    storageBaseUri: jest.fn(),
-    emails: jest.fn(),
-    unstakeInterval: jest.fn(),
-    unstakeTimer: jest.fn(),
-    pinataApiKey: jest.fn(),
-    pinataSecretKey: jest.fn(),
-    pinataEmail: jest.fn(),
-    pinataUserId: jest.fn(),
-    pinataEmailVerified: jest.fn(),
-    pinataMfaEnabled: jest.fn(),
-    pinataPinPolicyRegionId: jest.fn(),
-    pinataPinPolicyRegionReplCount: jest.fn(),
-    pinataPrivateKey: jest.fn(),
-    swaggerEnable: jest.fn(),
-    sentryDsn: jest.fn(),
-    nodeEnv: jest.fn(),
+    loadSecrets: jest.fn((entity) => entity),
+    getSecret: jest.fn((entity) => entity),
   }));
