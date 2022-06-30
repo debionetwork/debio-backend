@@ -59,7 +59,6 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
 import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
-import { LabCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/labs';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -122,7 +121,6 @@ describe('Data Staked Integration Tests', () => {
         },
         SubstrateListenerHandler,
         ...GeneticTestingCommandHandlers,
-        ...LabCommandHandlers,
       ],
     }).compile();
 
