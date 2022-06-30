@@ -3,9 +3,7 @@ import 'regenerator-runtime/runtime';
 import { stakeLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import {
-  registerLab,
-} from '@debionetwork/polkadot-provider/lib/command/labs';
+import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';
@@ -31,10 +29,10 @@ import { LocationModule } from '../../../../../../src/endpoints/location/locatio
 import { CqrsModule } from '@nestjs/cqrs';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
+import { LabCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/labs';
 import { createConnection } from 'typeorm';
 
-describe('Order Failed Integration Tests', () => {
+describe('lab staking Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
@@ -92,7 +90,7 @@ describe('Order Failed Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...OrderCommandHandlers,
+        ...LabCommandHandlers,
       ],
     }).compile();
 
@@ -108,7 +106,7 @@ describe('Order Failed Integration Tests', () => {
     api.disconnect();
   });
 
-  it('failed order event', async () => {
+  it('lab staking event', async () => {
     // eslint-disable-next-line
     const labRegisterPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -146,11 +144,13 @@ describe('Order Failed Integration Tests', () => {
       .where('transaction_logs.transaction_type = :transaction_type', {
         transaction_type: 6,
       })
-      .where('notification.transaction_status = :transaction_status', {
+      .where('transaction_logs.transaction_status = :transaction_status', {
         transaction_status: 26,
       })
       .getMany();
 
-    expect(labLogging).toEqual('a');
+    expect(labLogging[0].ref_number).toEqual(lab.accountId);
+    expect(labLogging[0].transaction_type).toEqual(6);
+    expect(labLogging[0].transaction_status).toEqual(26);
   }, 180000);
 });

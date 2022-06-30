@@ -8,7 +8,6 @@ import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
-import { Order } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
 import { TestingModule } from '@nestjs/testing/testing-module';
 import { Test } from '@nestjs/testing/test';
 import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
@@ -36,13 +35,12 @@ import { SubstrateListenerHandler } from '../../../../../../src/listeners/substr
 import { createConnection } from 'typeorm';
 import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
 
-describe('Data Staked Integration Tests', () => {
+describe('Lab unstaking Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
   let pair: any;
   let lab: Lab;
-  let order: Order;
 
   global.console = {
     ...console,
@@ -166,7 +164,7 @@ describe('Data Staked Integration Tests', () => {
       })
       .getMany();
 
-    expect(transactionLogs[0].ref_number).toEqual(order.id);
+    expect(transactionLogs[0].ref_number).toEqual(lab.accountId);
     expect(transactionLogs[0].transaction_type).toEqual(6);
     expect(transactionLogs[0].transaction_status).toEqual(27);
   }, 180000);
