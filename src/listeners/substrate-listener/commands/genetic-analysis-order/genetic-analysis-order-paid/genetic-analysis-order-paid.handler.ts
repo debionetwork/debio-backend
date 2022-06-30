@@ -29,29 +29,34 @@ export class GeneticAnalysisOrderPaidHandler
       `Genetic Analysis Order Paid With GA Order ID: ${geneticAnalysisOrder.id}!`,
     );
 
+    console.log(geneticAnalysisOrder);
     try {
       const isGeneticAnalysisOrderHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
           geneticAnalysisOrder.id,
           14,
         );
+      console.log(geneticAnalysisOrder);
       const geneticAnalysisOrderHistory =
         await this.loggingService.getLoggingByOrderId(geneticAnalysisOrder.id);
 
+      console.log(geneticAnalysisOrderHistory);
       if (!isGeneticAnalysisOrderHasBeenInsert) {
         const geneticAnalysisOrderLogging: TransactionLoggingDto = {
           address: geneticAnalysisOrder.customerId,
           amount: +geneticAnalysisOrder.prices[0].value,
           created_at: geneticAnalysisOrder.updatedAt,
           currency: geneticAnalysisOrder.currency.toUpperCase(),
-          parent_id: BigInt(geneticAnalysisOrderHistory.id),
+          parent_id: BigInt(geneticAnalysisOrderHistory.id ?? 0),
           ref_number: geneticAnalysisOrder.id,
           transaction_status: 14,
           transaction_type: 3,
         };
+        console.log(geneticAnalysisOrderLogging);
 
         await this.loggingService.create(geneticAnalysisOrderLogging);
       }
+      console.log(geneticAnalysisOrderHistory);
 
       const currDateTime = this.dateTimeProxy.new();
 
@@ -67,6 +72,7 @@ export class GeneticAnalysisOrderPaidHandler
         from: 'Debio Network',
         to: geneticAnalysisOrder.sellerId,
       };
+      console.log(notificationNewOrderGeneticAnalyst);
 
       this.notificationService.insert(notificationNewOrderGeneticAnalyst);
     } catch (error) {
