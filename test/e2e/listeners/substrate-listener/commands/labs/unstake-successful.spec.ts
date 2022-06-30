@@ -169,15 +169,6 @@ describe('Lab unstaking Integration Tests', () => {
     expect(transactionLogs[0].transaction_type).toEqual(6);
     expect(transactionLogs[0].transaction_status).toEqual(27);
 
-    
-    const deRegisterLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
-      deregisterLab(api, pair, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
-      });
-    });
-
-    expect(await deRegisterLabPromise).toEqual(0);
+    await deregisterLab(api, pair);
   }, 180000);
 });

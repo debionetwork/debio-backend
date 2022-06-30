@@ -1,6 +1,9 @@
 import { ApiPromise } from '@polkadot/api';
 import 'regenerator-runtime/runtime';
-import { deregisterLab, stakeLab } from '@debionetwork/polkadot-provider/lib/command/labs';
+import {
+  deregisterLab,
+  stakeLab,
+} from '@debionetwork/polkadot-provider/lib/command/labs';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import { registerLab } from '@debionetwork/polkadot-provider/lib/command/labs';
@@ -153,14 +156,6 @@ describe('lab staking Integration Tests', () => {
     expect(labLogging[0].transaction_type).toEqual(6);
     expect(labLogging[0].transaction_status).toEqual(26);
 
-    const deRegisterLabPromise: Promise<Lab> = new Promise((resolve, reject) => {
-      deregisterLab(api, pair, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
-      });
-    });
-
-    expect(await deRegisterLabPromise).toEqual(0);
+    await deregisterLab(api, pair);
   }, 180000);
 });
