@@ -35,10 +35,13 @@ import {
   addGeneticData,
   createGeneticAnalysisOrder,
   createGeneticAnalystService,
+  deleteGeneticAnalystService,
   queryGeneticAnalysisOrderByCustomerId,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
   queryGeneticDataByOwnerId,
+  queryGeneticAnalystServicesCount,
+  deregisterGeneticAnalyst,
   registerGeneticAnalyst,
   stakeGeneticAnalyst,
   updateGeneticAnalystVerificationStatus,
@@ -245,5 +248,17 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
       ),
     ).toBeTruthy();
+
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteGeneticAnalystService(api, pair, gaService.id, () => {
+        queryGeneticAnalystServicesCount(api).then((res) => {
+          deregisterGeneticAnalyst(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
   }, 360000);
 });
