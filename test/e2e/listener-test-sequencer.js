@@ -27,6 +27,12 @@ class CustomSequencer extends Sequencer {
       return obj.path.includes('listeners/substrate-listener/commands/genetic-testing/data-staked.spec.ts');
     }));
     sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-paid.spec.ts');
+    }));
+    sequence.push(...testsArray.filter(obj => {
+      return obj.path.includes('listeners/substrate-listener/commands/service-request/service-request-partial.spec.ts');
+    }));
+    sequence.push(...testsArray.filter(obj => {
       return obj.path.includes('listeners/substrate-listener/commands/services/service-created.spec.ts');
     }));
 
