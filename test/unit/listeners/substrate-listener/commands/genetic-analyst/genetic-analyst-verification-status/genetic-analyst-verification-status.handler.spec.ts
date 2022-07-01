@@ -1,5 +1,6 @@
 import {
   DateTimeProxy,
+  NotificationService,
   TransactionLoggingService,
 } from '../../../../../../../src/common';
 import { GeneticAnalystVerificationStatusCommand } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts';
@@ -10,6 +11,7 @@ import {
   MockType,
   dateTimeProxyMockFactory,
   transactionLoggingServiceMockFactory,
+  notificationServiceMockFactory,
 } from '../../../../../mock';
 import { GeneticAnalystVerificationStatusHandler } from '../../../../../../../src/listeners/substrate-listener/commands/genetic-analysts/genetic-analyst-verification-status/genetic-analyst-verification-status.handler';
 import { when } from 'jest-when';
@@ -17,6 +19,7 @@ import { when } from 'jest-when';
 describe('Genetic Analyst Verification Status Handler Event', () => {
   let geneticAnalystVerificationStatusHandler: GeneticAnalystVerificationStatusHandler;
   let transactionLoggingServiceMock: MockType<TransactionLoggingService>;
+  let notificationServiceMock: MockType<NotificationService>;
   let dateTimeProxyMock: MockType<DateTimeProxy>; // eslint-disable-line
 
   beforeEach(async () => {
@@ -25,6 +28,10 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
         {
           provide: TransactionLoggingService,
           useFactory: transactionLoggingServiceMockFactory,
+        },
+        {
+          provide: NotificationService,
+          useFactory: notificationServiceMockFactory,
         },
         {
           provide: DateTimeProxy,
@@ -39,6 +46,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     );
     transactionLoggingServiceMock = module.get(TransactionLoggingService);
     dateTimeProxyMock = module.get(DateTimeProxy); // eslint-disable-line
+    notificationServiceMock = module.get(NotificationService);
 
     await module.init();
   });
@@ -54,7 +62,7 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     const RESULT_STATUS = true;
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 14)
+      .calledWith(geneticAnalyst.toHuman().accountId, 21)
       .mockReturnValue(RESULT_STATUS);
 
     const GeneticAnalysisOrders: GeneticAnalystVerificationStatusCommand =
@@ -70,17 +78,18 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 
   it('should called logging Verification Status Rejected', async () => {
     // Arrange
-    const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Rejected';
+    const geneticAnalyst = createMockGeneticAnalyst('Rejected');
 
-    const RESULT_STATUS = { id: 1 };
+    const RESULT_STATUS = false;
+    const ACCOUNT_ID = geneticAnalyst.toHuman().accountId;
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 14)
+      .calledWith(geneticAnalyst.toHuman().accountId, 21)
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
@@ -95,17 +104,27 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        address: ACCOUNT_ID,
+        transaction_type: 4,
+        transaction_status: 21,
+        currency: 'DBIO',
+      }),
+    );
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 
   it('should called logging Verification Status Verified', async () => {
     // Arrange
-    const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Verified';
+    const geneticAnalyst = createMockGeneticAnalyst('Verified');
 
-    const RESULT_STATUS = { id: 1 };
+    const RESULT_STATUS = false;
+    const ACCOUNT_ID = geneticAnalyst.toHuman().accountId;
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 14)
+      .calledWith(geneticAnalyst.toHuman().accountId, 21)
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
@@ -120,17 +139,27 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        address: ACCOUNT_ID,
+        transaction_type: 4,
+        transaction_status: 20,
+        currency: 'DBIO',
+      }),
+    );
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 
   it('should called logging Verification Status Revoked', async () => {
     // Arrange
-    const geneticAnalyst = createMockGeneticAnalyst();
-    geneticAnalyst.toHuman().verificationStatus = 'Revoked';
+    const geneticAnalyst = createMockGeneticAnalyst('Revoked');
 
-    const RESULT_STATUS = { id: 1 };
+    const RESULT_STATUS = false;
+    const ACCOUNT_ID = geneticAnalyst.toHuman().accountId;
 
     when(transactionLoggingServiceMock.getLoggingByHashAndStatus)
-      .calledWith(geneticAnalyst.toHuman().accountId, 14)
+      .calledWith(geneticAnalyst.toHuman().accountId, 21)
       .mockReturnValue(RESULT_STATUS);
 
     const geneticAnalystVerificationStatusCommand: GeneticAnalystVerificationStatusCommand =
@@ -145,5 +174,15 @@ describe('Genetic Analyst Verification Status Handler Event', () => {
     expect(
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalled();
+    expect(transactionLoggingServiceMock.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        address: ACCOUNT_ID,
+        transaction_type: 4,
+        transaction_status: 22,
+        currency: 'DBIO',
+      }),
+    );
+    expect(notificationServiceMock.insert).toBeCalled();
   });
 });
