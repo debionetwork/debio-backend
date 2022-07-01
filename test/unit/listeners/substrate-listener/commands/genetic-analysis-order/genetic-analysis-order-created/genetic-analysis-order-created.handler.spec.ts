@@ -76,7 +76,7 @@ describe('Genetic Analysis Order Created Handler Event', () => {
       transactionLoggingServiceMock.getLoggingByHashAndStatus,
     ).toHaveBeenCalled();
     expect(transactionLoggingServiceMock.create).not.toHaveBeenCalled();
-    expect(notificationServiceMock.insert).toBeCalled();
+    expect(notificationServiceMock.insert).not.toBeCalled();
   });
 
   it('should called logging service create', async () => {
