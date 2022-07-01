@@ -46,13 +46,7 @@ export class GeneticAnalysisOrderCreatedHandler
         transaction_status: 13,
         transaction_type: 3,
       };
-
-      if (!isGeneticAnalysisOrderHasBeenInsert) {
-        await this.loggingService.create(geneticAnalysisOrderLogging);
-      }
-
       const currDateTime = this.dateTimeProxy.new();
-
       const notificationInput: NotificationDto = {
         role: 'Customer',
         entity_type: 'Genetic Analysis Orders',
@@ -66,7 +60,10 @@ export class GeneticAnalysisOrderCreatedHandler
         to: 'Debio Network',
       };
 
-      await this.notificationService.insert(notificationInput);
+      if (!isGeneticAnalysisOrderHasBeenInsert) {
+        await this.loggingService.create(geneticAnalysisOrderLogging);
+        await this.notificationService.insert(notificationInput);
+      }
     } catch (error) {
       await this.logger.log(error);
     }
