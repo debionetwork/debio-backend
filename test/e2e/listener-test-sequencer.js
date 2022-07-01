@@ -24,10 +24,10 @@ class CustomSequencer extends Sequencer {
       return obj.path.includes('listeners/substrate-listener/commands/genetic-analysis-order/genetic-analysis-order-created.spec.ts');
     }));
     sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('listeners/substrate-listener/commands/services/service-created.spec.ts');
+      return obj.path.includes('listeners/substrate-listener/commands/genetic-testing/data-staked.spec.ts');
     }));
     sequence.push(...testsArray.filter(obj => {
-      return obj.path.includes('listeners/substrate-listener/commands/genetic-testing/data-staked.spec.ts');
+      return obj.path.includes('listeners/substrate-listener/commands/services/service-created.spec.ts');
     }));
     return sequence;
   }
