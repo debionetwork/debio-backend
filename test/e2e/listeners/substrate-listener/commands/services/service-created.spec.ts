@@ -165,7 +165,7 @@ describe('Service Created Integration Tests', () => {
       .where('notification.entity = :entity', { entity: 'Add service' })
       .getMany();
 
-    expect(notifications.length).toEqual(1);
+    expect(notifications.length).toBeGreaterThan(0);
     expect(notifications[0].to).toEqual(service.ownerId);
     expect(notifications[0].entity).toEqual('Add service');
     expect(
