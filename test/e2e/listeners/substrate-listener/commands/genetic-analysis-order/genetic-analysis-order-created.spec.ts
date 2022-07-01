@@ -35,19 +35,13 @@ import {
   addGeneticData,
   createGeneticAnalysisOrder,
   createGeneticAnalystService,
-<<<<<<< HEAD
   deleteGeneticAnalystService,
-=======
->>>>>>> 247ef966387572453d970f32b646c70e70772d45
   queryGeneticAnalysisOrderByCustomerId,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
   queryGeneticDataByOwnerId,
-<<<<<<< HEAD
   queryGeneticAnalystServicesCount,
   deregisterGeneticAnalyst,
-=======
->>>>>>> 247ef966387572453d970f32b646c70e70772d45
   registerGeneticAnalyst,
   stakeGeneticAnalyst,
   updateGeneticAnalystVerificationStatus,
