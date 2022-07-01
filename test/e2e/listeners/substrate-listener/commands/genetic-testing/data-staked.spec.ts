@@ -243,7 +243,7 @@ describe('Data Staked Integration Tests', () => {
       })
       .getMany();
 
-    expect(transactionLogs).toEqual('1');
+    expect(transactionLogs[0].ref_number).toEqual(order.id);
     expect(transactionLogs[0].transaction_type).toEqual(8);
     expect(transactionLogs[0].transaction_status).toEqual(34);
 
