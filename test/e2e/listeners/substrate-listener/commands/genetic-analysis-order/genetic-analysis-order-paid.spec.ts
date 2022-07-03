@@ -33,21 +33,17 @@ import {
 } from '@debionetwork/polkadot-provider/lib/models/genetic-analysts';
 import { GeneticAnalysisOrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-analysis-order';
 import {
-  addGeneticData,
-  createGeneticAnalysisOrder,
-  createGeneticAnalystService,
+  deleteGeneticAnalystService,
+  deregisterGeneticAnalyst,
   queryGeneticAnalysisOrderByCustomerId,
   queryGeneticAnalysisOrderById,
   queryGeneticAnalystByAccountId,
   queryGeneticAnalystServicesByHashId,
+  queryGeneticAnalystServicesCount,
   queryGeneticDataByOwnerId,
-  registerGeneticAnalyst,
   setGeneticAnalysisOrderPaid,
-  stakeGeneticAnalyst,
-  updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { geneticAnalystsDataMock } from '../../../../../mocks/models/genetic-analysts/genetic-analysts.mock';
-import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { geneticAnalystServiceDataMock } from '../../../../../mocks/models/genetic-analysts/genetic-analyst-service.mock';
 import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
@@ -125,30 +121,17 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('genetic analysis order event', async () => {
     const gaPromise: Promise<GeneticAnalyst> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        registerGeneticAnalyst(api, pair, geneticAnalystsDataMock.info, () => {
-          stakeGeneticAnalyst(api, pair, () => {
-            updateGeneticAnalystVerificationStatus(
-              api,
-              pair,
-              pair.address,
-              VerificationStatus.Verified,
-              () => {
-                queryGeneticAnalystByAccountId(api, pair.address).then(
-                  (res) => {
-                    resolve(res);
-                  },
-                );
-              },
-            );
-          });
+        queryGeneticAnalystByAccountId(api, pair.address).then((res) => {
+          resolve(res);
         });
       },
     );
@@ -159,20 +142,9 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     const gaServicePromise: Promise<GeneticAnalystService> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        createGeneticAnalystService(
-          api,
-          pair,
-          geneticAnalystServiceDataMock.info,
-          () => {
-            queryGeneticAnalystByAccountId(api, pair.address).then((ga) => {
-              queryGeneticAnalystServicesByHashId(api, ga.services[0]).then(
-                (res) => {
-                  resolve(res);
-                },
-              );
-            });
-          },
-        );
+        queryGeneticAnalystServicesByHashId(api, ga.services[0]).then((res) => {
+          resolve(res);
+        });
       },
     );
 
@@ -188,35 +160,27 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     const geneticDataPromise: Promise<GeneticData> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        addGeneticData(api, pair, 'string', 'string', 'string', () => {
-          queryGeneticDataByOwnerId(api, pair.address).then((res) => {
-            resolve(res.at(-1));
-          });
+        queryGeneticDataByOwnerId(api, pair.address).then((res) => {
+          resolve(res.at(-1));
         });
       },
     );
 
     geneticData = await geneticDataPromise;
+    expect(geneticData).toEqual(
+      expect.objectContaining({
+        title: 'string',
+        description: 'string',
+        reportLink: 'string',
+      }),
+    );
 
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
       // eslint-disable-next-line
       new Promise((resolve, reject) => {
-        createGeneticAnalysisOrder(
-          api,
-          pair,
-          geneticData.id,
-          gaService.id,
-          0,
-          geneticData.reportLink,
-          '0x8d2f0702072c07d31251be881104acde7953ecc1c8b33c31fce59ec6b0799ecc',
-          () => {
-            queryGeneticAnalysisOrderByCustomerId(api, pair.address).then(
-              (res) => {
-                resolve(res.at(-1));
-              },
-            );
-          },
-        );
+        queryGeneticAnalysisOrderByCustomerId(api, pair.address).then((res) => {
+          resolve(res.at(-1));
+        });
       });
 
     geneticAnalysisOrder = await geneticAnalysisOrderPromise;
@@ -268,5 +232,18 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `A new order ${geneticAnalysisOrder.id} is awaiting process.`,
       ),
     ).toBeTruthy();
-  }, 360000);
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteGeneticAnalystService(api, pair, gaService.id, () => {
+        queryGeneticAnalystServicesCount(api).then((res) => {
+          deregisterGeneticAnalyst(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+  }, 160000);
 });

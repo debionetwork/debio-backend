@@ -110,9 +110,9 @@ describe('Service Created Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
-    app.close();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('service created event', async () => {

@@ -39,6 +39,7 @@ import {
   queryServiceRequestByAccountId,
   queryServiceRequestById,
   queryServicesByMultipleIds,
+  queryServicesCount,
   registerLab,
   Service,
   ServiceRequest,
@@ -125,10 +126,9 @@ describe('Service Request Excess Integration Tests', () => {
   });
 
   afterAll(async () => {
-    await deleteService(api, pair, service.id);
-    await deregisterLab(api, pair);
-    api.disconnect();
-  }, 30000);
+    await api.disconnect();
+    await app.close();
+  });
 
   it('service request partial event', async () => {
     const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
@@ -208,8 +208,8 @@ describe('Service Request Excess Integration Tests', () => {
           pair,
           serviceRequest.hash,
           service.id,
-          '2',
-          '1',
+          '900000000000000000',
+          '100000000000000000',
           () => {
             queryServiceRequestById(api, serviceRequest.hash).then((res) => {
               resolve(res);
@@ -297,5 +297,18 @@ describe('Service Request Excess Integration Tests', () => {
       ),
     ).toBeTruthy();
     expect(notifications[0].from).toEqual('Debio Network');
-  }, 350000);
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+  }, 160000);
 });

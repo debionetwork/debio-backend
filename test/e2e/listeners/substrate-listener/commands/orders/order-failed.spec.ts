@@ -10,22 +10,16 @@ import {
   rejectDnaSample,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import {
-  createService,
-  deleteService,
-} from '@debionetwork/polkadot-provider/lib/command/labs/services';
+import { createService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
 import {
   queryDnaSamples,
   queryLabById,
 } from '@debionetwork/polkadot-provider/lib/query/labs';
-import {
-  queryServicesByMultipleIds,
-  queryServicesCount,
-} from '@debionetwork/polkadot-provider/lib/query/labs/services';
+import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider/lib/query/labs/services';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import {
-  deregisterLab,
   registerLab,
+  updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
@@ -60,6 +54,7 @@ import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-
 import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
 import { createConnection } from 'typeorm';
 import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 describe('Order Failed Integration Tests', () => {
   let app: INestApplication;
@@ -133,17 +128,26 @@ describe('Order Failed Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('failed order event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
+        updateLabVerificationStatus(
+          api,
+          pair,
+          pair.address,
+          VerificationStatus.Verified,
+          () => {
+            queryLabById(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       });
     });
 
@@ -263,18 +267,5 @@ describe('Order Failed Integration Tests', () => {
     expect(
       notifications[0].description.includes('DAI as quality control fees for'),
     ).toBeTruthy();
-
-    // eslint-disable-next-line
-    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
-      deleteService(api, pair, service.id, () => {
-        queryServicesCount(api).then((res) => {
-          deregisterLab(api, pair, () => {
-            resolve(res);
-          });
-        });
-      });
-    });
-
-    expect(await deletePromise).toEqual(0);
   }, 120000);
 });

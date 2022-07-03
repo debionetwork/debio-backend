@@ -56,8 +56,8 @@ export class GeneticAnalysisOrderCreatedHandler
         created_at: currDateTime,
         updated_at: currDateTime,
         deleted_at: null,
-        from: geneticAnalysisOrder.customerId,
-        to: 'Debio Network',
+        from: 'Debio Network',
+        to: geneticAnalysisOrder.customerId,
       };
 
       if (!isGeneticAnalysisOrderHasBeenInsert) {

@@ -39,6 +39,7 @@ import {
   queryServiceRequestByAccountId,
   queryServiceRequestById,
   queryServicesByMultipleIds,
+  queryServicesCount,
   registerLab,
   Service,
   ServiceRequest,
@@ -125,10 +126,9 @@ describe('Service Request Excess Integration Tests', () => {
   });
 
   afterAll(async () => {
-    await deleteService(api, pair, service.id);
-    await deregisterLab(api, pair);
-    api.disconnect();
-  }, 30000);
+    await api.disconnect();
+    await app.close();
+  });
 
   it('service request excess event', async () => {
     const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
@@ -163,24 +163,23 @@ describe('Service Request Excess Integration Tests', () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
-        updateLabVerificationStatus(api, pair, pair.address, VerificationStatus.Verified, () => {
-          queryLabById(api, pair.address).then((res) => {
-            resolve(res);
-          });
-        });
+        updateLabVerificationStatus(
+          api,
+          pair,
+          pair.address,
+          VerificationStatus.Verified,
+          () => {
+            queryLabById(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       });
     });
 
     lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
     expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
-
-    await updateLabVerificationStatus(
-      api,
-      pair,
-      lab.accountId,
-      VerificationStatus.Verified,
-    );
 
     // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
@@ -209,8 +208,8 @@ describe('Service Request Excess Integration Tests', () => {
           pair,
           serviceRequest.hash,
           service.id,
-          '1',
-          '1',
+          '800000000000000000',
+          '100000000000000000',
           () => {
             queryServiceRequestById(api, serviceRequest.hash).then((res) => {
               resolve(res);
@@ -297,5 +296,18 @@ describe('Service Request Excess Integration Tests', () => {
         `Your over payment staking service request with ID ${serviceRequest.hash} has been refunded.`,
       ),
     ).toBeTruthy();
-  }, 350000);
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+  }, 200000);
 });

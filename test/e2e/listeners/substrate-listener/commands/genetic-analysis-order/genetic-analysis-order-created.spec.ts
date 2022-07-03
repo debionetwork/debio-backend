@@ -122,8 +122,9 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('genetic analysis order created event', async () => {
@@ -194,6 +195,13 @@ describe('Genetic Analysis Order Created Integration Test', () => {
     );
 
     geneticData = await geneticDataPromise;
+    expect(geneticData).toEqual(
+      expect.objectContaining({
+        title: 'string',
+        description: 'string',
+        reportLink: 'string',
+      }),
+    );
 
     const geneticAnalysisOrderPromise: Promise<GeneticAnalysisOrder> =
       // eslint-disable-next-line
@@ -245,5 +253,5 @@ describe('Genetic Analysis Order Created Integration Test', () => {
         `You've successfully submitted your requested test for ${geneticAnalysisOrder.id}.`,
       ),
     ).toBeTruthy();
-  }, 360000);
+  }, 180000);
 });
