@@ -123,7 +123,7 @@ describe('Service Request Excess Integration Tests', () => {
     const { api: _api, pair: _pair } = await initializeApi();
     api = _api;
     pair = _pair;
-  });
+  }, 360000);
 
   afterAll(async () => {
     await api.disconnect();
@@ -310,5 +310,5 @@ describe('Service Request Excess Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 160000);
+  }, 200000);
 });

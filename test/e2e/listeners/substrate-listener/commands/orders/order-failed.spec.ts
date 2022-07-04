@@ -267,5 +267,5 @@ describe('Order Failed Integration Tests', () => {
     expect(
       notifications[0].description.includes('DAI as quality control fees for'),
     ).toBeTruthy();
-  }, 120000);
+  }, 180000);
 });

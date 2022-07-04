@@ -244,5 +244,5 @@ describe('Order Fulfilled Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 120000);
+  }, 180000);
 });
