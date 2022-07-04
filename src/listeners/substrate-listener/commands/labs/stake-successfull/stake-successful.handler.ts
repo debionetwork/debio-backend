@@ -23,6 +23,7 @@ export class LabStakeSuccessfullHandler
     await this.logger.log(`Lab ID: ${lab.accountId} Stake Successful!`);
 
     try {
+      const tenMinuteInMiliSecond = 10 * 60 * 1000;
       const isLabHasBeenInsert =
         await this.loggingService.getLoggingByHashAndStatus(
           lab.accountId,
@@ -41,7 +42,15 @@ export class LabStakeSuccessfullHandler
         transaction_status: 26, // Lab Staked
         transaction_type: 6, // Staking Lab
       };
-      if (!isLabHasBeenInsert) {
+      let isLabHasBeenInsertTenMinuteAgo = false;
+
+      if (isLabHasBeenInsert) {
+        isLabHasBeenInsertTenMinuteAgo =
+          Number(new Date(new Date(this.dateTimeProxy.now())).getTime()) -
+            Number(new Date(isLabHasBeenInsert.created_at).getTime()) <=
+          tenMinuteInMiliSecond;
+      }
+      if (!isLabHasBeenInsert || isLabHasBeenInsertTenMinuteAgo === false) {
         await this.loggingService.create(labLogging);
       }
     } catch (error) {

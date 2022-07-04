@@ -44,7 +44,7 @@ export class GeneticAnalysisOrderPaidHandler
           amount: +geneticAnalysisOrder.prices[0].value,
           created_at: geneticAnalysisOrder.updatedAt,
           currency: geneticAnalysisOrder.currency.toUpperCase(),
-          parent_id: BigInt(geneticAnalysisOrderHistory.id),
+          parent_id: BigInt(geneticAnalysisOrderHistory.id ?? 0),
           ref_number: geneticAnalysisOrder.id,
           transaction_status: 14,
           transaction_type: 3,
