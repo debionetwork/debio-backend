@@ -27,6 +27,7 @@ import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
 import {
   deregisterLab,
   registerLab,
+  updateLabVerificationStatus,
 } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
@@ -59,6 +60,7 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
 import { createConnection } from 'typeorm';
 import { GeneticTestingCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/genetic-testing';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
 describe('Data Staked Integration Tests', () => {
   let app: INestApplication;
@@ -132,17 +134,26 @@ describe('Data Staked Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('data staked event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
+        updateLabVerificationStatus(
+          api,
+          pair,
+          pair.address,
+          VerificationStatus.Verified,
+          () => {
+            queryLabById(api, pair.address).then((res) => {
+              resolve(res);
+            });
+          },
+        );
       });
     });
 

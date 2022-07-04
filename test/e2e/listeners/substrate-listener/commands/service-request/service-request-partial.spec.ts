@@ -1,42 +1,9 @@
+import { INestApplication } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiPromise } from '@polkadot/api';
-import 'regenerator-runtime/runtime';
-import {
-  queryLastOrderHashByCustomer,
-  queryOrderDetailByOrderID,
-} from '@debionetwork/polkadot-provider/lib/query/labs/orders';
-import { createOrder } from '@debionetwork/polkadot-provider/lib/command/labs/orders';
-import {
-  processDnaSample,
-  rejectDnaSample,
-  submitTestResult,
-} from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import { createService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
-import {
-  queryDnaSamples,
-  queryLabById,
-} from '@debionetwork/polkadot-provider/lib/query/labs';
-import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider/lib/query/labs/services';
-import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import {
-  registerLab,
-  updateLabVerificationStatus,
-} from '@debionetwork/polkadot-provider/lib/command/labs';
-import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
-import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
-import { Order } from '@debionetwork/polkadot-provider/lib/models/labs/orders';
-import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
-import { DnaSampleStatus } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample-status';
-import { TestingModule } from '@nestjs/testing/testing-module';
-import { Test } from '@nestjs/testing/test';
-import { INestApplication } from '@nestjs/common/interfaces/nest-application.interface';
-import { initializeApi } from '../../../../polkadot-init';
-import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
-import { LabRating } from '../../../../../../src/endpoints/rating/models/rating.entity';
-import { TransactionRequest } from '../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
-import { LocationEntities } from '../../../../../../src/endpoints/location/models';
-import { dummyCredentials } from '../../../../config';
-import { EscrowService } from '../../../../../../src/common/modules/escrow/escrow.service';
-import { escrowServiceMockFactory } from '../../../../../unit/mock';
 import {
   DateTimeModule,
   DebioConversionModule,
@@ -46,17 +13,46 @@ import {
   SubstrateModule,
   TransactionLoggingModule,
 } from '../../../../../../src/common';
+import { EscrowService } from '../../../../../../src/common/modules/escrow/escrow.service';
+import { TransactionRequest } from '../../../../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { LocationModule } from '../../../../../../src/endpoints/location/location.module';
-import { CqrsModule } from '@nestjs/cqrs';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { LocationEntities } from '../../../../../../src/endpoints/location/models';
+import { LabRating } from '../../../../../../src/endpoints/rating/models/rating.entity';
+import { ServiceRequestCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/service-request';
 import { SubstrateListenerHandler } from '../../../../../../src/listeners/substrate-listener/substrate-listener.handler';
-import { OrderCommandHandlers } from '../../../../../../src/listeners/substrate-listener/commands/orders';
-import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
+import { dummyCredentials } from '../../../../config';
+import { escrowServiceMockFactory } from '../../../../../unit/mock';
+import { initializeApi } from '../../../../polkadot-init';
+import {
+  claimRequest,
+  createOrder,
+  createRequest,
+  createService,
+  deleteService,
+  deregisterLab,
+  Lab,
+  Order,
+  processRequest,
+  queryLabById,
+  queryLastOrderHashByCustomer,
+  queryOrderDetailByOrderID,
+  queryServiceRequestByAccountId,
+  queryServiceRequestById,
+  queryServicesByMultipleIds,
+  queryServicesCount,
+  registerLab,
+  Service,
+  ServiceRequest,
+  updateLabVerificationStatus,
+} from '@debionetwork/polkadot-provider';
+import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
+import { serviceDataMock } from '../../../../../mocks/models/labs/services.mock';
+import { serviceRequestMock } from '../../../../../mocks/models/labs/service-request.mock';
 import { createConnection } from 'typeorm';
-import { DnaSample } from '@debionetwork/polkadot-provider/lib/models/labs/genetic-testing/dna-sample';
+import { Notification } from '../../../../../../src/common/modules/notification/models/notification.entity';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 
-describe('Order Failed Integration Tests', () => {
+describe('Service Request Excess Integration Tests', () => {
   let app: INestApplication;
 
   let api: ApiPromise;
@@ -64,6 +60,7 @@ describe('Order Failed Integration Tests', () => {
   let lab: Lab;
   let service: Service;
   let order: Order;
+  let serviceRequest: ServiceRequest;
 
   global.console = {
     ...console,
@@ -81,7 +78,7 @@ describe('Order Failed Integration Tests', () => {
           type: 'postgres',
           ...dummyCredentials,
           database: 'db_postgres',
-          entities: [LabRating, TransactionRequest],
+          entities: [LabRating, TransactionRequest, Notification],
           autoLoadEntities: true,
         }),
         TypeOrmModule.forRoot({
@@ -116,7 +113,7 @@ describe('Order Failed Integration Tests', () => {
           useFactory: escrowServiceMockFactory,
         },
         SubstrateListenerHandler,
-        ...OrderCommandHandlers,
+        ...ServiceRequestCommandHandlers,
       ],
     }).compile();
 
@@ -133,7 +130,36 @@ describe('Order Failed Integration Tests', () => {
     await app.close();
   });
 
-  it('failed order event', async () => {
+  it('service request partial event', async () => {
+    const serviceRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        createRequest(
+          api,
+          pair,
+          serviceRequestMock.country,
+          serviceRequestMock.region,
+          serviceRequestMock.city,
+          serviceRequestMock.serviceCategory,
+          serviceRequestMock.stakingAmount,
+          () => {
+            queryServiceRequestByAccountId(api, pair.address).then((res) => {
+              resolve(res.at(-1));
+            });
+          },
+        );
+      },
+    );
+
+    serviceRequest = await serviceRequestPromise;
+    expect(serviceRequest.normalize()).toEqual(
+      expect.objectContaining({
+        country: serviceRequestMock.country,
+        region: serviceRequestMock.region,
+        city: serviceRequestMock.city,
+      }),
+    );
+
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
       registerLab(api, pair, labDataMock.info, () => {
@@ -153,6 +179,7 @@ describe('Order Failed Integration Tests', () => {
 
     lab = await labPromise;
     expect(lab.info).toEqual(labDataMock.info);
+    expect(lab.verificationStatus).toEqual(VerificationStatus.Verified);
 
     // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
@@ -172,6 +199,27 @@ describe('Order Failed Integration Tests', () => {
     });
 
     service = await servicePromise;
+
+    const claimRequestPromise: Promise<ServiceRequest> = new Promise(
+      // eslint-disable-next-line
+      (resolve, reject) => {
+        claimRequest(
+          api,
+          pair,
+          serviceRequest.hash,
+          service.id,
+          '900000000000000000',
+          '100000000000000000',
+          () => {
+            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
+              resolve(res);
+            });
+          },
+        );
+      },
+    );
+
+    serviceRequest = await claimRequestPromise;
 
     // eslint-disable-next-line
     const orderPromise: Promise<Order> = new Promise((resolve, reject) => {
@@ -199,32 +247,19 @@ describe('Order Failed Integration Tests', () => {
     expect(order.customerBoxPublicKey).toEqual(lab.info.boxPublicKey);
     expect(order.orderFlow).toEqual(serviceDataMock.serviceFlow);
 
-    await submitTestResult(api, pair, order.dnaSampleTrackingId, {
-      comments: 'comment',
-      resultLink: 'resultLink',
-      reportLink: 'reportLink',
-    });
-
-    await processDnaSample(
-      api,
-      pair,
-      order.dnaSampleTrackingId,
-      DnaSampleStatus.Arrived,
-    );
-    const rejectedTitle = 'REJECTED';
-    const rejectedDescription = 'REJECTED_DESCRIPTION';
-
-    const rejectDnaSamplePromise: Promise<DnaSample> = new Promise(
+    const processRequestPromise: Promise<ServiceRequest> = new Promise(
       // eslint-disable-next-line
       (resolve, reject) => {
-        rejectDnaSample(
+        processRequest(
           api,
           pair,
+          lab.accountId,
+          serviceRequest.hash,
+          order.id,
           order.dnaSampleTrackingId,
-          rejectedTitle,
-          rejectedDescription,
+          '0',
           () => {
-            queryDnaSamples(api, order.dnaSampleTrackingId).then((res) => {
+            queryServiceRequestById(api, serviceRequest.hash).then((res) => {
               resolve(res);
             });
           },
@@ -232,13 +267,7 @@ describe('Order Failed Integration Tests', () => {
       },
     );
 
-    const dnaSample = await rejectDnaSamplePromise;
-    expect(dnaSample.labId).toEqual(order.sellerId);
-    expect(dnaSample.ownerId).toEqual(order.customerId);
-    expect(dnaSample.trackingId).toEqual(order.dnaSampleTrackingId);
-    expect(dnaSample.status).toEqual(DnaSampleStatus.Rejected);
-    expect(dnaSample.rejectedTitle).toEqual(rejectedTitle);
-    expect(dnaSample.rejectedDescription).toEqual(rejectedDescription);
+    serviceRequest = await processRequestPromise;
 
     const dbConnection = await createConnection({
       ...dummyCredentials,
@@ -251,21 +280,35 @@ describe('Order Failed Integration Tests', () => {
       .getRepository(Notification)
       .createQueryBuilder('notification')
       .where('notification.to = :to', {
-        to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+        to: serviceRequest.requesterAddress,
       })
-      .where('notification.entity = :entity', { entity: 'Order Failed' })
+      .where('notification.entity = :entity', {
+        entity: 'ServiceRequestStakingAmountIncreased',
+      })
       .getMany();
 
-    expect(notifications.length).toEqual(1);
-    expect(notifications[0].to).toEqual(
-      '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+    expect(notifications[0].to).toEqual(serviceRequest.requesterAddress);
+    expect(notifications[0].entity).toEqual(
+      'ServiceRequestStakingAmountIncreased',
     );
-    expect(notifications[0].entity).toEqual('Order Failed');
     expect(
-      notifications[0].description.includes("You've received"),
+      notifications[0].description.includes(
+        `Your partial payment staking service request with ID ${serviceRequest.hash} has been increased.`,
+      ),
     ).toBeTruthy();
-    expect(
-      notifications[0].description.includes('DAI as quality control fees for'),
-    ).toBeTruthy();
-  }, 180000);
+    expect(notifications[0].from).toEqual('Debio Network');
+
+    // eslint-disable-next-line
+    const deletePromise: Promise<number> = new Promise((resolve, reject) => {
+      deleteService(api, pair, service.id, () => {
+        queryServicesCount(api).then((res) => {
+          deregisterLab(api, pair, () => {
+            resolve(res);
+          });
+        });
+      });
+    });
+
+    expect(await deletePromise).toEqual(0);
+  }, 200000);
 });

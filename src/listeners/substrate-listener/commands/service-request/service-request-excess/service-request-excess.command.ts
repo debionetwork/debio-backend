@@ -1,10 +1,12 @@
 import { BlockMetaData } from '../../../models/block-metadata.event-model';
-import { ServiceRequest } from '@debionetwork/polkadot-provider';
 
 export class ServiceRequestStakingAmountExcessRefundedCommand {
-  request: any;
+  requesterId: string;
+  requestId: string;
+  additionalStakingAmount: string;
   constructor(args: Array<any>, public readonly blockMetadata: BlockMetaData) {
-    const requestData = args;
-    this.request = new ServiceRequest(requestData);
+    this.requesterId = args[0].toString();
+    this.requestId = args[1].toString();
+    this.additionalStakingAmount = args[2].toString();
   }
 }

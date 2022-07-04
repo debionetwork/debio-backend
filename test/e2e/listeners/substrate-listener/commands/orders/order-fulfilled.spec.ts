@@ -12,20 +12,14 @@ import {
   processDnaSample,
   submitTestResult,
 } from '@debionetwork/polkadot-provider/lib/command/labs/genetic-testing';
-import {
-  createService,
-  deleteService,
-} from '@debionetwork/polkadot-provider/lib/command/labs/services';
+import { deleteService } from '@debionetwork/polkadot-provider/lib/command/labs/services';
 import { queryLabById } from '@debionetwork/polkadot-provider/lib/query/labs';
 import {
   queryServicesByMultipleIds,
   queryServicesCount,
 } from '@debionetwork/polkadot-provider/lib/query/labs/services';
 import { Lab } from '@debionetwork/polkadot-provider/lib/models/labs';
-import {
-  deregisterLab,
-  registerLab,
-} from '@debionetwork/polkadot-provider/lib/command/labs';
+import { deregisterLab } from '@debionetwork/polkadot-provider/lib/command/labs';
 import { labDataMock } from '../../../../../mocks/models/labs/labs.mock';
 import { Service } from '@debionetwork/polkadot-provider/lib/models/labs/services';
 import {
@@ -134,17 +128,16 @@ describe('Order Fulfilled Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('fulfill order event', async () => {
     // eslint-disable-next-line
     const labPromise: Promise<Lab> = new Promise((resolve, reject) => {
-      registerLab(api, pair, labDataMock.info, () => {
-        queryLabById(api, pair.address).then((res) => {
-          resolve(res);
-        });
+      queryLabById(api, pair.address).then((res) => {
+        resolve(res);
       });
     });
 
@@ -153,19 +146,11 @@ describe('Order Fulfilled Integration Tests', () => {
 
     // eslint-disable-next-line
     const servicePromise: Promise<Service> = new Promise((resolve, reject) => {
-      createService(
-        api,
-        pair,
-        serviceDataMock.info,
-        serviceDataMock.serviceFlow,
-        () => {
-          queryLabById(api, pair.address).then((lab) => {
-            queryServicesByMultipleIds(api, lab.services).then((res) => {
-              resolve(res[0]);
-            });
-          });
-        },
-      );
+      queryLabById(api, pair.address).then((lab) => {
+        queryServicesByMultipleIds(api, lab.services).then((res) => {
+          resolve(res[0]);
+        });
+      });
     });
 
     service = await servicePromise;
@@ -259,5 +244,5 @@ describe('Order Fulfilled Integration Tests', () => {
     });
 
     expect(await deletePromise).toEqual(0);
-  }, 120000);
+  }, 180000);
 });

@@ -26,28 +26,25 @@ export class ServiceRequestStakingAmountIncreasedHandler
 
   async execute(command: ServiceRequestStakingAmountIncreasedCommand) {
     await this.logger.log('Service Request Staking Amount Excess Refunded!');
-    const serviceRequest = command.request;
+    const { requesterId, requestId, additionalStakingAmount } = command;
     const loggingServiceRequest = await this.loggingService.getLoggingByOrderId(
-      serviceRequest[1],
+      requestId,
     );
 
     const stakingLogging: TransactionLoggingDto = {
-      address: serviceRequest[0].toString(),
-      amount: serviceRequest[2].toString(),
+      address: requesterId,
+      amount: Number(additionalStakingAmount),
       created_at: this.dateTimeProxy.new(),
       currency: 'DBIO',
       parent_id: loggingServiceRequest.id,
-      ref_number: serviceRequest[1].toString(),
+      ref_number: requestId,
       transaction_status: 10,
       transaction_type: 2,
     };
 
     try {
       const isServiceRequestHasBeenInsert =
-        await this.loggingService.getLoggingByHashAndStatus(
-          serviceRequest.hash,
-          10,
-        );
+        await this.loggingService.getLoggingByHashAndStatus(requestId, 10);
       if (!isServiceRequestHasBeenInsert) {
         await this.loggingService.create(stakingLogging);
       }
@@ -58,13 +55,13 @@ export class ServiceRequestStakingAmountIncreasedHandler
         role: 'Customer',
         entity_type: 'ServiceRequest',
         entity: 'ServiceRequestStakingAmountIncreased',
-        description: `Your partial payment staking service request with ID ${serviceRequest[1]} has been increased.`,
+        description: `Your partial payment staking service request with ID ${requestId} has been increased.`,
         read: false,
         created_at: currDateTime,
         updated_at: currDateTime,
         deleted_at: null,
-        from: null,
-        to: serviceRequest.requesterAddress,
+        from: 'Debio Network',
+        to: requesterId,
       };
 
       await this.notificationService.insert(notificationInput);

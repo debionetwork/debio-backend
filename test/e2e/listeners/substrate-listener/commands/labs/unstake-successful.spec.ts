@@ -106,8 +106,9 @@ describe('Lab unstaking Integration Tests', () => {
     pair = _pair;
   }, 360000);
 
-  afterAll(() => {
-    api.disconnect();
+  afterAll(async () => {
+    await api.disconnect();
+    await app.close();
   });
 
   it('lab unstaking event', async () => {
