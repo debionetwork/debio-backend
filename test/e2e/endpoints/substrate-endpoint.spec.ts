@@ -52,7 +52,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
@@ -92,9 +91,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
           useFactory: async (
             gCloudSecretManagerService: GCloudSecretManagerService,
           ) => ({
-            node: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_NODE')
-              .toString(),
+            node: process.env.ELASTICSEARCH_NODE,
             auth: {
               username: gCloudSecretManagerService
                 .getSecret('ELASTICSEARCH_USERNAME')
