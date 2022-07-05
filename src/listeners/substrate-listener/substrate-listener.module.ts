@@ -49,16 +49,14 @@ import {
       ) => {
         await gCloudSecretManagerService.loadSecrets();
         return {
-          node: gCloudSecretManagerService.getSecret(
-            'ELASTICSEARCH_NODE',
-          ) as string,
+          node: process.env.ELASTICSEARCH_NODE,
           auth: {
-            username: gCloudSecretManagerService.getSecret(
-              'ELASTICSEARCH_USERNAME',
-            ) as string,
-            password: gCloudSecretManagerService.getSecret(
-              'ELASTICSEARCH_PASSWORD',
-            ) as string,
+            username: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_USERNAME')
+              .toString(),
+            password: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_PASSWORD')
+              .toString(),
           },
         };
       },

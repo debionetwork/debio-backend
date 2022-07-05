@@ -9,15 +9,15 @@ import { Response } from 'express';
 import {
   EmailNotification,
   EmailNotificationService,
+  ProcessEnvProxy,
   SubstrateService,
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Controller('email')
 export class EmailEndpointController {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly process: ProcessEnvProxy,
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
     private readonly emailNotificationService: EmailNotificationService,
@@ -52,7 +52,7 @@ export class EmailEndpointController {
     );
 
     const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-      this.gCloudSecretManagerService.getSecret('EMAILS').split(','),
+      this.process.env.EMAILS.split(','),
       labRegister,
     );
 

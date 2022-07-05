@@ -32,9 +32,7 @@ import {
       ) => {
         await gCloudSecretManagerService.loadSecrets();
         return {
-          node: gCloudSecretManagerService
-            .getSecret('ELASTICSEARCH_NODE')
-            .toString(),
+          node: process.env.ELASTICSEARCH_NODE,
           auth: {
             username: gCloudSecretManagerService
               .getSecret('ELASTICSEARCH_USERNAME')

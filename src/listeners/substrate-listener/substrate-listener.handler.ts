@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { SubstrateService } from '../../common';
+import { ProcessEnvProxy, SubstrateService } from '../../common';
 import { Header, Event } from '@polkadot/types/interfaces';
 import {
   SetLastSubstrateBlockCommand,
@@ -55,7 +55,6 @@ import {
   DnaSampleRejectedCommand,
   DnaSampleResultReadyCommand,
 } from './commands/genetic-testing';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const eventRoutes = {
   services: {
@@ -125,7 +124,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
     private readonly substrate: SubstrateService,
     private readonly commandBus: CommandBus,
     private queryBus: QueryBus,
-    private gCloudSecretManagerService: GCloudSecretManagerService,
+    private process: ProcessEnvProxy,
   ) {}
 
   async onModuleInit() {
@@ -232,10 +231,7 @@ export class SubstrateListenerHandler implements OnModuleInit {
           );
 
           // check if env is development
-          if (
-            this.gCloudSecretManagerService.getSecret('NODE_ENV') ===
-            'development'
-          ) {
+          if (this.process.env.NODE_ENV === 'development') {
             this.lastBlock = await this.queryBus.execute(
               new GetLastSubstrateBlockQuery(),
             );

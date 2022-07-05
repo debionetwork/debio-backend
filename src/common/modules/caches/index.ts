@@ -20,8 +20,8 @@ require('dotenv').config(); // eslint-disable-line
         await gCloudSecretManagerService.loadSecrets();
         return {
           store: redisStore,
-          host: gCloudSecretManagerService.getSecret('HOST_REDIS').toString(),
-          port: gCloudSecretManagerService.getSecret('PORT_REDIS').toString(),
+          host: process.env.HOST_REDIS,
+          port: process.env.PORT_REDIS,
           auth_pass: gCloudSecretManagerService
             .getSecret('REDIS_PASSWORD')
             .toString(),

@@ -9,12 +9,12 @@ import ABI from './utils/ABI.json';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ProcessEnvProxy } from '../proxies';
 
 @Injectable()
 export class EthereumService {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly process: ProcessEnvProxy,
     private readonly ethersContract: EthersContract,
     private readonly ethersSigner: EthersSigner,
     private readonly cachesService: CachesService,
@@ -37,7 +37,7 @@ export class EthereumService {
 
   getEthersProvider(): ethers.providers.JsonRpcProvider {
     const provider = new ethers.providers.JsonRpcProvider(
-      this.gCloudSecretManagerService.getSecret('WEB3_RPC_HTTPS').toString(),
+      this.process.env.WEB3_RPC_HTTPS,
     );
     return provider;
   }
@@ -45,9 +45,7 @@ export class EthereumService {
   getContract(): SmartContract {
     try {
       const contract: SmartContract = this.ethersContract.create(
-        this.gCloudSecretManagerService
-          .getSecret('ESCROW_CONTRACT_ADDRESS')
-          .toString(),
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         ABI,
       );
 
@@ -61,9 +59,7 @@ export class EthereumService {
     try {
       const provider = this.getEthersProvider();
       const contract = new ethers.Contract(
-        this.gCloudSecretManagerService
-          .getSecret('ESCROW_CONTRACT_ADDRESS')
-          .toString(),
+        this.process.env.ESCROW_CONTRACT_ADDRESS,
         escrowContract.abi,
         provider,
       );
