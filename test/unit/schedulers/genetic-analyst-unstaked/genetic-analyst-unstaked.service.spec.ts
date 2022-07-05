@@ -7,7 +7,7 @@ import {
   MockLogger,
   schedulerRegistryMockFactory,
 } from '../../mock';
-import { SubstrateService } from '../../../../src/common';
+import { ProcessEnvProxy, SubstrateService } from '../../../../src/common';
 import { GeneticAnalyst } from '@debionetwork/polkadot-provider';
 
 import * as geneticAnalystQuery from '@debionetwork/polkadot-provider/lib/query/genetic-analysts';
@@ -47,6 +47,13 @@ describe('UnstakedService', () => {
     }
   }
 
+  class ProcessEnvProxyMock {
+    env = {
+      UNSTAKE_INTERVAL: INTERVAL,
+      UNSTAKE_TIMER: TIMER,
+    };
+  }
+
   const createSearchObject = () => {
     return {
       index: 'genetic-analysts',
@@ -77,6 +84,10 @@ describe('UnstakedService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         GeneticAnalystUnstakedService,
+        {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
+        },
         {
           provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,

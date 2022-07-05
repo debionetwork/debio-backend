@@ -55,6 +55,11 @@ describe('Substrate Listener Handler Unit Test', () => {
       return this._secretsList.get(key);
     }
   }
+  class ProcessEnvProxyMock {
+    env = {
+      NODE_ENV,
+    };
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -63,6 +68,7 @@ describe('Substrate Listener Handler Unit Test', () => {
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: QueryBus, useFactory: queryBusMockFactory },
         { provide: CommandBus, useFactory: commandBusMockFactory },
+        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
         {
           provide: GCloudSecretManagerService,
           useClass: GoogleSecretManagerServiceMock,

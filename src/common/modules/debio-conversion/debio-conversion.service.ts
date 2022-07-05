@@ -14,16 +14,15 @@ export class DebioConversionService {
   async getExchange() {
     try {
       const res = await axios.get(`${this.process.env.REDIS_STORE_URL}/cache`, {
-          auth: {
-            username: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_USERNAME')
-              .toString(),
-            password: this.gCloudSecretManagerService
-              .getSecret('REDIS_STORE_PASSWORD')
-              .toString(),
-          },
+        auth: {
+          username: this.gCloudSecretManagerService
+            .getSecret('REDIS_STORE_USERNAME')
+            .toString(),
+          password: this.gCloudSecretManagerService
+            .getSecret('REDIS_STORE_PASSWORD')
+            .toString(),
         },
-      );
+      });
 
       return res.data;
     } catch (error) {

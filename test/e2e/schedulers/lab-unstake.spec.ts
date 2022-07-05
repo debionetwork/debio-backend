@@ -1,9 +1,12 @@
 import 'regenerator-runtime/runtime';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { 
+import {
   ProcessEnvModule,
-  ProcessEnvProxy, SubstrateModule, SubstrateService } from '../../../src/common';
+  ProcessEnvProxy,
+  SubstrateModule,
+  SubstrateService,
+} from '../../../src/common';
 import {
   ElasticsearchModule,
   ElasticsearchService,
