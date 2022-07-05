@@ -55,7 +55,7 @@ export class ServiceRequestService {
         [country: string]: RequestByCountryDictInterface;
       } = {};
       for (const req of hits) {
-        if (!req?._source?.service_request) {
+        if (req?._source?.service_request === undefined) {
           continue;
         }
 
