@@ -24,7 +24,6 @@ describe('Unstaked Scheduler (e2e)', () => {
   let schedulerRegistry: SchedulerRegistry;
   let unstakedService: UnstakedService;
   let substrateService: SubstrateService;
-  let gCloudSecretManagerService: GCloudSecretManagerService;
   let processEnvProxy: ProcessEnvProxy;
   let elasticsearchService: ElasticsearchService;
 
@@ -87,7 +86,6 @@ describe('Unstaked Scheduler (e2e)', () => {
     schedulerRegistry = module.get(SchedulerRegistry);
     substrateService = module.get(SubstrateService);
     processEnvProxy = module.get(ProcessEnvProxy);
-    gCloudSecretManagerService = module.get(GCloudSecretManagerService);
     elasticsearchService = module.get(ElasticsearchService);
 
     unstakedService = new UnstakedService(
