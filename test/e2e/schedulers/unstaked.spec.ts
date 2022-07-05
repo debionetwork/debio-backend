@@ -1,7 +1,12 @@
 import 'regenerator-runtime/runtime';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { SubstrateModule, SubstrateService } from '../../../src/common';
+import {
+  ProcessEnvModule,
+  ProcessEnvProxy,
+  SubstrateModule,
+  SubstrateService,
+} from '../../../src/common';
 import {
   ElasticsearchModule,
   ElasticsearchService,
@@ -20,21 +25,17 @@ describe('Unstaked Scheduler (e2e)', () => {
   let unstakedService: UnstakedService;
   let substrateService: SubstrateService;
   let gCloudSecretManagerService: GCloudSecretManagerService;
+  let processEnvProxy: ProcessEnvProxy;
   let elasticsearchService: ElasticsearchService;
 
   let app: INestApplication;
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['EMAIL', process.env.EMAIL],
       ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['UNSTAKE_TIMER', process.env.UNSTAKE_TIMER],
-      ['UNSTAKE_INTERVAL', process.env.UNSTAKE_INTERVAL],
     ]);
     loadSecrets() {
       return null;
@@ -44,6 +45,7 @@ describe('Unstaked Scheduler (e2e)', () => {
       return this._secretsList.get(key);
     }
   }
+
   global.console = {
     ...console,
     log: jest.fn(),
@@ -56,16 +58,13 @@ describe('Unstaked Scheduler (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule,
         ElasticsearchModule.registerAsync({
           imports: [GCloudSecretManagerModule],
           inject: [GCloudSecretManagerService],
           useFactory: async (
             gCloudSecretManagerService: GCloudSecretManagerService,
           ) => ({
-            node: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_NODE')
-              .toString(),
+            node: process.env.ELASTICSEARCH_NODE,
             auth: {
               username: gCloudSecretManagerService
                 .getSecret('ELASTICSEARCH_USERNAME')
@@ -76,6 +75,7 @@ describe('Unstaked Scheduler (e2e)', () => {
             },
           }),
         }),
+        ProcessEnvModule,
         SubstrateModule,
         ScheduleModule.forRoot(),
       ],
@@ -86,11 +86,12 @@ describe('Unstaked Scheduler (e2e)', () => {
 
     schedulerRegistry = module.get(SchedulerRegistry);
     substrateService = module.get(SubstrateService);
+    processEnvProxy = module.get(ProcessEnvProxy);
     gCloudSecretManagerService = module.get(GCloudSecretManagerService);
     elasticsearchService = module.get(ElasticsearchService);
 
     unstakedService = new UnstakedService(
-      gCloudSecretManagerService,
+      processEnvProxy,
       elasticsearchService,
       substrateService,
       schedulerRegistry,
