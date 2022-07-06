@@ -19,7 +19,6 @@ import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
-import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -330,13 +329,6 @@ export function createMockGeneticAnalystService() {
         testResultSample: 'string',
       },
     })),
-  };
-}
-
-export function mockBlockNumber(): BlockMetaData {
-  return {
-    blockHash: 'string',
-    blockNumber: 1,
   };
 }
 

@@ -14,14 +14,11 @@ import { BountyModule } from './endpoints/bounty/bounty.module';
 import { EmrModule } from './endpoints/category/emr/emr.module';
 import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
 import { VerificationModule } from './endpoints/verification/verification.module';
-import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
-import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 import { CachesModule, DateTimeModule } from './common';
-import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
@@ -91,7 +88,6 @@ require('dotenv').config(); // eslint-disable-line
     RatingModule,
     EmrModule,
     ServiceCategoryModule,
-    EthereumListenerModule,
     EscrowModule,
     DebioConversionModule,
     SubstrateEndpointModule,
@@ -101,12 +97,10 @@ require('dotenv').config(); // eslint-disable-line
     BountyModule,
     HealthModule,
     CachesModule,
-    SchedulersModule,
     TransactionModule,
     SpecializationModule,
     NotificationEndpointModule,
     DnaCollectionModule,
-    SubstrateListenerModule,
   ],
 })
 export class AppModule {}
