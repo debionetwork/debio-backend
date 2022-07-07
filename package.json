@@ -23,11 +23,9 @@
     "test:watch": "jest --config ./test/unit/jest-unit.json --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "npm run test:e2e-endpoint && npm run test:e2e-scheduler",
+    "test:e2e": "npm run test:e2e-endpoint",
     "test:e2e-endpoint": "jest --config ./test/e2e/jest-e2e-endpoint.json --runInBand --forceExit",
-    "test:e2e-scheduler": "jest --config ./test/e2e/jest-e2e-scheduler.json --runInBand --forceExit",
-    "test:e2e-listener": "jest --config ./test/e2e/jest-e2e-listener.json --runInBand --forceExit",
-    "test:e2e:watch": "jest --config ./test/e2e/jest-e2e.json --watch"
+    "test:e2e:watch": "jest --config ./test/e2e/jest-e2e-endpoint.json --watch"
   },
   "dependencies": {
     "@debionetwork/nestjs-gcloud-secret-manager": "^0.0.1",

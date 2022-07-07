@@ -13,7 +13,7 @@ require('dotenv').config(); // eslint-disable-line
   imports: [
     GCloudSecretManagerModule,
     MailerModule.forRootAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,

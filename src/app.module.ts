@@ -35,7 +35,7 @@ require('dotenv').config(); // eslint-disable-line
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
@@ -58,7 +58,7 @@ require('dotenv').config(); // eslint-disable-line
       },
     }),
     TypeOrmModule.forRootAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,

@@ -86,7 +86,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         LocationModule,
         DebioConversionModule,
         ElasticsearchModule.registerAsync({
-          imports: [GCloudSecretManagerModule],
+          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
           inject: [GCloudSecretManagerService],
           useFactory: async (
             gCloudSecretManagerService: GCloudSecretManagerService,
@@ -116,7 +116,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     server = app.getHttpServer();
     substrateService = module.get(SubstrateService);
     await app.init();
-  });
+  }, 60000);
 
   afterAll(async () => {
     await substrateService.stopListen();

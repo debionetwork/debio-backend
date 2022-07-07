@@ -5,7 +5,7 @@ import { AuthenticationController } from './authentication.controller';
 
 @Module({
   imports: [
-    GCloudSecretManagerModule,
+    GCloudSecretManagerModule.withConfig(process.env.PARENT),
     JwtModule.register({
       signOptions: {
         expiresIn: '5s',

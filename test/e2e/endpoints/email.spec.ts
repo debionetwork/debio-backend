@@ -76,7 +76,7 @@ describe('Email Controller (e2e)', () => {
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
-  });
+  }, 60000);
 
   it('POST registered-lab/:lab_id: should return sendMailRegisteredLab', async () => {
     // Act

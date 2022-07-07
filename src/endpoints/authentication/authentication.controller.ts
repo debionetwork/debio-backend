@@ -18,6 +18,8 @@ export class AuthenticationController {
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
   ) {
+    await this.gCloudSecretManagerService.loadSecrets();
+
     if (
       !(
         debioApiKey ===
@@ -26,16 +28,9 @@ export class AuthenticationController {
     ) {
       return response.status(401).send('debio-api-key header is required');
     }
+
     const signJwt = await this.jwtService.signAsync(
       pinataJwtPayload(this.gCloudSecretManagerService),
-      {
-        secret: this.gCloudSecretManagerService
-          .getSecret('PINATA_SECRET_KEY')
-          .toString(),
-        privateKey: this.gCloudSecretManagerService
-          .getSecret('PINATA_PRIVATE_KEY')
-          .toString(),
-      },
     );
     return response.status(200).send({
       jwt: signJwt,

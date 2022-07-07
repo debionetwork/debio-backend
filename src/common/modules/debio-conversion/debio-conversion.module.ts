@@ -4,7 +4,10 @@ import { ProcessEnvModule } from '../proxies';
 import { DebioConversionService } from './debio-conversion.service';
 
 @Module({
-  imports: [ProcessEnvModule, GCloudSecretManagerModule],
+  imports: [
+    ProcessEnvModule,
+    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+  ],
   providers: [DebioConversionService],
   exports: [ProcessEnvModule, DebioConversionService],
 })

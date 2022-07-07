@@ -13,7 +13,7 @@ import { TransactionService } from './transaction.service';
     TransactionLoggingModule,
     GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule],
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,

@@ -52,7 +52,7 @@ describe('Transaction Controller (e2e)', () => {
         TransactionLoggingModule,
         TransactionModule,
         ElasticsearchModule.registerAsync({
-          imports: [GCloudSecretManagerModule],
+          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
           inject: [GCloudSecretManagerService],
           useFactory: async (
             gCloudSecretManagerService: GCloudSecretManagerService,

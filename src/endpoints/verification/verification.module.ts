@@ -11,7 +11,7 @@ import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-ma
     SubstrateModule,
     TransactionLoggingModule,
     DateTimeModule,
-    GCloudSecretManagerModule,
+    GCloudSecretManagerModule.withConfig(process.env.PARENT),
   ],
   controllers: [VerificationController],
   providers: [VerificationService],

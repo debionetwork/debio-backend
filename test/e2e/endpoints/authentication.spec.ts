@@ -76,6 +76,7 @@ describe('Authentication Controller (e2e)', () => {
       .send();
 
     // Assert
+    console.log(result.text);
     expect(result.status).toEqual(200);
 
     // prettier-ignore

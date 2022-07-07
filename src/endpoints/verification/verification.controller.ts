@@ -34,6 +34,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
+      await this.gCloudSecretManagerService.loadSecrets();
       if (
         debioApiKey !=
         this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
@@ -70,6 +71,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
+      await this.gCloudSecretManagerService.loadSecrets();
       if (
         debioApiKey !=
         this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()

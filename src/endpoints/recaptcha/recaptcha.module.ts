@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { RecaptchaController } from './recaptcha.controller';
 
 @Module({
-  imports: [GCloudSecretManagerModule],
+  imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
   controllers: [RecaptchaController],
 })
 export class RecaptchaModule {}
