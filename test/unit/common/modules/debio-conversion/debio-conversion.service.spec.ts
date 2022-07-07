@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import {
-  DebioConversionService,
   ProcessEnvProxy,
+  DebioConversionService,
 } from '../../../../../src/common';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Debio Conversion Service Unit Tests', () => {
   let debioConversionService: DebioConversionService;
@@ -13,8 +14,22 @@ describe('Debio Conversion Service Unit Tests', () => {
   const REDIS_STORE_URL = 'URL';
   const REDIS_STORE_USERNAME = 'REDIS_STORE_USERNAME';
   const REDIS_STORE_PASSWORD = 'REDIS_STORE_PASSWORD';
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['REDIS_STORE_USERNAME', REDIS_STORE_USERNAME],
+      ['REDIS_STORE_PASSWORD', REDIS_STORE_PASSWORD],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   class ProcessEnvProxyMock {
-    env = { REDIS_STORE_URL, REDIS_STORE_USERNAME, REDIS_STORE_PASSWORD };
+    env = { REDIS_STORE_URL };
   }
 
   // Arrange before each iteration
@@ -23,6 +38,10 @@ describe('Debio Conversion Service Unit Tests', () => {
       providers: [
         DebioConversionService,
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

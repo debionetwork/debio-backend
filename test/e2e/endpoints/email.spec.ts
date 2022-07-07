@@ -6,7 +6,6 @@ import {
   EmailNotificationModule,
   MailerManager,
   MailModule,
-  ProcessEnvModule,
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
@@ -14,12 +13,33 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { EmailEndpointModule } from '../../../src/endpoints/email/email.module';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Email Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let substrateService: SubstrateService;
   let mailerManager: MailerManager;
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['EMAIL', process.env.EMAIL],
+      ['EMAILS', process.env.EMAILS],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   global.console = {
     ...console,
@@ -43,10 +63,12 @@ describe('Email Controller (e2e)', () => {
         MailModule,
         SubstrateModule,
         EmailNotificationModule,
-        ProcessEnvModule,
         EmailEndpointModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     substrateService = module.get(SubstrateService);
     mailerManager = module.get(MailerManager);
@@ -54,7 +76,7 @@ describe('Email Controller (e2e)', () => {
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
-  });
+  }, 60000);
 
   it('POST registered-lab/:lab_id: should return sendMailRegisteredLab', async () => {
     // Act

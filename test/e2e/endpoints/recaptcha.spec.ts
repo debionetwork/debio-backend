@@ -6,7 +6,7 @@ import { Response } from 'express';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
 import { RecaptchaController } from '../../../src/endpoints/recaptcha/recaptcha.controller';
-import { ProcessEnvProxy } from '../../../src/common';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Recaptcha Controller (e2e)', () => {
   const axiosMock = new MockAdapter(axios);
@@ -14,16 +14,28 @@ describe('Recaptcha Controller (e2e)', () => {
   let app: INestApplication;
 
   const RECAPTCHA_SECRET_KEY = 'KEY';
-  class ProcessEnvProxyMock {
-    env = {
-      RECAPTCHA_SECRET_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['RECAPTCHA_SECRET_KEY', RECAPTCHA_SECRET_KEY],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RecaptchaController],
-      providers: [{ provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock }],
+      providers: [
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
+      ],
     }).compile();
 
     axiosMock.reset();

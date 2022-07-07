@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { WalletSigner } from 'nestjs-ethers';
-import { EthereumService, ProcessEnvProxy, SubstrateService } from '../..';
+import { EthereumService, SubstrateService } from '../..';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const lock = new AsyncLock();
 const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';
@@ -12,7 +13,7 @@ let nonce = 0;
 @Injectable()
 export class EscrowService {
   constructor(
-    private readonly process: ProcessEnvProxy,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly substrateService: SubstrateService,
     private readonly ethereumService: EthereumService,
   ) {}
@@ -22,7 +23,9 @@ export class EscrowService {
   async onModuleInit(): Promise<void> {
     this.provider = await this.ethereumService.getEthersProvider();
     this.escrowWallet = await new ethers.Wallet(
-      this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
+      this.gCloudSecretManagerService
+        .getSecret('DEBIO_ESCROW_PRIVATE_KEY')
+        .toString(),
       this.provider,
     );
   }
@@ -134,7 +137,9 @@ export class EscrowService {
       const tokenAmount = ethers.utils.parseUnits(String(amount), 18);
       const tokenContract = this.ethereumService.getContract();
       const wallet: WalletSigner = await this.ethereumService.createWallet(
-        this.process.env.DEBIO_ESCROW_PRIVATE_KEY,
+        this.gCloudSecretManagerService
+          .getSecret('DEBIO_ESCROW_PRIVATE_KEY')
+          .toString(),
       );
       const tokenContractWithSigner = tokenContract.connect(wallet);
       const options = {

@@ -9,8 +9,8 @@ import { DataTokenToDatasetMapping } from '../../../src/endpoints/bounty/models/
 import { dummyCredentials } from '../config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingDto } from '../../../src/endpoints/bounty/dto/data-staking.dto';
-import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from '../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Bounty Controller (e2e)', () => {
   let server: Server;
@@ -22,14 +22,23 @@ describe('Bounty Controller (e2e)', () => {
     filename: 'FILE',
   };
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['BUCKET_NAME', process.env.BUCKET_NAME],
+      ['STORAGE_BASE_URI', process.env.STORAGE_BASE_URI],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudStorageModule.withConfig({
-          defaultBucketname: process.env.BUCKET_NAME,
-          storageBaseUri: process.env.STORAGE_BASE_URI,
-          predefinedAcl: 'private',
-        }),
         BountyModule,
         DateTimeModule,
         TypeOrmModule.forRoot({
@@ -39,7 +48,10 @@ describe('Bounty Controller (e2e)', () => {
           autoLoadEntities: true,
         }),
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();

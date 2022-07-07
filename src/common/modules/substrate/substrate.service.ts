@@ -2,6 +2,7 @@ import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { ProcessEnvProxy } from '../proxies';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -11,7 +12,10 @@ export class SubstrateService implements OnModuleInit {
   private _listenStatus: boolean;
   private readonly _logger: Logger = new Logger(SubstrateService.name);
 
-  constructor(private readonly process: ProcessEnvProxy) {}
+  constructor(
+    private readonly process: ProcessEnvProxy,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+  ) {}
 
   get api(): ApiPromise {
     return this._api;
@@ -22,13 +26,16 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async onModuleInit() {
+    await this.gCloudSecretManagerService.loadSecrets();
     this._wsProvider = new WsProvider(this.process.env.SUBSTRATE_URL);
 
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();
 
     this._pair = await keyring.addFromUri(
-      this.process.env.ADMIN_SUBSTRATE_MNEMONIC,
+      this.gCloudSecretManagerService
+        .getSecret('ADMIN_SUBSTRATE_MNEMONIC')
+        .toString(),
     );
 
     await this.startListen();

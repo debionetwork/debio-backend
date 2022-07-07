@@ -19,11 +19,11 @@ import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
-import { BlockMetaData } from '../../src/listeners/substrate-listener/models/block-metadata.event-model';
 import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -332,13 +332,6 @@ export function createMockGeneticAnalystService() {
   };
 }
 
-export function mockBlockNumber(): BlockMetaData {
-  return {
-    blockHash: 'string',
-    blockNumber: 1,
-  };
-}
-
 export const MockLogger = {
   log: jest.fn(),
   error: jest.fn(),
@@ -370,4 +363,10 @@ export const countryServiceMockFactory: () => MockType<CountryService> =
 export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
   jest.fn(() => ({
     addInterval: jest.fn(),
+  }));
+
+export const googleSecretManagerServiceMockFactory: () => MockType<GCloudSecretManagerService> =
+  jest.fn(() => ({
+    loadSecrets: jest.fn((entity) => entity),
+    getSecret: jest.fn((entity) => entity),
   }));

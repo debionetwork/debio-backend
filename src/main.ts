@@ -5,11 +5,14 @@ import * as Sentry from '@sentry/node';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 import helmet = require('helmet');
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
   app.enableCors();
+
+  const gCloudSecretManagerService = app.get(GCloudSecretManagerService);
 
   if (process.env.SWAGGER_ENABLE === 'true') {
     const config = new DocumentBuilder()
@@ -22,7 +25,9 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  const SENTRY_DSN = process.env.SENTRY_DSN;
+  const SENTRY_DSN = gCloudSecretManagerService
+    .getSecret('SENTRY_DSN')
+    .toString();
 
   if (SENTRY_DSN) {
     Sentry.init({

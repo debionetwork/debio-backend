@@ -17,7 +17,6 @@ import {
 } from '../../../../src/endpoints/substrate-endpoint/services';
 import {
   DateTimeProxy,
-  ProcessEnvProxy,
   TransactionLoggingService,
   SubstrateService,
 } from '../../../../src/common';
@@ -30,6 +29,7 @@ import {
   dbioUnit,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -99,10 +99,15 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       getGeneticAnalysisOrderById: jest.fn(),
     }));
 
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY,
-    };
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([['DEBIO_API_KEY', DEBIO_API_KEY]]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   class SubstrateServiceMock {
@@ -140,7 +145,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: geneticAnalysisOrderMockfactory,
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
-        { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

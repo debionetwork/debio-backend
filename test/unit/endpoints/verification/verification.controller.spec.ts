@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockType } from '../../mock';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { VerificationController } from '../../../../src/endpoints/verification/verification.controller';
-import { ProcessEnvProxy } from '../../../../src/common';
 import httpMocks = require('node-mocks-http');
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Verification Controller Unit Tests', () => {
   let verificationController: VerificationController;
@@ -15,10 +15,17 @@ describe('Verification Controller Unit Tests', () => {
     }));
   let verificationServiceMock: MockType<VerificationService>;
 
-  class ProcessEnvProxyMock {
-    env = {
-      DEBIO_API_KEY: 'DEBIO_API_KEY',
-    };
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['DEBIO_API_KEY', 'DEBIO_API_KEY'],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
   }
 
   // Arrange before each iteration
@@ -27,12 +34,12 @@ describe('Verification Controller Unit Tests', () => {
       providers: [
         VerificationController,
         {
-          provide: ProcessEnvProxy,
-          useClass: ProcessEnvProxyMock,
-        },
-        {
           provide: VerificationService,
           useFactory: verificationServiceMockFactory,
+        },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
         },
       ],
     }).compile();

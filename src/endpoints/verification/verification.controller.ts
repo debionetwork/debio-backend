@@ -1,3 +1,4 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import {
   Controller,
   Headers,
@@ -8,14 +9,14 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { SentryInterceptor, ProcessEnvProxy } from '../../common';
+import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
 export class VerificationController {
   constructor(
-    private readonly processEnvProxy: ProcessEnvProxy,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
     private readonly verificationService: VerificationService,
   ) {}
 
@@ -33,7 +34,11 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
+      await this.gCloudSecretManagerService.loadSecrets();
+      if (
+        debioApiKey !=
+        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+      ) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationLab(
@@ -66,7 +71,11 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (debioApiKey != this.processEnvProxy.env.DEBIO_API_KEY) {
+      await this.gCloudSecretManagerService.loadSecrets();
+      if (
+        debioApiKey !=
+        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+      ) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationGeneticAnalyst(

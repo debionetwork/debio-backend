@@ -48,13 +48,11 @@ describe.only('EthereumService', () => {
   const ETHEREUM_RPC = 'RPC';
   const WEB3_RPC_HTTPS = 'RPC';
   const ESCROW_CONTRACT_ADDRESS = 'ADDR';
-  const COINMARKETCAP_API_KEY = 'KEY';
   class ProcessEnvProxyMock {
     env = {
       ETHEREUM_RPC,
       WEB3_RPC_HTTPS,
       ESCROW_CONTRACT_ADDRESS,
-      COINMARKETCAP_API_KEY,
     };
   }
 

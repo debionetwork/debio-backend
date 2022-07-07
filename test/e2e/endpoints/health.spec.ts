@@ -14,11 +14,31 @@ import { LocationEntities } from '../../../src/endpoints/location/models';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { SubstrateService } from '../../../src/common/modules/substrate/substrate.service';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Health Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['EMAIL', process.env.EMAIL],
+      ['PASS_EMAIL', process.env.PASS_EMAIL],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   global.console = {
     ...console,
@@ -56,7 +76,10 @@ describe('Health Controller (e2e)', () => {
         SubstrateHealthModule,
         HealthModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     api = module.get(SubstrateService);
     app = module.createNestApplication();

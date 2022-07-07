@@ -29,6 +29,10 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GeneticAnalysisOrderPaidDto } from '../../../src/endpoints/substrate-endpoint/dto/genetic-analysis-order-paid.dto';
 import { NotificationEndpointModule } from '../../../src/endpoints/notification-endpoint/notification-endpoint.module';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
@@ -45,6 +49,22 @@ describe('Substrate Endpoint Controller (e2e)', () => {
     warn: jest.fn(),
     error: jest.fn(),
   };
+
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
+      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
+      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
+      ['DEBIO_API_KEY', process.env.DEBIO_API_KEY],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -66,11 +86,19 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         LocationModule,
         DebioConversionModule,
         ElasticsearchModule.registerAsync({
-          useFactory: async () => ({
+          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+          inject: [GCloudSecretManagerService],
+          useFactory: async (
+            gCloudSecretManagerService: GCloudSecretManagerService,
+          ) => ({
             node: process.env.ELASTICSEARCH_NODE,
             auth: {
-              username: process.env.ELASTICSEARCH_USERNAME,
-              password: process.env.ELASTICSEARCH_PASSWORD,
+              username: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_USERNAME')
+                .toString(),
+              password: gCloudSecretManagerService
+                .getSecret('ELASTICSEARCH_PASSWORD')
+                .toString(),
             },
           }),
         }),
@@ -79,13 +107,16 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         DateTimeModule,
         NotificationEndpointModule,
       ],
-    }).compile();
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();
     substrateService = module.get(SubstrateService);
     await app.init();
-  });
+  }, 60000);
 
   afterAll(async () => {
     await substrateService.stopListen();

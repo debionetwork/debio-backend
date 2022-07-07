@@ -2,26 +2,34 @@ import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
-import { DateTimeModule } from '../../../src/common/modules/proxies/date-time';
-import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageModule } from '../../../src/endpoints/cloud-storage/cloud-storage.module';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Cloud Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
 
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['BUCKET_NAME', process.env.BUCKET_NAME],
+      ['STORAGE_BASE_URI', process.env.STORAGE_BASE_URI],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CloudStorageModule,
-        GCloudStorageModule.withConfig({
-          defaultBucketname: process.env.BUCKET_NAME,
-          storageBaseUri: process.env.STORAGE_BASE_URI,
-          predefinedAcl: 'private',
-        }),
-        DateTimeModule,
-      ],
-    }).compile();
+      imports: [CloudStorageModule],
+    })
+      .overrideProvider(GCloudSecretManagerService)
+      .useClass(GoogleSecretManagerServiceMock)
+      .compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();

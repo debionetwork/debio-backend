@@ -14,45 +14,71 @@ import { BountyModule } from './endpoints/bounty/bounty.module';
 import { EmrModule } from './endpoints/category/emr/emr.module';
 import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
 import { VerificationModule } from './endpoints/verification/verification.module';
-import { SchedulersModule } from './schedulers/schedulers.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './endpoints/health/health.module';
 import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
 import { EmailEndpointModule } from './endpoints/email/email.module';
-import { SubstrateListenerModule } from './listeners/substrate-listener/substrate-listener.module';
 import { CachesModule, DateTimeModule } from './common';
-import { EthereumListenerModule } from './listeners/ethereum-listener/ethereum-listener.module';
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
 import { AuthenticationModule } from './endpoints/authentication/authentication.module';
 import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.HOST_POSTGRES,
-      port: 5432,
-      username: process.env.USERNAME_POSTGRES,
-      password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_POSTGRES,
-      entities: [LabRating, TransactionRequest],
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService,
+      ) => {
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          type: 'postgres',
+          host: process.env.HOST_POSTGRES,
+          port: 5432,
+          username: gCloudSecretManagerService
+            .getSecret('POSTGRES_USERNAME')
+            .toString(),
+          password: gCloudSecretManagerService
+            .getSecret('POSTGRES_PASSWORD')
+            .toString(),
+          database: process.env.DB_POSTGRES,
+          entities: [LabRating, TransactionRequest],
+          autoLoadEntities: true,
+        };
+      },
     }),
-    TypeOrmModule.forRoot({
-      name: 'dbLocation',
-      type: 'postgres',
-      host: process.env.HOST_POSTGRES,
-      port: 5432,
-      username: process.env.USERNAME_POSTGRES,
-      password: process.env.PASSWORD_POSTGRES,
-      database: process.env.DB_LOCATIONS,
-      entities: [...LocationEntities],
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService,
+      ) => {
+        await gCloudSecretManagerService.loadSecrets();
+        return {
+          type: 'postgres',
+          host: process.env.HOST_POSTGRES,
+          port: 5432,
+          username: gCloudSecretManagerService
+            .getSecret('POSTGRES_USERNAME')
+            .toString(),
+          password: gCloudSecretManagerService
+            .getSecret('POSTGRES_PASSWORD')
+            .toString(),
+          database: process.env.DB_LOCATION,
+          entities: [...LocationEntities],
+          autoLoadEntities: true,
+        };
+      },
     }),
     AuthenticationModule,
     DateTimeModule,
@@ -62,7 +88,6 @@ require('dotenv').config(); // eslint-disable-line
     RatingModule,
     EmrModule,
     ServiceCategoryModule,
-    EthereumListenerModule,
     EscrowModule,
     DebioConversionModule,
     SubstrateEndpointModule,
@@ -72,12 +97,10 @@ require('dotenv').config(); // eslint-disable-line
     BountyModule,
     HealthModule,
     CachesModule,
-    SchedulersModule,
     TransactionModule,
     SpecializationModule,
     NotificationEndpointModule,
     DnaCollectionModule,
-    SubstrateListenerModule,
   ],
 })
 export class AppModule {}
