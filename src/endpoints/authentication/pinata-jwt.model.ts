@@ -1,19 +1,30 @@
-export const pinataJwtPayload = {
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+
+export const pinataJwtPayload = (
+  gCloudSecretManagerService: GCloudSecretManagerService,
+) => ({
   userInformation: {
-    id: process.env.PINATA_USER_ID,
-    email: process.env.PINATA_EMAIL,
-    email_verified: process.env.PINATA_EMAIL_VERIFIED,
+    id: gCloudSecretManagerService.getSecret('PINATA_USER_ID').toString(),
+    email: gCloudSecretManagerService.getSecret('PINATA_EMAIL').toString(),
+    email_verified: gCloudSecretManagerService
+      .getSecret('PINATA_EMAIL_VERIFIED')
+      .toString(),
     pin_policy: {
       regions: [
         {
-          id: process.env.PINATA_PIN_POLICY_REGION_ID,
-          desiredReplicationCount:
-            process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT,
+          id: gCloudSecretManagerService
+            .getSecret('PINATA_PIN_POLICY_REGION_ID')
+            .toString(),
+          desiredReplicationCount: gCloudSecretManagerService
+            .getSecret('PINATA_PIN_POLICY_REGION_REPL_COUNT')
+            .toString(),
         },
       ],
       version: 1,
     },
-    mfa_enabled: process.env.PINATA_MFA_ENABLED,
+    mfa_enabled: gCloudSecretManagerService
+      .getSecret('PINATA_MFA_ENABLED')
+      .toString(),
   },
   iat: Math.floor(new Date().getTime() / 1000),
-};
+});
