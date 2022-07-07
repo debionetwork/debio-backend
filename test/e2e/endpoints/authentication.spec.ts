@@ -4,48 +4,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationModule } from '../../../src/endpoints/authentication/authentication.module';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { ProcessEnvProxy } from '../../../src/common';
 
 describe('Authentication Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
 
   const apiKey = 'DEBIO_API_KEY';
-  class GoogleSecretManagerServiceMock {
-    async accessSecret() {
-      return null;
-    }
-    debioApiKey = apiKey;
-    pinataSecretKey = process.env.PINATA_SECRET_KEY;
-    pinataPrivateKey = process.env.PINATA_PRIVATE_KEY;
-    pinataUserId = process.env.PINATA_USER_ID;
-    pinataEmail = process.env.PINATA_EMAIL;
-    pinataEmailVerified = process.env.PINATA_EMAIL_VERIFIED;
-    pinataPinPolicyRegionId = process.env.PINATA_PIN_POLICY_REGION_ID;
-    pinataPinPolicyRegionReplCount =
-      process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT;
-    pinataMfaEnabled = process.env.PINATA_MFA_ENABLED;
-    _secretsList = new Map<string, string>([
-      ['DEBIO_API_KEY', apiKey],
-      ['PINATA_SECRET_KEY', process.env.PINATA_SECRET_KEY],
-      ['PINATA_PRIVATE_KEY', process.env.PINATA_PRIVATE_KEY],
-      ['PINATA_USER_ID', process.env.PINATA_USER_ID],
-      ['PINATA_EMAIL', process.env.PINATA_EMAIL],
-      ['PINATA_EMAIL_VERIFIED', process.env.PINATA_EMAIL_VERIFIED],
-      ['PINATA_PIN_POLICY_REGION_ID', process.env.PINATA_PIN_POLICY_REGION_ID],
-      [
-        'PINATA_PIN_POLICY_REGION_REPL_COUNT',
-        process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT,
-      ],
-      ['PINATA_MFA_ENABLED', process.env.PINATA_MFA_ENABLED],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
+  class ProcessEnvProxyMock {
+    env = {
+      DEBIO_API_KEY: apiKey,
+    };
   }
 
   beforeAll(async () => {
@@ -58,10 +27,13 @@ describe('Authentication Controller (e2e)', () => {
         }),
         AuthenticationModule,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+      providers: [
+        {
+          provide: ProcessEnvProxy,
+          useClass: ProcessEnvProxyMock,
+        },
+      ],
+    }).compile();
 
     app = module.createNestApplication();
     server = app.getHttpServer();
@@ -76,7 +48,6 @@ describe('Authentication Controller (e2e)', () => {
       .send();
 
     // Assert
-    console.log(result.text);
     expect(result.status).toEqual(200);
 
     // prettier-ignore
