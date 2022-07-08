@@ -14,25 +14,21 @@ import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
     LocationModule,
     DebioConversionModule,
-    GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await gCloudSecretManagerService.loadSecrets();
         return {
-          node: process.env.ELASTICSEARCH_NODE,
+          node: gCloudSecretManagerService
+            .getSecret('ELASTICSEARCH_NODE')
+            .toString(),
           auth: {
             username: gCloudSecretManagerService
               .getSecret('ELASTICSEARCH_USERNAME')

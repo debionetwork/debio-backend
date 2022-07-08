@@ -13,7 +13,10 @@ import request from 'supertest';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { EmailEndpointModule } from '../../../src/endpoints/email/email.module';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Email Controller (e2e)', () => {
   let server: Server;
@@ -31,6 +34,7 @@ describe('Email Controller (e2e)', () => {
       ['EMAIL', process.env.EMAIL],
       ['EMAILS', process.env.EMAILS],
       ['PASS_EMAIL', process.env.PASS_EMAIL],
+      ['POSTGRES_HOST', 'localhost'],
     ]);
     loadSecrets() {
       return null;
@@ -53,6 +57,7 @@ describe('Email Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           name: 'default',
           ...dummyCredentials,

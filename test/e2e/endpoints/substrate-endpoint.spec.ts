@@ -11,7 +11,6 @@ import {
   SubstrateModule,
   SubstrateService,
 } from '../../../src/common';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dummyCredentials } from '../config';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
@@ -34,6 +33,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 
+require('dotenv').config(); // eslint-disable-line
 describe('Substrate Endpoint Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
@@ -52,10 +52,12 @@ describe('Substrate Endpoint Controller (e2e)', () => {
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
       ['DEBIO_API_KEY', process.env.DEBIO_API_KEY],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
     ]);
     loadSecrets() {
       return null;
@@ -69,6 +71,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         SubstrateEndpointModule,
         TypeOrmModule.forRoot({
           ...dummyCredentials,
@@ -85,23 +88,6 @@ describe('Substrate Endpoint Controller (e2e)', () => {
         }),
         LocationModule,
         DebioConversionModule,
-        ElasticsearchModule.registerAsync({
-          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
-          inject: [GCloudSecretManagerService],
-          useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService,
-          ) => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_USERNAME')
-                .toString(),
-              password: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_PASSWORD')
-                .toString(),
-            },
-          }),
-        }),
         SubstrateModule,
         TransactionLoggingModule,
         DateTimeModule,

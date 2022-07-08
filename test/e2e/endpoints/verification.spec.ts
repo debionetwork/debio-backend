@@ -12,7 +12,10 @@ import { VerificationModule } from '../../../src/endpoints/verification/verifica
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../config';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
@@ -29,6 +32,7 @@ describe('Verification Controller (e2e)', () => {
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
       ['DEBIO_API_KEY', apiKey],
+      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
     ]);
     loadSecrets() {
       return null;
@@ -51,6 +55,7 @@ describe('Verification Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',

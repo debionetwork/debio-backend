@@ -1,14 +1,10 @@
-import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
-import { ProcessEnvModule } from '../proxies';
 import { DebioConversionService } from './debio-conversion.service';
 
+require('dotenv').config(); // eslint-disable-line
+
 @Module({
-  imports: [
-    ProcessEnvModule,
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
-  ],
   providers: [DebioConversionService],
-  exports: [ProcessEnvModule, DebioConversionService],
+  exports: [DebioConversionService],
 })
 export class DebioConversionModule {}

@@ -4,7 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthenticationModule } from '../../../src/endpoints/authentication/authentication.module';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Authentication Controller (e2e)', () => {
   let server: Server;
@@ -38,6 +41,7 @@ describe('Authentication Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         JwtModule.register({
           signOptions: {
             expiresIn: '5s',

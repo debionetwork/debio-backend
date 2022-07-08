@@ -1,7 +1,4 @@
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TerminusModule } from '@nestjs/terminus';
@@ -10,16 +7,15 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
 @Module({
   imports: [
     TerminusModule,
-    GCloudSecretManagerModule,
     ElasticsearchModule.registerAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await gCloudSecretManagerService.loadSecrets();
         return {
-          node: process.env.ELASTICSEARCH_NODE,
+          node: gCloudSecretManagerService
+            .getSecret('ELASTICSEARCH_NODE')
+            .toString(),
           auth: {
             username: gCloudSecretManagerService
               .getSecret('ELASTICSEARCH_USERNAME')

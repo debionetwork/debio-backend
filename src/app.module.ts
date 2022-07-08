@@ -34,16 +34,17 @@ require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     ScheduleModule.forRoot(),
+    GCloudSecretManagerModule.withConfig(process.env.PARENT),
     TypeOrmModule.forRootAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await gCloudSecretManagerService.loadSecrets();
         return {
           type: 'postgres',
-          host: process.env.HOST_POSTGRES,
+          host: gCloudSecretManagerService
+            .getSecret('POSTGRES_HOST')
+            .toString(),
           port: 5432,
           username: gCloudSecretManagerService
             .getSecret('POSTGRES_USERNAME')
@@ -51,22 +52,25 @@ require('dotenv').config(); // eslint-disable-line
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: process.env.DB_POSTGRES,
+          database: gCloudSecretManagerService
+            .getSecret('POSTGRES_DB')
+            .toString(),
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         };
       },
     }),
     TypeOrmModule.forRootAsync({
-      imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
+      name: 'dbLocation',
       inject: [GCloudSecretManagerService],
       useFactory: async (
         gCloudSecretManagerService: GCloudSecretManagerService,
       ) => {
-        await gCloudSecretManagerService.loadSecrets();
         return {
           type: 'postgres',
-          host: process.env.HOST_POSTGRES,
+          host: gCloudSecretManagerService
+            .getSecret('POSTGRES_HOST')
+            .toString(),
           port: 5432,
           username: gCloudSecretManagerService
             .getSecret('POSTGRES_USERNAME')
@@ -74,7 +78,9 @@ require('dotenv').config(); // eslint-disable-line
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: process.env.DB_LOCATION,
+          database: gCloudSecretManagerService
+            .getSecret('POSTGRES_DB_LOCATIONS')
+            .toString(),
           entities: [...LocationEntities],
           autoLoadEntities: true,
         };

@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TransactionLoggingModule } from '../../../src/common';
 import { Server } from 'http';
@@ -32,6 +31,7 @@ describe('Transaction Controller (e2e)', () => {
 
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
+      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
       ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
@@ -49,25 +49,9 @@ describe('Transaction Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TransactionLoggingModule,
         TransactionModule,
-        ElasticsearchModule.registerAsync({
-          imports: [GCloudSecretManagerModule.withConfig(process.env.PARENT)],
-          inject: [GCloudSecretManagerService],
-          useFactory: async (
-            gCloudSecretManagerService: GCloudSecretManagerService,
-          ) => ({
-            node: process.env.ELASTICSEARCH_NODE,
-            auth: {
-              username: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_USERNAME')
-                .toString(),
-              password: gCloudSecretManagerService
-                .getSecret('ELASTICSEARCH_PASSWORD')
-                .toString(),
-            },
-          }),
-        }),
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
