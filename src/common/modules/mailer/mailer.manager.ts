@@ -2,7 +2,6 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
-require('dotenv').config(); // eslint-disable-line
 
 @Injectable()
 export class MailerManager {

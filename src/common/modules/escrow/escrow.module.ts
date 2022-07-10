@@ -4,7 +4,6 @@ import { EscrowAccounts } from './models/deposit.entity';
 import { EscrowService } from './escrow.service';
 import { EthereumModule, SubstrateModule } from '../..';
 
-require('dotenv').config(); // eslint-disable-line
 @Module({
   imports: [
     TypeOrmModule.forFeature([EscrowAccounts]),

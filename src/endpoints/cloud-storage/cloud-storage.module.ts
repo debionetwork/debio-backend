@@ -4,8 +4,6 @@ import { CloudStorageController } from './cloud-storage.controller';
 import { DateTimeModule } from '../../common';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
-require('dotenv').config(); // eslint-disable-line
-
 @Module({
   imports: [
     GCloudStorageModule.withConfigAsync({

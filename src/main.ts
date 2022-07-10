@@ -14,7 +14,7 @@ async function bootstrap() {
 
   const gCloudSecretManagerService = app.get(GCloudSecretManagerService);
 
-  if (process.env.SWAGGER_ENABLE === 'true') {
+  if (gCloudSecretManagerService.getSecret('SWAGGER_ENABLE') === 'true') {
     const config = new DocumentBuilder()
       .setTitle('Debio API')
       .setDescription('the Debio API Documentation')
@@ -36,6 +36,6 @@ async function bootstrap() {
   }
 
   await cryptoWaitReady();
-  await app.listen(process.env.PORT);
+  await app.listen(gCloudSecretManagerService.getSecret('PORT').toString());
 }
 bootstrap();
