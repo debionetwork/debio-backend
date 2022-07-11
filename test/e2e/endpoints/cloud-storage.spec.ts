@@ -9,6 +9,8 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 
+require('dotenv').config(); // eslint-disable-line
+
 describe('Cloud Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;

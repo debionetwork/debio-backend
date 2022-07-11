@@ -18,6 +18,8 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 
+require('dotenv').config(); // eslint-disable-line
+
 describe('Email Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;

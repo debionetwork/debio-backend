@@ -10,7 +10,12 @@ import { dummyCredentials } from '../config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingDto } from '../../../src/endpoints/bounty/dto/data-staking.dto';
 import { DataTokenToDatasetMappingDto } from '../../../src/endpoints/bounty/dto/data-token-to-dataset-mapping.dto';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+
+require('dotenv').config(); // eslint-disable-line
 
 describe('Bounty Controller (e2e)', () => {
   let server: Server;
@@ -39,6 +44,7 @@ describe('Bounty Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         BountyModule,
         DateTimeModule,
         TypeOrmModule.forRoot({
