@@ -19,6 +19,7 @@ describe.only('Substrate Service Unit Test', () => {
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
       ['ADMIN_SUBSTRATE_MNEMONIC', ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', SUBSTRATE_URL],
     ]);
     loadSecrets() {
       return null;

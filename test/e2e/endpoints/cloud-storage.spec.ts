@@ -3,7 +3,13 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Server } from 'http';
 import { CloudStorageModule } from '../../../src/endpoints/cloud-storage/cloud-storage.module';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
+import { cryptoWaitReady } from '@polkadot/util-crypto';
+
+require('dotenv').config(); // eslint-disable-line
 
 describe('Cloud Controller (e2e)', () => {
   let server: Server;
@@ -25,12 +31,16 @@ describe('Cloud Controller (e2e)', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [CloudStorageModule],
+      imports: [
+        CloudStorageModule,
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+      ],
     })
       .overrideProvider(GCloudSecretManagerService)
       .useClass(GoogleSecretManagerServiceMock)
       .compile();
 
+    await cryptoWaitReady();
     app = module.createNestApplication();
     server = app.getHttpServer();
     await app.init();
@@ -43,7 +53,6 @@ describe('Cloud Controller (e2e)', () => {
     const result = await request(server)
       .get(`/gcs/signed-url?filename=${FILENAME}&action=${ACTION}`)
       .send();
-
     // Assert
     expect(result.status).toEqual(200);
     expect(result.text.includes('signedUrl')).toEqual(true);

@@ -1,19 +1,24 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
-require('dotenv').config(); // eslint-disable-line
 
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+  ) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
     let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (process.env.HOST_POSTGRES == 'localhost') {
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
       subject = `Testing New Service Request Email`;
     }
     this.mailerService.sendMail({
@@ -26,7 +31,9 @@ export class MailerManager {
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
     let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (process.env.HOST_POSTGRES == 'localhost') {
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
       subject = `Testing New Lab Register Email`;
     }
     const files: any[] = [];

@@ -5,13 +5,23 @@ import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
   imports: [
-    GCloudStorageModule.withConfig({
-      defaultBucketname: process.env.BUCKET_NAME,
-      storageBaseUri: process.env.STORAGE_BASE_URI,
-      predefinedAcl: 'private',
+    GCloudStorageModule.withConfigAsync({
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService,
+      ) => ({
+        defaultBucketname: gCloudSecretManagerService
+          .getSecret('BUCKET_NAME')
+          .toString(),
+        storageBaseUri: gCloudSecretManagerService
+          .getSecret('STORAGE_BASE_URI')
+          .toString(),
+        predefinedAcl: 'private',
+      }),
     }),
     TypeOrmModule.forFeature([DataStakingEvents, DataTokenToDatasetMapping]),
     DateTimeModule,

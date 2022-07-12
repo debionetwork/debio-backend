@@ -14,7 +14,10 @@ import { LocationEntities } from '../../../src/endpoints/location/models';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { SubstrateService } from '../../../src/common/modules/substrate/substrate.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import {
+  GCloudSecretManagerModule,
+  GCloudSecretManagerService,
+} from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Health Controller (e2e)', () => {
   let server: Server;
@@ -52,6 +55,7 @@ describe('Health Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        GCloudSecretManagerModule.withConfig(process.env.PARENT),
         TypeOrmModule.forRoot({
           name: 'default',
           ...dummyCredentials,

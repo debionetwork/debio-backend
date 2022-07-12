@@ -18,8 +18,6 @@ export class AuthenticationController {
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
   ) {
-    await this.gCloudSecretManagerService.loadSecrets();
-
     if (
       !(
         debioApiKey ===

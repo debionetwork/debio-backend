@@ -4,15 +4,9 @@ import { TransactionLoggingModule } from '../../common/modules/transaction-loggi
 import { SubstrateModule } from '../../common';
 import { VerificationController } from './verification.controller';
 import { VerificationService } from './verification.service';
-import { GCloudSecretManagerModule } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 @Module({
-  imports: [
-    SubstrateModule,
-    TransactionLoggingModule,
-    DateTimeModule,
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
-  ],
+  imports: [SubstrateModule, TransactionLoggingModule, DateTimeModule],
   controllers: [VerificationController],
   providers: [VerificationService],
   exports: [VerificationService],
