@@ -160,7 +160,7 @@ jobs:
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
-              --set-string config.google.parent=projects/${{ secrets.DEV_GCP_PROJECT_ID }} \
+              --set-string config.google.parent=projects/debio-network-development \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
               --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
@@ -339,7 +339,7 @@ jobs:
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
-              --set-string config.google.parent=projects/${{ secrets.TESTNET_GCP_PROJECT_ID }} \
+              --set-string config.google.parent=projects/debio-network-testnet \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
               --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
@@ -518,7 +518,7 @@ jobs:
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
-              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
+              --set-string config.google.parent=projects/debio-network \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
               --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
@@ -697,7 +697,7 @@ jobs:
               --set-string config.email.password=${{ steps.secrets.outputs.PASS_EMAIL }} \
               --set-string config.email.emails="${{ steps.secrets.outputs.EMAILS }}" \
               --set-string config.bucketname=${{ steps.secrets.outputs.BUCKET_NAME }} \
-              --set-string config.google.parent=projects/${{ secrets.MAINNET_GCP_PROJECT_ID }} \
+              --set-string config.google.parent=projects/debio-network \
               --set-string config.storageBaseURI=${{ steps.secrets.outputs.STORAGE_BASE_URI }} \
               --set-string config.pinata.apiKey=${{ steps.secrets.outputs.PINATA_API_KEY }} \
               --set-string config.pinata.secretKey=${{ steps.secrets.outputs.PINATA_SECRET_KEY }} \
