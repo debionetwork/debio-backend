@@ -7,8 +7,8 @@ import { ProcessEnvProxy } from './process-env.proxy';
 })
 export class ProcessEnvModule {
   static async setDefault(env: Record<string, any>): Promise<DynamicModule> {
-    for (let key in Object.keys(env)) {
-      process.env[key] = process.env[key] ?? Object.values(env)[key];
+    for (const key of Object.keys(env)) {
+      process.env[key] = process.env[key] ?? env[key];
     }
     return {
       module: ProcessEnvModule,
