@@ -1,14 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProcessEnvModule, ProcessEnvProxy } from '../../../../../src/common';
 
+require('dotenv').config(); // eslint-disable-line
+
 describe('Process Env Proxy Set Default Unit Tests', () => {
   let proxy: ProcessEnvProxy;
+
+  //eslint-disable-next-line
+  const WOW = 'WOW';
+  process.env.WEB = WOW;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         ProcessEnvModule.setDefault({
           URL: 'RPC',
+          WEB: 'WEB',
         }),
       ],
     }).compile();
@@ -27,5 +34,6 @@ describe('Process Env Proxy Set Default Unit Tests', () => {
 
     // Assert
     expect(proxy.env.URL).toEqual(EXPECTED_RESULT);
+    expect(proxy.env.WEB).toEqual(WOW);
   });
 });
