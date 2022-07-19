@@ -1,12 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProcessEnvProxy } from '../../../../../src/common';
+import { ProcessEnvModule, ProcessEnvProxy } from '../../../../../src/common';
 
-describe('Process Env Proxy Unit Tests', () => {
+describe('Process Env Proxy Set Default Unit Tests', () => {
   let proxy: ProcessEnvProxy;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProcessEnvProxy],
+      imports: [
+        ProcessEnvModule.setDefault({
+          URL: 'RPC',
+        }),
+      ],
     }).compile();
 
     proxy = module.get(ProcessEnvProxy);
@@ -20,7 +24,6 @@ describe('Process Env Proxy Unit Tests', () => {
   it('should reflected', () => {
     // Arrange
     const EXPECTED_RESULT = 'RPC';
-    Reflect.set(proxy.env, 'URL', EXPECTED_RESULT);
 
     // Assert
     expect(proxy.env.URL).toEqual(EXPECTED_RESULT);
