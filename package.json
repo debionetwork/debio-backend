@@ -1,13 +1,14 @@
 {
-  "version": "2.0.0",
+  "name": "debio-backend",
+  "version": "2.2.3",
+  "private": true,
   "license": "AGPL-3.0",
   "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
   "homepage": "https://www.debio.network",
   "repository": {
     "type": "git",
-    "url": "https://github.com/debionetwork/debio-backend"
+    "url": "https://github.com/debionetwork/debio-backend.git"
   },
-  "private": true,
   "scripts": {
     "install:hooks": ".maintain/install-hooks.sh",
     "prebuild": "rimraf dist",
