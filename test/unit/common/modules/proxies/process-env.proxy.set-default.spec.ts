@@ -1,12 +1,23 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProcessEnvProxy } from '../../../../../src/common';
+import { ProcessEnvModule, ProcessEnvProxy } from '../../../../../src/common';
 
-describe('Process Env Proxy Unit Tests', () => {
+require('dotenv').config(); // eslint-disable-line
+
+describe('Process Env Proxy Set Default Unit Tests', () => {
   let proxy: ProcessEnvProxy;
+
+  //eslint-disable-next-line
+  const WOW = 'WOW';
+  process.env.WEB = WOW;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ProcessEnvProxy],
+      imports: [
+        ProcessEnvModule.setDefault({
+          URL: 'RPC',
+          WEB: 'WEB',
+        }),
+      ],
     }).compile();
 
     proxy = module.get(ProcessEnvProxy);
@@ -20,9 +31,9 @@ describe('Process Env Proxy Unit Tests', () => {
   it('should reflected', () => {
     // Arrange
     const EXPECTED_RESULT = 'RPC';
-    Reflect.set(proxy.env, 'URL', EXPECTED_RESULT);
 
     // Assert
     expect(proxy.env.URL).toEqual(EXPECTED_RESULT);
+    expect(proxy.env.WEB).toEqual(WOW);
   });
 });
