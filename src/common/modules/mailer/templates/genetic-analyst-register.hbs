@@ -1,0 +1,162 @@
+<div>
+  <div>
+    <h4>You have been assigned to provide verification for the following new Genetic Analyst. Here are the details:</h4>
+    <p> </p>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <td>Profile Picture</td>
+        <td>:</td>
+        <td>{{profile_picture}}</td>
+      </tr>
+      <tr>
+        <td>First Name</td>
+        <td>:</td>
+        <td>{{first_name}}</td>
+      </tr>
+      <tr>
+        <td>Last Name</td>
+        <td>:</td>
+        <td>{{last_name}}</td>
+      </tr>
+      <tr>
+        <td>Gender</td>
+        <td>:</td>
+        <td>{{gender}}</td>
+      </tr>
+      <tr>
+        <td>Date of Birth</td>
+        <td>:</td>
+        <td>{{date_of_birth}}</td>
+      </tr>
+       <tr>
+        <td>Email</td>
+        <td>:</td>
+        <td>{{email}}</td>
+      </tr>
+       <tr>
+        <td>Phone Number</td>
+        <td>:</td>
+        <td>{{phone_number}}</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <h4>Qualification :</h4>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <td>Specialization</td>
+        <td>:</td>
+        <td>{{#each specialization}} {{specialization_categories}} {{else}} - {{/each}}</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <h4>Certifications :</h4>
+  </div>
+  {{#each certifications}}
+  <div>
+      <table>
+        <tr>
+          <td>{{colNum @index}}.</td>
+          <td>Title</td>
+          <td>:</td>
+          <td>{{title}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Issuer</td>
+          <td>:</td>
+          <td>{{issuer}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Month</td>
+          <td>:</td>
+          <td>{{month}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Year</td>
+          <td>:</td>
+          <td>{{year}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Description</td>
+          <td>:</td>
+          <td>{{description}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Supporting Document</td>
+          <td>:</td>
+          <td>{{supporting_document}}</td>
+        </tr>
+      </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Certificate</p>
+  </div>
+  {{/each}}
+  <div>
+    <p></p>
+    <h4>Services :</h4>
+  </div>
+  {{#each services}}
+  <div>    
+    <table>
+      <tr>
+        <td>{{colNum @index}}.</td>
+        <td>Service Category</td>
+        <td>:</td>
+        <td>{{category}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Service Name</td>
+        <td>:</td>
+        <td>{{name}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Price</td>
+        <td>:</td>
+        <td>{{price}} {{currency}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>QC Price</td>
+        <td>:</td>
+        <td>{{qc_price}} {{currency}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Short Description</td>
+        <td>:</td>
+        <td>{{description}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Expected Duration</td>
+        <td>:</td>
+        <td>{{#with expected_duration}} {{duration}} {{duration_type}} {{/with}}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>Long Description</td>
+        <td>:</td>
+        <td>{{long_description}}</td>
+      </tr>
+    </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Service</p>
+  </div>
+  {{/each}}
+</div>
