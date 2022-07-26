@@ -1,50 +1,44 @@
 import { ApiPromise } from '@polkadot/api';
-import { Lab } from '@debionetwork/polkadot-provider';
+import { GeneticAnalyst, GeneticAnalystService } from '@debionetwork/polkadot-provider';
 import {
-  getGeneticAnalystRegisterCertification,
-  GeneticAnalystRegisterCertification,
+  getGeneticAnalystRegisterCertifications,
 } from './certification';
 import {
-  getGeneticAnalystRegisterService,
+  getGeneticAnalystRegisterServices,
   GeneticAnalystRegisterService,
 } from './service';
+import { GeneticAnalystQualificationCertification } from '@debionetwork/polkadot-provider/lib/models/genetic-analysts/genetic-analyst-qualification/genetic-analyst-qualification-certification';
 
 export class GeneticAnalystRegister {
-  lab_id: string;
+  genetic_analyst_id: string;
   email: string;
   phone_number: string;
-  website: string;
-  lab_name: string;
-  country: string;
-  state: string;
-  city: string;
+  profile_link: string;
+  genetic_analyst_name: string;
   profile_image: string | undefined;
-  address: string;
-  certifications: Array<GeneticAnalystRegisterCertification>;
+  gender: string;
+  certifications: Array<GeneticAnalystQualificationCertification>;
   services: Array<GeneticAnalystRegisterService>;
 }
 
 export async function geneticAnalystToGARegister(
   api: ApiPromise,
-  lab: Lab,
+  genetic_analyst: GeneticAnalyst,
 ): Promise<GeneticAnalystRegister> {
   const geneticAnalystRegister = new GeneticAnalystRegister();
 
-  geneticAnalystRegister.lab_id = lab.accountId;
-  geneticAnalystRegister.email = lab.info.email;
-  geneticAnalystRegister.phone_number = lab.info.phoneNumber;
-  geneticAnalystRegister.website = lab.info.website;
-  geneticAnalystRegister.lab_name = lab.info.name;
-  geneticAnalystRegister.country = lab.info.country;
-  geneticAnalystRegister.state = lab.info.region;
-  geneticAnalystRegister.city = lab.info.city;
-  geneticAnalystRegister.address = lab.info.address;
-  geneticAnalystRegister.profile_image = lab.info.profileImage;
+  geneticAnalystRegister.genetic_analyst_id = genetic_analyst.accountId;
+  geneticAnalystRegister.email = genetic_analyst.info.email;
+  geneticAnalystRegister.phone_number = genetic_analyst.info.phoneNumber;
+  geneticAnalystRegister.profile_link = genetic_analyst.info.profileLink;
+  geneticAnalystRegister.genetic_analyst_name = `${genetic_analyst.info.firstName} ${genetic_analyst.info.lastName}`;
+  geneticAnalystRegister.gender = genetic_analyst.info.gender;
+  geneticAnalystRegister.profile_image = genetic_analyst.info.profileImage;
   geneticAnalystRegister.certifications =
-    await getGeneticAnalystRegisterCertification(api, lab.certifications);
-  geneticAnalystRegister.services = await getGeneticAnalystRegisterService(
+    await getGeneticAnalystRegisterCertifications(api, genetic_analyst.accountId);
+  geneticAnalystRegister.services = await getGeneticAnalystRegisterServices(
     api,
-    lab.services,
+    genetic_analyst.services,
   );
 
   return geneticAnalystRegister;

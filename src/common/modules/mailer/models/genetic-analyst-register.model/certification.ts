@@ -1,5 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
-import { queryCertificationsByMultipleIds } from '@debionetwork/polkadot-provider';
+import { queryGeneticAnalystByAccountId } from '@debionetwork/polkadot-provider';
+import { GeneticAnalystQualificationCertification } from '@debionetwork/polkadot-provider/lib/models/genetic-analysts/genetic-analyst-qualification/genetic-analyst-qualification-certification';
 
 export class GeneticAnalystRegisterCertification {
   title: string;
@@ -10,28 +11,30 @@ export class GeneticAnalystRegisterCertification {
   supporting_document: string | undefined;
 }
 
-export async function getGeneticAnalystRegisterCertification(
+export async function getGeneticAnalystRegisterCertifications(
   api: ApiPromise,
-  ids: string[],
-): Promise<Array<GeneticAnalystRegisterCertification>> {
-  const certifications = await queryCertificationsByMultipleIds(
+  geneticAnalystId: string,
+): Promise<Array<GeneticAnalystQualificationCertification>> {
+  const certifications = await queryGeneticAnalystByAccountId(
     api as any,
-    ids,
+    geneticAnalystId,
   );
-  const geneticAnalystRegisterCertifications: Array<GeneticAnalystRegisterCertification> =
-    new Array<GeneticAnalystRegisterCertification>();
+  console.log("certification", certifications);
+  
+  const geneticAnalystRegisterCertifications: Array<GeneticAnalystQualificationCertification> =
+    new Array<GeneticAnalystQualificationCertification>();
 
-  certifications.forEach((val) => {
-    const lrc: GeneticAnalystRegisterCertification =
-      new GeneticAnalystRegisterCertification();
-    lrc.title = val.info.title;
-    lrc.issuer = val.info.issuer;
-    lrc.description = val.info.description;
-    lrc.month = val.info.month;
-    lrc.year = val.info.year;
-    lrc.supporting_document = val.info.supportingDocument;
-    geneticAnalystRegisterCertifications.push(lrc);
-  });
+  // certifications.forEach((val) => {
+  //   const lrc: GeneticAnalystQualificationCertification =
+  //     new GeneticAnalystQualificationCertification();
+  //   lrc.title = val.info.title;
+  //   lrc.issuer = val.info.issuer;
+  //   lrc.description = val.info.description;
+  //   lrc.month = val.info.month;
+  //   lrc.year = val.info.year;
+  //   lrc.supporting_document = val.info.supportingDocument;
+  //   geneticAnalystQualificationCertifications.push(lrc);
+  // });
 
   return geneticAnalystRegisterCertifications;
 }

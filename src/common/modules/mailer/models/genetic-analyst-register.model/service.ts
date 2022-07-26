@@ -19,7 +19,7 @@ export class GeneticAnalystRegisterService {
   expected_duration: GeneticAnalystRegisterExpectedDuration;
 }
 
-export async function getGeneticAnalystRegisterService(
+export async function getGeneticAnalystRegisterServices(
   api: ApiPromise,
   ids: string[],
 ): Promise<Array<GeneticAnalystRegisterService>> {

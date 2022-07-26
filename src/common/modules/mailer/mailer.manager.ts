@@ -75,4 +75,8 @@ export class MailerManager {
       await this._logger.log(`Send Email Failed: ${error}`);
     }
   }
+
+  async sendGeneticAnalystRegistrationEmail(to: string | string[], context: any){
+    
+  }
 }

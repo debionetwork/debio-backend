@@ -11,7 +11,7 @@ import {
   EmailNotificationService,
   SubstrateService,
 } from '../../common';
-import { queryLabById } from '@debionetwork/polkadot-provider';
+import { queryGeneticAnalystByAccountId, queryLabById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 
@@ -72,5 +72,17 @@ export class EmailEndpointController {
     response.status(200).send({
       message: 'Sending Email.',
     });
+  }
+
+  async sendMailRegisterGeneticAnalyst(
+    @Param('genetic_analyst_id') genetic_analyst_id: string
+  ){
+    const ga = await queryGeneticAnalystByAccountId(
+      this.substrateService.api as any,
+      genetic_analyst_id,
+    );
+    console.log("masuk: ", ga);
+
+        
   }
 }
