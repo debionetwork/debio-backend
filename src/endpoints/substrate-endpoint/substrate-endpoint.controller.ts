@@ -47,6 +47,8 @@ import {
   geneticAnalysisOrderByGA,
 } from './models/response';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { TransactionTypeList } from '../../common/modules/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '../../common/modules/transaction-status/models/transaction-status.list';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -402,8 +404,8 @@ export class SubstrateController {
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: '-',
-      transaction_type: 8,
-      transaction_status: 33,
+      transaction_type: TransactionTypeList.Reward,
+      transaction_status: TransactionStatusList.RegisteredUser,
     };
     let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(

@@ -12,6 +12,8 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
+import { TransactionTypeList } from '../../common/modules/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '../../common/modules/transaction-status/models/transaction-status.list';
 
 @Injectable()
 export class VerificationService {
@@ -49,8 +51,8 @@ export class VerificationService {
         currency: 'DBIO',
         parent_id: BigInt(0),
         ref_number: '-',
-        transaction_type: 8,
-        transaction_status: 35,
+        transaction_type: TransactionTypeList.Reward,
+        transaction_status: TransactionStatusList.LabVerified,
       };
 
       await this.transactionLoggingService.create(dataInput);

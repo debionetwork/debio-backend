@@ -18,6 +18,10 @@ import { serviceList } from './endpoints/category/service.mock.data';
 import { specializationList } from './endpoints/category/specialization.mock.data';
 import { Notification } from '../../src/common/modules/notification/models/notification.entity';
 import { dnaCollectionList } from './endpoints/category/dna-collection.mock.data';
+import { TransactionStatus } from '../../src/common/modules/transaction-status/models/transaction-status.entity';
+import { TransactionType } from '../../src/common/modules/transaction-type/models/transaction-type.entity';
+import { TransactionTypeList } from '../../src/common/modules/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '../../src/common/modules/transaction-status/models/transaction-status.list';
 
 function initalPostgresConnection(): Promise<Connection> {
   return createConnection({
@@ -56,6 +60,8 @@ module.exports = async () => {
       SpecializationCategory,
       DnaCollectionCategory,
       Notification,
+      TransactionStatus,
+      TransactionType,
     ],
     synchronize: true,
   });
@@ -136,6 +142,261 @@ module.exports = async () => {
     })
     .execute();
   console.log('`EmailNotification` data injection successful! ✅');
+
+  console.log('Injecting `Transaction Type` into debio-postgres 💉...');
+
+  const transactionTypes = [
+    {
+      id: 1,
+      type: 'Order',
+    },
+    {
+      id: 2,
+      type: 'Staking Request Service',
+    },
+    {
+      id: 3,
+      type: 'Genetic Analysis Order',
+    },
+    {
+      id: 4,
+      type: 'Genetic Analyst',
+    },
+    {
+      id: 5,
+      type: 'Staking Genetic Analyst',
+    },
+    {
+      id: 6,
+      type: 'Staking Lab',
+    },
+    {
+      id: 7,
+      type: 'Lab',
+    },
+    {
+      id: 8,
+      type: 'Reward',
+    },
+  ];
+
+  for (const transactionType of transactionTypes) {
+    await dbPostgresMigration
+      .createQueryBuilder()
+      .insert()
+      .into(TransactionType)
+      .values({
+        id: transactionType.id,
+        type: transactionType.type as TransactionTypeList,
+      })
+      .execute();
+  }
+  console.log('`Transaction Type` data injection successful! ✅');
+
+  console.log('Injecting `Transaction Status` into debio-postgres 💉...');
+
+  const transactionStatus = [
+    {
+      id: 1,
+      id_type: 1,
+      transaction_status: 'Unpaid',
+    },
+    {
+      id: 2,
+      id_type: 1,
+      transaction_status: 'Paid',
+    },
+    {
+      id: 3,
+      id_type: 1,
+      transaction_status: 'Fulfilled',
+    },
+    {
+      id: 4,
+      id_type: 1,
+      transaction_status: 'Refunded',
+    },
+    {
+      id: 5,
+      id_type: 1,
+      transaction_status: 'Cancelled',
+    },
+    {
+      id: 6,
+      id_type: 1,
+      transaction_status: 'Failed',
+    },
+    {
+      id: 7,
+      id_type: 2,
+      transaction_status: 'Stake',
+    },
+    {
+      id: 8,
+      id_type: 2,
+      transaction_status: 'Unstake',
+    },
+    {
+      id: 9,
+      id_type: 2,
+      transaction_status: 'Excess',
+    },
+    {
+      id: 10,
+      id_type: 2,
+      transaction_status: 'Partial',
+    },
+    {
+      id: 11,
+      id_type: 2,
+      transaction_status: 'Waiting For Unstake',
+    },
+    {
+      id: 12,
+      id_type: 2,
+      transaction_status: 'Finalized',
+    },
+    {
+      id: 13,
+      id_type: 3,
+      transaction_status: 'Unpaid',
+    },
+    {
+      id: 14,
+      id_type: 3,
+      transaction_status: 'Paid',
+    },
+    {
+      id: 15,
+      id_type: 3,
+      transaction_status: 'Fulfilled',
+    },
+    {
+      id: 16,
+      id_type: 3,
+      transaction_status: 'Refunded',
+    },
+    {
+      id: 17,
+      id_type: 3,
+      transaction_status: 'Cancelled',
+    },
+    {
+      id: 18,
+      id_type: 3,
+      transaction_status: 'Failed',
+    },
+    {
+      id: 19,
+      id_type: 4,
+      transaction_status: 'Unverified',
+    },
+    {
+      id: 20,
+      id_type: 4,
+      transaction_status: 'Verified',
+    },
+    {
+      id: 21,
+      id_type: 4,
+      transaction_status: 'Rejected',
+    },
+    {
+      id: 22,
+      id_type: 4,
+      transaction_status: 'Revoked',
+    },
+    {
+      id: 23,
+      id_type: 5,
+      transaction_status: 'Staked',
+    },
+    {
+      id: 24,
+      id_type: 5,
+      transaction_status: 'Unstaked',
+    },
+    {
+      id: 25,
+      id_type: 6,
+      transaction_status: 'Unstaked',
+    },
+    {
+      id: 26,
+      id_type: 6,
+      transaction_status: 'Staked',
+    },
+    {
+      id: 27,
+      id_type: 6,
+      transaction_status: 'Waiting For Unstaked',
+    },
+    {
+      id: 28,
+      id_type: 7,
+      transaction_status: 'Unverified',
+    },
+    {
+      id: 29,
+      id_type: 7,
+      transaction_status: 'Verified',
+    },
+    {
+      id: 30,
+      id_type: 7,
+      transaction_status: 'Rejected',
+    },
+    {
+      id: 31,
+      id_type: 7,
+      transaction_status: 'Revoked',
+    },
+    {
+      id: 32,
+      id_type: 3,
+      transaction_status: 'Service Charge',
+    },
+    {
+      id: 33,
+      id_type: 8,
+      transaction_status: 'Registered User',
+    },
+    {
+      id: 34,
+      id_type: 8,
+      transaction_status: 'Customer Add Data as Bounty',
+    },
+    {
+      id: 35,
+      id_type: 8,
+      transaction_status: 'Lab Verified',
+    },
+    {
+      id: 36,
+      id_type: 8,
+      transaction_status: 'Customer Stake Request Service',
+    },
+    {
+      id: 37,
+      id_type: 8,
+      transaction_status: 'Lab Provide Requested Service',
+    },
+  ];
+
+  for (const transactionStat of transactionStatus) {
+    await dbPostgresMigration
+      .createQueryBuilder()
+      .insert()
+      .into(TransactionStatus)
+      .values({
+        id: transactionStat.id,
+        id_type: transactionStat.id_type,
+        transaction_status:
+          transactionStat.transaction_status as TransactionStatusList,
+      })
+      .execute();
+  }
+  console.log('`Transaction Status` data injection successful! ✅');
 
   await dbPostgresMigration.close();
   console.log('`db_postgres` migration successful! 🙌');
