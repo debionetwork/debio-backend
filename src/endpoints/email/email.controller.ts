@@ -1,6 +1,7 @@
 import { Controller, Param, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
+  geneticAnalystToGARegister,
   LabRegister,
   labToLabRegister,
   MailerManager,
@@ -11,7 +12,7 @@ import {
   EmailNotificationService,
   SubstrateService,
 } from '../../common';
-import { queryGeneticAnalystByAccountId, queryLabById } from '@debionetwork/polkadot-provider';
+import { queryGeneticAnalystByAccountId, queryGeneticAnalystQualificationsByHashId, queryGeneticAnalystQualificationsCountByOwner, queryLabById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 
@@ -24,6 +25,8 @@ export class EmailEndpointController {
     private readonly emailNotificationService: EmailNotificationService,
   ) {}
 
+  /* A function that takes two arguments and returns a list with the first argument as the head and the
+  second argument as the tail. */
   @Post('registered-lab/:lab_id')
   @ApiParam({ name: 'lab_id' })
   @ApiOperation({
@@ -74,15 +77,22 @@ export class EmailEndpointController {
     });
   }
 
+  @Post('registered-genetic_analyst/:genetic_analyst_id')
+  @ApiParam({ name: 'genetic_analyst_id' })
   async sendMailRegisterGeneticAnalyst(
     @Param('genetic_analyst_id') genetic_analyst_id: string
   ){
-    const ga = await queryGeneticAnalystByAccountId(
+    console.log("this account id: ", genetic_analyst_id);
+    
+    const contextGA = await queryGeneticAnalystByAccountId(
       this.substrateService.api as any,
-      genetic_analyst_id,
+      "5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf"
     );
-    console.log("masuk: ", ga);
+    const geneticAnalystRegister = await geneticAnalystToGARegister(
+      this.substrateService.api as any,
+      contextGA
+    );
 
-        
+    console.log("masuk: ", geneticAnalystRegister);
   }
 }
