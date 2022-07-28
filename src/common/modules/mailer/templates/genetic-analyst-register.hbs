@@ -111,12 +111,6 @@
   <div>    
     <table>
       <tr>
-        <td>{{colNum @index}}.</td>
-        <td>Service Category</td>
-        <td>:</td>
-        <td>{{category}}</td>
-      </tr>
-      <tr>
         <td></td>
         <td>Service Name</td>
         <td>:</td>
@@ -130,13 +124,7 @@
       </tr>
       <tr>
         <td></td>
-        <td>QC Price</td>
-        <td>:</td>
-        <td>{{qc_price}} {{currency}}</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>Short Description</td>
+        <td>Description</td>
         <td>:</td>
         <td>{{description}}</td>
       </tr>
@@ -144,13 +132,7 @@
         <td></td>
         <td>Expected Duration</td>
         <td>:</td>
-        <td>{{#with expected_duration}} {{duration}} {{duration_type}} {{/with}}</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td>Long Description</td>
-        <td>:</td>
-        <td>{{long_description}}</td>
+        <td>{{expected_duration}}</td>
       </tr>
     </table>
   </div>

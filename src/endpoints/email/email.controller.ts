@@ -12,7 +12,12 @@ import {
   EmailNotificationService,
   SubstrateService,
 } from '../../common';
-import { queryGeneticAnalystByAccountId, queryGeneticAnalystQualificationsByHashId, queryGeneticAnalystQualificationsCountByOwner, queryLabById } from '@debionetwork/polkadot-provider';
+import {
+  queryGeneticAnalystByAccountId,
+  queryGeneticAnalystQualificationsByHashId,
+  queryGeneticAnalystQualificationsCountByOwner,
+  queryLabById,
+} from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 
@@ -80,19 +85,40 @@ export class EmailEndpointController {
   @Post('registered-genetic_analyst/:genetic_analyst_id')
   @ApiParam({ name: 'genetic_analyst_id' })
   async sendMailRegisterGeneticAnalyst(
-    @Param('genetic_analyst_id') genetic_analyst_id: string
-  ){
-    console.log("this account id: ", genetic_analyst_id);
-    
+    @Param('genetic_analyst_id') genetic_analyst_id: string,
+    @Res() response: Response,
+  ) {
+    let isEmailSent = false;
     const contextGA = await queryGeneticAnalystByAccountId(
       this.substrateService.api as any,
-      "5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf"
+      '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf',
     );
     const geneticAnalystRegister = await geneticAnalystToGARegister(
       this.substrateService.api as any,
-      contextGA
+      contextGA,
     );
 
-    console.log("masuk: ", geneticAnalystRegister);
+    console.log('masuk: ', geneticAnalystRegister);
+    const sentEMail =
+      await this.mailerManager.sendGeneticAnalystRegistrationEmail(
+        process.env.EMAILS.split(','),
+        geneticAnalystRegister,
+      );
+
+    const dataInput = new EmailNotification();
+    if (sentEMail) {
+      isEmailSent = true;
+      dataInput.sent_at = new Date();
+    }
+    dataInput.notification_type = 'GeneticAnalystRegister';
+    dataInput.ref_number = '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf';
+    dataInput.is_email_sent = isEmailSent;
+    dataInput.created_at = new Date();
+
+    await this.emailNotificationService.insertEmailNotification(dataInput);
+
+    response.status(200).send({
+      message: 'Sending Email.',
+    });
   }
 }

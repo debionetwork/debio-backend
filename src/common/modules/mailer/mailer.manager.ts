@@ -1,7 +1,7 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
-import { CustomerStakingRequestService, LabRegister } from './models';
+import { CustomerStakingRequestService, GeneticAnalystRegister, LabRegister } from './models';
 import { keyList } from '../../secrets';
 
 @Injectable()
@@ -28,6 +28,47 @@ export class MailerManager {
       template: 'customer-staking-request-service',
       context: context,
     });
+  }
+
+  async sendGeneticAnalystRegistrationEmail(
+    to: string | string[],
+    context: GeneticAnalystRegister,
+  ) {
+    let subject = `New Genetic Analyst Register – ${context.genetic_analyst_name}`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
+      subject = `Testing New Genetic Analyst Register Email`;
+    }
+    const files: any[] = [];
+    context.certifications.forEach((val, idx) => {
+      files.push({
+        filename: `Certifications Supporting Document ${idx + 1}`,
+        path: val.supportingDocument,
+      });
+    });
+
+    try {
+      this.mailerService.sendMail({
+        to: to,
+        subject: subject,
+        template: 'genetic-analyst-register',
+        context: {
+          profile_image: context.profile_image,
+          email: context.email,
+          genetic_analyst_name: context.genetic_analyst_name,
+          phone_number: context.phone_number,
+          gender: context.gender,
+          certifications: context.certifications,
+          services: context.services,
+          experience: context.experience,
+        },
+        attachments: files,
+      });
+      return true;
+    } catch (error) {
+      await this._logger.log(`Send Email Failed: ${error}`);
+    }
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
@@ -74,9 +115,5 @@ export class MailerManager {
     } catch (error) {
       await this._logger.log(`Send Email Failed: ${error}`);
     }
-  }
-
-  async sendGeneticAnalystRegistrationEmail(to: string | string[], context: any){
-    
   }
 }

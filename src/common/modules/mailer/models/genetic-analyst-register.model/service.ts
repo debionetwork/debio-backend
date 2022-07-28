@@ -1,5 +1,9 @@
 import { ApiPromise } from '@polkadot/api';
-import { queryServicesByMultipleIds, queryGeneticAnalystServicesByHashId, GeneticAnalystService } from '@debionetwork/polkadot-provider';
+import {
+  queryServicesByMultipleIds,
+  queryGeneticAnalystServicesByHashId,
+  GeneticAnalystService,
+} from '@debionetwork/polkadot-provider';
 
 export class GeneticAnalystRegisterExpectedDuration {
   duration: string;
@@ -20,14 +24,17 @@ export async function getGeneticAnalystRegisterServices(
   api: ApiPromise,
   ids: string[],
 ): Promise<Array<GeneticAnalystRegisterService>> {
-
   const geneticAnalystRegisterServices: Array<GeneticAnalystRegisterService> =
     new Array<GeneticAnalystRegisterService>();
-  const gsrs: Array<GeneticAnalystService> =new Array<GeneticAnalystService>;
+  const gsrs: Array<GeneticAnalystService> = new Array<GeneticAnalystService>();
   for (let i = 0; i < ids.length; i++) {
     const hashId = ids[i];
-    let gaService = await queryGeneticAnalystServicesByHashId(api as any, hashId);
-    const tempRS : GeneticAnalystRegisterService = new GeneticAnalystRegisterService();
+    let gaService = await queryGeneticAnalystServicesByHashId(
+      api as any,
+      hashId,
+    );
+    const tempRS: GeneticAnalystRegisterService =
+      new GeneticAnalystRegisterService();
     tempRS.currency = gaService.info.pricesByCurrency[0].currency;
     tempRS.description = gaService.info.description;
     tempRS.expected_duration = `${gaService.info.expectedDuration.duration} ${gaService.info.expectedDuration.durationType}`;

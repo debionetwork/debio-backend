@@ -1,5 +1,10 @@
 import { ApiPromise } from '@polkadot/api';
-import { GeneticAnalyst, GeneticAnalystQualification, GeneticAnalystService, queryGeneticAnalystQualificationsByHashId } from '@debionetwork/polkadot-provider';
+import {
+  GeneticAnalyst,
+  GeneticAnalystQualification,
+  GeneticAnalystService,
+  queryGeneticAnalystQualificationsByHashId,
+} from '@debionetwork/polkadot-provider';
 import {
   getGeneticAnalystRegisterServices,
   GeneticAnalystRegisterService,
@@ -35,12 +40,17 @@ export async function geneticAnalystToGARegister(
   geneticAnalystRegister.genetic_analyst_name = `${genetic_analyst.info.firstName} ${genetic_analyst.info.lastName}`;
   geneticAnalystRegister.gender = genetic_analyst.info.gender;
   geneticAnalystRegister.profile_image = genetic_analyst.info.profileImage;
-  
+
   for (let i = 0; i < genetic_analyst.qualifications.length; i++) {
     const hashId = genetic_analyst.qualifications[i];
-    const qualification = await queryGeneticAnalystQualificationsByHashId(api, hashId)
-    geneticAnalystRegister.certifications.push(...qualification.info.certification)
-    geneticAnalystRegister.experience.push(...qualification.info.experience)
+    const qualification = await queryGeneticAnalystQualificationsByHashId(
+      api,
+      hashId,
+    );
+    geneticAnalystRegister.certifications.push(
+      ...qualification.info.certification,
+    );
+    geneticAnalystRegister.experience.push(...qualification.info.experience);
   }
 
   geneticAnalystRegister.services = await getGeneticAnalystRegisterServices(
