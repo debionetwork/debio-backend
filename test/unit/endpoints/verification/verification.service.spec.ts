@@ -15,7 +15,9 @@ import {
   updateGeneticAnalystVerificationStatus,
 } from '@debionetwork/polkadot-provider';
 import { NotificationService } from '../../../../src/common/modules/notification/notification.service';
-import { TransactionLoggingDto } from 'src/common/modules/transaction-logging/dto/transaction-logging.dto';
+import { TransactionLoggingDto } from '../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
+import { TransactionTypeList } from '../../../../src/common/modules/transaction-type/models/transaction-type.list';
+import { TransactionStatusList } from '../../../../src/common/modules/transaction-status/models/transaction-status.list';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   // eslint-disable-next-line
@@ -124,8 +126,8 @@ describe('Verification Service Unit Tests', () => {
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: '-',
-      transaction_type: 8,
-      transaction_status: 35,
+      transaction_type: TransactionTypeList.Reward,
+      transaction_status: TransactionStatusList.LabVerified,
     };
 
     const EXPECTED_RESULTS = 'EXPECTED_RESULTS';
@@ -162,8 +164,8 @@ describe('Verification Service Unit Tests', () => {
       currency: 'DBIO',
       parent_id: BigInt(0),
       ref_number: '-',
-      transaction_type: 8,
-      transaction_status: 35,
+      transaction_type: TransactionTypeList.Reward,
+      transaction_status: TransactionStatusList.LabVerified,
     };
 
     const EXPECTED_RESULTS = 'EXPECTED_RESULTS';
