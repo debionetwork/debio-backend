@@ -72,6 +72,7 @@ require('dotenv').config(); // eslint-disable-line
       },
     }),
     TypeOrmModule.forRootAsync({
+      name: 'dbLocation',
       imports: [
         ProcessEnvModule.setDefault({
           PARENT: 'PARENT',
