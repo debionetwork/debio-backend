@@ -65,7 +65,7 @@ require('dotenv').config(); // eslint-disable-line
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: processEnvProxy.env.DB_LOCATIONS,
+          database: processEnvProxy.env.DB_POSTGRES,
           entities: [LabRating, TransactionRequest],
           autoLoadEntities: true,
         };
