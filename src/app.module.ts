@@ -46,7 +46,7 @@ require('dotenv').config(); // eslint-disable-line
           PARENT: 'PARENT',
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_POSTGRES: 'DB_POSTGRES',
-          DB_LOCATION: 'DB_LOCATION',
+          DB_LOCATIONS: 'DB_LOCATIONS',
         }),
         GCloudSecretManagerModule.withConfig(process.env.PARENT),
       ],
@@ -78,7 +78,7 @@ require('dotenv').config(); // eslint-disable-line
           PARENT: 'PARENT',
           HOST_POSTGRES: 'HOST_POSTGRES',
           DB_POSTGRES: 'DB_POSTGRES',
-          DB_LOCATION: 'DB_LOCATION',
+          DB_LOCATIONS: 'DB_LOCATIONS',
         }),
         GCloudSecretManagerModule.withConfig(process.env.PARENT),
       ],
@@ -97,7 +97,7 @@ require('dotenv').config(); // eslint-disable-line
           password: gCloudSecretManagerService
             .getSecret('POSTGRES_PASSWORD')
             .toString(),
-          database: processEnvProxy.env.DB_LOCATION,
+          database: processEnvProxy.env.DB_LOCATIONS,
           entities: [...LocationEntities],
           autoLoadEntities: true,
         };
