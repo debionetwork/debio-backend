@@ -69,8 +69,8 @@ export class SubstrateController {
   @Get('/labs')
   @ApiQuery({ name: 'country' })
   @ApiQuery({ name: 'region' })
-  @ApiQuery({ name: 'city' })
   @ApiQuery({ name: 'category' })
+  @ApiQuery({ name: 'city', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
   @ApiOperation({
@@ -87,7 +87,6 @@ export class SubstrateController {
     @Query('region') region,
     @Query('city') city,
     @Query('category') category,
-    @Query('service_flow') service_flow,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
