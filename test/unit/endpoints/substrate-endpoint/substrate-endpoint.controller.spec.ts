@@ -187,7 +187,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         'XX',
         'XX',
         'XX',
-        false,
         1,
         10,
       ),

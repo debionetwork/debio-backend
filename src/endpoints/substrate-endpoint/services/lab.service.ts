@@ -24,12 +24,12 @@ export class LabService {
                 match_phrase_prefix: { 'services.country': { query: country } },
               },
               { match_phrase_prefix: { 'services.region': { query: region } } },
-              { match_phrase_prefix: { 'services.city': { query: city } } },
               {
                 match_phrase_prefix: {
                   'services.info.category': { query: category },
                 },
               },
+              { match_phrase_prefix: { 'services.city': { query: city } } },
             ],
           },
         },
@@ -37,6 +37,10 @@ export class LabService {
       from: (size * page - size) | 0,
       size: size | 10,
     };
+
+    if (city === null || city === undefined) {
+      searchObj.body.query.bool.must.pop();
+    }
 
     const result = [];
     try {
