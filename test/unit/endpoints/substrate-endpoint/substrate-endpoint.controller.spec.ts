@@ -512,13 +512,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       DTO.ethAddress,
       expect.any(Function),
     );
-    expect(sendRewards).toHaveBeenCalled();
-    expect(sendRewards).toHaveBeenCalledWith(
-      'API',
-      'PAIR',
-      DTO.accountId,
-      (REWARD * DBIO_UNIT).toString(),
-    );
   });
 
   it('should not set genetic analysis order paid with false API key', async () => {

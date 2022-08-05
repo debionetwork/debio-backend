@@ -394,19 +394,7 @@ export class SubstrateController {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;
-    const rewardAmount = 0.2;
 
-    const dataInput: TransactionLoggingDto = {
-      address: accountId,
-      amount: rewardAmount,
-      created_at: this.dateTime.new(),
-      currency: 'DBIO',
-      parent_id: BigInt(0),
-      ref_number: '-',
-      transaction_type: TransactionTypeList.Reward,
-      transaction_status: TransactionStatusList.RegisteredUser,
-    };
-    let reward = null;
     const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
       this.substrateService.api as any,
       ethAddress,
@@ -428,27 +416,7 @@ export class SubstrateController {
       return response.status(401).send('Binding Error');
     }
 
-    const isRewardHasBeenSend =
-      await this.transactionLoggingService.getRewardBindingByAccountId(
-        accountId,
-      );
-
-    if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
-      // eslint-disable-next-line
-      await sendRewards(
-        this.substrateService.api as any,
-        this.substrateService.pair,
-        accountId,
-        (rewardAmount * dbioUnit).toString(),
-      );
-
-      reward = rewardAmount;
-
-      await this.transactionLoggingService.create(dataInput);
-    }
-
     return response.status(200).send({
-      reward,
       message: `eth-address ${ethAddress} bound to ${accountId}`,
     });
   }
