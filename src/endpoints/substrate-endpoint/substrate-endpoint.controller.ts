@@ -10,7 +10,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { SentryInterceptor } from '../../common/interceptors';
 import { WalletBindingDTO } from './dto/wallet-binding.dto';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
@@ -23,17 +22,10 @@ import {
   GeneticAnalysisOrderService,
 } from './services';
 import {
-  sendRewards,
-  queryAccountIdByEthAddress,
   adminSetEthAddress,
   setGeneticAnalysisOrderPaid,
-  dbioUnit,
 } from '@debionetwork/polkadot-provider';
-import {
-  DateTimeProxy,
-  SubstrateService,
-  TransactionLoggingService,
-} from '../../common';
+import { SubstrateService } from '../../common';
 import { GeneticAnalysisOrderPaidDto } from './dto/genetic-analysis-order-paid.dto';
 import {
   labsResponse,
@@ -47,8 +39,6 @@ import {
   geneticAnalysisOrderByGA,
 } from './models/response';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { TransactionTypeList } from '../../common/modules/transaction-type/models/transaction-type.list';
-import { TransactionStatusList } from '../../common/modules/transaction-status/models/transaction-status.list';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -58,9 +48,7 @@ export class SubstrateController {
     private readonly labService: LabService,
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
-    private readonly transactionLoggingService: TransactionLoggingService,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService,
-    private readonly dateTime: DateTimeProxy,
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
@@ -394,23 +382,6 @@ export class SubstrateController {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;
-    const rewardAmount = 0.2;
-
-    const dataInput: TransactionLoggingDto = {
-      address: accountId,
-      amount: rewardAmount,
-      created_at: this.dateTime.new(),
-      currency: 'DBIO',
-      parent_id: BigInt(0),
-      ref_number: '-',
-      transaction_type: TransactionTypeList.Reward,
-      transaction_status: TransactionStatusList.RegisteredUser,
-    };
-    let reward = null;
-    const isSubstrateAddressHasBeenBinding = await queryAccountIdByEthAddress(
-      this.substrateService.api as any,
-      ethAddress,
-    );
 
     try {
       // eslint-disable-next-line
@@ -428,27 +399,7 @@ export class SubstrateController {
       return response.status(401).send('Binding Error');
     }
 
-    const isRewardHasBeenSend =
-      await this.transactionLoggingService.getRewardBindingByAccountId(
-        accountId,
-      );
-
-    if (!isSubstrateAddressHasBeenBinding && !isRewardHasBeenSend) {
-      // eslint-disable-next-line
-      await sendRewards(
-        this.substrateService.api as any,
-        this.substrateService.pair,
-        accountId,
-        (rewardAmount * dbioUnit).toString(),
-      );
-
-      reward = rewardAmount;
-
-      await this.transactionLoggingService.create(dataInput);
-    }
-
     return response.status(200).send({
-      reward,
       message: `eth-address ${ethAddress} bound to ${accountId}`,
     });
   }

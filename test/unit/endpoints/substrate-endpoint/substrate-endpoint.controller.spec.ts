@@ -24,9 +24,7 @@ import { WalletBindingDTO } from '../../../../src/endpoints/substrate-endpoint/d
 import {
   queryAccountIdByEthAddress,
   setEthAddress,
-  sendRewards,
   setGeneticAnalysisOrderPaid,
-  dbioUnit,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
@@ -457,11 +455,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(
       await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
-    expect(queryAccountIdByEthAddress).toHaveBeenCalled();
-    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
-      'API',
-      DTO.ethAddress,
-    );
     expect(adminSetEthAddress).toHaveBeenCalled();
     expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
@@ -479,10 +472,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       accountId: 'string',
       ethAddress: 'string',
     };
-    const DBIO_UNIT = dbioUnit;
-    const REWARD = 0.2;
     const EXPECTED_RESULTS = {
-      reward: REWARD,
       message: `eth-address ${DTO.ethAddress} bound to ${DTO.accountId}`,
     };
     const RESPONSE: Response = {
@@ -499,11 +489,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     expect(
       await substrateControllerMock.walletBinding(DEBIO_API_KEY, DTO, RESPONSE),
     ).toEqual(EXPECTED_RESULTS);
-    expect(queryAccountIdByEthAddress).toHaveBeenCalled();
-    expect(queryAccountIdByEthAddress).toHaveBeenCalledWith(
-      'API',
-      DTO.ethAddress,
-    );
     expect(adminSetEthAddress).toHaveBeenCalled();
     expect(adminSetEthAddress).toHaveBeenCalledWith(
       'API',
@@ -511,13 +496,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       DTO.accountId,
       DTO.ethAddress,
       expect.any(Function),
-    );
-    expect(sendRewards).toHaveBeenCalled();
-    expect(sendRewards).toHaveBeenCalledWith(
-      'API',
-      'PAIR',
-      DTO.accountId,
-      (REWARD * DBIO_UNIT).toString(),
     );
   });
 
