@@ -82,10 +82,19 @@ export class TransactionLoggingService {
     });
   }
 
-  getRewardBindingByAccountId(accountId) {
+  async getRewardBindingByAccountId(accountId) {
+    const transactionType = await this.getTransactionType(
+      TransactionTypeList.Reward,
+    );
+
+    const transactionStatus = await this.getTransactionStatus(
+      TransactionStatusList.RegisteredUser,
+      transactionType,
+    );
+
     return this.transactionRequestRepository.findOne({
       where: {
-        transaction_status: 33,
+        transaction_status: transactionStatus,
         address: accountId,
       },
     });
