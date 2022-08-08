@@ -15,6 +15,9 @@ export class Notification {
   entity: string;
 
   @Column()
+  reference_id: string;
+
+  @Column()
   description: string;
 
   @Column()
@@ -36,4 +39,7 @@ export class Notification {
 
   @Column()
   to: string;
+
+  @Column()
+  block_number: string;
 }
