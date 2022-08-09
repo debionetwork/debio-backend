@@ -62,7 +62,10 @@ export class NotificationService {
 
   async setBulkNotificationHasBeenRead(to) {
     return await this.notificationRepository.update(
-      { to },
+      {
+        to,
+        read: false,
+      },
       {
         updated_at: await this.dateTimeProxy.new(),
         read: true,
