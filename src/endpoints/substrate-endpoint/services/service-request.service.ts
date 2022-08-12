@@ -63,29 +63,34 @@ export class ServiceRequestService {
           _source: { country, service_request },
         } = req;
 
-        if (!requestByCountryDict[country]) {
-          requestByCountryDict[country] = {
-            totalRequests: 0,
-            totalValue: 0,
-            services: {},
-          };
-        }
-        for (const service of service_request) {
-          const serviceLocationIdentity =
-            service.region + '-' + service.city + '-' + service.category;
-          const value = Number(service.amount.split(',').join('')) / 10 ** 18;
-          requestByCountryDict[country].totalRequests += 1;
-          const currValueByCountry = Number(
-            requestByCountryDict[country].totalValue,
-          );
-          requestByCountryDict[country].totalValue = currValueByCountry + value;
+        if (service_request.length > 0) {
+          if (!requestByCountryDict[country]) {
+            requestByCountryDict[country] = {
+              totalRequests: 0,
+              totalValue: 0,
+              services: {},
+            };
+          }
+          for (const service of service_request) {
+            const serviceLocationIdentity =
+              service.region + '-' + service.city + '-' + service.category;
+            const value = Number(service.amount.split(',').join('')) / 10 ** 18;
+            requestByCountryDict[country].totalRequests += 1;
+            const currValueByCountry = Number(
+              requestByCountryDict[country].totalValue,
+            );
+            requestByCountryDict[country].totalValue =
+              currValueByCountry + value;
 
-          if (
-            !requestByCountryDict[country]['services'][serviceLocationIdentity]
-          ) {
-            requestByCountryDict[country]['services'][serviceLocationIdentity] =
-              {
-                countryCode: country,
+            if (
+              !requestByCountryDict[country]['services'][
+                serviceLocationIdentity
+              ]
+            ) {
+              requestByCountryDict[country]['services'][
+                serviceLocationIdentity
+              ] = {
+                countryId: country,
                 category: service.category,
                 regionCode: service.region,
                 city: service.city,
@@ -96,18 +101,19 @@ export class ServiceRequestService {
                   usd: 0,
                 },
               };
-          }
+            }
 
-          requestByCountryDict[country]['services'][
-            serviceLocationIdentity
-          ].totalRequests += 1;
-          const currValueByCountryServiceCategoryDai = Number(
-            requestByCountryDict[country]['services'][serviceLocationIdentity]
-              .totalValue.dbio,
-          );
-          requestByCountryDict[country]['services'][
-            serviceLocationIdentity
-          ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
+            requestByCountryDict[country]['services'][
+              serviceLocationIdentity
+            ].totalRequests += 1;
+            const currValueByCountryServiceCategoryDai = Number(
+              requestByCountryDict[country]['services'][serviceLocationIdentity]
+                .totalValue.dbio,
+            );
+            requestByCountryDict[country]['services'][
+              serviceLocationIdentity
+            ].totalValue.dbio = currValueByCountryServiceCategoryDai + value;
+          }
         }
       }
 

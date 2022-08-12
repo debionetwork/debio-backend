@@ -10,7 +10,7 @@ export interface CurrencyValueInterface {
   usd: number;
 }
 export interface ServiceInterface {
-  countryCode: string;
+  countryId: string;
   category: string;
   regionCode: string;
   city: string;
