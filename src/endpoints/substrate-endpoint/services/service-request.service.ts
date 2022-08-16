@@ -138,10 +138,15 @@ export class ServiceRequestService {
         }));
 
         const requestByCountry: RequestsByCountry = {
+          countryId: countryCode,
           country: name,
           services: servicesArr,
           totalRequests: totalRequests,
-          totalValue: totalValue as string,
+          totalValue: {
+            dbio: totalValue,
+            dai: totalValue * oneDbioEqualToDai || 'Conversion Error',
+            usd: totalValue * oneDbioEqualToUsd || 'Conversion Error',
+          },
         };
 
         requestByCountryList.push(requestByCountry);

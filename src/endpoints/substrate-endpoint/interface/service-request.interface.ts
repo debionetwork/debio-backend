@@ -1,13 +1,14 @@
 export interface RequestsByCountry {
+  countryId: string;
   country: string;
   totalRequests: number;
-  totalValue: string;
+  totalValue: CurrencyValueInterface;
   services: Array<ServiceInterface>;
 }
 export interface CurrencyValueInterface {
   dbio: number;
-  dai: number;
-  usd: number;
+  dai: number | string;
+  usd: number | string;
 }
 export interface ServiceInterface {
   countryId: string;
@@ -19,7 +20,7 @@ export interface ServiceInterface {
 }
 export interface RequestByCountryDictInterface {
   totalRequests: number;
-  totalValue: string | number;
+  totalValue: number;
   services: {
     [id: string]: ServiceInterface;
   };
