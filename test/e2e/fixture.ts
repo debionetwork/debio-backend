@@ -143,6 +143,71 @@ module.exports = async () => {
     .execute();
   console.log('`EmailNotification` data injection successful! ✅');
 
+  console.log('Injecting `Notification` into debio-postgres 💉...');
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 1,
+      role: 'Lab',
+      entity: 'New Order',
+      entity_type: 'Lab',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      block_number: '1',
+    })
+    .execute();
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 2,
+      role: 'Lab',
+      entity: 'New Order',
+      entity_type: 'Lab',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      block_number: '2',
+    })
+    .execute();
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 3,
+      role: 'Lab',
+      entity: 'New Order',
+      entity_type: 'Lab',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY',
+      block_number: '3',
+    })
+    .execute();
+  console.log('`NOtification` data injection successful! ✅');
+
   console.log('Injecting `Transaction Type` into debio-postgres 💉...');
 
   const transactionTypes = [

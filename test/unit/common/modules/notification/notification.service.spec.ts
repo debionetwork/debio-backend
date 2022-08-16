@@ -107,6 +107,7 @@ describe('Debio Notification Service Unit Tests', () => {
     expect(repositoryMock.update).toHaveBeenCalledWith(
       {
         to: TO,
+        read: false,
       },
       expect.objectContaining({
         read: true,

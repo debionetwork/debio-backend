@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Put, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Put,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../common';
 import { notificationData } from '../../common/modules/notification/models/response';
@@ -18,10 +25,22 @@ export class NotificationEndpointController {
       example: notificationData,
     },
   })
-  async getAllNotificationByToId(@Param('to_id') to_id: string) {
+  async getAllNotificationByToId(
+    @Param('to_id') to_id: string,
+    @Query('start_block') startBlock: string,
+    @Query('end_block') endBlock: string,
+    @Query('role') role: string,
+    @Query('from') from: string,
+  ) {
     try {
       return {
-        data: await this.notificationService.getAllByToId(to_id),
+        data: await this.notificationService.getAllByToId(
+          to_id,
+          startBlock,
+          endBlock,
+          role,
+          from,
+        ),
       };
     } catch (error) {
       return error;

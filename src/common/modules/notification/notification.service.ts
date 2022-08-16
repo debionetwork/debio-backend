@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTimeProxy } from '../proxies/date-time/date-time.proxy';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
 
@@ -13,11 +13,20 @@ export class NotificationService {
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
-  getAllByToId(to: string) {
+  getAllByToId(
+    to: string,
+    startBlock: string,
+    endBlock: string,
+    role: string,
+    from: string,
+  ) {
     return this.notificationRepository.find({
       where: {
         to,
         deleted_at: null,
+        block_number: Between(startBlock, endBlock),
+        role,
+        from,
       },
       order: {
         updated_at: 'DESC',
@@ -53,7 +62,10 @@ export class NotificationService {
 
   async setBulkNotificationHasBeenRead(to) {
     return await this.notificationRepository.update(
-      { to },
+      {
+        to,
+        read: false,
+      },
       {
         updated_at: await this.dateTimeProxy.new(),
         read: true,
