@@ -6,13 +6,14 @@ import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../secrets';
 
 @Module({
   imports: [
     GCloudStorageModule.withConfigAsync({
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => ({
         defaultBucketname: gCloudSecretManagerService
           .getSecret('BUCKET_NAME')

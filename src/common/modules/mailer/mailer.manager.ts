@@ -2,13 +2,14 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import { CustomerStakingRequestService, LabRegister } from './models';
+import { keyList } from '../../../secrets';
 
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
   constructor(
     private readonly mailerService: MailerService,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async sendCustomerStakingRequestServiceEmail(

@@ -1,6 +1,7 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { keyList } from '../../secrets';
 import { TransactionLoggingModule } from '../../common';
 import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
@@ -11,7 +12,7 @@ import { TransactionService } from './transaction.service';
     ElasticsearchModule.registerAsync({
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           node: gCloudSecretManagerService

@@ -15,6 +15,7 @@ import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../secrets';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
     ElasticsearchModule.registerAsync({
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           node: gCloudSecretManagerService

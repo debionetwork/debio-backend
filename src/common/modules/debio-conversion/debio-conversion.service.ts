@@ -1,12 +1,13 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import { keyList } from '../../../secrets';
 
 @Injectable()
 export class DebioConversionService {
   private readonly logger: Logger = new Logger(DebioConversionService.name);
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async getExchange() {

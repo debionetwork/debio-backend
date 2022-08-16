@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TerminusModule } from '@nestjs/terminus';
 import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
+import { keyList } from '../../../../secrets';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
     ElasticsearchModule.registerAsync({
       inject: [GCloudSecretManagerService],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           node: gCloudSecretManagerService

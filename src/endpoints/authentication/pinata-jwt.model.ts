@@ -1,7 +1,8 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../secrets';
 
 export const pinataJwtPayload = (
-  gCloudSecretManagerService: GCloudSecretManagerService,
+  gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
 ) => ({
   userInformation: {
     id: gCloudSecretManagerService.getSecret('PINATA_USER_ID').toString(),
