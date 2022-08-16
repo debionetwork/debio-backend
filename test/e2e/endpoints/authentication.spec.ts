@@ -8,6 +8,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList } from '../../../src/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -43,7 +44,7 @@ describe('Authentication Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         JwtModule.register({
           signOptions: {
             expiresIn: '5s',

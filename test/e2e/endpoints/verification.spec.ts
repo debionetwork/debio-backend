@@ -16,12 +16,13 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList, SecretKeyList } from '../../../src/secrets';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
-  let gcloudSecretManagerService: GCloudSecretManagerService;
+  let gcloudSecretManagerService: GCloudSecretManagerService<keyList>;
 
   const apiKey = 'DEBIO_API_KEY';
 
@@ -55,7 +56,7 @@ describe('Verification Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',

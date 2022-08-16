@@ -8,6 +8,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
+import { SecretKeyList } from '../../../src/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -33,7 +34,7 @@ describe('Cloud Controller (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         CloudStorageModule,
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
     })
       .overrideProvider(GCloudSecretManagerService)
