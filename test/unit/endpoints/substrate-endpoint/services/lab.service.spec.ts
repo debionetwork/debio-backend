@@ -24,15 +24,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
           bool: {
             must: [
               {
-                match_phrase_prefix: { 'services.country': { query: country } },
+                match_phrase_prefix: { 'info.country': { query: country } },
               },
-              { match_phrase_prefix: { 'services.region': { query: region } } },
+              { match_phrase_prefix: { 'info.region': { query: region } } },
               {
                 match_phrase_prefix: {
                   'services.info.category': { query: category },
                 },
               },
-              { match_phrase_prefix: { 'services.city': { query: city } } },
+              { match_phrase_prefix: { 'info.city': { query: city } } },
             ],
           },
         },
