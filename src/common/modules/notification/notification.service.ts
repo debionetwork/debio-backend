@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTimeProxy } from '../proxies/date-time/date-time.proxy';
-import { Between, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
 
@@ -53,6 +53,19 @@ export class NotificationService {
   async setNotificationHasBeenReadById(id) {
     return await this.notificationRepository.update(
       { id },
+      {
+        updated_at: await this.dateTimeProxy.new(),
+        read: true,
+      },
+    );
+  }
+
+  async setNotificationHasBeenReadByIds(ids: string[]) {
+    return await this.notificationRepository.update(
+      {
+        id: In(ids),
+        read: false,
+      },
       {
         updated_at: await this.dateTimeProxy.new(),
         read: true,

@@ -206,6 +206,69 @@ module.exports = async () => {
       block_number: '3',
     })
     .execute();
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 4,
+      role: 'GA',
+      entity: 'New Order',
+      entity_type: 'GA',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQ5',
+      block_number: '4',
+    })
+    .execute();
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 5,
+      role: 'GA',
+      entity: 'New Order',
+      entity_type: 'GA',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQ5',
+      block_number: '5',
+    })
+    .execute();
+
+  await dbPostgresMigration
+    .createQueryBuilder()
+    .insert()
+    .into(Notification)
+    .values({
+      id: 6,
+      role: 'GA',
+      entity: 'New Order',
+      entity_type: 'GA',
+      reference_id: '5FjqD9WgAS3DvxuZYNT7LX8jpPca3yfQXMWMtkmvN8kvFaSs',
+      description: 'A new order ([]) is awaiting process.',
+      read: false,
+      created_at: new Date(),
+      updated_at: new Date(),
+      deleted_at: null,
+      from: 'Debio Network',
+      to: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQ5',
+      block_number: '6',
+    })
+    .execute();
   console.log('`NOtification` data injection successful! ✅');
 
   console.log('Injecting `Transaction Type` into debio-postgres 💉...');
