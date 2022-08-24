@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -6,10 +7,11 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { SentryInterceptor } from '../../common';
 import { notificationData } from '../../common/modules/notification/models/response';
 import { NotificationService } from '../../common/modules/notification/notification.service';
+import { DataListIdDto } from './dto/data-list-id.dto';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('notification')
@@ -69,6 +71,35 @@ export class NotificationEndpointController {
       return {
         data: await this.notificationService.setNotificationHasBeenReadById(
           notification_id,
+        ),
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Put('set-read-many')
+  @ApiBody({ type: DataListIdDto })
+  @ApiOperation({
+    description: 'update data notification to hasbeen read by list id.',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        data: {
+          generatedMaps: [],
+          raw: [],
+          affected: 1,
+        },
+      },
+    },
+  })
+  async setNotificationHasbeenReadByIds(@Body() dto: DataListIdDto) {
+    try {
+      return {
+        data: await this.notificationService.setNotificationHasBeenReadByIds(
+          dto.ids,
         ),
       };
     } catch (error) {
