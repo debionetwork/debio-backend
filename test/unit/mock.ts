@@ -24,7 +24,7 @@ import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../src/secrets';
+import { keyList } from '../../src/common/secrets';
 
 export function mockFunction(args) {} // eslint-disable-line
 

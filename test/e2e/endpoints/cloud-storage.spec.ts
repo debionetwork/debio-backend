@@ -8,7 +8,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
-import { SecretKeyList } from '../../../src/secrets';
+import { SecretKeyList } from '../../../src/common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 

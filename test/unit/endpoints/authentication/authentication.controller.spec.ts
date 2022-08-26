@@ -5,7 +5,7 @@ import { AuthenticationController } from '../../../../src/endpoints/authenticati
 import { pinataJwtPayload } from '../../../../src/endpoints/authentication/pinata-jwt.model';
 import { JwtService } from '@nestjs/jwt';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../../src/secrets';
+import { keyList } from '../../../../src/common/secrets';
 
 jest.mock('../../../../src/endpoints/authentication/pinata-jwt.model', () => ({
   pinataJwtPayload: jest.fn(),

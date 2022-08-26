@@ -8,7 +8,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../src/secrets';
+import { SecretKeyList } from '../../../src/common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 

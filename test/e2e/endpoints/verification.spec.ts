@@ -16,7 +16,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList, SecretKeyList } from '../../../src/secrets';
+import { keyList, SecretKeyList } from '../../../src/common/secrets';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
