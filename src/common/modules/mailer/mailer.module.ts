@@ -4,7 +4,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
-import { keyList } from '../../../secrets';
+import { keyList } from '../../secrets';
 
 @Module({
   imports: [

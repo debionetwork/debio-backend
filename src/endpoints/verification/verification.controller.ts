@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 

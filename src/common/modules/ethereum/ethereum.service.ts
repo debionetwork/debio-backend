@@ -10,7 +10,7 @@ import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../secrets';
+import { keyList } from '../../secrets';
 
 @Injectable()
 export class EthereumService {

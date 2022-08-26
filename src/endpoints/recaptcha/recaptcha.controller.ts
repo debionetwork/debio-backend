@@ -2,7 +2,7 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import axios from 'axios';
 import { Response } from 'express';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common/interceptors';
 
 @UseInterceptors(SentryInterceptor)

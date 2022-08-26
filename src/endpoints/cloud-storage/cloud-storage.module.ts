@@ -3,7 +3,7 @@ import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
 import { DateTimeModule } from '../../common';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 
 @Module({
   imports: [

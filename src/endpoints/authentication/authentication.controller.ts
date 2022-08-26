@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SentryInterceptor } from '../../common';
 import { pinataJwtPayload } from './pinata-jwt.model';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('auth')

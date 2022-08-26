@@ -39,7 +39,7 @@ import {
   geneticAnalysisOrderByGA,
 } from './models/response';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)

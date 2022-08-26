@@ -13,7 +13,7 @@ import {
 } from '../../common';
 import { queryLabById } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../secrets';
+import { keyList } from '../../common/secrets';
 
 @Controller('email')
 export class EmailEndpointController {

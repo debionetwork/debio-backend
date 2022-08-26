@@ -1,7 +1,7 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
-import { keyList } from '../../../secrets';
+import { keyList } from '../../secrets';
 
 @Injectable()
 export class DebioConversionService {

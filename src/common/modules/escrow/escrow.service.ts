@@ -5,7 +5,7 @@ import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../../secrets';
+import { keyList } from '../../secrets';
 
 const lock = new AsyncLock();
 const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';
