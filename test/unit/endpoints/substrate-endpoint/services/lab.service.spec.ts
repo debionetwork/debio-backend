@@ -17,23 +17,30 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
     page: number,
     size: number,
   ) => {
+    const searchMustList: Array<any> = [
+      {
+        match_phrase_prefix: { 'info.country': { query: country } },
+      },
+    ];
+
+    if (region !== undefined && region !== null && region.trim() !== '') {
+      searchMustList.push({
+        match_phrase_prefix: { 'info.region': { query: region } },
+      });
+    }
+
+    if (city !== undefined && city !== null && city.trim() !== '') {
+      searchMustList.push({
+        match_phrase_prefix: { 'info.city': { query: city } },
+      });
+    }
+
     return {
       index: 'labs',
       body: {
         query: {
           bool: {
-            must: [
-              {
-                match_phrase_prefix: { 'info.country': { query: country } },
-              },
-              { match_phrase_prefix: { 'info.region': { query: region } } },
-              {
-                match_phrase_prefix: {
-                  'services.info.category': { query: category },
-                },
-              },
-              { match_phrase_prefix: { 'info.city': { query: city } } },
-            ],
+            must: searchMustList,
           },
         },
       },
@@ -138,6 +145,88 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
         'XX',
         'XX',
         'XX',
+        1,
+        10,
+      ),
+    ).toEqual(RESULT);
+    expect(elasticsearchServiceMock.search).toHaveBeenCalled();
+  });
+
+  it('should find lab by country', async () => {
+    // Arrange
+    const CALLED_WITH = createSearchObject(
+      'XX',
+      null,
+      null,
+      null,
+      false,
+      1,
+      10,
+    );
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                certifications: 'cert',
+                verification_status: false,
+                blockMetaData: 1,
+                account_id: 'ID',
+                info: {
+                  category: 'XX',
+                },
+                stake_amount: '20',
+                stake_status: 'string',
+                unstake_at: 'string',
+                retrieve_unstake_at: 'string',
+                services: [
+                  {
+                    info: {
+                      category: 'XX',
+                    },
+                    service_flow: false,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+    when(elasticsearchServiceMock.search)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
+
+    const RESULT = {
+      result: [
+        {
+          lab_id: 'ID',
+          info: {
+            category: 'XX',
+          },
+          stake_amount: '20',
+          stake_status: 'string',
+          unstake_at: 'string',
+          retrieve_unstake_at: 'string',
+          lab_detail: {
+            category: 'XX',
+          },
+          certifications: 'cert',
+          verification_status: false,
+          service_flow: false,
+          blockMetaData: 1,
+        },
+      ],
+    };
+
+    // Assert
+    expect(
+      await labServiceMock.getByCountryCityCategory(
+        'XX',
+        null,
+        null,
+        null,
         1,
         10,
       ),
