@@ -2,6 +2,7 @@ import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { waitReady } from '@polkadot/wasm-crypto';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../secrets';
 
 @Injectable()
 export class SubstrateService implements OnModuleInit {
@@ -12,7 +13,7 @@ export class SubstrateService implements OnModuleInit {
   private readonly _logger: Logger = new Logger(SubstrateService.name);
 
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   get api(): ApiPromise {

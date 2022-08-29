@@ -2,13 +2,14 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 import { Body, Controller, Post, Res, UseInterceptors } from '@nestjs/common';
 import axios from 'axios';
 import { Response } from 'express';
+import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common/interceptors';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('recaptcha')
 export class RecaptchaController {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   @Post()

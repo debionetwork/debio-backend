@@ -12,6 +12,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList } from '../../../src/common/secrets';
 
 describe('Transaction Controller (e2e)', () => {
   let server: Server;
@@ -49,7 +50,7 @@ describe('Transaction Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         TransactionLoggingModule,
         TransactionModule,
         TypeOrmModule.forRoot({

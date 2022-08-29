@@ -32,6 +32,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { SecretKeyList } from '../../../src/common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 describe('Substrate Endpoint Controller (e2e)', () => {
@@ -71,7 +72,7 @@ describe('Substrate Endpoint Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         SubstrateEndpointModule,
         TypeOrmModule.forRoot({
           ...dummyCredentials,

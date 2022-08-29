@@ -39,6 +39,7 @@ import {
   geneticAnalysisOrderByGA,
 } from './models/response';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../common/secrets';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -48,7 +49,7 @@ export class SubstrateController {
     private readonly labService: LabService,
     private readonly serviceService: ServiceService,
     private readonly orderService: OrderService,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,

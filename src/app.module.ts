@@ -33,13 +33,14 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList, SecretKeyList } from './common/secrets';
 
 require('dotenv').config(); // eslint-disable-line
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    GCloudSecretManagerModule.withConfig(process.env.PARENT),
+    GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
     TypeOrmModule.forRootAsync({
       imports: [
         ProcessEnvModule.setDefault({
@@ -48,12 +49,12 @@ require('dotenv').config(); // eslint-disable-line
           DB_POSTGRES: 'DB_POSTGRES',
           DB_LOCATIONS: 'DB_LOCATIONS',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
       inject: [ProcessEnvProxy, GCloudSecretManagerService],
       useFactory: async (
         processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           type: 'postgres',
@@ -80,12 +81,12 @@ require('dotenv').config(); // eslint-disable-line
           DB_POSTGRES: 'DB_POSTGRES',
           DB_LOCATIONS: 'DB_LOCATIONS',
         }),
-        GCloudSecretManagerModule.withConfig(process.env.PARENT),
+        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
       ],
       inject: [ProcessEnvProxy, GCloudSecretManagerService],
       useFactory: async (
         processEnvProxy: ProcessEnvProxy,
-        gCloudSecretManagerService: GCloudSecretManagerService,
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           type: 'postgres',

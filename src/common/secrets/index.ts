@@ -1,0 +1,42 @@
+require('dotenv').config(); // eslint-disable-line
+
+export const SecretKeyList = {
+  ADMIN_SUBSTRATE_MNEMONIC: process.env.ADMIN_SUBSTRATE_MNEMONIC || null,
+  BUCKET_NAME: process.env.BUCKET_NAME || null,
+  DEBIO_API_KEY: process.env.DEBIO_API_KEY || null,
+  EMAIL: process.env.EMAIL || null,
+  EMAILS: process.env.EMAILS || null,
+  PASS_EMAIL: process.env.PASS_EMAIL || null,
+  POSTGRES_HOST: process.env.HOST_POSTGRES || null,
+  POSTGRES_USERNAME: process.env.USERNAME_POSTGRES || null,
+  PARENT: process.env.PARENT || null,
+  HOST_POSTGRES: process.env.HOST_POSTGRES || null,
+  DB_POSTGRES: process.env.DB_POSTGRES || null,
+  DB_LOCATIONS: process.env.DB_LOCATIONS || null,
+  POSTGRES_PASSWORD: process.env.PASSWORD_POSTGRES || null,
+  PINATA_SECRET_KEY: process.env.PINATA_SECRET_KEY || null,
+  PINATA_USER_ID: process.env.PINATA_USER_ID || null,
+  PINATA_EMAIL: process.env.PINATA_EMAIL || null,
+  PINATA_EMAIL_VERIFIED: process.env.PINATA_EMAIL_VERIFIED || null,
+  PINATA_PIN_POLICY_REGION_ID: process.env.PINATA_PIN_POLICY_REGION_ID || null,
+  PINATA_PIN_POLICY_REGION_REPL_COUNT:
+    process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT || null,
+  PINATA_MFA_ENABLED: process.env.PINATA_MFA_ENABLED || null,
+  RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY || null,
+  REDIS_HOST: process.env.HOST_REDIS || null,
+  REDIS_PORT: process.env.PORT_REDIS || null,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD || null,
+  REDIS_STORE_URL: process.env.REDIS_STORE_URL || null,
+  REDIS_STORE_USERNAME: process.env.REDIS_STORE_USERNAME || null,
+  REDIS_STORE_PASSWORD: process.env.REDIS_STORE_PASSWORD || null,
+  SUBSTRATE_URL: process.env.SUBSTRATE_URL || null,
+  STORAGE_BASE_URI: process.env.STORAGE_BASE_URI || null,
+  DEBIO_ESCROW_PRIVATE_KEY: process.env.DEBIO_ESCROW_PRIVATE_KEY || null,
+  WEB3_RPC_HTTPS: process.env.WEB3_RPC_HTTPS || null,
+  ESCROW_CONTRACT_ADDRESS: process.env.ESCROW_CONTRACT_ADDRESS || null,
+  ELASTICSEARCH_NODE: process.env.ELASTICSEARCH_NODE || null,
+  ELASTICSEARCH_USERNAME: process.env.ELASTICSEARCH_USERNAME || null,
+  ELASTICSEARCH_PASSWORD: process.env.ELASTICSEARCH_PASSWORD || null,
+} as const;
+
+export type keyList = keyof typeof SecretKeyList;
