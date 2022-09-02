@@ -14,23 +14,30 @@ export class LabService {
     page: number,
     size: number,
   ) {
+    const searchMustList: Array<any> = [
+      {
+        match_phrase_prefix: { 'info.country': { query: country } },
+      },
+    ];
+
+    if (region !== undefined && region !== null && region.trim() !== '') {
+      searchMustList.push({
+        match_phrase_prefix: { 'info.region': { query: region } },
+      });
+    }
+
+    if (city !== undefined && city !== null && city.trim() !== '') {
+      searchMustList.push({
+        match_phrase_prefix: { 'info.city': { query: city } },
+      });
+    }
+
     const searchObj = {
       index: 'labs',
       body: {
         query: {
           bool: {
-            must: [
-              {
-                match_phrase_prefix: { 'info.country': { query: country } },
-              },
-              { match_phrase_prefix: { 'info.region': { query: region } } },
-              {
-                match_phrase_prefix: {
-                  'services.info.category': { query: category },
-                },
-              },
-              { match_phrase_prefix: { 'info.city': { query: city } } },
-            ],
+            must: searchMustList,
           },
         },
       },
@@ -38,17 +45,20 @@ export class LabService {
       size: size | 10,
     };
 
-    if (city === null || city === undefined) {
-      searchObj.body.query.bool.must.pop();
-    }
-
     const result = [];
     try {
       const labs = await this.elasticsearchService.search(searchObj);
       labs.body.hits.hits.forEach((lab) => {
-        lab._source.services = lab._source.services.filter(
-          (serviceFilter) => serviceFilter.info['category'] === category,
-        );
+        if (
+          category !== undefined &&
+          category !== null &&
+          category.trim() !== ''
+        ) {
+          lab._source.services = lab._source.services.filter(
+            (serviceFilter) => serviceFilter.info['category'] === category,
+          );
+        }
+
         lab._source.services.forEach((labService) => {
           labService.lab_detail = lab._source.info;
           labService.certifications = lab._source.certifications;

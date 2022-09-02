@@ -57,8 +57,8 @@ export class SubstrateController {
 
   @Get('/labs')
   @ApiQuery({ name: 'country' })
-  @ApiQuery({ name: 'region' })
-  @ApiQuery({ name: 'category' })
+  @ApiQuery({ name: 'region', required: false })
+  @ApiQuery({ name: 'category', required: false })
   @ApiQuery({ name: 'city', required: false })
   @ApiQuery({ name: 'page', required: false })
   @ApiQuery({ name: 'size', required: false })
@@ -72,10 +72,10 @@ export class SubstrateController {
     },
   })
   async findByCountryCityCategory(
-    @Query('country') country,
-    @Query('region') region,
-    @Query('city') city,
-    @Query('category') category,
+    @Query('country') country: string,
+    @(Query('region')!) region: string,
+    @(Query('city')!) city: string,
+    @(Query('category')!) category: string,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
