@@ -1,6 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
 import {
-  queryServicesByMultipleIds,
   queryGeneticAnalystServicesByHashId,
   GeneticAnalystService,
 } from '@debionetwork/polkadot-provider';
@@ -26,7 +25,7 @@ export async function getGeneticAnalystRegisterServices(
 ): Promise<Array<GeneticAnalystRegisterService>> {
   const geneticAnalystRegisterServices: Array<GeneticAnalystRegisterService> =
     new Array<GeneticAnalystRegisterService>();
-  const gsrs: Array<GeneticAnalystService> = new Array<GeneticAnalystService>();
+  const gsrs: Array<GeneticAnalystService> = new Array<GeneticAnalystService>(); // eslint-disable-line
   for (let i = 0; i < ids.length; i++) {
     const hashId = ids[i];
     const gaService = await queryGeneticAnalystServicesByHashId(

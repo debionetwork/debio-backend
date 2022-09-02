@@ -14,8 +14,6 @@ import {
 } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
-  queryGeneticAnalystQualificationsByHashId,
-  queryGeneticAnalystQualificationsCountByOwner,
   queryLabById,
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';

@@ -1,8 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import {
   GeneticAnalyst,
-  GeneticAnalystQualification,
-  GeneticAnalystService,
   queryGeneticAnalystQualificationsByHashId,
 } from '@debionetwork/polkadot-provider';
 import {
