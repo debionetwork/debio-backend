@@ -29,7 +29,7 @@ export async function getGeneticAnalystRegisterServices(
   const gsrs: Array<GeneticAnalystService> = new Array<GeneticAnalystService>();
   for (let i = 0; i < ids.length; i++) {
     const hashId = ids[i];
-    let gaService = await queryGeneticAnalystServicesByHashId(
+    const gaService = await queryGeneticAnalystServicesByHashId(
       api as any,
       hashId,
     );
