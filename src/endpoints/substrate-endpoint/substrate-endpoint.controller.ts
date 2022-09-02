@@ -73,9 +73,9 @@ export class SubstrateController {
   })
   async findByCountryCityCategory(
     @Query('country') country: string,
-    @(Query('region')!) region: string,
-    @(Query('city')!) city: string,
-    @(Query('category')!) category: string,
+    @Query('region') region: string,
+    @Query('city') city: string,
+    @Query('category') category: string,
     @Query('page') page,
     @Query('size') size,
   ): Promise<any> {
