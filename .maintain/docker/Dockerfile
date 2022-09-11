@@ -1,32 +1,30 @@
-# Install dependencies only when needed
-FROM node:16.14.2-buster-slim AS dependencies
+# Dependencies stage
+FROM node:16.16.0-alpine3.16 AS dependencies
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci --ignore-scripts
 
-# Rebuild the source code only when needed
-FROM node:16.14.2-buster-slim AS builder
+# Builder stage
+FROM node:16.16.0-alpine3.16 AS builder
 WORKDIR /app
-COPY package*.json ./
+# Copy from dependencies stage
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
 ENV NODE_ENV production
-RUN npm ci --only=production && npm cache clean --force
+RUN npm run build
+# We'll use production dependencies only by NODE_ENV=production
+RUN npm ci --ignore-scripts
 
 # Production image, copy all the files and run
-FROM node:16.14.2-buster-slim AS runner
-LABEL social.debio.image.authors="debio.dev@blocksphere.id"
-# Create user and set ownership and permissions as required
-RUN useradd -m -u 1001 -U -s /bin/sh -d /home/debio debio
+FROM node:16.16.0-alpine3.16 AS runner
+LABEL network.debio.image.authors="devops@debio.network"
 WORKDIR /app
 # Copy from builder stage
-COPY --from=builder --chown=debio /app/package.json ./package.json
-COPY --from=builder --chown=debio /app/node_modules ./node_modules
-COPY --from=builder --chown=debio /app/dist ./dist
-# Set to a non-root built-in user
-USER debio
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/dist ./dist
+# Set to a non-root user
+USER node
 # Set environment variable
 ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000
 EXPOSE ${PORT}
-CMD [ "npm", "run", "start:prod"]
+CMD [ "node", "dist/main.js"]
