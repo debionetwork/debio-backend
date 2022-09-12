@@ -1,6 +1,7 @@
 import { Controller, Param, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
+  geneticAnalystToGARegister,
   LabRegister,
   labToLabRegister,
   MailerManager,
@@ -11,7 +12,10 @@ import {
   EmailNotificationService,
   SubstrateService,
 } from '../../common';
-import { queryLabById } from '@debionetwork/polkadot-provider';
+import {
+  queryGeneticAnalystByAccountId,
+  queryLabById,
+} from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 
@@ -24,6 +28,8 @@ export class EmailEndpointController {
     private readonly emailNotificationService: EmailNotificationService,
   ) {}
 
+  /* A function that takes two arguments and returns a list with the first argument as the head and the
+  second argument as the tail. */
   @Post('registered-lab/:lab_id')
   @ApiParam({ name: 'lab_id' })
   @ApiOperation({
@@ -64,6 +70,46 @@ export class EmailEndpointController {
     }
     dataInput.notification_type = 'LabRegister';
     dataInput.ref_number = lab_id;
+    dataInput.is_email_sent = isEmailSent;
+    dataInput.created_at = new Date();
+
+    await this.emailNotificationService.insertEmailNotification(dataInput);
+
+    response.status(200).send({
+      message: 'Sending Email.',
+    });
+  }
+
+  @Post('registered-genetic_analyst/:genetic_analyst_id')
+  @ApiParam({ name: 'genetic_analyst_id' })
+  async sendMailRegisterGeneticAnalyst(
+    @Param('genetic_analyst_id') genetic_analyst_id: string,
+    @Res() response: Response,
+  ) {
+    let isEmailSent = false;
+    const contextGA = await queryGeneticAnalystByAccountId(
+      this.substrateService.api as any,
+      '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf',
+    );
+    const geneticAnalystRegister = await geneticAnalystToGARegister(
+      this.substrateService.api as any,
+      contextGA,
+    );
+
+    console.log('masuk: ', geneticAnalystRegister);
+    const sentEMail =
+      await this.mailerManager.sendGeneticAnalystRegistrationEmail(
+        process.env.EMAILS.split(','),
+        geneticAnalystRegister,
+      );
+
+    const dataInput = new EmailNotification();
+    if (sentEMail) {
+      isEmailSent = true;
+      dataInput.sent_at = new Date();
+    }
+    dataInput.notification_type = 'GeneticAnalystRegister';
+    dataInput.ref_number = '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf';
     dataInput.is_email_sent = isEmailSent;
     dataInput.created_at = new Date();
 
