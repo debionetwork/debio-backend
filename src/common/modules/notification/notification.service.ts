@@ -29,7 +29,7 @@ export class NotificationService {
         from,
       },
       order: {
-        updated_at: 'DESC',
+        created_at: 'DESC',
       },
     });
   }
