@@ -44,7 +44,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v0
         with:
           cluster_name: ${{ secrets.TESTNET_GKE_CLUSTER_NAME }}
-          location: ${{ secrets.TESTNET_GKE_LOCAION }}
+          location: ${{ secrets.TESTNET_GKE_LOCATION }}
           use_internal_ip: true
           use_auth_provider: true
       - name: Tunneling SSH connections
@@ -137,7 +137,7 @@ jobs:
         uses: google-github-actions/get-gke-credentials@v0
         with:
           cluster_name: ${{ secrets.MAINNET_GKE_CLUSTER_NAME }}
-          location: ${{ secrets.MAINNET_GKE_LOCAION }}
+          location: ${{ secrets.MAINNET_GKE_LOCATION }}
           use_internal_ip: true
           use_auth_provider: true
       - name: Tunneling SSH connections
