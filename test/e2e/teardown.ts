@@ -4,7 +4,6 @@ module.exports = async () => {
 
   const promise = new Promise((resolve, reject) => {
     console.log('Stopping docker-compose... 🐋');
-    // eslint-disable-line
     compose.down({ cwd: path.join(__dirname), log: true }).then(
       () => {
         resolve('DeBio Backend Dependencies is Down!');

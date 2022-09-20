@@ -59,8 +59,9 @@ describe('Recaptcha Controller Unit Tests', () => {
       )
       .reply(200, EXPECTED_RESULTS);
     const RESPONSE: Response = {
-      json: (body: any): any => body, // eslint-disable-line
-      status: (code: number) => RESPONSE, // eslint-disable-line
+      json: (body: any): any => body,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      status: (code: number) => RESPONSE,
     } as Response;
 
     // Assert

@@ -35,7 +35,6 @@ export class VerificationService {
     //Send Reward 2 DBIO
     if (verificationStatus === 'Verified') {
       const reward = 2;
-      // eslint-disable-next-line
       await sendRewards(
         this.subtrateService.api as any,
         this.subtrateService.pair,

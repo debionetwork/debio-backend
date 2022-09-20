@@ -10,7 +10,6 @@ module.exports = async () => {
 
   const promise = new Promise((resolve, reject) => {
     console.log('Starting docker-compose... 🐋');
-    // eslint-disable-line
     compose.upAll({ cwd: path.join(__dirname), log: true }).then(
       () => {
         fixture()
