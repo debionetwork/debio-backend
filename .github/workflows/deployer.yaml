@@ -1,0 +1,25 @@
+name: Deployer
+
+on:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: deployer
+
+jobs:
+  deploy-to-mainnet:
+    runs-on: ubuntu-20.04
+    environment: mainnet
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    name: Deploy to Mainnet
+    steps:
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.MAINNET_GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.MAINNET_GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
