@@ -1,6 +1,10 @@
 name: Deployer
 
 on:
+  push:
+    branches:
+      - main
+      - releases/**
   release:
     types:
       - published
@@ -9,17 +13,192 @@ concurrency:
   group: deployer
 
 jobs:
-  deploy-to-mainnet:
+  build-and-push-docker-image:
+    name: Build and Push Docker Image
+    uses: ./.github/workflows/builder.yaml
+
+  deploy-to-testnet:
+    needs: build-and-push-docker-image
+    if: ${{ github.event_name != 'release' }}
     runs-on: ubuntu-20.04
-    environment: mainnet
+    environment:
+      name: testnet
+      url: https://${{ secrets.TESTNET_BACKEND_DNS }}
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      id-token: write
+      contents: read
+    name: Deploy to Testnet
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: ${{ secrets.TESTNET_GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.TESTNET_GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+      - name: Get GKE Credentials
+        id: get-gke-credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: ${{ secrets.TESTNET_GKE_CLUSTER_NAME }}
+          location: ${{ secrets.TESTNET_GKE_LOCAION }}
+          use_internal_ip: true
+          use_auth_provider: true
+      - name: Tunneling SSH connections
+        id: ssh-compute
+        uses: google-github-actions/ssh-compute@v0
+        with:
+          instance_name: ${{ secrets.TESTNET_BASTION_INSTANCE_NAME }}
+          zone: ${{ secrets.TESTNET_BASTION_INSTANCE_ZONE }}
+          ssh_args: '-4 -L8888:127.0.0.1:8888 -N -q -f'
+          ssh_private_key: ${{ secrets.TESTNET_BASTION_SSH_PRIVATE_KEY }}
+      - name: Setup Helm
+        id: setup-helm
+        uses: azure/setup-helm@v1
+        with:
+          version: 'v3.9.4'
+      - name: Perform Deployment
+        run: |
+          helm repo add debionetwork https://charts.debio.network
+          helm repo update
+          HTTPS_PROXY=127.0.0.1:8888 helm upgrade ${{ github.event.repository.name }} debionetwork/debio-app-deployer \
+            --install \
+            --set-string nameOverride=${{ github.event.repository.name }} \
+            --set-string image.repository=${{ github.event.repository.full_name }} \
+            --set-string image.tag=${{ github.event.release.tag_name }} \
+            --set containerPort=3000 \
+            --set-string serviceAccount.name=${{ github.event.repository.name }} \
+            --set-string serviceAccount.annotations."iam\.gke\.io/gcp-service-account"=${{ github.event.repository.name }}@${{ secrets.TESTNET_GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+            --set config.secretsStore.enabled=true \
+            --set-string config.secretsStore.providerClass=${{ github.event.repository.name }}-secrets-store-provider \
+            --set-string config.secretsStore.name=${{ github.event.repository.name }}-secrets-store \
+            --set service.port=3000 \
+            --set ingress.enabled=true \
+            --set-string ingress.className=nginx \
+            --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="debio-backend-basic-auth" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="*" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, POST\, PUT\, DELETE\, PATCH\, OPTIONS" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,Origin\,Accept\,X-CustomHeader\,debio-api-key" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
+            --set-string ingress.hosts[0].host=${{ secrets.TESTNET_BACKEND_DNS }} \
+            --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
+            --set-string ingress.hosts[0].paths[0].pathType=Prefix \
+            --set-string ingress.hosts[0].paths[1].path=/conversion/\(\)\(.\*\) \
+            --set-string ingress.hosts[0].paths[1].pathType=Prefix \
+            --set-string ingress.hosts[0].paths[1].serviceName=debio-conversion \
+            --set-string ingress.hosts[0].paths[1].servicePort=3000 \
+            --set-string ingress.tls[0].secretName=${{ secrets.TESTNET_BACKEND_DNS }}-letsencrypt-tls \
+            --set-string ingress.tls[0].hosts[0]=${{ secrets.TESTNET_BACKEND_DNS }} \
+            --set-string resources.requests.cpu=100m \
+            --set-string resources.requests.memory=512Mi \
+            --set-string resources.limits.cpu=300m \
+            --set-string resources.limits.memory=1024Mi \
+            --set replicaCount=1 \
+            --set autoscaling.enabled=true \
+            --set autoscaling.minReplicas=1 \
+            --set autoscaling.maxReplicas=5 \
+            --set-string nodeSelector.node_pool=general \
+            --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
+          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}
+
+  deploy-to-mainnet:
+    needs: build-and-push-docker-image
+    if: ${{ github.event_name == 'release' }}
+    runs-on: ubuntu-20.04
+    environment:
+      name: mainnet
+      url: https://${{ secrets.MAINNET_BACKEND_DNS }}
+    permissions:
+      id-token: write
+      contents: read
     name: Deploy to Mainnet
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v0
         with:
           workload_identity_provider: ${{ secrets.MAINNET_GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.MAINNET_GOOGLE_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+      - name: Get GKE Credentials
+        id: get-gke-credentials
+        uses: google-github-actions/get-gke-credentials@v0
+        with:
+          cluster_name: ${{ secrets.MAINNET_GKE_CLUSTER_NAME }}
+          location: ${{ secrets.MAINNET_GKE_LOCAION }}
+          use_internal_ip: true
+          use_auth_provider: true
+      - name: Tunneling SSH connections
+        id: ssh-compute
+        uses: google-github-actions/ssh-compute@v0
+        with:
+          instance_name: ${{ secrets.MAINNET_BASTION_INSTANCE_NAME }}
+          zone: ${{ secrets.MAINNET_BASTION_INSTANCE_ZONE }}
+          ssh_args: '-4 -L8888:127.0.0.1:8888 -N -q -f'
+          ssh_private_key: ${{ secrets.MAINNET_BASTION_SSH_PRIVATE_KEY }}
+      - name: Setup Helm
+        id: setup-helm
+        uses: azure/setup-helm@v1
+        with:
+          version: 'v3.9.4'
+      - name: Perform Deployment
+        run: |
+          helm repo add debionetwork https://charts.debio.network
+          helm repo update
+          HTTPS_PROXY=127.0.0.1:8888 helm upgrade ${{ github.event.repository.name }} debionetwork/debio-app-deployer \
+            --install \
+            --set-string nameOverride=${{ github.event.repository.name }} \
+            --set-string image.repository=${{ github.event.repository.full_name }} \
+            --set-string image.tag=${{ github.event.release.tag_name }} \
+            --set containerPort=3000 \
+            --set-string serviceAccount.name=${{ github.event.repository.name }} \
+            --set-string serviceAccount.annotations."iam\.gke\.io/gcp-service-account"=${{ github.event.repository.name }}@${{ secrets.MAINNET_GCP_PROJECT_ID }}.iam.gserviceaccount.com \
+            --set config.secretsStore.enabled=true \
+            --set-string config.secretsStore.providerClass=${{ github.event.repository.name }}-secrets-store-provider \
+            --set-string config.secretsStore.name=${{ github.event.repository.name }}-secrets-store \
+            --set service.port=3000 \
+            --set ingress.enabled=true \
+            --set-string ingress.className=nginx \
+            --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="debio-backend-basic-auth" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="*" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, POST\, PUT\, DELETE\, PATCH\, OPTIONS" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,Origin\,Accept\,X-CustomHeader\,debio-api-key" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
+            --set-string ingress.hosts[0].host=${{ secrets.MAINNET_BACKEND_DNS }} \
+            --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
+            --set-string ingress.hosts[0].paths[0].pathType=Prefix \
+            --set-string ingress.hosts[0].paths[1].path=/conversion/\(\)\(.\*\) \
+            --set-string ingress.hosts[0].paths[1].pathType=Prefix \
+            --set-string ingress.hosts[0].paths[1].serviceName=debio-conversion \
+            --set-string ingress.hosts[0].paths[1].servicePort=3000 \
+            --set-string ingress.tls[0].secretName=${{ secrets.MAINNET_BACKEND_DNS }}-letsencrypt-tls \
+            --set-string ingress.tls[0].hosts[0]=${{ secrets.MAINNET_BACKEND_DNS }} \
+            --set-string resources.requests.cpu=100m \
+            --set-string resources.requests.memory=512Mi \
+            --set-string resources.limits.cpu=300m \
+            --set-string resources.limits.memory=1024Mi \
+            --set replicaCount=1 \
+            --set autoscaling.enabled=true \
+            --set autoscaling.minReplicas=1 \
+            --set autoscaling.maxReplicas=5 \
+            --set-string nodeSelector.node_pool=general \
+            --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
+          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}

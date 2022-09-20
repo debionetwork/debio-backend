@@ -1,12 +1,7 @@
 name: Builder
 
 on:
-  push:
-    branches:
-      - main
-      - releases/**
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+*'
+  workflow_call:
 
 concurrency:
   group: builder-${{ github.ref }}
