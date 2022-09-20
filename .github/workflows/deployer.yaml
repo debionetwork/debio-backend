@@ -16,6 +16,7 @@ jobs:
   build-and-push-docker-image:
     name: Build and Push Docker Image
     uses: ./.github/workflows/builder.yaml
+    secrets: inherit
 
   deploy-to-testnet:
     needs: build-and-push-docker-image
