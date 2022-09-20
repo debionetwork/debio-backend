@@ -56,7 +56,7 @@ jobs:
         with:
           instance_name: ${{ secrets.TESTNET_BASTION_INSTANCE_NAME }}
           zone: ${{ secrets.TESTNET_BASTION_INSTANCE_ZONE }}
-          ssh_args: '-4 -L8888:127.0.0.1:8888 -N -q -f'
+          ssh_args: '-4 -L 8888:127.0.0.1:8888 -N -q -f'
           ssh_private_key: ${{ secrets.TESTNET_BASTION_SSH_PRIVATE_KEY }}
           command: 'echo Tunneling SSH connections'
       - name: Setup Helm
