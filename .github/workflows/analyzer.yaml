@@ -51,7 +51,7 @@ jobs:
           sarif_file: results.sarif
 
   security-sast:
-    if: ${{ github.event_name != 'branch_protection_rule' || !startsWith(github.ref, 'refs/heads/') }}
+    if: ${{ !startsWith(github.ref, 'refs/heads/') }}
     runs-on: ubuntu-20.04
     permissions:
       security-events: write
@@ -75,7 +75,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
 
   check-dead-link:
-    if: ${{ github.event_name != 'branch_protection_rule' || !startsWith(github.ref, 'refs/heads/') }}
+    if: ${{ !startsWith(github.ref, 'refs/heads/') }}
     runs-on: ubuntu-20.04
     name: Check Dead Link
     steps:
