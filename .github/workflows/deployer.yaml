@@ -16,10 +16,9 @@ jobs:
   build-and-push-docker-image:
     name: Build and Push Docker Image
     uses: ./.github/workflows/builder.yaml
-    with:
+    secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-    secrets: inherit
 
   deploy-to-testnet:
     needs: build-and-push-docker-image
