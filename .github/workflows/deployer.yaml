@@ -60,7 +60,7 @@ jobs:
           echo "::set-output name=value::$(git rev-parse --short HEAD)"
       - name: Setup Helm
         id: setup-helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: 'v3.9.4'
       - name: Perform Deployment
@@ -148,7 +148,7 @@ jobs:
         run: gcloud compute ssh ${{ secrets.MAINNET_BASTION_INSTANCE_NAME }} --project=${{ secrets.MAINNET_GCP_PROJECT_ID }} --zone ${{ secrets.MAINNET_BASTION_INSTANCE_ZONE }} --quiet --tunnel-through-iap --ssh-flag "-4 -L 8888:127.0.0.1:8888 -N -q -f"
       - name: Setup Helm
         id: setup-helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: 'v3.9.4'
       - name: Perform Deployment
