@@ -106,4 +106,25 @@ describe('Email Controller (e2e)', () => {
       }),
     );
   });
+
+  it('POST registered-genetic-analyst/:genetic_analyst_id: should return sendMailRegisteredGeneticAnalyst', async () => {
+    // Act
+    const sendLabRegistrationEmailSpy = jest.spyOn(
+      mailerManager,
+      'sendGeneticAnalystRegistrationEmail',
+    );
+    sendLabRegistrationEmailSpy.mockImplementation(() => Promise.resolve(true));
+
+    const result = await request(server)
+      .post(`/email/registered-genetic-analyst/${substrateService.pair.address}`)
+      .send();
+
+    expect(sendLabRegistrationEmailSpy).toBeCalled();
+    expect(result.status).toEqual(200);
+    expect(result.body).toEqual(
+      expect.objectContaining({
+        message: 'Sending Email.',
+      }),
+    );
+  });
 });
