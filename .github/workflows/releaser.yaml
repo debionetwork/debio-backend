@@ -16,12 +16,12 @@ jobs:
       - name: Build Changelog
         id: build-changelog
         uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           configuration: .github/workflows/rcb_config.json
       - name: Publish
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           body: ${{ steps.build-changelog.outputs.changelog }}
           draft: true
