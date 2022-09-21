@@ -26,7 +26,6 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: testnet
-      url: https://${{ secrets.TESTNET_BACKEND_DNS }}
     permissions:
       id-token: write
       contents: read
@@ -120,7 +119,6 @@ jobs:
     runs-on: ubuntu-20.04
     environment:
       name: mainnet
-      url: https://${{ secrets.MAINNET_BACKEND_DNS }}
     permissions:
       id-token: write
       contents: read
