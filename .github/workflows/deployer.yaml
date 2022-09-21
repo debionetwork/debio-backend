@@ -54,6 +54,11 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0
       - name: Tunneling SSH Connections
         run: gcloud compute ssh ${{ secrets.TESTNET_BASTION_INSTANCE_NAME }} --project=${{ secrets.TESTNET_GCP_PROJECT_ID }} --zone ${{ secrets.TESTNET_BASTION_INSTANCE_ZONE }} --quiet --tunnel-through-iap --ssh-flag "-4 -L 8888:127.0.0.1:8888 -N -q -f"
+      - name: Get Short SHA
+        id: get-short-sha
+        shell: bash
+        run: |
+          echo "::set-output name=value::$(git rev-parse --short HEAD)"
       - name: Setup Helm
         id: setup-helm
         uses: azure/setup-helm@v1
@@ -67,7 +72,7 @@ jobs:
             --install \
             --set-string nameOverride=${{ github.event.repository.name }} \
             --set-string image.repository=${{ github.event.repository.full_name }} \
-            --set-string image.tag=${{ github.event.release.tag_name }} \
+            --set-string image.tag=${{ steps.get-short-sha.outputs.value }} \
             --set containerPort=3000 \
             --set-string serviceAccount.name=${{ github.event.repository.name }} \
             --set-string serviceAccount.annotations."iam\.gke\.io/gcp-service-account"=${{ github.event.repository.name }}@${{ secrets.TESTNET_GCP_PROJECT_ID }}.iam.gserviceaccount.com \
