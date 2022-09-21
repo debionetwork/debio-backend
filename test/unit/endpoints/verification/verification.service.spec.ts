@@ -20,16 +20,13 @@ import { TransactionTypeList } from '../../../../src/common/modules/transaction-
 import { TransactionStatusList } from '../../../../src/common/modules/transaction-status/models/transaction-status.list';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
-  // eslint-disable-next-line
   sendRewards: jest.fn(
     (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   updateLabVerificationStatus: jest.fn(
-    // eslint-disable-next-line
     (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   updateGeneticAnalystVerificationStatus: jest.fn(
-    // eslint-disable-next-line
     (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
   convertToDbioUnitString: jest.fn(),

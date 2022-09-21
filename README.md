@@ -13,9 +13,6 @@ The Anonymous-First Platform for Medical and Bioinformatics Data.
 [![Node.js version](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org/)
 [![NestJS version](https://img.shields.io/badge/NestJS-%5E8.0.0-red?logo=NestJS)](https://github.com/nestjs/nest)
 [![Medium](https://img.shields.io/badge/Medium-DeBio%20Network-brightgreen?logo=medium)](https://blog.debio.network)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=debionetwork_debio-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=debionetwork_debio-backend)
-[![Builder](https://github.com/debionetwork/debio-backend/actions/workflows/builder.yml/badge.svg)](https://github.com/debionetwork/debio-backend/actions/workflows/builder.yml)
-[![Tester](https://github.com/debionetwork/debio-backend/actions/workflows/tester.yml/badge.svg)](https://github.com/debionetwork/debio-backend/actions/workflows/tester.yml)
 
 </div>
 
@@ -23,15 +20,19 @@ The Anonymous-First Platform for Medical and Bioinformatics Data.
 
 DeBio Network is a decentralized anonymous-first platform for medical and bioinformatics data. It uses blockchain technology as the immutable transaction ledger to support its processes.
 
-DeBio Network's backend servers are built using NestJS, a progressive  <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications using <a href="http://www.typescriptlang.org" target="_blank">TypeScript</a>.
-
 ## Getting Started
 
-Follow these steps to get started with our backend
+Follow these steps to get started with our Backend
 
 ### Node.js Setup
 
-All <a href="http://nodejs.org" target="_blank">Node.js</a> versions `14.0.0` above are compatible with our backend. To complete the [basic Node.js setup instructions](https://techviewleo.com/install-nodejs-and-npm-on-debian-linux/).
+All <a href="http://nodejs.org" target="_blank">Node.js</a> versions `14.0.0` above are compatible with our Backend.
+
+### Installation
+
+```bash
+$ npm install
+```
 
 ### Running a Development Server
 
@@ -47,7 +48,7 @@ Build for production environments:
 npm run build
 ```
 
-Execute unit tests:
+Execute tests:
 
 ```bash
 npm run test
@@ -58,8 +59,14 @@ npm run test
 First, install [Docker](https://docs.docker.com/get-docker/) and
 [Docker Compose](https://docs.docker.com/compose/install/).
 
-Then run the following command to start a backend server using Docker Compose.
+Then run the following command to start a Backend server using Docker Compose.
+
+```sh
+./.maintain/docker/create-network.sh
+```
 
 ```bash
 ./.maintain/docker/start-docker-compose.sh
 ```
+
+Server running on http://127.0.0.1:3003.

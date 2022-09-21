@@ -6,7 +6,6 @@ require('dotenv').config(); // eslint-disable-line
 describe('Process Env Proxy Set Default Unit Tests', () => {
   let proxy: ProcessEnvProxy;
 
-  //eslint-disable-next-line
   const WOW = 'WOW';
   process.env.WEB = WOW;
 

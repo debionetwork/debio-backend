@@ -32,11 +32,9 @@ import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-m
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
   setEthAddress: jest.fn(),
-  // eslint-disable-next-line
   adminSetEthAddress: jest.fn(
     (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),
-  // eslint-disable-next-line
   sendRewards: jest.fn(
     (_param1, _param2, _param3, _param4, param5) => param5 && param5(),
   ),

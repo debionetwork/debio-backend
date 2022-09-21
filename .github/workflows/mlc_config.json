@@ -1,7 +1,16 @@
 {
-    "ignorePatterns": [
-      {
-        "pattern": "^http://127.0.0.1"
-      }
-    ]
+  "ignorePatterns": [
+    {
+      "pattern": "^http://127.0.0.1"
+    },
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^https://medium.com/@debionetwork.blog"
+    },
+    {
+      "pattern": "^https://blocksphere2020.atlassian.net/browse/DBIO-ISSUE_NUMBER"
+    }
+  ]
 }
