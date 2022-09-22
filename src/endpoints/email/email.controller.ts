@@ -80,7 +80,7 @@ export class EmailEndpointController {
     });
   }
 
-  @Post('registered-genetic_analyst/:genetic_analyst_id')
+  @Post('registered-genetic-analyst/:genetic_analyst_id')
   @ApiParam({ name: 'genetic_analyst_id' })
   async sendMailRegisterGeneticAnalyst(
     @Param('genetic_analyst_id') genetic_analyst_id: string,
@@ -89,14 +89,13 @@ export class EmailEndpointController {
     let isEmailSent = false;
     const contextGA = await queryGeneticAnalystByAccountId(
       this.substrateService.api as any,
-      '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf',
+      genetic_analyst_id,
     );
     const geneticAnalystRegister = await geneticAnalystToGARegister(
       this.substrateService.api as any,
       contextGA,
     );
 
-    console.log('masuk: ', geneticAnalystRegister);
     const sentEMail =
       await this.mailerManager.sendGeneticAnalystRegistrationEmail(
         process.env.EMAILS.split(','),
@@ -109,7 +108,7 @@ export class EmailEndpointController {
       dataInput.sent_at = new Date();
     }
     dataInput.notification_type = 'GeneticAnalystRegister';
-    dataInput.ref_number = '5EHkvDcbZGxbKKZgbMT2tGqBW52VMShwusg4yCxfknRU35Mf';
+    dataInput.ref_number = genetic_analyst_id;
     dataInput.is_email_sent = isEmailSent;
     dataInput.created_at = new Date();
 
