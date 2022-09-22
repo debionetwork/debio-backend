@@ -116,7 +116,9 @@ describe('Email Controller (e2e)', () => {
     sendLabRegistrationEmailSpy.mockImplementation(() => Promise.resolve(true));
 
     const result = await request(server)
-      .post(`/email/registered-genetic-analyst/${substrateService.pair.address}`)
+      .post(
+        `/email/registered-genetic-analyst/${substrateService.pair.address}`,
+      )
       .send();
 
     expect(sendLabRegistrationEmailSpy).toBeCalled();
