@@ -1,7 +1,6 @@
 ## Describe your changes
 
 ## Issue ticket number / link
-- https://blocksphere2020.atlassian.net/browse/DBIO-ISSUE_NUMBER
 
 ## Checklist before requesting a review
 - [ ] I have performed a self-review of my code
