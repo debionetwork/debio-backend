@@ -98,7 +98,10 @@ export class EmailEndpointController {
 
     const sentEMail =
       await this.mailerManager.sendGeneticAnalystRegistrationEmail(
-        this.gCloudSecretManagerService.getSecret('EMAILS').toString().split(','),
+        this.gCloudSecretManagerService
+          .getSecret('EMAILS')
+          .toString()
+          .split(','),
         geneticAnalystRegister,
       );
 
