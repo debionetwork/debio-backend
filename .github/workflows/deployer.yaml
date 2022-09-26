@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - releases/**
   release:
     types:
       - published
@@ -82,16 +81,14 @@ jobs:
             --set ingress.enabled=true \
             --set-string ingress.className=nginx \
             --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="debio-backend-basic-auth" \
             --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="*" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, POST\, PUT\, DELETE\, PATCH\, OPTIONS" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,Origin\,Accept\,X-CustomHeader\,debio-api-key" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"=${{ github.event.repository.name }}-basic-auth \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"=basic \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"=true \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,debio-api-key" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"=https://*.{{ secrets.TESTNET_DNS }} \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/use-regex"=true \
             --set-string ingress.hosts[0].host=${{ secrets.TESTNET_BACKEND_DNS }} \
             --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
             --set-string ingress.hosts[0].paths[0].pathType=Prefix \
@@ -111,7 +108,12 @@ jobs:
             --set autoscaling.maxReplicas=5 \
             --set-string nodeSelector.node_pool=general \
             --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
-          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}
+          HTTPS_PROXY=127.0.0.1:8888 kubectl rollout status deployment/${{ github.event.repository.name }}
+      - name: Clean Up Tunneling SSH Connections
+        if: always()
+        run: |
+          kill -9 $(lsof -ti:8888)
+          gcloud compute os-login ssh-keys remove --key-file=/home/runner/.ssh/google_compute_engine.pub
 
   deploy-to-mainnet:
     needs: build-and-push-docker-image
@@ -170,16 +172,14 @@ jobs:
             --set ingress.enabled=true \
             --set-string ingress.className=nginx \
             --set-string ingress.annotations."cert-manager\.io/cluster-issuer"=letsencrypt \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"="basic" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"="debio-backend-basic-auth" \
             --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-realm"="Authentication Required" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"="true" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"="*" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-methods"="GET\, POST\, PUT\, DELETE\, PATCH\, OPTIONS" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,Origin\,Accept\,X-CustomHeader\,debio-api-key" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-credentials"="true" \
-            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-max-age"="600" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-secret"=${{ github.event.repository.name }}-basic-auth \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/auth-type"=basic \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/enable-cors"=true \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-headers"="DNT\,Keep-Alive\,User-Agent\,X-Requested-With\,If-Modified-Since\,Cache-Control\,Content-Type\,Range\,Authorization\,debio-api-key" \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/cors-allow-origin"=https://*.{{ secrets.MAINNET_DNS }} \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/rewrite-target"=/\$2\$3 \
+            --set-string ingress.annotations."nginx\.ingress\.kubernetes\.io/use-regex"=true \
             --set-string ingress.hosts[0].host=${{ secrets.MAINNET_BACKEND_DNS }} \
             --set-string ingress.hosts[0].paths[0].path=/\(\)\(.\*\) \
             --set-string ingress.hosts[0].paths[0].pathType=Prefix \
@@ -199,4 +199,10 @@ jobs:
             --set autoscaling.maxReplicas=5 \
             --set-string nodeSelector.node_pool=general \
             --set-string nodeSelector."iam\.gke\.io/gke-metadata-server-enabled"="true"
-          HTTPS_PROXY=127.0.0.1:8888  kubectl rollout status deployment/${{ github.event.repository.name }}
+          HTTPS_PROXY=127.0.0.1:8888 kubectl rollout status deployment/${{ github.event.repository.name }}
+          kill -9 $(lsof -ti:8888)
+      - name: Clean Up Tunneling SSH Connections
+        if: always()
+        run: |
+          kill -9 $(lsof -ti:8888)
+          gcloud compute os-login ssh-keys remove --key-file=/home/runner/.ssh/google_compute_engine.pub
