@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Perform Scorecards Analysis
-        uses: ossf/scorecard-action@v2.0.3
+        uses: ossf/scorecard-action@v2.0.4
         with:
           results_file: results.sarif
           results_format: sarif
