@@ -41,7 +41,6 @@ export async function geneticAnalystToGARegister(
   geneticAnalystRegister.profile_image = genetic_analyst.info.profileImage;
   geneticAnalystRegister.specialization = genetic_analyst.info.specialization;
 
-
   for (let i = 0; i < genetic_analyst.qualifications.length; i++) {
     const hashId = genetic_analyst.qualifications[i];
     const qualification = await queryGeneticAnalystQualificationsByHashId(
