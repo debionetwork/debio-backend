@@ -51,7 +51,7 @@ export class MailerManager {
         path: val.supportingDocument,
       });
     });
-
+    
     try {
       this.mailerService.sendMail({
         to: to,
@@ -66,6 +66,7 @@ export class MailerManager {
           certifications: context.certifications,
           services: context.services,
           experience: context.experience,
+          specialization: context.specialization
         },
         attachments: files,
       });

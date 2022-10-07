@@ -21,6 +21,7 @@ export class GeneticAnalystRegister {
   certifications: Array<GeneticAnalystQualificationCertification>;
   services: Array<GeneticAnalystRegisterService>;
   experience: Array<Experience>;
+  specialization: string;
 }
 
 export async function geneticAnalystToGARegister(
@@ -38,6 +39,8 @@ export async function geneticAnalystToGARegister(
   geneticAnalystRegister.genetic_analyst_name = `${genetic_analyst.info.firstName} ${genetic_analyst.info.lastName}`;
   geneticAnalystRegister.gender = genetic_analyst.info.gender;
   geneticAnalystRegister.profile_image = genetic_analyst.info.profileImage;
+  geneticAnalystRegister.specialization = genetic_analyst.info.specialization;
+
 
   for (let i = 0; i < genetic_analyst.qualifications.length; i++) {
     const hashId = genetic_analyst.qualifications[i];
