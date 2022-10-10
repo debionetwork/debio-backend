@@ -66,6 +66,7 @@ export class MailerManager {
           certifications: context.certifications,
           services: context.services,
           experience: context.experience,
+          specialization: context.specialization,
         },
         attachments: files,
       });
