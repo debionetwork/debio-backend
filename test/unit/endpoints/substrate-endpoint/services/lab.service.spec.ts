@@ -4,7 +4,12 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { LabService } from '../../../../../src/endpoints/substrate-endpoint/services/lab.service';
 import { CountryService } from '../../../../../src/endpoints/location/country.service';
 import { StateService } from '../../../../../src/endpoints/location/state.service';
-import { countryServiceMockFactory, elasticsearchServiceMockFactory, MockType, stateServiceMockFactory } from '../../../mock';
+import {
+  countryServiceMockFactory,
+  elasticsearchServiceMockFactory,
+  MockType,
+  stateServiceMockFactory,
+} from '../../../mock';
 
 describe('Substrate Indexer Lab Service Unit Tests', () => {
   let labServiceMock: LabService;
@@ -126,13 +131,13 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   });
 
   it('should find lab by country, city, and category', async () => {
-    const COUNTRY = "XX";
-    const REGION = "XX";
-    const CITY = "XX";
-    const CATEGORY = "XX";
+    const COUNTRY = 'XX';
+    const REGION = 'XX';
+    const CITY = 'XX';
+    const CATEGORY = 'XX';
 
-    const COUNTRY_NAME = "XX";
-    const REGION_NAME = "XX";
+    const COUNTRY_NAME = 'XX';
+    const REGION_NAME = 'XX';
     // Arrange
     const CALLED_WITH = createSearchObject(
       'XX',
@@ -180,10 +185,10 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       .mockReturnValue(ES_RESULT);
     when(countryServiceMock.getByIso2Code)
       .calledWith(COUNTRY)
-      .mockReturnValue({name: COUNTRY_NAME});
+      .mockReturnValue({ name: COUNTRY_NAME });
     when(stateServiceMock.getState)
       .calledWith(COUNTRY, REGION)
-      .mockReturnValue({name: REGION_NAME});
+      .mockReturnValue({ name: REGION_NAME });
 
     const RESULT = {
       result: [
@@ -198,7 +203,7 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
           retrieve_unstake_at: 'string',
           lab_detail: {
             category: 'XX',
-            region: 'XX'
+            region: 'XX',
           },
           certifications: 'cert',
           verification_status: false,
@@ -225,11 +230,11 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
   });
 
   it('should find lab by country', async () => {
-    const COUNTRY = "XX";
-    const REGION = "XX";
+    const COUNTRY = 'XX';
+    const REGION = 'XX';
 
-    const COUNTRY_NAME = "XX";
-    const REGION_NAME = "XX";
+    const COUNTRY_NAME = 'XX';
+    const REGION_NAME = 'XX';
     // Arrange
     const CALLED_WITH = createSearchObject(
       'XX',
@@ -277,10 +282,10 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       .mockReturnValue(ES_RESULT);
     when(countryServiceMock.getByIso2Code)
       .calledWith(COUNTRY)
-      .mockReturnValue({name: COUNTRY_NAME});
+      .mockReturnValue({ name: COUNTRY_NAME });
     when(stateServiceMock.getState)
       .calledWith(COUNTRY, REGION)
-      .mockReturnValue({name: REGION_NAME});
+      .mockReturnValue({ name: REGION_NAME });
 
     const RESULT = {
       result: [
@@ -295,14 +300,14 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
           retrieve_unstake_at: 'string',
           lab_detail: {
             category: 'XX',
-            region: 'XX'
+            region: 'XX',
           },
           certifications: 'cert',
           verification_status: false,
           service_flow: false,
           blockMetaData: 1,
           country_name: COUNTRY_NAME,
-          region_name: REGION_NAME
+          region_name: REGION_NAME,
         },
       ],
     };

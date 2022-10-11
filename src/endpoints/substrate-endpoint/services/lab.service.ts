@@ -9,7 +9,7 @@ export class LabService {
   constructor(
     private countryService: CountryService,
     private stateService: StateService,
-    private readonly elasticsearchService: ElasticsearchService
+    private readonly elasticsearchService: ElasticsearchService,
   ) {}
 
   async getByCountryCityCategory(
@@ -38,8 +38,9 @@ export class LabService {
       });
     }
 
-    const countryName = (await this.countryService.getByIso2Code(country))?.name ?? "";
-    let regionMap: Map<string, string> = new Map<string, string>();
+    const countryName =
+      (await this.countryService.getByIso2Code(country))?.name ?? '';
+    const regionMap: Map<string, string> = new Map<string, string>();
 
     const searchObj = {
       index: 'labs',
@@ -58,7 +59,8 @@ export class LabService {
     try {
       const labs = await this.elasticsearchService.search(searchObj);
       labs.body.hits.hits.forEach(async (lab) => {
-        let { info, services } = lab._source
+        let { services } = lab._source;
+        const { info } = lab._source;
         if (
           category !== undefined &&
           category !== null &&
@@ -69,12 +71,13 @@ export class LabService {
           );
         }
 
-        let regionName = "";
+        let regionName = '';
 
         if (regionMap.has(info.region)) {
           regionName = regionMap.get(info.region);
         } else {
-          regionName = (await this.stateService.getState(country, info.region)).name;
+          regionName = (await this.stateService.getState(country, info.region))
+            .name;
           regionMap.set(info.region, regionName);
         }
 
