@@ -60,7 +60,7 @@ jobs:
         with:
           install: true
       - name: Cache Docker Layers
-        uses: actions/cache@56461b9eb0f8438fd15c7a9968e3c9ebb18ceff1
+        uses: actions/cache@3cea5372237819ed00197afe530f5a7ea3e805c8
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}

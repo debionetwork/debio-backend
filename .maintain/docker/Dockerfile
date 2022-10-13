@@ -7,7 +7,7 @@ FROM node:16.16.0-bullseye-slim@sha256:02ccb6b16a5d3c6c702e55dee1769d2976bf15ba4
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
-ENV NODE_ENV production
+ENV NODE_ENV=production
 RUN npm run build
 RUN npm ci --ignore-scripts
 
