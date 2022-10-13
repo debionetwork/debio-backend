@@ -1,0 +1,226 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency: 
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    if: ${{ github.event_name == 'pull_request' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        command:
+          - 'build'
+          - 'lint:check'
+          - 'format:check'
+          - 'test:unit'
+    runs-on: ubuntu-20.04
+    name: Test on Node.js 16 ( ${{ matrix.command }} )
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          fetch-depth: 0
+      - name: Set Up Node.js
+        uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b
+        with:
+          node-version: 16
+          cache: npm
+      - name: Install Dependencies
+        run: npm ci --ignore-scripts
+      - name: Run ${{ matrix.command }}
+        run: npm run ${{ matrix.command }}
+
+  build:
+    if: ${{ github.event_name == 'push' && github.ref_type == 'branch' }}
+    runs-on: ubuntu-20.04
+    name: Build
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          fetch-depth: 0
+      - name: Set Up QEMU
+        uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18
+      - name: Set Up Docker Buildx
+        id: set-up-buildx
+        uses: docker/setup-buildx-action@95cb08cb2672c73d4ffd2f422e6d11953d2a9c70
+        with:
+          install: true
+      - name: Cache Docker Layers
+        uses: actions/cache@56461b9eb0f8438fd15c7a9968e3c9ebb18ceff1
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Build Docker
+        uses: docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5
+        with:
+          builder: ${{ steps.set-up-buildx.outputs.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+          context: .
+          file: .maintain/docker/Dockerfile
+          tags: ${{ github.repository }}:${{ github.sha }}
+          outputs: type=docker,dest=/tmp/docker_image.tar
+      - name: Move Cache Docker Layers
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Upload Build to Artifact
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+        with:
+          name: build_${{ github.sha }}
+          path: |
+            /tmp/docker_image.tar
+          retention-days: 5
+
+  release-please:
+    needs:
+      - build
+    runs-on: ubuntu-20.04
+    name: Release Please
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          fetch-depth: 0
+      - name: Release
+        id: release
+        uses: google-github-actions/release-please-action@069d7229d7b10308de85bc606a91e0033e259c8e
+        with:
+          token: ${{ secrets.PAT }}
+          fork: true
+          release-type: node
+          package-name: ${{ github.event.repository.name }}
+          include-v-in-tag: false
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
+  publish-docker:
+    needs:
+      - release-please
+    runs-on: ubuntu-20.04
+    name: Publish Docker
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Download Build from Artifact
+        uses: actions/download-artifact@fb598a63ae348fa914e94cd0ff38f362e927b741
+        with:
+          name: build_${{ github.sha }}
+          path: /tmp
+      - name: Load Downloaded Image
+        run: |
+          docker load --input /tmp/docker_image.tar
+          docker images --no-trunc --digests ${{ github.repository }}
+      - name: Tag as Release Version
+        if: ${{ needs.release-please.outputs.release_created }}
+        run: |
+          docker tag ${{ github.repository }}:${{ github.sha }} ${{ github.repository }}:${{ needs.release-please.outputs.tag_name }}
+          docker tag ${{ github.repository }}:${{ github.sha }} ${{ github.repository }}:latest
+          docker images --no-trunc --digests ${{ github.repository }}
+      - name: Push
+        run: docker image push -a ${{ github.repository }}
+
+  deploy:
+    needs:
+      - release-please
+      - publish-docker
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      max-parallel: 1
+      matrix:
+        is_release:
+          - ${{ needs.release-please.outputs.release_created || false }}
+        environment:
+          - TESTNET
+          - MAINNET
+        exclude:
+          - is_release: false
+            environment: MAINNET
+    environment: ${{ matrix.environment }}
+    runs-on: ubuntu-20.04
+    name: Deploy to ${{ matrix.environment }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        with:
+          fetch-depth: 0
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@2671692c371cbef34ed8ded9f197670c88c9d343
+        with:
+          workload_identity_provider: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_PROVIDER')] }}
+          service_account: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT')] }}
+      - name: Set Up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@877d4953d2c70a0ba7ef3290ae968eb24af233bb
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@054fdb05e32039f72764f03e69e6acb20caa6f56
+        with:
+          cluster_name: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_CLUSTER_NAME')] }}
+          location: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_LOCATION')] }}
+          use_internal_ip: true
+          use_auth_provider: true
+      - name: Tunneling SSH connections
+        run: |
+          gcloud compute ssh ${{ secrets[format('{0}_{1}', matrix.environment, 'GCE_BASTION_INSTANCE_NAME')] }} \
+            --project=${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_PROJECT_ID')] }} \
+            --zone ${{ secrets[format('{0}_{1}', matrix.environment, 'GCE_BASTION_INSTANCE_ZONE')] }} \
+            --ssh-flag '-4 -L 8888:127.0.0.1:8888 -N -q -f' \
+            --tunnel-through-iap \
+            --quiet
+      - name: Set Up Helm
+        uses: azure/setup-helm@b5b231a831f96336bbfeccc1329990f0005c5bb1
+        with:
+          version: v3.10.0
+      - name: Perform Deployment
+        run: |
+          helm repo add debionetwork https://charts.debio.network
+          helm repo update
+          HTTPS_PROXY=127.0.0.1:8888 helm upgrade ${{ github.event.repository.name }} debionetwork/debio-app-deployer \
+            --install \
+            --set-string nameOverride=${{ github.event.repository.name }} \
+            --set-string image.repository=${{ github.repository }} \
+            --set-string image.tag=${{ needs.release-please.outputs.tag_name || github.sha }} \
+            --set-string serviceAccount.name=${{ github.event.repository.name }} \
+            --set-string serviceAccount.annotations.'iam\.gke\.io/gcp-service-account'=${{ github.event.repository.name }}@${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_PROJECT_ID')] }}.iam.gserviceaccount.com \
+            --set config.secretsStore.enabled=true \
+            --set-string config.secretsStore.providerClass=${{ github.event.repository.name }}-secrets-store-provider \
+            --set-string config.secretsStore.name=${{ github.event.repository.name }}-secrets-store \
+            --set containerPort=3000 \
+            --set service.port=3000 \
+            --set-string resources.requests.cpu=100m \
+            --set-string resources.requests.memory=512Mi \
+            --set-string resources.limits.cpu=300m \
+            --set-string resources.limits.memory=1024Mi \
+            --set replicaCount=1 \
+            --set autoscaling.enabled=true \
+            --set autoscaling.minReplicas=1 \
+            --set autoscaling.maxReplicas=5 \
+            --set-string nodeSelector.node_pool=general \
+            --set-string nodeSelector.'iam\.gke\.io/gke-metadata-server-enabled'='true'
+          HTTPS_PROXY=127.0.0.1:8888 kubectl rollout status deployment/${{ github.event.repository.name }}
+      - name: Clean Up Tunneling SSH Connections
+        if: always()
+        run: |
+          kill -9 $(lsof -ti:8888)
+          gcloud compute os-login ssh-keys remove --key-file=/home/runner/.ssh/google_compute_engine.pub
