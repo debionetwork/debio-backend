@@ -1,10 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
+import { StateService } from '../../location/state.service';
+import { CountryService } from '../../location/country.service';
 
 @Injectable()
 export class LabService {
   private readonly logger: Logger = new Logger(LabService.name);
-  constructor(private readonly elasticsearchService: ElasticsearchService) {}
+  constructor(
+    private countryService: CountryService,
+    private stateService: StateService,
+    private readonly elasticsearchService: ElasticsearchService,
+  ) {}
 
   async getByCountryCityCategory(
     country: string,
@@ -32,6 +38,10 @@ export class LabService {
       });
     }
 
+    const countryName =
+      (await this.countryService.getByIso2Code(country))?.name ?? '';
+    const regionMap: Map<string, string> = new Map<string, string>();
+
     const searchObj = {
       index: 'labs',
       body: {
@@ -48,18 +58,30 @@ export class LabService {
     const result = [];
     try {
       const labs = await this.elasticsearchService.search(searchObj);
-      labs.body.hits.hits.forEach((lab) => {
+      labs.body.hits.hits.forEach(async (lab) => {
+        let { services } = lab._source;
+        const { info } = lab._source;
         if (
           category !== undefined &&
           category !== null &&
           category.trim() !== ''
         ) {
-          lab._source.services = lab._source.services.filter(
+          services = services.filter(
             (serviceFilter) => serviceFilter.info['category'] === category,
           );
         }
 
-        lab._source.services.forEach((labService) => {
+        let regionName = '';
+
+        if (regionMap.has(info.region)) {
+          regionName = regionMap.get(info.region);
+        } else {
+          regionName = (await this.stateService.getState(country, info.region))
+            .name;
+          regionMap.set(info.region, regionName);
+        }
+
+        services.forEach(async (labService) => {
           labService.lab_detail = lab._source.info;
           labService.certifications = lab._source.certifications;
           labService.verification_status = lab._source.verification_status;
@@ -69,6 +91,8 @@ export class LabService {
           labService.unstake_at = lab._source.unstake_at;
           labService.retrieve_unstake_at = lab._source.retrieve_unstake_at;
           labService.lab_id = lab._source.account_id;
+          labService.country_name = countryName;
+          labService.region_name = regionName;
 
           result.push(labService);
         });

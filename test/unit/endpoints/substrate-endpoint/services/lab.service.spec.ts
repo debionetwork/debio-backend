@@ -2,10 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { when } from 'jest-when';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { LabService } from '../../../../../src/endpoints/substrate-endpoint/services/lab.service';
-import { elasticsearchServiceMockFactory, MockType } from '../../../mock';
+import { CountryService } from '../../../../../src/endpoints/location/country.service';
+import { StateService } from '../../../../../src/endpoints/location/state.service';
+import {
+  countryServiceMockFactory,
+  elasticsearchServiceMockFactory,
+  MockType,
+  stateServiceMockFactory,
+} from '../../../mock';
 
 describe('Substrate Indexer Lab Service Unit Tests', () => {
   let labServiceMock: LabService;
+  let countryServiceMock: CountryService;
+  let stateServiceMock: StateService;
   let elasticsearchServiceMock: MockType<ElasticsearchService>;
 
   const createSearchObject = (
@@ -55,6 +64,14 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       providers: [
         LabService,
         {
+          provide: CountryService,
+          useFactory: countryServiceMockFactory,
+        },
+        {
+          provide: StateService,
+          useFactory: stateServiceMockFactory,
+        },
+        {
           provide: ElasticsearchService,
           useFactory: elasticsearchServiceMockFactory,
         },
@@ -62,176 +79,14 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
     }).compile();
 
     labServiceMock = module.get(LabService);
+    countryServiceMock = module.get(CountryService);
+    stateServiceMock = module.get(StateService);
     elasticsearchServiceMock = module.get(ElasticsearchService);
   });
 
   it('should be defined', () => {
     // Assert
     expect(labServiceMock).toBeDefined();
-  });
-
-  it('should find lab by country, city, and category', async () => {
-    // Arrange
-    const CALLED_WITH = createSearchObject(
-      'XX',
-      'XX',
-      'XX',
-      'XX',
-      false,
-      1,
-      10,
-    );
-    const ES_RESULT = {
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                certifications: 'cert',
-                verification_status: false,
-                blockMetaData: 1,
-                account_id: 'ID',
-                info: {
-                  category: 'XX',
-                },
-                stake_amount: '20',
-                stake_status: 'string',
-                unstake_at: 'string',
-                retrieve_unstake_at: 'string',
-                services: [
-                  {
-                    info: {
-                      category: 'XX',
-                    },
-                    service_flow: false,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    };
-    when(elasticsearchServiceMock.search)
-      .calledWith(CALLED_WITH)
-      .mockReturnValue(ES_RESULT);
-
-    const RESULT = {
-      result: [
-        {
-          lab_id: 'ID',
-          info: {
-            category: 'XX',
-          },
-          stake_amount: '20',
-          stake_status: 'string',
-          unstake_at: 'string',
-          retrieve_unstake_at: 'string',
-          lab_detail: {
-            category: 'XX',
-          },
-          certifications: 'cert',
-          verification_status: false,
-          service_flow: false,
-          blockMetaData: 1,
-        },
-      ],
-    };
-
-    // Assert
-    expect(
-      await labServiceMock.getByCountryCityCategory(
-        'XX',
-        'XX',
-        'XX',
-        'XX',
-        1,
-        10,
-      ),
-    ).toEqual(RESULT);
-    expect(elasticsearchServiceMock.search).toHaveBeenCalled();
-  });
-
-  it('should find lab by country', async () => {
-    // Arrange
-    const CALLED_WITH = createSearchObject(
-      'XX',
-      null,
-      null,
-      null,
-      false,
-      1,
-      10,
-    );
-    const ES_RESULT = {
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                certifications: 'cert',
-                verification_status: false,
-                blockMetaData: 1,
-                account_id: 'ID',
-                info: {
-                  category: 'XX',
-                },
-                stake_amount: '20',
-                stake_status: 'string',
-                unstake_at: 'string',
-                retrieve_unstake_at: 'string',
-                services: [
-                  {
-                    info: {
-                      category: 'XX',
-                    },
-                    service_flow: false,
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    };
-    when(elasticsearchServiceMock.search)
-      .calledWith(CALLED_WITH)
-      .mockReturnValue(ES_RESULT);
-
-    const RESULT = {
-      result: [
-        {
-          lab_id: 'ID',
-          info: {
-            category: 'XX',
-          },
-          stake_amount: '20',
-          stake_status: 'string',
-          unstake_at: 'string',
-          retrieve_unstake_at: 'string',
-          lab_detail: {
-            category: 'XX',
-          },
-          certifications: 'cert',
-          verification_status: false,
-          service_flow: false,
-          blockMetaData: 1,
-        },
-      ],
-    };
-
-    // Assert
-    expect(
-      await labServiceMock.getByCountryCityCategory(
-        'XX',
-        null,
-        null,
-        null,
-        1,
-        10,
-      ),
-    ).toEqual(RESULT);
-    expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
   it('should return empty', () => {
@@ -254,7 +109,6 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
     ).resolves.toEqual({
       result: RESULT,
     });
-    expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
   it('should throw error', () => {
@@ -274,6 +128,201 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
     expect(
       labServiceMock.getByCountryCityCategory('XX', 'XX', 'XX', 'XX', 1, 10),
     ).rejects.toMatchObject(ERROR_RESULT);
+  });
+
+  it('should find lab by country, city, and category', async () => {
+    const COUNTRY = 'XX';
+    const REGION = 'XX';
+    const CITY = 'XX';
+    const CATEGORY = 'XX';
+
+    const COUNTRY_NAME = 'XX';
+    const REGION_NAME = 'XX';
+    // Arrange
+    const CALLED_WITH = createSearchObject(
+      'XX',
+      'XX',
+      'XX',
+      'XX',
+      false,
+      1,
+      10,
+    );
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                certifications: 'cert',
+                verification_status: false,
+                blockMetaData: 1,
+                account_id: 'ID',
+                info: {
+                  region: 'XX',
+                  category: 'XX',
+                },
+                stake_amount: '20',
+                stake_status: 'string',
+                unstake_at: 'string',
+                retrieve_unstake_at: 'string',
+                services: [
+                  {
+                    info: {
+                      category: 'XX',
+                    },
+                    service_flow: false,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+    when(elasticsearchServiceMock.search)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
+    when(countryServiceMock.getByIso2Code)
+      .calledWith(COUNTRY)
+      .mockReturnValue({ name: COUNTRY_NAME });
+    when(stateServiceMock.getState)
+      .calledWith(COUNTRY, REGION)
+      .mockReturnValue({ name: REGION_NAME });
+
+    const RESULT = {
+      result: [
+        {
+          lab_id: 'ID',
+          info: {
+            category: 'XX',
+          },
+          stake_amount: '20',
+          stake_status: 'string',
+          unstake_at: 'string',
+          retrieve_unstake_at: 'string',
+          lab_detail: {
+            category: 'XX',
+            region: 'XX',
+          },
+          certifications: 'cert',
+          verification_status: false,
+          service_flow: false,
+          blockMetaData: 1,
+          country_name: COUNTRY_NAME,
+          region_name: REGION_NAME,
+        },
+      ],
+    };
+
+    // Assert
+    expect(
+      await labServiceMock.getByCountryCityCategory(
+        COUNTRY,
+        REGION,
+        CITY,
+        CATEGORY,
+        1,
+        10,
+      ),
+    ).toEqual(RESULT);
+    expect(elasticsearchServiceMock.search).toHaveBeenCalled();
+  });
+
+  it('should find lab by country', async () => {
+    const COUNTRY = 'XX';
+    const REGION = 'XX';
+
+    const COUNTRY_NAME = 'XX';
+    const REGION_NAME = 'XX';
+    // Arrange
+    const CALLED_WITH = createSearchObject(
+      'XX',
+      null,
+      null,
+      null,
+      false,
+      1,
+      10,
+    );
+    const ES_RESULT = {
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                certifications: 'cert',
+                verification_status: false,
+                blockMetaData: 1,
+                account_id: 'ID',
+                info: {
+                  region: 'XX',
+                  category: 'XX',
+                },
+                stake_amount: '20',
+                stake_status: 'string',
+                unstake_at: 'string',
+                retrieve_unstake_at: 'string',
+                services: [
+                  {
+                    info: {
+                      category: 'XX',
+                    },
+                    service_flow: false,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    };
+    when(elasticsearchServiceMock.search)
+      .calledWith(CALLED_WITH)
+      .mockReturnValue(ES_RESULT);
+    when(countryServiceMock.getByIso2Code)
+      .calledWith(COUNTRY)
+      .mockReturnValue({ name: COUNTRY_NAME });
+    when(stateServiceMock.getState)
+      .calledWith(COUNTRY, REGION)
+      .mockReturnValue({ name: REGION_NAME });
+
+    const RESULT = {
+      result: [
+        {
+          lab_id: 'ID',
+          info: {
+            category: 'XX',
+          },
+          stake_amount: '20',
+          stake_status: 'string',
+          unstake_at: 'string',
+          retrieve_unstake_at: 'string',
+          lab_detail: {
+            category: 'XX',
+            region: 'XX',
+          },
+          certifications: 'cert',
+          verification_status: false,
+          service_flow: false,
+          blockMetaData: 1,
+          country_name: COUNTRY_NAME,
+          region_name: REGION_NAME,
+        },
+      ],
+    };
+
+    // Assert
+    expect(
+      await labServiceMock.getByCountryCityCategory(
+        COUNTRY,
+        null,
+        null,
+        null,
+        1,
+        10,
+      ),
+    ).toEqual(RESULT);
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 });
