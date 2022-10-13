@@ -10,7 +10,6 @@
     "url": "https://github.com/debionetwork/debio-backend.git"
   },
   "scripts": {
-    "install:hooks": ".maintain/install-hooks.sh",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",

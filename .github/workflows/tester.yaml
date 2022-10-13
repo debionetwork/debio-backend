@@ -10,49 +10,24 @@ concurrency:
   group: tester-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
-jobs:
-  changes:
-    runs-on: ubuntu-20.04
-    outputs:
-      app-source: ${{ steps.filter.outputs.app-source }}
-    name: Changes
-    steps:
-      - name: Filter
-        id: filter
-        uses: dorny/paths-filter@v2
-        with:
-          filters: |
-            app-source:
-              - 'src/**'
-              - 'test/**'
-              - '.eslintrc.js'
-              - '.prettierrc'
-              - 'babel.config.js'
-              - 'nest-cli.json'
-              - 'package-lock.json'
-              - 'package.json'
-              - 'tsconfig.build.json'
-              - 'tsconfig.json'
+permissions:
+  contents: read
 
+jobs:
   testing:
-    needs: changes
-    if: ${{ needs.changes.outputs.app-source == 'true' }}
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [16]
-    name: Testing on Node.js ${{ matrix.node-version }}
+    name: Testing on Node.js 16
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
         with:
           fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set Up Node.js
+        uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b # v3.5.0
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 16
       - name: Install Dependencies
+        if: steps.dependencies-cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
       - name: Check Lint
         run: npm run lint:check

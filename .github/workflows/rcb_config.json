@@ -24,6 +24,6 @@
   "ignore_labels": [
     "ci"
   ],
-  "template": "${{CHANGELOG}}\n\n<summary>**Full Changelog**: ${{RELEASE_DIFF}}</summary>",
-  "pr_template": "* ${{TITLE}} in #${{NUMBER}}"
+  "template": "${{CHANGELOG}}\n\n**Full Changelog**:${{RELEASE_DIFF}}",
+  "pr_template": "- ${{TITLE}} in #${{NUMBER}}"
 }

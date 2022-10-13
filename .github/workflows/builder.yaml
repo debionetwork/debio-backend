@@ -2,14 +2,26 @@ name: Builder
 
 on:
   workflow_call:
+    inputs:
+      docker_image_name:
+        type: string
+        required: true
     secrets:
-      DOCKERHUB_USERNAME:
+      docker_username:
         required: true
-      DOCKERHUB_TOKEN:
+      docker_password:
         required: true
+    outputs:
+      docker_image_name:
+        value: ${{ jobs.docker.outputs.docker_image_name }}
+      docker_image_version:
+        value: ${{ jobs.docker.outputs.docker_image_version }}
 
 concurrency:
-  group: builder-${{ github.ref }}
+  group: builder-${{ github.sha }}
+
+permissions:
+  contents: read
 
 jobs:
   docker:
@@ -17,43 +29,43 @@ jobs:
     name: Docker
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
         with:
           fetch-depth: 0
-      - name: Set up QEMU
+      - name: Set Up QEMU
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Buildx
+        uses: docker/setup-qemu-action@8b122486cedac8393e77aa9734c3528886e4a1a8 # v2.0.0
+      - name: Set Up Buildx
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         id: set-up-buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # v2.0.0
         with:
           install: true
-      - name: Initialize Cache Layers
+      - name: Cache Layers
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: actions/cache@v3
+        uses: actions/cache@ac8075791e805656e71b4ba23325ace9e3421120 # v3.0.9
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # v2.0.0
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.docker_username }}
+          password: ${{ secrets.docker_password }}
       - name: Generate Metadata
         id: generate-metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@69f6fc9d46f2f8bf0d5491e4aabe0bb8c6a4678a # v4.0.1
         with:
           images: |
-            docker.io/${{ github.repository }}
+            docker.io/${{ inputs.docker_image_name }}
           tags: |
             type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/') }}
             type=sha,prefix=,enable=${{ startsWith(github.ref, 'refs/heads/') }}
       - name: Build and Push
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@c84f38281176d4c9cdb1626ffafcd6b3911b5d94 # v3.1.1
         with:
           builder: ${{ steps.set-up-buildx.outputs.name }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -70,15 +82,18 @@ jobs:
           echo "::set-output name=value::$(git rev-parse --short HEAD)"
       - name: Retag Image and Push
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@f973043dc002b8e5a772c53e79441e6e1861e874 # v2.0.0
         with:
-          src: docker.io/${{ github.repository }}:${{ steps.get-short-sha.outputs.value }}
+          src: docker.io/${{ inputs.docker_image_name }}:${{ steps.get-short-sha.outputs.value }}
           dst: ${{ steps.generate-metadata.outputs.tags }}
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
-      - name: Move Cache
+      - name: Move Cache Layers
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+    outputs:
+      docker_image_name: ${{ inputs.docker_image_name }}
+      docker_image_version: ${{ steps.generate-metadata.outputs.version }}

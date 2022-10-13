@@ -8,21 +8,61 @@ on:
 concurrency:
   group: releaser
 
+permissions:
+  contents: read
+
 jobs:
-  publish-draft-release:
+  build:
+    name: Build
+    uses: ./.github/workflows/builder.yaml
+    with:
+      docker_image_name: ${{ github.repository }}
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  deploy:
+    needs: build
+    permissions:
+      contents: read
+      id-token: write
+    name: Deploy
+    uses: ./.github/workflows/deployer.yaml
+    with:
+      environment_name: mainnet
+      environment_url: https://api.debio.network
+      docker_image_name: ${{ needs.build.outputs.docker_image_name }}
+      docker_image_version: ${{ needs.build.outputs.docker_image_version }}
+    secrets:
+      gcp_project_id: ${{ secrets.MAINNET_GCP_PROJECT_ID }}
+      gcp_workload_identity_provider: ${{ secrets.MAINNET_GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      gcp_workload_service_account: ${{ secrets.MAINNET_GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+      gke_cluster_name: ${{ secrets.MAINNET_GKE_CLUSTER_NAME }}
+      gke_location: ${{ secrets.MAINNET_GKE_LOCATION }}
+      gce_bastion_instance_name: ${{ secrets.MAINNET_GCE_BASTION_INSTANCE_NAME }}
+      gce_bastion_instance_zone: ${{ secrets.MAINNET_GCE_BASTION_INSTANCE_ZONE }}
+
+  publish:
+    needs: deploy
+    permissions:
+      contents: write
+      id-token: write
     runs-on: ubuntu-20.04
-    name: Publish Draft Release
+    name: Publish
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # v3.0.2
+        with:
+          fetch-depth: 0
       - name: Build Changelog
         id: build-changelog
-        uses: mikepenz/release-changelog-builder-action@v3
+        uses: mikepenz/release-changelog-builder-action@000e44613cdb6c340ac98cb1582f99e8d3230058 # v3.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          configuration: .github/workflows/rcb_config.json
+          configuration: ./.github/workflows/rcb_config.json
       - name: Publish
-        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
+        uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5 # v0.1.14
         with:
-          body: ${{ steps.build-changelog.outputs.changelog }}
-          draft: true
           prerelease: ${{ contains(github.ref, '-rc') || contains(github.ref, '-beta') || contains(github.ref, '-alpha') }}
+          body: ${{ steps.build-changelog.outputs.changelog }}

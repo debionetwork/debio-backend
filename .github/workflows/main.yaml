@@ -1,0 +1,43 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    uses: ./.github/workflows/builder.yaml
+    with:
+      docker_image_name: ${{ github.repository }}
+    secrets:
+      docker_username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker_password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  deploy:
+    needs: build  
+    permissions:
+      contents: read
+      id-token: write
+    name: Deploy
+    uses: ./.github/workflows/deployer.yaml
+    with:
+      environment_name: testnet
+      environment_url: https://api.testnet.debio.network
+      docker_image_name: ${{ needs.build.outputs.docker_image_name }}
+      docker_image_version: ${{ needs.build.outputs.docker_image_version }}
+    secrets:
+      gcp_project_id: ${{ secrets.TESTNET_GCP_PROJECT_ID }}
+      gcp_workload_identity_provider: ${{ secrets.TESTNET_GCP_WORKLOAD_IDENTITY_PROVIDER }}
+      gcp_workload_service_account: ${{ secrets.TESTNET_GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT }}
+      gke_cluster_name: ${{ secrets.TESTNET_GKE_CLUSTER_NAME }}
+      gke_location: ${{ secrets.TESTNET_GKE_LOCATION }}
+      gce_bastion_instance_name: ${{ secrets.TESTNET_GCE_BASTION_INSTANCE_NAME }}
+      gce_bastion_instance_zone: ${{ secrets.TESTNET_GCE_BASTION_INSTANCE_ZONE }}
