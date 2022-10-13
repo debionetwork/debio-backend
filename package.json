@@ -3,8 +3,8 @@
   "version": "2.2.5",
   "private": true,
   "license": "AGPL-3.0",
-  "author": "DeBio Dev Team <debio_dev@blocksphere.id>",
-  "homepage": "https://www.debio.network",
+  "author": "DeBio Dev Team <dev@debio.network>",
+  "homepage": "https://debio.network",
   "repository": {
     "type": "git",
     "url": "https://github.com/debionetwork/debio-backend.git"
