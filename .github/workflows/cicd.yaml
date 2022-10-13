@@ -30,11 +30,11 @@ jobs:
     name: Test on Node.js 16 ( ${{ matrix.command }} )
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
         with:
           fetch-depth: 0
       - name: Set Up Node.js
-        uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516
         with:
           node-version: 16
           cache: npm
@@ -49,7 +49,7 @@ jobs:
     name: Build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
         with:
           fetch-depth: 0
       - name: Set Up QEMU
@@ -95,7 +95,7 @@ jobs:
     name: Release Please
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
         with:
           fetch-depth: 0
       - name: Release
@@ -163,7 +163,7 @@ jobs:
     name: Deploy to ${{ matrix.environment }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791
         with:
           fetch-depth: 0
       - name: Authenticate to Google Cloud
@@ -172,9 +172,9 @@ jobs:
           workload_identity_provider: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_PROVIDER')] }}
           service_account: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT')] }}
       - name: Set Up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@877d4953d2c70a0ba7ef3290ae968eb24af233bb
+        uses: google-github-actions/setup-gcloud@65ed483aa286ae127a49b5b9a0436055eb49d590
       - name: Get GKE Credentials
-        uses: google-github-actions/get-gke-credentials@054fdb05e32039f72764f03e69e6acb20caa6f56
+        uses: google-github-actions/get-gke-credentials@e63a4c9af4177933c328c2965c6b62588138d075
         with:
           cluster_name: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_CLUSTER_NAME')] }}
           location: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_LOCATION')] }}
