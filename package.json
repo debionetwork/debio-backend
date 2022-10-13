@@ -14,7 +14,7 @@
     "build": "nest build",
     "lint": "eslint \"{src,test}/**/*.ts\" --fix",
     "lint:check": "eslint \"{src,test}/**/*.ts\" --report-unused-disable-directives",
-    "format": "prettier \"src/**/*.ts\" \"test/**/*.ts\"  --write ",
+    "format": "prettier \"src/**/*.ts\" \"test/**/*.ts\" --write",
     "format:check": "prettier \"src/**/*.ts\" \"test/**/*.ts\" -l",
     "start": "nest start",
     "start:dev": "nest start --watch",

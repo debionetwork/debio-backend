@@ -10,8 +10,8 @@ The Anonymous-First Platform for Medical and Bioinformatics Data.
 <br>
 <br>
 
-[![Node.js version](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org/)
-[![NestJS version](https://img.shields.io/badge/NestJS-%5E8.0.0-red?logo=NestJS)](https://github.com/nestjs/nest)
+[![Node.js](https://img.shields.io/badge/Node.js-%5E14.0.0-green?logo=Node.Js)](https://nodejs.org)
+[![Nest.js](https://img.shields.io/badge/Nest.js-%5E8.0.0-red?logo=NestJs)](https://nestjs.com)
 [![Medium](https://img.shields.io/badge/Medium-DeBio%20Network-brightgreen?logo=medium)](https://blog.debio.network)
 
 </div>
