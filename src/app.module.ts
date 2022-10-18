@@ -34,6 +34,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList, SecretKeyList } from './common/secrets';
+import { ConversionModule } from './endpoints/conversion/conversion.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -125,6 +126,7 @@ require('dotenv').config(); // eslint-disable-line
     SpecializationModule,
     NotificationEndpointModule,
     DnaCollectionModule,
+    ConversionModule,
   ],
 })
 export class AppModule {}

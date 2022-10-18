@@ -1,9 +1,10 @@
-import { DebioConversionService } from './debio-conversion.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { HttpModule } from '@nestjs/axios';
 import { CacheModule, Module } from '@nestjs/common';
 import * as redisStore from 'cache-manager-redis-store';
-import { keyList } from '../../../common/secrets';
+import { DebioConversionModule } from 'src/common';
+import { keyList } from '../../common/secrets';
+import { CacheController } from './conversion.controller';
 
 @Module({
   imports: [
@@ -22,8 +23,8 @@ import { keyList } from '../../../common/secrets';
       },
     }),
     HttpModule,
+    DebioConversionModule,
   ],
-  providers: [DebioConversionService],
-  exports: [DebioConversionService],
+  controllers: [CacheController],
 })
-export class DebioConversionModule {}
+export class ConversionModule {}
