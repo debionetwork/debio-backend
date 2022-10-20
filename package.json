@@ -32,6 +32,7 @@
   "dependencies": {
     "@debionetwork/nestjs-gcloud-secret-manager": "0.0.3",
     "@debionetwork/nestjs-gcloud-storage": "0.0.2",
+    "@debionetwork/pinata-ipfs": "^0.0.3",
     "@debionetwork/polkadot-provider": "0.0.12",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.8.1",
@@ -56,6 +57,7 @@
     "class-transformer": "^0.4.0",
     "dotenv": "^8.6.0",
     "ethers": "^5.4.4",
+    "form-data": "^4.0.0",
     "fs": "0.0.1-security",
     "handlebars": "^4.7.7",
     "helmet": "^4.6.0",
@@ -80,6 +82,7 @@
     "@types/cron": "^1.7.3",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.1.5",
+    "@types/multer": "^1.4.7",
     "@types/node": "^16.0.0",
     "@types/nodemailer": "^6.4.4",
     "@types/supertest": "^2.0.11",
