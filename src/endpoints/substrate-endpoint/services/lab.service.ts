@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { StateService } from '../../location/state.service';
 import { CountryService } from '../../location/country.service';
@@ -7,7 +7,9 @@ import { CountryService } from '../../location/country.service';
 export class LabService {
   private readonly logger: Logger = new Logger(LabService.name);
   constructor(
+    @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
+    @Inject(forwardRef(() => StateService))
     private stateService: StateService,
     private readonly elasticsearchService: ElasticsearchService,
   ) {}
