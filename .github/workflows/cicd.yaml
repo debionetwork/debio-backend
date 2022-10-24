@@ -56,7 +56,7 @@ jobs:
         uses: docker/setup-qemu-action@e81a89b1732b9c48d79cd809d8d81d79c4647a18
       - name: Set Up Docker Buildx
         id: set-up-buildx
-        uses: docker/setup-buildx-action@95cb08cb2672c73d4ffd2f422e6d11953d2a9c70
+        uses: docker/setup-buildx-action@8c0edbc76e98fa90f69d9a2c020dcb50019dc325
         with:
           install: true
       - name: Cache Docker Layers
@@ -167,14 +167,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@2671692c371cbef34ed8ded9f197670c88c9d343
+        uses: google-github-actions/auth@c4799db9111fba4461e9f9da8732e5057b394f72
         with:
           workload_identity_provider: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_PROVIDER')] }}
           service_account: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT')] }}
       - name: Set Up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@65ed483aa286ae127a49b5b9a0436055eb49d590
+        uses: google-github-actions/setup-gcloud@ee9693ff89cdf73862b8a13988f6a71070e8fc58
       - name: Get GKE Credentials
-        uses: google-github-actions/get-gke-credentials@e63a4c9af4177933c328c2965c6b62588138d075
+        uses: google-github-actions/get-gke-credentials@45e9605d689a4ad17a24d232effa1a70b641502a
         with:
           cluster_name: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_CLUSTER_NAME')] }}
           location: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_LOCATION')] }}
