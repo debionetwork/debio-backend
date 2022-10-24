@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { uploadFile } from "@debionetwork/pinata-ipfs";
 import { GCloudSecretManagerService } from "@debionetwork/nestjs-gcloud-secret-manager";
 import { keyList } from "../../common/secrets";
+import axios from 'axios';
+import { AxiosRequestConfig } from 'axios';
+import FormData from "form-data";
 
 @Injectable()
 export class PinataService {
@@ -22,10 +24,25 @@ export class PinataService {
       },
       pinataOptions: { cidVersion: 0 }
     }
-    await uploadFile(
-      options,
-      file.buffer,
-      this.gCloudSecretManagerService.getSecret("VUE_APP_PINATA_JWT_KEY").toString(),
-    )
+
+    const data = new FormData();
+    data.append('file', file);
+
+    data.append('pinataMetadata', JSON.stringify(options.pinataMetadata));
+    data.append('pinataOptions', JSON.stringify(options.pinataOptions));
+
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
+      headers: {
+        'Authorization': this.gCloudSecretManagerService.getSecret("VUE_APP_PINATA_JWT_KEY").toString(),
+        ...data.getHeaders()
+      },
+      data: data
+    };
+
+    const res = await axios(config);
+
+    return res;
   }
 }
