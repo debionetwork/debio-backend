@@ -35,7 +35,7 @@ export class PinataService {
       url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
       headers: {
         Authorization: this.gCloudSecretManagerService
-          .getSecret('VUE_APP_PINATA_JWT_KEY')
+          .getSecret('PINATA_JWT')
           .toString(),
         ...data.getHeaders(),
       },

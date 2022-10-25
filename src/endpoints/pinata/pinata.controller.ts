@@ -1,4 +1,9 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { PinataService } from './pinata.service';
 
@@ -15,9 +20,9 @@ export class PinataController {
         file: {
           type: 'string',
           format: 'binary',
-        }
-      }
-    }
+        },
+      },
+    },
   })
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
     const upload = await this.pinataService.uploadToPinata(file);

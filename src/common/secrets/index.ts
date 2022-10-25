@@ -40,7 +40,7 @@ export const SecretKeyList = {
   COINMARKETCAP_API_KEY: process.env.API_KEY_COINMARKETCAP || null,
   SODAKI_HOST: process.env.SODAKI_HOST || null,
   COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST || null,
-  VUE_APP_PINATA_JWT_KEY: process.env.VUE_APP_PINATA_JWT_KEY || null,
+  PINATA_JWT: process.env.PINATA_JWT || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;
