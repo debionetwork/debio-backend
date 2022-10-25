@@ -32,6 +32,9 @@ describe('Bounty Controller (e2e)', () => {
     _secretsList = new Map<string, string>([
       ['BUCKET_NAME', process.env.BUCKET_NAME],
       ['STORAGE_BASE_URI', process.env.STORAGE_BASE_URI],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

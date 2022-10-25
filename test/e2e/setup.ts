@@ -8,6 +8,10 @@ module.exports = async () => {
   const apiKey = 'DEBIO_API_KEY';
   process.env.DEBIO_API_KEY = apiKey;
 
+  process.env.HOST_REDIS = 'localhost';
+  process.env.PORT_REDIS = '6379';
+  process.env.REDIS_PASSWORD = 'root';
+
   const promise = new Promise((resolve, reject) => {
     console.log('Starting docker-compose... 🐋');
     compose.upAll({ cwd: path.join(__dirname), log: true }).then(

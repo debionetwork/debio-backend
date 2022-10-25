@@ -34,6 +34,9 @@ describe('Verification Controller (e2e)', () => {
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
       ['DEBIO_API_KEY', apiKey],
       ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

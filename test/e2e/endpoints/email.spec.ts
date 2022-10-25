@@ -38,6 +38,9 @@ describe('Email Controller (e2e)', () => {
       ['EMAILS', process.env.EMAILS],
       ['PASS_EMAIL', process.env.PASS_EMAIL],
       ['POSTGRES_HOST', 'localhost'],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;
