@@ -15,9 +15,9 @@ import { CacheController } from './conversion.controller';
       ) => {
         return {
           store: redisStore,
-          host: gCloudSecretManagerService.getSecret("REDIS_HOST"),
-          port: gCloudSecretManagerService.getSecret("REDIS_PORT"),
-          auth_pass: gCloudSecretManagerService.getSecret("REDIS_PASSWORD"),
+          host: gCloudSecretManagerService.getSecret('REDIS_HOST'),
+          port: gCloudSecretManagerService.getSecret('REDIS_PORT'),
+          auth_pass: gCloudSecretManagerService.getSecret('REDIS_PASSWORD'),
           ttl: 2 * 60 * 60,
         };
       },

@@ -24,7 +24,8 @@ export class ServiceRequestService {
     const requestByCountryList: Array<RequestsByCountry> = [];
 
     try {
-      const exchangeBalance = await this.exchangeCacheService.processCacheConversion();
+      const exchangeBalance =
+        await this.exchangeCacheService.processCacheConversion();
       const serviceRequests = await this.elasticsearchService.search({
         index: 'country-service-request',
         body: {

@@ -13,9 +13,11 @@ import { keyList } from '../../../common/secrets';
       ) => {
         return {
           store: redisStore,
-          host: gCloudSecretManagerService.getSecret("REDIS_HOST").toString(),
-          port: gCloudSecretManagerService.getSecret("REDIS_PORT").toString(),
-          auth_pass: gCloudSecretManagerService.getSecret("REDIS_PASSWORD").toString(),
+          host: gCloudSecretManagerService.getSecret('REDIS_HOST').toString(),
+          port: gCloudSecretManagerService.getSecret('REDIS_PORT').toString(),
+          auth_pass: gCloudSecretManagerService
+            .getSecret('REDIS_PASSWORD')
+            .toString(),
           ttl: 2 * 60 * 60,
         };
       },

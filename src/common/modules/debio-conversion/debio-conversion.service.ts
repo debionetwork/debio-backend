@@ -21,7 +21,10 @@ export class DebioConversionService {
   }
 
   async setCacheExchangeFromTo(from: string, to: string) {
-    const listApiKey: string[] = this.gCloudSecretManagerService.getSecret("API_KEY_COINMARKETCAP").toString().split(',');
+    const listApiKey: string[] = this.gCloudSecretManagerService
+      .getSecret('API_KEY_COINMARKETCAP')
+      .toString()
+      .split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(
       'index_api_key',
     );
@@ -56,7 +59,10 @@ export class DebioConversionService {
   async setCacheExchange() {
     const sodaki = await this.getSodakiExchange();
 
-    const listApiKey: string[] = this.gCloudSecretManagerService.getSecret("API_KEY_COINMARKETCAP").toString().split(',');
+    const listApiKey: string[] = this.gCloudSecretManagerService
+      .getSecret('API_KEY_COINMARKETCAP')
+      .toString()
+      .split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(
       'index_api_key',
     );
@@ -87,13 +93,11 @@ export class DebioConversionService {
   }
 
   async getSodakiExchange(): Promise<SodakiExchange> {
-    const response = await axios.get(this.gCloudSecretManagerService.getSecret("SODAKI_HOST").toString());
-
-    const sodakiExchange: SodakiExchange = new SodakiExchange(
-      null,
-      null,
-      null,
+    const response = await axios.get(
+      this.gCloudSecretManagerService.getSecret('SODAKI_HOST').toString(),
     );
+
+    const sodakiExchange: SodakiExchange = new SodakiExchange(null, null, null);
     for (let i = 0; i < response.data.length; i++) {
       if (
         sodakiExchange.dbioToWNear !== null &&
@@ -140,36 +144,46 @@ export class DebioConversionService {
   }
 
   async convertDaiToUsd(apiKey: string, daiAmount: number): Promise<number> {
-    const response = await axios.get(`${this.gCloudSecretManagerService.getSecret("COINMARKETCAP_HOST").toString()}/tools/price-conversion`, {
-      headers: {
-        'X-CMC_PRO_API_KEY': apiKey,
+    const response = await axios.get(
+      `${this.gCloudSecretManagerService
+        .getSecret('COINMARKETCAP_HOST')
+        .toString()}/tools/price-conversion`,
+      {
+        headers: {
+          'X-CMC_PRO_API_KEY': apiKey,
+        },
+        params: {
+          amount: daiAmount,
+          symbol: 'DAI',
+          convert: 'USD',
+        },
       },
-      params: {
-        amount: daiAmount,
-        symbol: 'DAI',
-        convert: 'USD',
-      }
-    });
+    );
 
     return response.data.data[0].quote['USD']['price'];
   }
-  
+
   async convertBalanceFromTo(
     apiKey: string,
     balanceAmount: number,
     from: string,
     to: string,
   ): Promise<number> {
-    const response = await axios.get(`${this.gCloudSecretManagerService.getSecret("COINMARKETCAP_HOST").toString()}/tools/price-conversion`, {
-      headers: {
-        'X-CMC_PRO_API_KEY': apiKey,
+    const response = await axios.get(
+      `${this.gCloudSecretManagerService
+        .getSecret('COINMARKETCAP_HOST')
+        .toString()}/tools/price-conversion`,
+      {
+        headers: {
+          'X-CMC_PRO_API_KEY': apiKey,
+        },
+        params: {
+          amount: balanceAmount,
+          symbol: from.toUpperCase(),
+          convert: to.toUpperCase(),
+        },
       },
-      params: {
-        amount: balanceAmount,
-        symbol: from.toUpperCase(),
-        convert: to.toUpperCase(),
-      }
-    });
+    );
 
     return response.data.data[0].quote[to.toUpperCase()]['price'];
   }
@@ -187,10 +201,7 @@ export class DebioConversionService {
   }
 
   async processCacheConversionFromTo(from: string, to: string) {
-    let cacheExchange = await this.getCacheExchangeFromTo(
-      from,
-      to,
-    );
+    let cacheExchange = await this.getCacheExchangeFromTo(from, to);
 
     if (cacheExchange) {
       return cacheExchange;
