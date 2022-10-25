@@ -59,6 +59,12 @@ describe('Substrate Endpoint Controller (e2e)', () => {
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
       ['DEBIO_API_KEY', process.env.DEBIO_API_KEY],
       ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
+      ['SODAKI_HOST', process.env.SODAKI_HOST],
+      ['COINMARKETCAP_HOST', process.env.COINMARKETCAP_HOST],
+      ['API_KEY_COINMARKETCAP', process.env.API_KEY_COINMARKETCAP],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

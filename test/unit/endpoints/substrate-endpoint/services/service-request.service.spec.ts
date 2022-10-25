@@ -146,13 +146,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       .calledWith(ES_CALLED_WITH)
       .mockReturnValue(ES_RESULT);
 
-    exchangeCacheService.getExchange.mockReturnValue(EXCHANCE_RESULT);
+    exchangeCacheService.processCacheConversion.mockReturnValue(
+      EXCHANCE_RESULT,
+    );
 
     // Assert
     expect(
       await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
-    expect(exchangeCacheService.getExchange).toHaveBeenCalled();
+    expect(exchangeCacheService.processCacheConversion).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -211,13 +213,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       .calledWith(COUNTRY)
       .mockReturnValue(RETURN_COUNTRY_SERVICE);
 
-    exchangeCacheService.getExchange.mockReturnValue(EXCHANCE_RESULT);
+    exchangeCacheService.processCacheConversion.mockReturnValue(
+      EXCHANCE_RESULT,
+    );
 
     // Assert
     expect(
       await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
-    expect(exchangeCacheService.getExchange).toHaveBeenCalled();
+    expect(exchangeCacheService.processCacheConversion).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
     expect(countryServiceMock.getByIso2Code).toHaveBeenCalled();
   });
@@ -242,13 +246,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       Promise.reject(ERROR_RESULT),
     );
 
-    exchangeCacheService.getExchange.mockReturnValue(EXCHANCE_RESULT);
+    exchangeCacheService.processCacheConversion.mockReturnValue(
+      EXCHANCE_RESULT,
+    );
 
     // Assert
     expect(
       await serviceRequestService.getAggregatedByCountries(1, 10),
     ).toMatchObject(EXPECTED_RESULT);
-    expect(exchangeCacheService.getExchange).toHaveBeenCalled();
+    expect(exchangeCacheService.processCacheConversion).toHaveBeenCalled();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });
 
@@ -274,13 +280,15 @@ describe('Substrate Indexer Lab Service Unit Tests', () => {
       Promise.reject(ERROR_RESULT),
     );
 
-    exchangeCacheService.getExchange.mockReturnValue(EXCHANCE_RESULT);
+    exchangeCacheService.processCacheConversion.mockReturnValue(
+      EXCHANCE_RESULT,
+    );
 
     // Assert
     expect(
       serviceRequestService.getAggregatedByCountries(1, 10),
     ).rejects.toMatchObject(ERROR_RESULT);
-    expect(exchangeCacheService.getExchange).toHaveBeenCalled();
+    expect(exchangeCacheService.processCacheConversion).toHaveBeenCalled();
     await Promise.resolve();
     expect(elasticsearchServiceMock.search).toHaveBeenCalled();
   });

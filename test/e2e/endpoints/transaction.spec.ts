@@ -37,6 +37,9 @@ describe('Transaction Controller (e2e)', () => {
       ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
       ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
       ['DEBIO_API_KEY', process.env.DEBIO_API_KEY],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

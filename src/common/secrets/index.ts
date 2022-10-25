@@ -37,6 +37,9 @@ export const SecretKeyList = {
   ELASTICSEARCH_NODE: process.env.ELASTICSEARCH_NODE || null,
   ELASTICSEARCH_USERNAME: process.env.ELASTICSEARCH_USERNAME || null,
   ELASTICSEARCH_PASSWORD: process.env.ELASTICSEARCH_PASSWORD || null,
+  API_KEY_COINMARKETCAP: process.env.API_KEY_COINMARKETCAP || null,
+  SODAKI_HOST: process.env.SODAKI_HOST || null,
+  COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;

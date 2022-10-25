@@ -34,6 +34,9 @@ describe('Health Controller (e2e)', () => {
       ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
       ['EMAIL', process.env.EMAIL],
       ['PASS_EMAIL', process.env.PASS_EMAIL],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

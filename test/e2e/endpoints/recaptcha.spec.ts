@@ -17,6 +17,9 @@ describe('Recaptcha Controller (e2e)', () => {
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
       ['RECAPTCHA_SECRET_KEY', RECAPTCHA_SECRET_KEY],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

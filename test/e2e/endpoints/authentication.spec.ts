@@ -31,6 +31,9 @@ describe('Authentication Controller (e2e)', () => {
         process.env.PINATA_PIN_POLICY_REGION_REPL_COUNT,
       ],
       ['PINATA_MFA_ENABLED', process.env.PINATA_MFA_ENABLED],
+      ['REDIS_HOST', process.env.HOST_REDIS],
+      ['REDIS_PORT', process.env.PORT_REDIS],
+      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
     ]);
     loadSecrets() {
       return null;

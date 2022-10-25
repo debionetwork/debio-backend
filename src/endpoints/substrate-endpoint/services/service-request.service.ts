@@ -12,7 +12,6 @@ import {
 export class ServiceRequestService {
   private logger: Logger = new Logger(ServiceRequestService.name);
   constructor(
-    @Inject(forwardRef(() => CountryService))
     private countryService: CountryService,
     private readonly elasticsearchService: ElasticsearchService,
     private exchangeCacheService: DebioConversionService,
@@ -25,7 +24,8 @@ export class ServiceRequestService {
     const requestByCountryList: Array<RequestsByCountry> = [];
 
     try {
-      const exchangeBalance = await this.exchangeCacheService.getExchange();
+      const exchangeBalance =
+        await this.exchangeCacheService.processCacheConversion();
       const serviceRequests = await this.elasticsearchService.search({
         index: 'country-service-request',
         body: {
