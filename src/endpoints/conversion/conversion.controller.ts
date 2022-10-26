@@ -1,4 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { DebioConversionService } from 'src/common';
 
 @Controller('conversion')
@@ -8,13 +9,22 @@ export class CacheController {
   ) {}
 
   @Get('cache')
+  @ApiQuery({ name: 'from', required: false })
+  @ApiQuery({ name: 'to', required: false })
   async getCache(@Query('from') from: string, @Query('to') to: string) {
     if (from && to) {
       const resultFromTo =
-        this.debioConversionService.processCacheConversionFromTo(from, to);
-      return resultFromTo;
+        await this.debioConversionService.processCacheConversionFromTo(
+          from,
+          to,
+        );
+      return {
+        from: from,
+        to: to,
+        conversion: resultFromTo,
+      };
     } else {
-      const result = this.debioConversionService.processCacheConversion();
+      const result = await this.debioConversionService.processCacheConversion();
       return result;
     }
   }
