@@ -21,6 +21,7 @@ export class CacheController {
       return {
         from: from,
         to: to,
+        amount: 1,
         conversion: resultFromTo,
       };
     } else {

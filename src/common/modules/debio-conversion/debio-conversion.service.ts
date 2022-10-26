@@ -22,7 +22,7 @@ export class DebioConversionService {
 
   async setCacheExchangeFromTo(from: string, to: string) {
     const listApiKey: string[] = this.gCloudSecretManagerService
-      .getSecret('API_KEY_COINMARKETCAP')
+      .getSecret('COINMARKETCAP_API_KEY')
       .toString()
       .split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(
@@ -63,7 +63,7 @@ export class DebioConversionService {
     const sodaki = await this.getSodakiExchange();
 
     const listApiKey: string[] = this.gCloudSecretManagerService
-      .getSecret('API_KEY_COINMARKETCAP')
+      .getSecret('COINMARKETCAP_API_KEY')
       .toString()
       .split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(

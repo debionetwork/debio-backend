@@ -71,8 +71,8 @@ export class MailerManager {
         attachments: files,
       });
       return true;
-    } catch (error) {
-      await this._logger.log(`Send Email Failed: ${error}`);
+    } catch (error: any) {
+      this._logger.log(`Send Email Failed: ${error}`);
     }
   }
 
@@ -118,7 +118,7 @@ export class MailerManager {
       });
       return true;
     } catch (error) {
-      await this._logger.log(`Send Email Failed: ${error}`);
+      this._logger.log(`Send Email Failed: ${error}`);
     }
   }
 }

@@ -47,37 +47,54 @@ export class EmailEndpointController {
     @Param('lab_id') lab_id: string,
     @Res() response: Response,
   ) {
-    let isEmailSent = false;
-    const contextLab = await queryLabById(
-      this.substrateService.api as any,
-      lab_id,
-    );
+    try {
+      let isEmailSent = false;
+      const contextLab = await queryLabById(
+        this.substrateService.api as any,
+        lab_id,
+      );
 
-    const labRegister: LabRegister = await labToLabRegister(
-      this.substrateService.api,
-      contextLab,
-    );
+      const labRegister: LabRegister = await labToLabRegister(
+        this.substrateService.api,
+        contextLab,
+      );
 
-    const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-      this.gCloudSecretManagerService.getSecret('EMAILS').toString().split(','),
-      labRegister,
-    );
+      const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
+        this.gCloudSecretManagerService
+          .getSecret('EMAILS')
+          .toString()
+          .split(','),
+        labRegister,
+      );
 
-    const dataInput = new EmailNotification();
-    if (sentEMail) {
-      isEmailSent = true;
-      dataInput.sent_at = new Date();
+      const dataInput = new EmailNotification();
+      if (sentEMail) {
+        isEmailSent = true;
+        dataInput.sent_at = new Date();
+      }
+      dataInput.notification_type = 'LabRegister';
+      dataInput.ref_number = lab_id;
+      dataInput.is_email_sent = isEmailSent;
+      dataInput.created_at = new Date();
+
+      await this.emailNotificationService.insertEmailNotification(dataInput);
+
+      response.status(200).send({
+        message: 'Sending Email.',
+      });
+    } catch (err) {
+      if (err instanceof TypeError) {
+        response.status(404).send({
+          error: true,
+          message: 'lab id is not found',
+        });
+      } else {
+        response.status(500).send({
+          error: true,
+          message: 'Something went wrong',
+        });
+      }
     }
-    dataInput.notification_type = 'LabRegister';
-    dataInput.ref_number = lab_id;
-    dataInput.is_email_sent = isEmailSent;
-    dataInput.created_at = new Date();
-
-    await this.emailNotificationService.insertEmailNotification(dataInput);
-
-    response.status(200).send({
-      message: 'Sending Email.',
-    });
   }
 
   @Post('registered-genetic-analyst/:genetic_analyst_id')
@@ -86,39 +103,54 @@ export class EmailEndpointController {
     @Param('genetic_analyst_id') genetic_analyst_id: string,
     @Res() response: Response,
   ) {
-    let isEmailSent = false;
-    const contextGA = await queryGeneticAnalystByAccountId(
-      this.substrateService.api as any,
-      genetic_analyst_id,
-    );
-    const geneticAnalystRegister = await geneticAnalystToGARegister(
-      this.substrateService.api as any,
-      contextGA,
-    );
-
-    const sentEMail =
-      await this.mailerManager.sendGeneticAnalystRegistrationEmail(
-        this.gCloudSecretManagerService
-          .getSecret('EMAILS')
-          .toString()
-          .split(','),
-        geneticAnalystRegister,
+    try {
+      let isEmailSent = false;
+      const contextGA = await queryGeneticAnalystByAccountId(
+        this.substrateService.api as any,
+        genetic_analyst_id,
       );
 
-    const dataInput = new EmailNotification();
-    if (sentEMail) {
-      isEmailSent = true;
-      dataInput.sent_at = new Date();
+      const geneticAnalystRegister = await geneticAnalystToGARegister(
+        this.substrateService.api as any,
+        contextGA,
+      );
+
+      const sentEMail =
+        await this.mailerManager.sendGeneticAnalystRegistrationEmail(
+          this.gCloudSecretManagerService
+            .getSecret('EMAILS')
+            .toString()
+            .split(','),
+          geneticAnalystRegister,
+        );
+
+      const dataInput = new EmailNotification();
+      if (sentEMail) {
+        isEmailSent = true;
+        dataInput.sent_at = new Date();
+      }
+      dataInput.notification_type = 'GeneticAnalystRegister';
+      dataInput.ref_number = genetic_analyst_id;
+      dataInput.is_email_sent = isEmailSent;
+      dataInput.created_at = new Date();
+
+      await this.emailNotificationService.insertEmailNotification(dataInput);
+
+      response.status(200).send({
+        message: 'Sending Email.',
+      });
+    } catch (err) {
+      if (err instanceof TypeError) {
+        response.status(404).send({
+          error: true,
+          message: 'genetic analyst id is not found',
+        });
+      } else {
+        response.status(500).send({
+          error: true,
+          message: 'Something went wrong',
+        });
+      }
     }
-    dataInput.notification_type = 'GeneticAnalystRegister';
-    dataInput.ref_number = genetic_analyst_id;
-    dataInput.is_email_sent = isEmailSent;
-    dataInput.created_at = new Date();
-
-    await this.emailNotificationService.insertEmailNotification(dataInput);
-
-    response.status(200).send({
-      message: 'Sending Email.',
-    });
   }
 }
