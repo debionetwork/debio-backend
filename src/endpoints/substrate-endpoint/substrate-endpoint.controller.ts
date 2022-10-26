@@ -20,6 +20,7 @@ import {
   ServiceService,
   GeneticAnalysisService,
   GeneticAnalysisOrderService,
+  MenstrualCalendarService,
 } from './services';
 import {
   adminSetEthAddress,
@@ -53,6 +54,7 @@ export class SubstrateController {
     private readonly serviceRequestService: ServiceRequestService,
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
+    private readonly menstrualCalendarService: MenstrualCalendarService,
   ) {}
 
   @Get('/labs')
@@ -358,6 +360,20 @@ export class SubstrateController {
       );
 
     return genetic_analysis_orders;
+  }
+
+  @Get("/menstrual-calendar-cycle")
+  @ApiParam({ name: 'address_id' })
+  @ApiParam({ name: 'month' })
+  @ApiParam({ name: 'year' })
+  async getMenstrualCalendarCyclePerMonth(
+    @Param() params,
+  ) {
+    const { address_id, month, year } = params;
+
+    const menstrual_calendar_cycle = await this.menstrualCalendarService.getMenstrualCycleLogByMonth(address_id, month, year);
+
+    return menstrual_calendar_cycle;
   }
 
   @Post('/wallet-binding')
