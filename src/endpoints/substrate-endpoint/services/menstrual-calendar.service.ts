@@ -3,11 +3,13 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 @Injectable()
 export class MenstrualCalendarService {
-  constructor(
-    private readonly elasticsearchService: ElasticsearchService,
-  ){}
+  constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async getMenstrualCycleLogByMonth(addressId: string, month: number, year: number) {
+  async getMenstrualCycleLogByMonth(
+    addressId: string,
+    month: number,
+    year: number,
+  ) {
     const startDateMonth: Date = new Date(year, month - 1, 1);
     const endDateMonth: Date = new Date(year, month, 0);
 
@@ -28,16 +30,16 @@ export class MenstrualCalendarService {
           match: {
             address_id: {
               query: addressId,
-            }
+            },
           },
           range: {
-            "date": {
-              "gte": startDateMonth.getTime(),
-              "lte": endDateMonth.getTime(),
-            }
-          }
-        }
-      }
+            date: {
+              gte: startDateMonth.getTime(),
+              lte: endDateMonth.getTime(),
+            },
+          },
+        },
+      },
     });
 
     return menstrualCycle.body.hits.hits;
