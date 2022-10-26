@@ -17,7 +17,7 @@ export class DebioConversionService {
   }
 
   async getCacheExchangeFromTo(from: string, to: string) {
-    return this.cacheManager.get(`exchange${from}To${to}`);
+    return this.cacheManager.get<number>(`exchange${from}To${to}`);
   }
 
   async setCacheExchangeFromTo(from: string, to: string) {
@@ -51,7 +51,10 @@ export class DebioConversionService {
       to,
     );
 
-    await this.cacheManager.set(`exchange${from}To${to}`, convertBalanceFromTo);
+    await this.cacheManager.set<number>(
+      `exchange${from}To${to}`,
+      convertBalanceFromTo,
+    );
 
     return convertBalanceFromTo;
   }
