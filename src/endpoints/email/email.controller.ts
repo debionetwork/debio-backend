@@ -60,7 +60,10 @@ export class EmailEndpointController {
       );
 
       const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-        this.gCloudSecretManagerService.getSecret('EMAILS').toString().split(','),
+        this.gCloudSecretManagerService
+          .getSecret('EMAILS')
+          .toString()
+          .split(','),
         labRegister,
       );
 
@@ -83,7 +86,7 @@ export class EmailEndpointController {
       if (err instanceof TypeError) {
         response.status(404).send({
           error: true,
-          message: 'lab id is not found'
+          message: 'lab id is not found',
         });
       } else {
         response.status(500).send({
@@ -106,12 +109,12 @@ export class EmailEndpointController {
         this.substrateService.api as any,
         genetic_analyst_id,
       );
-      
+
       const geneticAnalystRegister = await geneticAnalystToGARegister(
         this.substrateService.api as any,
         contextGA,
       );
-  
+
       const sentEMail =
         await this.mailerManager.sendGeneticAnalystRegistrationEmail(
           this.gCloudSecretManagerService
@@ -120,7 +123,7 @@ export class EmailEndpointController {
             .split(','),
           geneticAnalystRegister,
         );
-  
+
       const dataInput = new EmailNotification();
       if (sentEMail) {
         isEmailSent = true;
@@ -130,9 +133,9 @@ export class EmailEndpointController {
       dataInput.ref_number = genetic_analyst_id;
       dataInput.is_email_sent = isEmailSent;
       dataInput.created_at = new Date();
-  
+
       await this.emailNotificationService.insertEmailNotification(dataInput);
-  
+
       response.status(200).send({
         message: 'Sending Email.',
       });
@@ -140,7 +143,7 @@ export class EmailEndpointController {
       if (err instanceof TypeError) {
         response.status(404).send({
           error: true,
-          message: 'genetic analyst id is not found'
+          message: 'genetic analyst id is not found',
         });
       } else {
         response.status(500).send({
