@@ -14,6 +14,7 @@ import {
   ServiceRequestService,
   GeneticAnalysisService,
   GeneticAnalysisOrderService,
+  MenstrualCalendarService,
 } from '../../../../src/endpoints/substrate-endpoint/services';
 import {
   DateTimeProxy,
@@ -70,6 +71,11 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
     getOrderList: jest.fn(),
   }));
 
+  const menstrualCalendarServiceMockFactory: () => MockType<MenstrualCalendarService> =
+    jest.fn(() => ({
+      getMenstrualCycleLogByMonth: jest.fn(),
+    }));
+
   const serviceRequestServiceMockFactory: () => MockType<ServiceRequestService> =
     jest.fn(() => ({
       getAggregatedByCountries: jest.fn(),
@@ -120,6 +126,10 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
         { provide: LabService, useFactory: labServiceMockFactory },
         { provide: ServiceService, useFactory: serviceServiceMockFactory },
         { provide: OrderService, useFactory: orderServiceMockFactory },
+        {
+          provide: MenstrualCalendarService,
+          useFactory: menstrualCalendarServiceMockFactory,
+        },
         {
           provide: NotificationService,
           useFactory: notificationServiceMockFactory,
