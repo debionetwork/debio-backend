@@ -27,7 +27,6 @@ import {
 import { TransactionModule } from './endpoints/transaction/transaction.module';
 import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
 import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
-import { AuthenticationModule } from './endpoints/authentication/authentication.module';
 import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
 import {
   GCloudSecretManagerModule,
@@ -35,6 +34,7 @@ import {
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList, SecretKeyList } from './common/secrets';
 import { ConversionModule } from './endpoints/conversion/conversion.module';
+import { PinataModule } from './endpoints/pinata/pinata.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -105,7 +105,6 @@ require('dotenv').config(); // eslint-disable-line
         };
       },
     }),
-    AuthenticationModule,
     DateTimeModule,
     CloudStorageModule,
     LocationModule,
@@ -127,6 +126,7 @@ require('dotenv').config(); // eslint-disable-line
     NotificationEndpointModule,
     DnaCollectionModule,
     ConversionModule,
+    PinataModule,
   ],
 })
 export class AppModule {}
