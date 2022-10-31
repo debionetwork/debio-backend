@@ -21,8 +21,9 @@ export class MenstrualCalendarService {
   > {
     const startDateMonth: Date = new Date(year, month - 1, 1);
     const endDateMonth: Date = new Date(year, month, 0);
-    console.log(addressId, month, year);
-    let result: Array<MenstrualCycleLogInterface> = [];
+
+    const result: Array<MenstrualCycleLogInterface> = [];
+
     try {
       const menstrualCycle = await this.elasticsearchService.search({
         index: 'menstrual-cycle-log',
