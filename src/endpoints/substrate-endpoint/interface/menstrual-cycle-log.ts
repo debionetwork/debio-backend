@@ -21,6 +21,6 @@ export interface MenstrualCycleLogResultSuccessInterface {
 
 export class MenstrualCycleLogErrorNotFound extends Error {
   constructor(message) {
-    super(message);
+    super(message)
   }
 }
