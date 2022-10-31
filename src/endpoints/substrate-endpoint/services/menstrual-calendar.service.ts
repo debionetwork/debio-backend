@@ -15,10 +15,13 @@ export class MenstrualCalendarService {
     addressId: string,
     month: number,
     year: number,
-  ): Promise<MenstrualCycleLogResultErrorInterface | MenstrualCycleLogResultSuccessInterface> {
+  ): Promise<
+    | MenstrualCycleLogResultErrorInterface
+    | MenstrualCycleLogResultSuccessInterface
+  > {
     const startDateMonth: Date = new Date(year, month - 1, 1);
     const endDateMonth: Date = new Date(year, month, 0);
-    console.log(addressId, month, year)
+    console.log(addressId, month, year);
     let result: Array<MenstrualCycleLogInterface> = [];
     try {
       const menstrualCycle = await this.elasticsearchService.search({
@@ -51,16 +54,16 @@ export class MenstrualCalendarService {
                       lte: endDateMonth.getTime(),
                     },
                   },
-                }
-              ]
-            }
+                },
+              ],
+            },
           },
         },
       });
-      
+
       for (const hit of menstrualCycle.body.hits.hits) {
-        const {_id, _source} = hit;
-        
+        const { _id, _source } = hit;
+
         result.push({
           id: _id,
           menstrual_calendar_id: _source.menstrual_calendar_id,
@@ -69,23 +72,26 @@ export class MenstrualCalendarService {
           symptoms: _source.symptoms,
           created_at: _source.created_at,
           account_id: _source.account_id,
-          menstrual_calendar_cycle_log_id: _source.menstrual_calendar_cycle_log_id,
+          menstrual_calendar_cycle_log_id:
+            _source.menstrual_calendar_cycle_log_id,
         });
       }
 
       if (result.length <= 0) {
-        throw new MenstrualCycleLogErrorNotFound("Menstrual cycle log not found.");
+        throw new MenstrualCycleLogErrorNotFound(
+          'Menstrual cycle log not found.',
+        );
       }
 
       return {
         status: 200,
-        data: result
+        data: result,
       };
     } catch (err: any) {
       if (err instanceof MenstrualCycleLogErrorNotFound) {
         throw new HttpException(err.message, HttpStatus.NOT_FOUND);
       } else {
-        throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR)
+        throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
   }
