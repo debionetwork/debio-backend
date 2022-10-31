@@ -362,7 +362,7 @@ export class SubstrateController {
     return genetic_analysis_orders;
   }
 
-  @Get('/menstrual-calendar-cycle')
+  @Get('/menstrual-calendar-cycle/:address_id/:month/:year')
   @ApiParam({ name: 'address_id' })
   @ApiParam({ name: 'month' })
   @ApiParam({ name: 'year' })
