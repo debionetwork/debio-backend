@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { CountryService } from '../../location/country.service';
 import { DebioConversionService } from '../../../common/modules/debio-conversion/debio-conversion.service';
