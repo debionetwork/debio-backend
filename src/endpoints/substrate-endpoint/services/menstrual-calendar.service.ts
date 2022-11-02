@@ -51,7 +51,7 @@ export class MenstrualCalendarService {
                 {
                   range: {
                     date: {
-                      gte: startDateMonth.getTime(),
+                      gte: startDateMonth.getTime() - 1,
                       lte: endDateMonth.getTime(),
                     },
                   },
