@@ -22,7 +22,7 @@ export class LabService {
     page: number,
     size: number,
   ) {
-    let result = [];
+    const result = [];
     try {
       const searchMustList: Array<any> = [
         {
@@ -83,7 +83,7 @@ export class LabService {
           regionMap.set(info.region, regionName);
         }
 
-        result = services.map((labService) => {
+        const labServices = services.map((labService) => {
           labService.lab_detail = lab._source.info;
           labService.certifications = lab._source.certifications;
           labService.verification_status = lab._source.verification_status;
@@ -98,6 +98,8 @@ export class LabService {
 
           return labService;
         });
+
+        result.push(...labServices);
       }
 
       return { result };
