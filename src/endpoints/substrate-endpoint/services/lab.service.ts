@@ -22,7 +22,7 @@ export class LabService {
     page: number,
     size: number,
   ) {
-    let result = [];
+    const result = [];
     try {
       const searchMustList: Array<any> = [
         {
