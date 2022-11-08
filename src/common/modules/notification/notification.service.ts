@@ -34,13 +34,7 @@ export class NotificationService {
         and cast(block_number as BIGINT) between $4 and $5
       order by created_at DESC
       `,
-      [
-        to,
-        role,
-        from,
-        startBlock,
-        endBlock
-      ]
+      [to, role, from, startBlock, endBlock],
     );
   }
 
