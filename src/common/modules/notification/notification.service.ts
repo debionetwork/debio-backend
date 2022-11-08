@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTimeProxy } from '../proxies/date-time/date-time.proxy';
-import { Between, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { NotificationDto } from './dto/notification.dto';
 import { Notification } from './models/notification.entity';
 
@@ -20,18 +20,28 @@ export class NotificationService {
     role: string,
     from: string,
   ) {
-    return this.notificationRepository.find({
-      where: {
+    return this.notificationRepository.query(
+      `
+      select
+        *
+      from
+        notification n
+      where
+        "to" = $1
+        and deleted_at is null
+        and "role" = $2
+        and "from" = $3
+        and cast(block_number as BIGINT) between $4 and $5
+      order by created_at DESC
+      `,
+      [
         to,
-        deleted_at: null,
-        block_number: Between(startBlock, endBlock),
         role,
         from,
-      },
-      order: {
-        created_at: 'DESC',
-      },
-    });
+        startBlock,
+        endBlock
+      ]
+    );
   }
 
   insert(data: NotificationDto) {
