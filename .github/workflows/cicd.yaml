@@ -172,7 +172,7 @@ jobs:
           workload_identity_provider: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_PROVIDER')] }}
           service_account: ${{ secrets[format('{0}_{1}', matrix.environment, 'GCP_WORKLOAD_IDENTITY_SERVICE_ACCOUNT')] }}
       - name: Set Up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@ee9693ff89cdf73862b8a13988f6a71070e8fc58
+        uses: google-github-actions/setup-gcloud@75fd574e9690e7c4a4681d1255d1c341cf0d9a8c
       - name: Get GKE Credentials
         uses: google-github-actions/get-gke-credentials@45e9605d689a4ad17a24d232effa1a70b641502a
         with:
