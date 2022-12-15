@@ -41,6 +41,7 @@ export const SecretKeyList = {
   SODAKI_HOST: process.env.SODAKI_HOST || null,
   COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST || null,
   PINATA_JWT: process.env.PINATA_JWT || null,
+  MYRIAD_HOST_ENDPOINT: process.env.MYRIAD_HOST_ENDPOINT || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;

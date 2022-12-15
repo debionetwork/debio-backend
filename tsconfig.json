@@ -13,6 +13,10 @@
     "incremental": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "paths": {
+      "@common/*": ["src/common/*"],
+      "@endpoints/*": ["src/endpoints/*"]
+    }
   }
 }
