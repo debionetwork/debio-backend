@@ -42,6 +42,7 @@ export const SecretKeyList = {
   COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST || null,
   PINATA_JWT: process.env.PINATA_JWT || null,
   MYRIAD_HOST_ENDPOINT: process.env.MYRIAD_HOST_ENDPOINT || null,
+  NETWORK_WALLET: process.env.NETWORK_WALLET || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;
