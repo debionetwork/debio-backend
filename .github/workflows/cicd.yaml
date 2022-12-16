@@ -30,7 +30,7 @@ jobs:
     name: Test on Node.js 16 ( ${{ matrix.command }} )
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
         with:
           fetch-depth: 0
       - name: Set Up Node.js
@@ -49,7 +49,7 @@ jobs:
     name: Build
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
         with:
           fetch-depth: 0
       - name: Set Up QEMU
@@ -95,7 +95,7 @@ jobs:
     name: Release Please
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
         with:
           fetch-depth: 0
       - name: Release
@@ -163,7 +163,7 @@ jobs:
     name: Deploy to ${{ matrix.environment }}
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
         with:
           fetch-depth: 0
       - name: Authenticate to Google Cloud
@@ -189,7 +189,7 @@ jobs:
             --tunnel-through-iap \
             --quiet
       - name: Set Up Helm
-        uses: azure/setup-helm@f382f75448129b3be48f8121b9857be18d815a82
+        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78
         with:
           version: v3.10.0
       - name: Perform Deployment
