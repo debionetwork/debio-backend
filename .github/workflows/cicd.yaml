@@ -179,7 +179,6 @@ jobs:
           cluster_name: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_CLUSTER_NAME')] }}
           location: ${{ secrets[format('{0}_{1}', matrix.environment, 'GKE_LOCATION')] }}
           use_internal_ip: true
-          use_auth_provider: true
       - name: Tunneling SSH connections
         run: |
           gcloud compute ssh ${{ secrets[format('{0}_{1}', matrix.environment, 'GCE_BASTION_INSTANCE_NAME')] }} \
