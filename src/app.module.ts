@@ -35,6 +35,7 @@ import {
 import { keyList, SecretKeyList } from './common/secrets';
 import { ConversionModule } from './endpoints/conversion/conversion.module';
 import { PinataModule } from './endpoints/pinata/pinata.module';
+import { MyriadModule } from './endpoints/myriad/myriad.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -127,6 +128,7 @@ require('dotenv').config(); // eslint-disable-line
     DnaCollectionModule,
     ConversionModule,
     PinataModule,
+    MyriadModule,
   ],
 })
 export class AppModule {}
