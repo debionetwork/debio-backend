@@ -18,4 +18,10 @@ export class RegisterUserDTO {
     description: 'address',
   })
   address: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'role',
+  })
+  role: string;
 }

@@ -40,6 +40,7 @@ export class MyriadController {
       username: data.username,
       name: data.name,
       address: data.address,
+      role: data.role,
     });
 
     return {
