@@ -44,7 +44,7 @@ export class MyriadController {
     });
 
     return {
-      ...registerRes
+      ...registerRes,
     };
   }
 
@@ -64,7 +64,7 @@ export class MyriadController {
     });
 
     return {
-      ...authRes
+      ...authRes,
     };
   }
 }

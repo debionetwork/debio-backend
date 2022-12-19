@@ -12,7 +12,7 @@ export class RegisterUserDTO {
     description: 'name',
   })
   name: string;
-  
+
   @ApiProperty({
     type: String,
     description: 'address',

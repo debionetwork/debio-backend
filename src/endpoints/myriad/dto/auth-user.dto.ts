@@ -12,25 +12,25 @@ export class AuthUserDTO {
     description: 'publicAddress',
   })
   publicAddress: string;
-  
+
   @ApiProperty({
     type: String,
     description: 'signature',
   })
   signature: string;
-  
+
   @ApiProperty({
     type: String,
     description: 'walletType',
   })
   walletType: string;
-  
+
   @ApiProperty({
     type: String,
     description: 'networkType',
   })
   networkType: string;
-  
+
   @ApiProperty({
     type: String,
     description: 'role',

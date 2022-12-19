@@ -8,6 +8,6 @@ import { MyriadService } from './myriad.service';
   imports: [TypeOrmModule.forFeature([MyriadAccount])],
   controllers: [MyriadController],
   providers: [MyriadService],
-  exports: [TypeOrmModule]
+  exports: [TypeOrmModule],
 })
 export class MyriadModule {}

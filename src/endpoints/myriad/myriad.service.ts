@@ -40,23 +40,26 @@ export class MyriadService {
     name,
     address,
     role,
-  }:{
+  }: {
     username: string;
     name: string;
     address: string;
     role: string;
   }) {
-    const res = await axios.post(`${this.myriadEndPoints}/authentication/signup/wallet`, {
-      username: username,
-      name: name,
-      address: address,
-      network: "debio",
-    });
+    const res = await axios.post(
+      `${this.myriadEndPoints}/authentication/signup/wallet`,
+      {
+        username: username,
+        name: name,
+        address: address,
+        network: 'debio',
+      },
+    );
 
     this.myriadAccountRepository.insert({
       address: address,
       username: username,
-      role: role
+      role: role,
     });
 
     return res.data;
@@ -77,28 +80,31 @@ export class MyriadService {
     networkType: string;
     role: string;
   }) {
-    const res = await axios.post<any, AxiosResponse<AuthUserInterface>>(`${this.myriadEndPoints}/authentication/login/wallet`, {
-      nonce,
-      publicAddress,
-      signature,
-      walletType,
-      networkType,
-      role,
-    });
+    const res = await axios.post<any, AxiosResponse<AuthUserInterface>>(
+      `${this.myriadEndPoints}/authentication/login/wallet`,
+      {
+        nonce,
+        publicAddress,
+        signature,
+        walletType,
+        networkType,
+        role,
+      },
+    );
 
     const account = await this.myriadAccountRepository.findOne({
       where: {
         address: publicAddress,
         role: role,
-      }
+      },
     });
 
     if (account) {
       await this.myriadAccountRepository.update(
-        {id: account.id},
+        { id: account.id },
         {
-          jwt_token: res.data.accessToken
-        }
+          jwt_token: res.data.accessToken,
+        },
       );
 
       return {
@@ -109,7 +115,7 @@ export class MyriadService {
 
     return {
       status: 401,
-      message: "account not found"
-    }
+      message: 'account not found',
+    };
   }
 }
