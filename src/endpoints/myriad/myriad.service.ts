@@ -4,15 +4,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
+import { AuthUserInterface } from './interface/auth-user';
+import { ContentInterface } from './interface/content';
+import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
-
-interface UsernameCheckInterface {
-  status: boolean;
-}
-
-interface AuthUserInterface {
-  accessToken: string;
-}
 
 @Injectable()
 export class MyriadService {
@@ -117,5 +112,17 @@ export class MyriadService {
       status: 401,
       message: 'account not found',
     };
+  }
+
+  public async unlockableContent(filter: string) {
+    const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(`${this.myriadEndPoints}/user/unlockable-contents`, {
+      params: {
+        filter: filter
+      }
+    });
+
+    const content: ContentInterface[] = res.data;
+
+    return content;
   }
 }

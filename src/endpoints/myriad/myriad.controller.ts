@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
+import { ContentInterface } from './interface/content';
 import { MyriadService } from './myriad.service';
 
 @Controller('myriad')
@@ -27,6 +28,26 @@ export class MyriadController {
 
     return {
       status,
+    };
+  }
+
+  @Get('content/unlockable')
+  @ApiOperation({
+    description: 'Get Unlockable Content from myriad'
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        data: []
+      }
+    }
+  })
+  public async getContentUnlockable(@Query('filter') filter: string) {
+    const content: ContentInterface[] = await this.myriadService.unlockableContent(filter);
+
+    return {
+      data: content
     };
   }
 
