@@ -114,12 +114,18 @@ export class MyriadService {
     };
   }
 
-  public async unlockableContent(filter: string) {
-    const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(`${this.myriadEndPoints}/user/unlockable-contents`, {
-      params: {
-        filter: filter
-      }
-    });
+  public async unlockableContent(auth: string, filter: string) {
+    const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
+      `${this.myriadEndPoints}/user/unlockable-contents`,
+      {
+        params: {
+          filter: filter,
+        },
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
+      },
+    );
 
     const content: ContentInterface[] = res.data;
 

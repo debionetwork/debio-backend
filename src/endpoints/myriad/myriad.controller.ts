@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
@@ -33,21 +33,25 @@ export class MyriadController {
 
   @Get('content/unlockable')
   @ApiOperation({
-    description: 'Get Unlockable Content from myriad'
+    description: 'Get Unlockable Content from myriad',
   })
   @ApiResponse({
     status: 200,
     schema: {
       example: {
-        data: []
-      }
-    }
+        data: [],
+      },
+    },
   })
-  public async getContentUnlockable(@Query('filter') filter: string) {
-    const content: ContentInterface[] = await this.myriadService.unlockableContent(filter);
+  public async getContentUnlockable(
+    @Query('filter') filter: string,
+    @Headers('Authorization') auth: string,
+  ) {
+    const content: ContentInterface[] =
+      await this.myriadService.unlockableContent(auth, filter);
 
     return {
-      data: content
+      data: content,
     };
   }
 
