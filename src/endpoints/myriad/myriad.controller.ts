@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
+import { ProfileDTO } from './dto/profile.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { ContentInterface } from './interface/content';
 import { MyriadService } from './myriad.service';
@@ -91,5 +100,18 @@ export class MyriadController {
     return {
       ...authRes,
     };
+  }
+
+  @Patch('profile/edit')
+  @ApiBody({ type: ProfileDTO })
+  @ApiOperation({
+    description: 'Update profile',
+  })
+  public async editProfile(@Body() data: ProfileDTO) {
+    return await this.myriadService.editProfile({
+      name: data.name,
+      bio: data.bio,
+      websiteURL: data.websiteURL,
+    });
   }
 }

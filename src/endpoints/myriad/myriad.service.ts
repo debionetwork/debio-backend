@@ -131,4 +131,22 @@ export class MyriadService {
 
     return content;
   }
+
+  public async editProfile({
+    name,
+    bio,
+    websiteURL,
+  }: {
+    name?: string;
+    bio?: string;
+    websiteURL?: string;
+  }) {
+    const res = await axios.patch(`${this.myriadEndPoints}/user/me`, {
+      name,
+      bio,
+      websiteURL,
+    });
+
+    return res.data;
+  }
 }
