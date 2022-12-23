@@ -107,11 +107,15 @@ export class MyriadController {
   @ApiOperation({
     description: 'Update profile',
   })
-  public async editProfile(@Body() data: ProfileDTO) {
+  public async editProfile(
+    @Body() data: ProfileDTO,
+    @Headers('Authorization') auth: string,
+  ) {
     return await this.myriadService.editProfile({
       name: data.name,
       bio: data.bio,
       websiteURL: data.websiteURL,
+      auth: auth,
     });
   }
 }

@@ -136,16 +136,26 @@ export class MyriadService {
     name,
     bio,
     websiteURL,
+    auth,
   }: {
     name?: string;
     bio?: string;
     websiteURL?: string;
+    auth: string;
   }) {
-    const res = await axios.patch(`${this.myriadEndPoints}/user/me`, {
-      name,
-      bio,
-      websiteURL,
-    });
+    const res = await axios.patch(
+      `${this.myriadEndPoints}/user/me`,
+      {
+        name,
+        bio,
+        websiteURL,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
+      },
+    );
 
     return res.data;
   }
