@@ -3,11 +3,21 @@ import {
   Controller,
   Get,
   Headers,
-  Patch,
+  Request,
   Post,
   Query,
+  Req,
+  Header,
+  Param,
 } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
 import { ProfileDTO } from './dto/profile.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
@@ -40,6 +50,9 @@ export class MyriadController {
     };
   }
 
+  @ApiHeader({
+    name: 'JWT',
+  })
   @Get('content/unlockable')
   @ApiOperation({
     description: 'Get Unlockable Content from myriad',
@@ -54,7 +67,7 @@ export class MyriadController {
   })
   public async getContentUnlockable(
     @Query('filter') filter: string,
-    @Headers('Authorization') auth: string,
+    @Headers('JWT') auth: string,
   ) {
     const content: ContentInterface[] =
       await this.myriadService.unlockableContent(auth, filter);
@@ -62,6 +75,27 @@ export class MyriadController {
     return {
       data: content,
     };
+  }
+
+  @Get('auth/nonce/:hex_wallet_address')
+  @ApiParam({ name: 'hex_wallet_address' })
+  @ApiOperation({
+    description: 'get nonce for authentication with hex wallet address',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        nonce: 1,
+      },
+    },
+  })
+  public async getNonceMyriad(
+    @Param('hex_wallet_address') hexWalletAddress: string,
+  ) {
+    return await this.myriadService.getNonce({
+      hexWalletAddress: hexWalletAddress,
+    });
   }
 
   @Post('register')
@@ -102,14 +136,17 @@ export class MyriadController {
     };
   }
 
-  @Patch('profile/edit')
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Post('profile/edit')
   @ApiBody({ type: ProfileDTO })
   @ApiOperation({
     description: 'Update profile',
   })
   public async editProfile(
     @Body() data: ProfileDTO,
-    @Headers('Authorization') auth: string,
+    @Headers('JWT') auth: string,
   ) {
     return await this.myriadService.editProfile({
       name: data.name,

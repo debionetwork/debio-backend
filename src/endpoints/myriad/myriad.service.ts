@@ -159,4 +159,18 @@ export class MyriadService {
 
     return res.data;
   }
+
+  public async getNonce({ hexWalletAddress }: { hexWalletAddress: string }) {
+    const res = await axios.get(
+      `${this.myriadEndPoints}/authentication/nonce`,
+      {
+        params: {
+          id: hexWalletAddress,
+          type: 'wallet',
+        },
+      },
+    );
+
+    return res.data;
+  }
 }
