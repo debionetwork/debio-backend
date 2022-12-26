@@ -18,7 +18,7 @@ export class PostDTO {
   isNSFW: boolean;
 
   @ApiProperty({
-    type: Array<String>,
+    type: Array<string>,
     description: 'mentions to',
     required: false,
   })
@@ -46,14 +46,14 @@ export class PostDTO {
   status: string;
 
   @ApiProperty({
-    type: Array<String>,
+    type: Array<string>,
     description: 'mentions to',
     required: false,
   })
   tag: string[];
 
   @ApiProperty({
-    type: Array<String>,
+    type: Array<string>,
     description: 'mentions to',
     required: false,
   })
