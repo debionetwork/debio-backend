@@ -19,6 +19,7 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
+import { PostDTO } from './dto/post.dto';
 import { ProfileDTO } from './dto/profile.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { ContentInterface } from './interface/content';
@@ -154,5 +155,56 @@ export class MyriadController {
       websiteURL: data.websiteURL,
       auth: auth,
     });
+  }
+
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Post('post/create')
+  @ApiBody({ type: PostDTO })
+  @ApiOperation({
+    description: 'Post to myriad',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: {
+        originCreatedAt: '2022-12-26T15:06:20.751Z',
+        id: '63a9b86c917d3e001cc6d901',
+        tags: [],
+        platform: 'myriad',
+        text: '[{"type":"p","children":[{"text":"test"}]}]',
+        metric: {
+          upvotes: 0,
+          downvotes: 0,
+          discussions: 0,
+          debates: 0,
+          comments: 0,
+          tips: 0,
+        },
+        isNSFW: false,
+        visibility: 'private',
+        mentions: [],
+        selectedUserIds: [],
+        banned: false,
+        createdAt: '2022-12-26T15:06:20.751Z',
+        updatedAt: '2022-12-26T15:06:20.751Z',
+        createdBy: '63a196939bf7c8001c58f13e',
+      },
+    },
+  })
+  public async postToMyriad(@Body() data: PostDTO) {
+    const res = await this.myriadService.postToMyriad({
+      createdBy: data.createdBy,
+      isNSFW: data.isNSFW,
+      visibility: data.visibility,
+      selectedUserIds: data.selectedUserIds,
+      rawText: data.rawText,
+      text: data.text,
+    });
+
+    return {
+      ...res,
+    };
   }
 }
