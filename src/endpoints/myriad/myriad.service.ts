@@ -6,6 +6,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
 import { AuthUserInterface } from './interface/auth-user';
 import { ContentInterface } from './interface/content';
+import { Post, Visibility } from './interface/post';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
 
@@ -172,5 +173,38 @@ export class MyriadService {
     );
 
     return res.data;
+  }
+
+  public async postToMyriad({
+    createdBy,
+    isNSFW,
+    visibility,
+    text,
+    rawText,
+    selectedUserIds,
+  }: {
+    createdBy: string;
+    isNSFW: boolean;
+    rawText: string;
+    text: string;
+    selectedUserIds?: string[];
+    visibility: Visibility;
+  }) {
+    const res = await axios.post<any, AxiosResponse<Post>>(
+      `${this.myriadEndPoints}/user/posts`,
+      {
+        createdBy: createdBy,
+        isNSFW: isNSFW,
+        mentions: [],
+        rawText: rawText,
+        status: 'published',
+        tags: [],
+        text: text,
+        selectedUserIds: selectedUserIds,
+        visibility: visibility,
+      },
+    );
+
+    return res;
   }
 }
