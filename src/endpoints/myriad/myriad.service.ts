@@ -31,6 +31,20 @@ export class MyriadService {
     return res.data.status;
   }
 
+  public async getCustomTimeline(userId: string, jwt: string) {
+    const res = await axios.get(`${this.myriadEndPoints}/experiences`, {
+      params: {
+        visibility: 'selected_user',
+        userId: userId,
+      },
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    return res.data;
+  }
+
   public async registerMyriadUser({
     username,
     name,
