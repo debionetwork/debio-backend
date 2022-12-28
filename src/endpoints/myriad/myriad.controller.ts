@@ -3,15 +3,11 @@ import {
   Controller,
   Get,
   Headers,
-  Request,
   Post,
   Query,
-  Req,
-  Header,
   Param,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiBody,
   ApiHeader,
   ApiOperation,
@@ -193,7 +189,10 @@ export class MyriadController {
       },
     },
   })
-  public async postToMyriad(@Body() data: PostDTO) {
+  public async postToMyriad(
+    @Body() data: PostDTO,
+    @Headers('JWT') auth: string,
+  ) {
     const res = await this.myriadService.postToMyriad({
       createdBy: data.createdBy,
       isNSFW: data.isNSFW,
@@ -202,6 +201,25 @@ export class MyriadController {
       rawText: data.rawText,
       text: data.text,
     });
+
+    return {
+      ...res,
+    };
+  }
+
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Get('timeline/:userid')
+  @ApiParam({ name: 'userid' })
+  @ApiOperation({
+    description: 'Get custom timeline',
+  })
+  public async getTimeline(
+    @Param('userid') userId: string,
+    @Headers('JWT') jwt: string,
+  ) {
+    const res = await this.myriadService.getCustomTimeline(userId, jwt);
 
     return {
       ...res,

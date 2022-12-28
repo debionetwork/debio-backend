@@ -27,14 +27,14 @@ export class PostDTO {
   @ApiProperty({
     type: String,
     description: 'raw text of post',
-    required: false,
+    required: true,
   })
   rawText: string;
 
   @ApiProperty({
     type: String,
     description: 'string json of post',
-    required: false,
+    required: true,
   })
   text: string;
 
@@ -47,7 +47,7 @@ export class PostDTO {
 
   @ApiProperty({
     type: Array<string>,
-    description: 'mentions to',
+    description: 'tag post',
     required: false,
   })
   tag: string[];
@@ -60,9 +60,10 @@ export class PostDTO {
   selectedUserIds: string[];
 
   @ApiProperty({
-    type: Visibility,
-    description: 'mentions to',
-    required: false,
+    type: String,
+    description: 'visibility post',
+    required: true,
+    enum: Visibility,
   })
   visibility: Visibility;
 }
