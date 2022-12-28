@@ -1,6 +1,6 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'myriad-account' })
+@Entity({ name: 'myriad_account' })
 export class MyriadAccount {
   @PrimaryGeneratedColumn()
   id: number;
