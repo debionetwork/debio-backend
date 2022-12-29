@@ -223,8 +223,8 @@ export class MyriadService {
       {
         headers: {
           Authorization: `Bearer ${auth}`,
-        }
-      }
+        },
+      },
     );
 
     return res;
