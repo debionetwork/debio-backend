@@ -6,7 +6,9 @@ import { SecondOpinionController } from './second-opinion.controller';
 import { SecondOpinionService } from './second-opinion.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([HealthProfessional, HealthProfessionalRole])],
+  imports: [
+    TypeOrmModule.forFeature([HealthProfessional, HealthProfessionalRole]),
+  ],
   controllers: [SecondOpinionController],
   providers: [SecondOpinionService],
   exports: [TypeOrmModule],

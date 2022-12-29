@@ -10,7 +10,8 @@ export class SecondOpinionService {
     @InjectRepository(HealthProfessional)
     private readonly healthProfessional: Repository<HealthProfessional>,
     @InjectRepository(HealthProfessionalRole)
-    private readonly healthProfessionlRole: Repository<HealthProfessionalRole>,) {}
+    private readonly healthProfessionlRole: Repository<HealthProfessionalRole>,
+  ) {}
 
   async findAllHealthProfessional() {
     const healthProfessional = await this.healthProfessional.find();
