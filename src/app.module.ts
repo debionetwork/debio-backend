@@ -36,6 +36,7 @@ import { keyList, SecretKeyList } from './common/secrets';
 import { ConversionModule } from './endpoints/conversion/conversion.module';
 import { PinataModule } from './endpoints/pinata/pinata.module';
 import { MyriadModule } from './endpoints/myriad/myriad.module';
+import { SecondOpinionModule } from './endpoints/second-opinion/second-opinion.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -129,6 +130,7 @@ require('dotenv').config(); // eslint-disable-line
     ConversionModule,
     PinataModule,
     MyriadModule,
+    SecondOpinionModule,
   ],
 })
 export class AppModule {}
