@@ -197,6 +197,7 @@ export class MyriadService {
     text,
     rawText,
     selectedUserIds,
+    auth,
   }: {
     createdBy: string;
     isNSFW: boolean;
@@ -204,6 +205,7 @@ export class MyriadService {
     text: string;
     selectedUserIds?: string[];
     visibility: Visibility;
+    auth: string;
   }) {
     const res = await axios.post<any, AxiosResponse<Post>>(
       `${this.myriadEndPoints}/user/posts`,
@@ -218,6 +220,11 @@ export class MyriadService {
         selectedUserIds: selectedUserIds,
         visibility: visibility,
       },
+      {
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        }
+      }
     );
 
     return res;
