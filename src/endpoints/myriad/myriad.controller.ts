@@ -200,6 +200,7 @@ export class MyriadController {
       selectedUserIds: data.selectedUserIds,
       rawText: data.rawText,
       text: data.text,
+      auth: auth,
     });
 
     return {

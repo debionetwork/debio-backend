@@ -69,7 +69,7 @@ export class MyriadService {
     await this.myriadAccountRepository.insert({
       address: address,
       username: username,
-      role: role,
+      role: role ?? '',
       jwt_token: '',
     });
 
@@ -197,6 +197,7 @@ export class MyriadService {
     text,
     rawText,
     selectedUserIds,
+    auth,
   }: {
     createdBy: string;
     isNSFW: boolean;
@@ -204,6 +205,7 @@ export class MyriadService {
     text: string;
     selectedUserIds?: string[];
     visibility: Visibility;
+    auth: string;
   }) {
     const res = await axios.post<any, AxiosResponse<Post>>(
       `${this.myriadEndPoints}/user/posts`,
@@ -217,6 +219,11 @@ export class MyriadService {
         text: text,
         selectedUserIds: selectedUserIds,
         visibility: visibility,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${auth}`,
+        },
       },
     );
 
