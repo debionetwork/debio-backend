@@ -66,10 +66,11 @@ export class MyriadService {
       },
     );
 
-    this.myriadAccountRepository.insert({
+    await this.myriadAccountRepository.insert({
       address: address,
       username: username,
       role: role,
+      jwt_token: '',
     });
 
     return res.data;
