@@ -16,6 +16,6 @@ export class MyriadAccount {
   @Column()
   role: string;
 
-  @Column()
+  @Column({ nullable: true })
   jwt_token: string;
 }
