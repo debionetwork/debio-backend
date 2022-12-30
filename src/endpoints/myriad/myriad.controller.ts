@@ -62,12 +62,9 @@ export class MyriadController {
       },
     },
   })
-  public async getContentUnlockable(
-    @Query('filter') filter: string,
-    @Headers('JWT') auth: string,
-  ) {
+  public async getContentUnlockable(@Headers('JWT') auth: string) {
     const content: ContentInterface[] =
-      await this.myriadService.unlockableContent(auth, filter);
+      await this.myriadService.unlockableContent(auth);
 
     return {
       data: content,
