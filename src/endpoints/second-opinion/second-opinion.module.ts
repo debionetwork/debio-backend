@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthProfessionalRole } from './models/health-professional-role.entity';
-import { HealthProfessional } from './models/health-professional.entity';
+import { HealthProfessionalSpecialization } from './models/health-professional-specialization.entity';
 import { SecondOpinionController } from './second-opinion.controller';
 import { SecondOpinionService } from './second-opinion.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([HealthProfessional, HealthProfessionalRole]),
+    TypeOrmModule.forFeature([
+      HealthProfessionalSpecialization,
+      HealthProfessionalRole,
+    ]),
   ],
   controllers: [SecondOpinionController],
   providers: [SecondOpinionService],
