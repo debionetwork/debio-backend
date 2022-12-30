@@ -46,7 +46,7 @@ export class MyriadService {
           Authorization: `Bearer ${jwt}`,
         },
       });
-  
+
       return res.data;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
@@ -74,14 +74,14 @@ export class MyriadService {
           network: 'debio',
         },
       );
-  
+
       await this.myriadAccountRepository.insert({
         address: address,
         username: username,
         role: role ?? '',
         jwt_token: '',
       });
-  
+
       return res.data;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
@@ -115,14 +115,14 @@ export class MyriadService {
           role,
         },
       );
-  
+
       const account = await this.myriadAccountRepository.findOne({
         where: {
           address: publicAddress,
           role: role,
         },
       });
-  
+
       if (account) {
         await this.myriadAccountRepository.update(
           { id: account.id },
@@ -130,13 +130,13 @@ export class MyriadService {
             jwt_token: res.data.accessToken,
           },
         );
-  
+
         return {
           status: 200,
           jwt: res.data.accessToken,
         };
       }
-  
+
       return {
         status: 401,
         message: 'account not found',
@@ -178,9 +178,9 @@ export class MyriadService {
           },
         },
       );
-  
+
       const content: ContentInterface[] = res.data;
-  
+
       return content;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
@@ -212,7 +212,7 @@ export class MyriadService {
           },
         },
       );
-  
+
       return res.data;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
@@ -230,7 +230,7 @@ export class MyriadService {
           },
         },
       );
-  
+
       return res.data;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
@@ -274,7 +274,7 @@ export class MyriadService {
           },
         },
       );
-  
+
       return res;
     } catch (err) {
       throw new HttpException(err.response.data, err.response.status);
