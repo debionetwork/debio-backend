@@ -1,6 +1,6 @@
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
@@ -25,24 +25,32 @@ export class MyriadService {
   }
 
   public async checkUsernameMyriad(username: string): Promise<boolean> {
-    const res = await axios.get<any, AxiosResponse<UsernameCheckInterface>>(
-      `${this.myriadEndPoints}/users/username/${username}`,
-    );
-    return res.data.status;
+    try {
+      const res = await axios.get<any, AxiosResponse<UsernameCheckInterface>>(
+        `${this.myriadEndPoints}/users/username/${username}`,
+      );
+      return res.data.status;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async getCustomTimeline(userId: string, jwt: string) {
-    const res = await axios.get(`${this.myriadEndPoints}/experiences`, {
-      params: {
-        visibility: 'selected_user',
-        userId: userId,
-      },
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-    });
-
-    return res.data;
+    try {
+      const res = await axios.get(`${this.myriadEndPoints}/experiences`, {
+        params: {
+          visibility: 'selected_user',
+          userId: userId,
+        },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+  
+      return res.data;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async registerMyriadUser({
@@ -56,24 +64,28 @@ export class MyriadService {
     address: string;
     role: string;
   }) {
-    const res = await axios.post(
-      `${this.myriadEndPoints}/authentication/signup/wallet`,
-      {
-        username: username,
-        name: name,
+    try {
+      const res = await axios.post(
+        `${this.myriadEndPoints}/authentication/signup/wallet`,
+        {
+          username: username,
+          name: name,
+          address: address,
+          network: 'debio',
+        },
+      );
+  
+      await this.myriadAccountRepository.insert({
         address: address,
-        network: 'debio',
-      },
-    );
-
-    await this.myriadAccountRepository.insert({
-      address: address,
-      username: username,
-      role: role ?? '',
-      jwt_token: '',
-    });
-
-    return res.data;
+        username: username,
+        role: role ?? '',
+        jwt_token: '',
+      });
+  
+      return res.data;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async authMyriadUser({
@@ -91,80 +103,88 @@ export class MyriadService {
     networkType: string;
     role: string;
   }) {
-    const res = await axios.post<any, AxiosResponse<AuthUserInterface>>(
-      `${this.myriadEndPoints}/authentication/login/wallet`,
-      {
-        nonce,
-        publicAddress,
-        signature,
-        walletType,
-        networkType,
-        role,
-      },
-    );
-
-    const account = await this.myriadAccountRepository.findOne({
-      where: {
-        address: publicAddress,
-        role: role,
-      },
-    });
-
-    if (account) {
-      await this.myriadAccountRepository.update(
-        { id: account.id },
+    try {
+      const res = await axios.post<any, AxiosResponse<AuthUserInterface>>(
+        `${this.myriadEndPoints}/authentication/login/wallet`,
         {
-          jwt_token: res.data.accessToken,
+          nonce,
+          publicAddress,
+          signature,
+          walletType,
+          networkType,
+          role,
         },
       );
-
+  
+      const account = await this.myriadAccountRepository.findOne({
+        where: {
+          address: publicAddress,
+          role: role,
+        },
+      });
+  
+      if (account) {
+        await this.myriadAccountRepository.update(
+          { id: account.id },
+          {
+            jwt_token: res.data.accessToken,
+          },
+        );
+  
+        return {
+          status: 200,
+          jwt: res.data.accessToken,
+        };
+      }
+  
       return {
-        status: 200,
-        jwt: res.data.accessToken,
+        status: 401,
+        message: 'account not found',
       };
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
     }
-
-    return {
-      status: 401,
-      message: 'account not found',
-    };
   }
 
   public async unlockableContent(auth: string) {
-    const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
-      `${this.myriadEndPoints}/user/comments`,
-      {
-        params: {
-          filter: {
-            include: [
-              {
-                relation: 'post',
-                scope: {
-                  include: [
-                    {
-                      relation: 'experiences',
-                      scope: {
-                        where: {
-                          visibility: 'selected_user',
+    try {
+      const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
+        `${this.myriadEndPoints}/user/comments`,
+        {
+          params: {
+            filter: {
+              include: [
+                {
+                  relation: 'post',
+                  scope: {
+                    include: [
+                      {
+                        relation: 'experiences',
+                        scope: {
+                          where: {
+                            visibility: 'selected_user',
+                          },
                         },
                       },
-                    },
-                    { relation: 'user' },
-                  ],
+                      { relation: 'user' },
+                    ],
+                  },
                 },
-              },
-            ],
+              ],
+            },
+          },
+          headers: {
+            Authorization: `Bearer ${auth}`,
           },
         },
-        headers: {
-          Authorization: `Bearer ${auth}`,
-        },
-      },
-    );
-
-    const content: ContentInterface[] = res.data;
-
-    return content;
+      );
+  
+      const content: ContentInterface[] = res.data;
+  
+      return content;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async editProfile({
@@ -178,35 +198,43 @@ export class MyriadService {
     websiteURL?: string;
     auth: string;
   }) {
-    const res = await axios.patch(
-      `${this.myriadEndPoints}/user/me`,
-      {
-        name,
-        bio,
-        websiteURL,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth}`,
+    try {
+      const res = await axios.patch(
+        `${this.myriadEndPoints}/user/me`,
+        {
+          name,
+          bio,
+          websiteURL,
         },
-      },
-    );
-
-    return res.data;
+        {
+          headers: {
+            Authorization: `Bearer ${auth}`,
+          },
+        },
+      );
+  
+      return res.data;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async getNonce({ hexWalletAddress }: { hexWalletAddress: string }) {
-    const res = await axios.get(
-      `${this.myriadEndPoints}/authentication/nonce`,
-      {
-        params: {
-          id: hexWalletAddress,
-          type: 'wallet',
+    try {
+      const res = await axios.get(
+        `${this.myriadEndPoints}/authentication/nonce`,
+        {
+          params: {
+            id: hexWalletAddress,
+            type: 'wallet',
+          },
         },
-      },
-    );
-
-    return res.data;
+      );
+  
+      return res.data;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 
   public async postToMyriad({
@@ -226,26 +254,30 @@ export class MyriadService {
     visibility: Visibility;
     auth: string;
   }) {
-    const res = await axios.post<any, AxiosResponse<Post>>(
-      `${this.myriadEndPoints}/user/posts`,
-      {
-        createdBy: createdBy,
-        isNSFW: isNSFW,
-        mentions: [],
-        rawText: rawText,
-        status: 'published',
-        tags: [],
-        text: text,
-        selectedUserIds: selectedUserIds,
-        visibility: visibility,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${auth}`,
+    try {
+      const res = await axios.post<any, AxiosResponse<Post>>(
+        `${this.myriadEndPoints}/user/posts`,
+        {
+          createdBy: createdBy,
+          isNSFW: isNSFW,
+          mentions: [],
+          rawText: rawText,
+          status: 'published',
+          tags: [],
+          text: text,
+          selectedUserIds: selectedUserIds,
+          visibility: visibility,
         },
-      },
-    );
-
-    return res;
+        {
+          headers: {
+            Authorization: `Bearer ${auth}`,
+          },
+        },
+      );
+  
+      return res;
+    } catch (err) {
+      throw new HttpException(err.response.data, err.response.status);
+    }
   }
 }
