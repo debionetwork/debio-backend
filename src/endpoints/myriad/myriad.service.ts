@@ -130,12 +130,31 @@ export class MyriadService {
     };
   }
 
-  public async unlockableContent(auth: string, filter: string) {
+  public async unlockableContent(auth: string) {
     const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
-      `${this.myriadEndPoints}/user/unlockable-contents`,
+      `${this.myriadEndPoints}/user/comments`,
       {
         params: {
-          filter: filter,
+          filter: {
+            include: [
+              {
+                relation: 'post',
+                scope: {
+                  include: [
+                    {
+                      relation: 'experiences',
+                      scope: {
+                        where: {
+                          visibility: 'selected_user',
+                        },
+                      },
+                    },
+                    { relation: 'user' },
+                  ],
+                },
+              },
+            ],
+          },
         },
         headers: {
           Authorization: `Bearer ${auth}`,
