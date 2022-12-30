@@ -6,7 +6,7 @@ import { SecondOpinionService } from './second-opinion.service';
 export class SecondOpinionController {
   constructor(private readonly secondOpinionService: SecondOpinionService) {}
 
-  @Get('health-professional')
+  @Get('health-professional-specialization')
   @ApiResponse({
     schema: {
       example: {
@@ -22,11 +22,11 @@ export class SecondOpinionController {
   })
   @ApiOperation({ description: 'get all health professional' })
   async getHealthProfessional() {
-    const allHealthProfessional =
-      await this.secondOpinionService.findAllHealthProfessional();
+    const allHealthProfessionalSpecialization =
+      await this.secondOpinionService.findAllHealthProfessionalSpecialization();
 
     return {
-      data: allHealthProfessional,
+      data: allHealthProfessionalSpecialization,
     };
   }
 
