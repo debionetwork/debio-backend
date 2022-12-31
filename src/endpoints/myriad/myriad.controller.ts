@@ -62,9 +62,9 @@ export class MyriadController {
       },
     },
   })
-  public async getContentUnlockable(@Headers('JWT') auth: string) {
+  public async getContentUnlockable(@Headers('JWT') jwt: string) {
     const content: ContentInterface[] =
-      await this.myriadService.unlockableContent(auth);
+      await this.myriadService.unlockableContent(jwt);
 
     return {
       data: content,
@@ -140,13 +140,13 @@ export class MyriadController {
   })
   public async editProfile(
     @Body() data: ProfileDTO,
-    @Headers('JWT') auth: string,
+    @Headers('JWT') jwt: string,
   ) {
     return await this.myriadService.editProfile({
       name: data.name,
       bio: data.bio,
       websiteURL: data.websiteURL,
-      auth: auth,
+      jwt: jwt,
     });
   }
 
@@ -188,7 +188,7 @@ export class MyriadController {
   })
   public async postToMyriad(
     @Body() data: PostDTO,
-    @Headers('JWT') auth: string,
+    @Headers('JWT') jwt: string,
   ) {
     const res = await this.myriadService.postToMyriad({
       createdBy: data.createdBy,
@@ -197,7 +197,7 @@ export class MyriadController {
       selectedUserIds: data.selectedUserIds,
       rawText: data.rawText,
       text: data.text,
-      auth: auth,
+      jwt: jwt,
     });
 
     return {
