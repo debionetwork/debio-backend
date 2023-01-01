@@ -31,7 +31,10 @@ export class MyriadService {
       );
       return res.data.status;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -49,7 +52,10 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -84,7 +90,10 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -142,11 +151,14 @@ export class MyriadService {
         message: 'account not found',
       };
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
-  public async unlockableContent(auth: string) {
+  public async unlockableContent(jwt: string) {
     try {
       const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
         `${this.myriadEndPoints}/user/comments`,
@@ -174,7 +186,7 @@ export class MyriadService {
             },
           },
           headers: {
-            Authorization: `Bearer ${auth}`,
+            Authorization: `Bearer ${jwt}`,
           },
         },
       );
@@ -183,7 +195,10 @@ export class MyriadService {
 
       return content;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -191,12 +206,12 @@ export class MyriadService {
     name,
     bio,
     websiteURL,
-    auth,
+    jwt,
   }: {
     name?: string;
     bio?: string;
     websiteURL?: string;
-    auth: string;
+    jwt: string;
   }) {
     try {
       const res = await axios.patch(
@@ -208,14 +223,17 @@ export class MyriadService {
         },
         {
           headers: {
-            Authorization: `Bearer ${auth}`,
+            Authorization: `Bearer ${jwt}`,
           },
         },
       );
 
       return res.data;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -233,7 +251,10 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 
@@ -244,7 +265,7 @@ export class MyriadService {
     text,
     rawText,
     selectedUserIds,
-    auth,
+    jwt,
   }: {
     createdBy: string;
     isNSFW: boolean;
@@ -252,7 +273,7 @@ export class MyriadService {
     text: string;
     selectedUserIds?: string[];
     visibility: Visibility;
-    auth: string;
+    jwt: string;
   }) {
     try {
       const res = await axios.post<any, AxiosResponse<Post>>(
@@ -270,14 +291,17 @@ export class MyriadService {
         },
         {
           headers: {
-            Authorization: `Bearer ${auth}`,
+            Authorization: `Bearer ${jwt}`,
           },
         },
       );
 
       return res;
     } catch (err) {
-      throw new HttpException(err.response.data, err.response.status);
+      throw new HttpException(
+        err.response.data ?? err,
+        err.response.status ?? 500,
+      );
     }
   }
 }
