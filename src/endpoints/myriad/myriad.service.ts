@@ -304,4 +304,38 @@ export class MyriadService {
       );
     }
   }
+
+  public async checkUserMyriadTable(address: string) {
+    const user = await this.myriadAccountRepository.findOneBy({
+      address: address,
+    });
+
+    return this.checkJWT(user);
+  }
+
+  private checkJWT(myriadAccount: MyriadAccount) {
+    if (myriadAccount === null) {
+      throw new HttpException(
+        {
+          status: 404,
+          message: 'user not found',
+        },
+        404,
+      );
+    }
+    if (myriadAccount.jwt_token === '' || myriadAccount.jwt_token === null) {
+      throw new HttpException(
+        {
+          status: 401,
+          message: 'user unauthenticated',
+        },
+        401,
+      );
+    } else {
+      return {
+        status: 200,
+        jwt: myriadAccount.jwt_token,
+      };
+    }
+  }
 }
