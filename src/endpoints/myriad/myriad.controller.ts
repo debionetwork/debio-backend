@@ -223,4 +223,17 @@ export class MyriadController {
       ...res,
     };
   }
+
+  @Get('check/user/:address')
+  @ApiParam({ name: 'address' })
+  @ApiOperation({
+    description: 'Check address user and return jwt',
+  })
+  public async getUserMyriad(@Param('address') address: string) {
+    const res = await this.myriadService.checkUserMyriadTable(address);
+
+    return {
+      ...res,
+    };
+  }
 }
