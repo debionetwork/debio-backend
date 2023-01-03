@@ -102,7 +102,7 @@ export class MyriadController {
       username: data.username,
       name: data.name,
       address: data.address,
-      role: data.role,
+      role: data.role.toLowerCase(),
     });
 
     return {
@@ -122,7 +122,7 @@ export class MyriadController {
       signature: data.signature,
       walletType: data.walletType,
       networkType: data.networkType,
-      role: data.role,
+      role: data.role.toLowerCase(),
     });
 
     return {
