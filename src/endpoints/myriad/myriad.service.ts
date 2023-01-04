@@ -1,6 +1,6 @@
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
@@ -12,6 +12,9 @@ import { MyriadAccount } from './models/myriad-account.entity';
 
 @Injectable()
 export class MyriadService {
+  private readonly logger: Logger = new Logger(
+    MyriadService.name,
+  );
   private myriadEndPoints: string;
 
   constructor(
@@ -31,9 +34,13 @@ export class MyriadService {
       );
       return res.data.status;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -52,9 +59,13 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -90,9 +101,13 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -151,9 +166,13 @@ export class MyriadService {
         message: 'account not found',
       };
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -195,9 +214,13 @@ export class MyriadService {
 
       return content;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -230,9 +253,13 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -251,9 +278,13 @@ export class MyriadService {
 
       return res.data;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
@@ -298,9 +329,13 @@ export class MyriadService {
 
       return res;
     } catch (err) {
+      this.logger.error(err);
       throw new HttpException(
-        err.response.data ?? err,
-        err.response.status ?? 500,
+        err?.response?.data ?? {
+          status: 500,
+          message: "Something went wrong in server"
+        },
+        err?.response?.status ?? 500,
       );
     }
   }
