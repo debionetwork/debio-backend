@@ -325,7 +325,7 @@ export class MyriadService {
         },
       );
 
-      return res;
+      return res.data;
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
