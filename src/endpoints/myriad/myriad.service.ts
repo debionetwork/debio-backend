@@ -12,9 +12,7 @@ import { MyriadAccount } from './models/myriad-account.entity';
 
 @Injectable()
 export class MyriadService {
-  private readonly logger: Logger = new Logger(
-    MyriadService.name,
-  );
+  private readonly logger: Logger = new Logger(MyriadService.name);
   private myriadEndPoints: string;
 
   constructor(
@@ -38,7 +36,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -63,7 +61,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -105,7 +103,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -170,7 +168,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -218,7 +216,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -257,7 +255,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -282,7 +280,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
@@ -333,7 +331,7 @@ export class MyriadService {
       throw new HttpException(
         err?.response?.data ?? {
           status: 500,
-          message: "Something went wrong in server"
+          message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
       );
