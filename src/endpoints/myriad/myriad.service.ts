@@ -158,16 +158,19 @@ export class MyriadService {
           jwt: res.data.accessToken,
         };
       } else {
-        throw new Error("account_not_found");
+        throw new Error('account_not_found');
       }
     } catch (err) {
       this.logger.error(err);
 
-      if (err?.message === "account_not_found") {
-        throw new HttpException({
-          status: 400,
-          message: "account not found"
-        }, 400);
+      if (err?.message === 'account_not_found') {
+        throw new HttpException(
+          {
+            status: 400,
+            message: 'account not found',
+          },
+          400,
+        );
       } else {
         throw new HttpException(
           err?.response?.data ?? {
