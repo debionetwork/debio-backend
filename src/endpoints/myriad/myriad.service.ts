@@ -157,21 +157,29 @@ export class MyriadService {
           status: 200,
           jwt: res.data.accessToken,
         };
+      } else {
+        throw new Error('account_not_found');
       }
-
-      return {
-        status: 401,
-        message: 'account not found',
-      };
     } catch (err) {
       this.logger.error(err);
-      throw new HttpException(
-        err?.response?.data ?? {
-          status: 500,
-          message: 'Something went wrong in server',
-        },
-        err?.response?.status ?? 500,
-      );
+
+      if (err?.message === 'account_not_found') {
+        throw new HttpException(
+          {
+            status: 400,
+            message: 'account not found',
+          },
+          400,
+        );
+      } else {
+        throw new HttpException(
+          err?.response?.data ?? {
+            status: 500,
+            message: 'Something went wrong in server',
+          },
+          err?.response?.status ?? 500,
+        );
+      }
     }
   }
 
