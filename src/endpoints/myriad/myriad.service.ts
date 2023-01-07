@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { AuthUserInterface } from './interface/auth-user';
 import { ContentInterface } from './interface/content';
 import { Post, Visibility } from './interface/post';
+import { TimelineInterface } from './interface/timeline';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
 
@@ -31,6 +32,51 @@ export class MyriadService {
         `${this.myriadEndPoints}/users/username/${username}`,
       );
       return res.data.status;
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
+  public async customVisibilityTimeline(
+    userId: string,
+    jwt: string,
+    timelineid: string,
+  ) {
+    try {
+      const timelineReq = await axios.get<
+        any,
+        AxiosResponse<TimelineInterface>
+      >(`${this.myriadEndPoints}/experiences/${timelineid}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      const { data } = timelineReq;
+
+      const newSelectedUserIds = [...data.selectedUserIds, userId];
+
+      const patchTimeline = await axios.patch(
+        `${this.myriadEndPoints}/user/experiences/${timelineid}`,
+        {
+          id: data.id,
+          selectedUserIds: newSelectedUserIds,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+
+      return patchTimeline.data;
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
