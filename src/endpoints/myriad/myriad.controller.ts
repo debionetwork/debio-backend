@@ -18,6 +18,7 @@ import { AuthUserDTO } from './dto/auth-user.dto';
 import { PostDTO } from './dto/post.dto';
 import { ProfileDTO } from './dto/profile.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
+import { TimelineDTO } from './dto/timeline.dto';
 import { ContentInterface } from './interface/content';
 import { MyriadService } from './myriad.service';
 
@@ -231,6 +232,29 @@ export class MyriadController {
   })
   public async getUserMyriad(@Param('address') address: string) {
     const res = await this.myriadService.checkUserMyriadTable(address);
+
+    return {
+      ...res,
+    };
+  }
+
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Post('timeline/add-user')
+  @ApiBody({ type: TimelineDTO })
+  @ApiOperation({
+    description: 'Post to myriad',
+  })
+  public async addUserToTimeline(
+    @Body() data: TimelineDTO,
+    @Headers('JWT') jwt: string,
+  ) {
+    const res = await this.myriadService.customVisibilityTimeline(
+      data.userId,
+      jwt,
+      data.timelineId,
+    );
 
     return {
       ...res,
