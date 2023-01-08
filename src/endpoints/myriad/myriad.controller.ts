@@ -260,4 +260,26 @@ export class MyriadController {
       ...res,
     };
   }
+
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Get('content/comment/total/:user_id')
+  @ApiParam({ name: 'user_id' })
+  @ApiOperation({
+    description: 'get total paid content comment by user id',
+  })
+  public async totalPaidContentComment(
+    @Param('user_id') userId: string,
+    @Headers('JWT') jwt: string,
+  ) {
+    const res = await this.myriadService.getTotalPaidContentComment(
+      userId,
+      jwt,
+    );
+
+    return {
+      ...res,
+    };
+  }
 }

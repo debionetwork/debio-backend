@@ -114,6 +114,36 @@ export class MyriadService {
     }
   }
 
+  public async getTotalPaidContentComment(userid: string, jwt: string) {
+    try {
+      const res = await axios.get(
+        `${this.myriadEndPoints}/user/comments/count`,
+        {
+          params: {
+            where: {
+              'asset.exclusiveContents': { exists: true },
+              userId: userid,
+            },
+          },
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+
+      return res.data;
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
   public async registerMyriadUser({
     username,
     name,
