@@ -220,3 +220,32 @@ export interface CurrencyInterface {
 export interface ValueInterface {
   value: string;
 }
+
+export enum StatusEnum {
+  SENT = 'sent',
+  RECEIVED = 'received',
+}
+
+export enum ReferenceTypeEnum {
+  UNLOCKABLE_CONTENT = 'unlockable_content',
+  POST = 'post',
+  COMMENT = 'comment',
+  USER = 'user',
+}
+
+export enum NetworkTypeEnum {
+  DBIO = 'dbio',
+  MYRIAD = 'myriad',
+  NEAR = 'near',
+  POLKADOT = 'polkadot',
+  KUSAMA = 'kusama',
+}
+
+export enum SymbolEnum {
+  DBIO = 'DBIO',
+  MYRIA = 'MYRIA',
+  NEAR = 'NEAR',
+  DOT = 'DOT',
+  KSM = 'KSM',
+  USDT = 'USDT',
+}

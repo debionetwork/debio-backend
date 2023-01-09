@@ -12,6 +12,7 @@ import {
   ApiHeader,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
 import { AuthUserDTO } from './dto/auth-user.dto';
@@ -19,7 +20,13 @@ import { PostDTO } from './dto/post.dto';
 import { ProfileDTO } from './dto/profile.dto';
 import { RegisterUserDTO } from './dto/register-user.dto';
 import { TimelineDTO } from './dto/timeline.dto';
-import { ContentInterface } from './interface/content';
+import {
+  ContentInterface,
+  NetworkTypeEnum,
+  ReferenceTypeEnum,
+  StatusEnum,
+  SymbolEnum,
+} from './interface/content';
 import { MyriadService } from './myriad.service';
 
 @Controller('myriad')
@@ -275,6 +282,57 @@ export class MyriadController {
   ) {
     const res = await this.myriadService.getTotalPaidContentComment(
       userId,
+      jwt,
+    );
+
+    return {
+      ...res,
+    };
+  }
+
+  @ApiHeader({
+    name: 'JWT',
+  })
+  @Get('tip/total')
+  @ApiQuery({
+    name: 'status',
+    enum: StatusEnum,
+    isArray: true,
+    example: Object.values(StatusEnum),
+  })
+  @ApiQuery({
+    name: 'referenceType',
+    enum: ReferenceTypeEnum,
+    isArray: true,
+    example: Object.values(ReferenceTypeEnum),
+  })
+  @ApiQuery({
+    name: 'networkType',
+    enum: NetworkTypeEnum,
+    isArray: true,
+    example: Object.values(NetworkTypeEnum),
+  })
+  @ApiQuery({
+    name: 'symbol',
+    enum: SymbolEnum,
+    isArray: true,
+    example: Object.values(SymbolEnum),
+  })
+  @ApiOperation({
+    description: 'get total tip user',
+  })
+  public async getTotalTip(
+    @Query('status') status: StatusEnum,
+    @Query('referenceType') referenceType: ReferenceTypeEnum,
+    @Query('networkType') networkType: NetworkTypeEnum,
+    @Query('symbol') symbol: SymbolEnum,
+    @Headers('JWT') jwt: string,
+  ) {
+    const res = await this.myriadService.getTotalTipFromUser(
+      referenceType,
+      networkType,
+      symbol,
+      status,
       jwt,
     );
 

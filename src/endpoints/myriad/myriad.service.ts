@@ -5,7 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
 import { AuthUserInterface } from './interface/auth-user';
-import { ContentInterface } from './interface/content';
+import {
+  ContentInterface,
+  NetworkTypeEnum,
+  ReferenceTypeEnum,
+  StatusEnum,
+  SymbolEnum,
+} from './interface/content';
 import { Post, Visibility } from './interface/post';
 import { TimelineInterface } from './interface/timeline';
 import { UsernameCheckInterface } from './interface/username-check';
@@ -124,6 +130,41 @@ export class MyriadService {
               'asset.exclusiveContents': { exists: true },
               userId: userid,
             },
+          },
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        },
+      );
+
+      return res.data;
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
+  public async getTotalTipFromUser(
+    referenceType: ReferenceTypeEnum,
+    networkType: NetworkTypeEnum,
+    symbol: SymbolEnum,
+    status: StatusEnum,
+    jwt: string,
+  ) {
+    try {
+      const res = await axios.get(
+        `${this.myriadEndPoints}/user/transaction/${status}/total`,
+        {
+          params: {
+            referenceType,
+            networkType,
+            symbol,
           },
           headers: {
             Authorization: `Bearer ${jwt}`,
