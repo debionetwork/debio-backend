@@ -14,6 +14,7 @@ import {
 } from './interface/content';
 import { Post, Visibility } from './interface/post';
 import { TimelineInterface } from './interface/timeline';
+import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
 
@@ -159,7 +160,7 @@ export class MyriadService {
   ) {
     try {
       const res = await axios.get(
-        `${this.myriadEndPoints}/user/transaction/${status}/total`,
+        `${this.myriadEndPoints}/user/transactions/${status}/total`,
         {
           params: {
             referenceType,
@@ -197,7 +198,7 @@ export class MyriadService {
     role: string;
   }) {
     try {
-      const res = await axios.post(
+      const res = await axios.post<any, AxiosResponse<UserMyriadInterface>>(
         `${this.myriadEndPoints}/authentication/signup/wallet`,
         {
           username: username,
@@ -207,11 +208,14 @@ export class MyriadService {
         },
       );
 
+      const { id } = res.data;
+
       await this.myriadAccountRepository.insert({
         address: address,
         username: username,
         role: role ?? '',
         jwt_token: '',
+        user_id: id,
       });
 
       return res.data;
@@ -481,7 +485,12 @@ export class MyriadService {
         404,
       );
     }
-    if (myriadAccount.jwt_token === '' || myriadAccount.jwt_token === null) {
+    if (
+      myriadAccount.jwt_token === '' ||
+      myriadAccount.jwt_token === null ||
+      myriadAccount.user_id === '' ||
+      myriadAccount.user_id === null
+    ) {
       throw new HttpException(
         {
           status: 401,
@@ -493,6 +502,7 @@ export class MyriadService {
       return {
         status: 200,
         jwt: myriadAccount.jwt_token,
+        user_id: myriadAccount.user_id,
       };
     }
   }

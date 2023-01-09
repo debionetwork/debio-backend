@@ -18,4 +18,8 @@ export class MyriadAccount {
 
   @Column({ nullable: true })
   jwt_token: string;
+
+  @Index({ unique: true })
+  @Column()
+  user_id: string;
 }
