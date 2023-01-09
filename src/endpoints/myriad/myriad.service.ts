@@ -159,7 +159,7 @@ export class MyriadService {
   ) {
     try {
       const res = await axios.get(
-        `${this.myriadEndPoints}/user/transaction/${status}/total`,
+        `${this.myriadEndPoints}/user/transactions/${status}/total`,
         {
           params: {
             referenceType,
