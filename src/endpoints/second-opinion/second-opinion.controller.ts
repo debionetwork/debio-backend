@@ -37,7 +37,7 @@ export class SecondOpinionController {
         data: [
           {
             id: 1,
-            category: 'Category Name',
+            specialization: 'Category Name',
             created_at: new Date(),
           },
         ],
