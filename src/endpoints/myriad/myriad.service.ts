@@ -506,4 +506,25 @@ export class MyriadService {
       };
     }
   }
+
+  public async getListUserId(role: string) {
+    try {
+      const list = await this.myriadAccountRepository.find({
+        select: ['user_id', 'role'],
+        where: {
+          role: role,
+        },
+      });
+
+      return list;
+    } catch (err) {
+      throw new HttpException(
+        {
+          status: 500,
+          message: err.message,
+        },
+        500,
+      );
+    }
+  }
 }

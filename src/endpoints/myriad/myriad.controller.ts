@@ -340,4 +340,25 @@ export class MyriadController {
       ...res,
     };
   }
+
+  @Get('/list/userid')
+  @ApiQuery({
+    name: 'role',
+    enum: [
+      'customer',
+      'health-professional/physical-health',
+      'health-professional/mental-health',
+    ],
+  })
+  @ApiOperation({
+    description: 'get list userid',
+  })
+  public async getListUserId(@Query('role') role: string) {
+    const res = await this.myriadService.getListUserId(role);
+
+    return {
+      status: 200,
+      data: res,
+    };
+  }
 }
