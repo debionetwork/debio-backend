@@ -467,6 +467,36 @@ export class MyriadService {
     }
   }
 
+  private async postToTimeline(jwt: string, userId: string) {
+    try {
+      const timeline = await axios.get(`${this.myriadEndPoints}/experiences`, {
+        params: {
+          visibility: 'selected_user',
+          userId: userId,
+        },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      const postTimeline = await axios.post(
+        `${this.myriadEndPoints}/experiences/post`,
+        {
+          experienceIds: [],
+          postId: '',
+        },
+      );
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
   public async checkUserMyriadTable(address: string) {
     const user = await this.myriadAccountRepository.findOneBy({
       address: address,
