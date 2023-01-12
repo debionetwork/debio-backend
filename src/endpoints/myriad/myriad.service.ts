@@ -446,19 +446,19 @@ export class MyriadService {
         adminToken = user.jwt_token;
       }
 
-      let experienceIdsAdmin = await this.cacheManager.get<string[]>(
+      const experienceIdsAdmin = await this.cacheManager.get<string[]>(
         'experience_ids_admin',
       );
-      if (!experienceIdsAdmin) {
-        const experienceIds = await axios.get(
-          `${this.myriadEndPoints}/user/experiences`,
-          {
-            headers: {
-              Authorization: `Bearer ${adminToken}`,
-            },
-          },
-        );
-      }
+      // if (!experienceIdsAdmin) {
+      //   const experienceIds = await axios.get(
+      //     `${this.myriadEndPoints}/user/experiences`,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${adminToken}`,
+      //       },
+      //     },
+      //   );
+      // }
 
       const res = await axios.post<any, AxiosResponse<Post>>(
         `${this.myriadEndPoints}/user/posts`,
