@@ -330,6 +330,7 @@ export class MyriadService {
                 },
               ],
             },
+            exclusiveInfo: true,
           },
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -337,10 +338,13 @@ export class MyriadService {
         },
       );
 
+      console.log(res.request);
+
       const content: ContentInterface[] = res.data;
 
       return content;
     } catch (err) {
+      console.log(err);
       this.logger.error(err);
       throw new HttpException(
         err?.response?.data ?? {
