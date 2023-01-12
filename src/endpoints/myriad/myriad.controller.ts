@@ -257,10 +257,11 @@ export class MyriadController {
     @Body() data: TimelineDTO,
     @Headers('JWT') jwt: string,
   ) {
+    const { selectedUser, timelineId } = data;
     const res = await this.myriadService.customVisibilityTimeline(
-      data.userId,
+      selectedUser,
       jwt,
-      data.timelineId,
+      timelineId,
     );
 
     return {
