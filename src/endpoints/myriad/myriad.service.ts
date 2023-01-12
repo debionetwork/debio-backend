@@ -1,6 +1,6 @@
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, HttpException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
@@ -16,6 +16,7 @@ import { Post, Visibility } from './interface/post';
 import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class MyriadService {
@@ -26,6 +27,7 @@ export class MyriadService {
     @InjectRepository(MyriadAccount)
     private readonly myriadAccountRepository: Repository<MyriadAccount>,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {
     this.myriadEndPoints = this.gCloudSecretManagerService
       .getSecret('MYRIAD_HOST_ENDPOINT')
@@ -424,6 +426,27 @@ export class MyriadService {
     jwt: string;
   }) {
     try {
+      let adminToken = await this.cacheManager.get<string>('admin_token');
+      if (!adminToken) {
+        const user = await this.myriadAccountRepository.findOne({
+          select: ['username', 'jwt_token'],
+          where: {
+            username: this.gCloudSecretManagerService.getSecret('MYRIAD_ADMIN_USERNAME').toString(),
+          }
+        });
+
+        adminToken = user.jwt_token;
+      }
+
+      let experienceIdsAdmin = await this.cacheManager.get<string[]>('experience_ids_admin');
+      if (!experienceIdsAdmin) {
+        const experienceIds = await axios.get(`${this.myriadEndPoints}/user/experiences`, {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        });
+      }
+
       const res = await axios.post<any, AxiosResponse<Post>>(
         `${this.myriadEndPoints}/user/posts`,
         {
@@ -444,7 +467,27 @@ export class MyriadService {
         },
       );
 
+      this.addPostToTimeline(experienceIdsAdmin, res.data.id);
+
       return res.data;
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
+  private async addPostToTimeline(timelineIds: string[], postId: string) {
+    try {
+      await axios.post(`${this.myriadEndPoints}/experiences/post`, {
+        experienceIds: timelineIds,
+        postId: postId,
+      });
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
