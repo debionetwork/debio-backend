@@ -52,29 +52,16 @@ export class MyriadService {
   }
 
   public async customVisibilityTimeline(
-    userId: string,
+    selectedUser: string[],
     jwt: string,
     timelineid: string,
   ) {
     try {
-      const timelineReq = await axios.get<
-        any,
-        AxiosResponse<TimelineInterface>
-      >(`${this.myriadEndPoints}/experiences/${timelineid}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-
-      const { data } = timelineReq;
-
-      const newSelectedUserIds = [...data.selectedUserIds, userId];
-
       const patchTimeline = await axios.patch(
         `${this.myriadEndPoints}/user/experiences/${timelineid}`,
         {
-          id: data.id,
-          selectedUserIds: newSelectedUserIds,
+          visibility: "selected_user",
+          selectedUserIds: selectedUser,
         },
         {
           headers: {
