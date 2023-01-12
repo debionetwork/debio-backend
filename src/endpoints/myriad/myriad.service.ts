@@ -1,6 +1,12 @@
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { CACHE_MANAGER, Inject, HttpException, Injectable, Logger } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  HttpException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
@@ -431,20 +437,27 @@ export class MyriadService {
         const user = await this.myriadAccountRepository.findOne({
           select: ['username', 'jwt_token'],
           where: {
-            username: this.gCloudSecretManagerService.getSecret('MYRIAD_ADMIN_USERNAME').toString(),
-          }
+            username: this.gCloudSecretManagerService
+              .getSecret('MYRIAD_ADMIN_USERNAME')
+              .toString(),
+          },
         });
 
         adminToken = user.jwt_token;
       }
 
-      let experienceIdsAdmin = await this.cacheManager.get<string[]>('experience_ids_admin');
+      let experienceIdsAdmin = await this.cacheManager.get<string[]>(
+        'experience_ids_admin',
+      );
       if (!experienceIdsAdmin) {
-        const experienceIds = await axios.get(`${this.myriadEndPoints}/user/experiences`, {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
+        const experienceIds = await axios.get(
+          `${this.myriadEndPoints}/user/experiences`,
+          {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
           },
-        });
+        );
       }
 
       const res = await axios.post<any, AxiosResponse<Post>>(

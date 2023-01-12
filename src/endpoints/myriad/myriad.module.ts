@@ -23,7 +23,8 @@ import * as redisStore from 'cache-manager-redis-store';
         };
       },
     }),
-    TypeOrmModule.forFeature([MyriadAccount])],
+    TypeOrmModule.forFeature([MyriadAccount]),
+  ],
   controllers: [MyriadController],
   providers: [MyriadService],
   exports: [TypeOrmModule],
