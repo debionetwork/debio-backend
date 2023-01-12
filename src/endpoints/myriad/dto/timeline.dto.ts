@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class TimelineDTO {
   @ApiProperty({
-    type: Array<String>,
+    type: Array<string>,
     description: 'selected user id',
   })
   selectedUser: string[];

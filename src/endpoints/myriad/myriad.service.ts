@@ -13,7 +13,6 @@ import {
   SymbolEnum,
 } from './interface/content';
 import { Post, Visibility } from './interface/post';
-import { TimelineInterface } from './interface/timeline';
 import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
