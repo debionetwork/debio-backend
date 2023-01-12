@@ -60,7 +60,7 @@ export class MyriadService {
       const patchTimeline = await axios.patch(
         `${this.myriadEndPoints}/user/experiences/${timelineid}`,
         {
-          visibility: "selected_user",
+          visibility: 'selected_user',
           selectedUserIds: selectedUser,
         },
         {
