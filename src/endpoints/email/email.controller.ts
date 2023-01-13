@@ -1,4 +1,4 @@
-import { Controller, Param, Post, Res } from '@nestjs/common';
+import { Controller, HttpException, Param, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
   geneticAnalystToGARegister,
@@ -18,14 +18,14 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
 
 @Controller('email')
 export class EmailEndpointController {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-    private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
-    private readonly emailNotificationService: EmailNotificationService,
+    @InjectQueue('email-sender-queue') private emailSenderQueue: Queue
   ) {}
 
   /* A function that takes two arguments and returns a list with the first argument as the head and the
@@ -45,10 +45,8 @@ export class EmailEndpointController {
   })
   async sendMailRegisteredLab(
     @Param('lab_id') lab_id: string,
-    @Res() response: Response,
   ) {
     try {
-      let isEmailSent = false;
       const contextLab = await queryLabById(
         this.substrateService.api as any,
         lab_id,
@@ -59,40 +57,24 @@ export class EmailEndpointController {
         contextLab,
       );
 
-      const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-        this.gCloudSecretManagerService
-          .getSecret('EMAILS')
-          .toString()
-          .split(','),
-        labRegister,
-      );
+      this.emailSenderQueue.add('register-lab', labRegister);
 
-      const dataInput = new EmailNotification();
-      if (sentEMail) {
-        isEmailSent = true;
-        dataInput.sent_at = new Date();
-      }
-      dataInput.notification_type = 'LabRegister';
-      dataInput.ref_number = lab_id;
-      dataInput.is_email_sent = isEmailSent;
-      dataInput.created_at = new Date();
-
-      await this.emailNotificationService.insertEmailNotification(dataInput);
-
-      response.status(200).send({
+      return {
         message: 'Sending Email.',
-      });
+      };
     } catch (err) {
       if (err instanceof TypeError) {
-        response.status(404).send({
+        throw new HttpException({
+          status: 404,
           error: true,
           message: 'lab id is not found',
-        });
+        }, 404);
       } else {
-        response.status(500).send({
+        throw new HttpException({
+          status: 500,
           error: true,
           message: 'Something went wrong',
-        });
+        }, 500);
       }
     }
   }
@@ -104,7 +86,6 @@ export class EmailEndpointController {
     @Res() response: Response,
   ) {
     try {
-      let isEmailSent = false;
       const contextGA = await queryGeneticAnalystByAccountId(
         this.substrateService.api as any,
         genetic_analyst_id,
@@ -115,41 +96,24 @@ export class EmailEndpointController {
         contextGA,
       );
 
-      const sentEMail =
-        await this.mailerManager.sendGeneticAnalystRegistrationEmail(
-          this.gCloudSecretManagerService
-            .getSecret('EMAILS')
-            .toString()
-            .split(','),
-          geneticAnalystRegister,
-        );
+      this.emailSenderQueue.add('register-ga', geneticAnalystRegister);
 
-      const dataInput = new EmailNotification();
-      if (sentEMail) {
-        isEmailSent = true;
-        dataInput.sent_at = new Date();
-      }
-      dataInput.notification_type = 'GeneticAnalystRegister';
-      dataInput.ref_number = genetic_analyst_id;
-      dataInput.is_email_sent = isEmailSent;
-      dataInput.created_at = new Date();
-
-      await this.emailNotificationService.insertEmailNotification(dataInput);
-
-      response.status(200).send({
+      return {
         message: 'Sending Email.',
-      });
+      };
     } catch (err) {
       if (err instanceof TypeError) {
-        response.status(404).send({
+        throw new HttpException({
+          status: 404,
           error: true,
           message: 'genetic analyst id is not found',
-        });
+        }, 404);
       } else {
-        response.status(500).send({
+        throw new HttpException({
+          status: 500,
           error: true,
           message: 'Something went wrong',
-        });
+        }, 500);
       }
     }
   }

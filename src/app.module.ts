@@ -1,42 +1,36 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LabRating } from './endpoints/rating/models/rating.entity';
-import { LocationEntities } from './endpoints/location/models';
-import { LocationModule } from './endpoints/location/location.module';
-import { RatingModule } from './endpoints/rating/rating.module';
-import { EscrowModule } from './common/modules/escrow/escrow.module';
-import { SubstrateEndpointModule } from './endpoints/substrate-endpoint/substrate-endpoint.module';
-import { TransactionLoggingModule } from './common/modules/transaction-logging/transaction-logging.module';
-import { TransactionRequest } from './common/modules/transaction-logging/models/transaction-request.entity';
-import { RecaptchaModule } from './endpoints/recaptcha/recaptcha.module';
-import { CloudStorageModule } from './endpoints/cloud-storage/cloud-storage.module';
-import { BountyModule } from './endpoints/bounty/bounty.module';
-import { EmrModule } from './endpoints/category/emr/emr.module';
-import { ServiceCategoryModule } from './endpoints/category/service/service-category.module';
-import { VerificationModule } from './endpoints/verification/verification.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { HealthModule } from './endpoints/health/health.module';
-import { DebioConversionModule } from './common/modules/debio-conversion/debio-conversion.module';
-import { EmailEndpointModule } from './endpoints/email/email.module';
-import {
-  CachesModule,
-  DateTimeModule,
-  ProcessEnvModule,
-  ProcessEnvProxy,
-} from './common';
-import { TransactionModule } from './endpoints/transaction/transaction.module';
-import { SpecializationModule } from './endpoints/category/specialization/specialization.module';
-import { NotificationEndpointModule } from './endpoints/notification-endpoint/notification-endpoint.module';
-import { DnaCollectionModule } from './endpoints/category/dna-collection/dna-collection.module';
 import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList, SecretKeyList } from './common/secrets';
-import { ConversionModule } from './endpoints/conversion/conversion.module';
-import { PinataModule } from './endpoints/pinata/pinata.module';
-import { MyriadModule } from './endpoints/myriad/myriad.module';
-import { SecondOpinionModule } from './endpoints/second-opinion/second-opinion.module';
+import { EmailSenderModule } from '@email-sender/email-sender.module';
+import { keyList, SecretKeyList } from '@common/secrets';
+import { ConversionModule } from '@endpoints/conversion/conversion.module';
+import { PinataModule } from '@endpoints/pinata/pinata.module';
+import { MyriadModule } from '@endpoints/myriad/myriad.module';
+import { SecondOpinionModule } from '@endpoints/second-opinion/second-opinion.module';
+import { CachesModule, DateTimeModule, DebioConversionModule, ProcessEnvModule, ProcessEnvProxy, TransactionLoggingModule } from '@common/modules';
+import { LabRating } from '@endpoints/rating/models/rating.entity';
+import { TransactionRequest } from '@common/modules/transaction-logging/models/transaction-request.entity';
+import { LocationEntities } from '@endpoints/location/models';
+import { CloudStorageModule } from '@endpoints/cloud-storage/cloud-storage.module';
+import { LocationModule } from '@endpoints/location/location.module';
+import { EmailEndpointModule } from '@endpoints/email/email.module';
+import { RatingModule } from '@endpoints/rating/rating.module';
+import { DnaCollectionModule } from '@endpoints/category/dna-collection/dna-collection.module';
+import { NotificationEndpointModule } from '@endpoints/notification-endpoint/notification-endpoint.module';
+import { SpecializationModule } from '@endpoints/category/specialization/specialization.module';
+import { TransactionModule } from '@endpoints/transaction/transaction.module';
+import { HealthModule } from '@endpoints/health/health.module';
+import { BountyModule } from '@endpoints/bounty/bounty.module';
+import { VerificationModule } from '@endpoints/verification/verification.module';
+import { RecaptchaModule } from '@endpoints/recaptcha/recaptcha.module';
+import { SubstrateEndpointModule } from '@endpoints/substrate-endpoint/substrate-endpoint.module';
+import { EscrowModule } from '@common/modules/escrow/escrow.module';
+import { EmrModule } from '@endpoints/category/emr/emr.module';
+import { ServiceCategoryModule } from '@endpoints/category/service/service-category.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -131,6 +125,7 @@ require('dotenv').config(); // eslint-disable-line
     PinataModule,
     MyriadModule,
     SecondOpinionModule,
+    EmailSenderModule,
   ],
 })
 export class AppModule {}

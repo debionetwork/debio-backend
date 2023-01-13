@@ -16,7 +16,8 @@
     "esModuleInterop": true,
     "paths": {
       "@common/*": ["src/common/*"],
-      "@endpoints/*": ["src/endpoints/*"]
+      "@endpoints/*": ["src/endpoints/*"],
+      "@email-sender/*": ["src/email-sender/*"]
     }
   }
 }
