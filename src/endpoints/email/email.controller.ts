@@ -25,7 +25,7 @@ import { InjectQueue } from '@nestjs/bull';
 export class EmailEndpointController {
   constructor(
     private readonly substrateService: SubstrateService,
-    @InjectQueue('email-sender-queue') private emailSenderQueue: Queue
+    @InjectQueue('email-sender-queue') private emailSenderQueue: Queue,
   ) {}
 
   /* A function that takes two arguments and returns a list with the first argument as the head and the
@@ -43,9 +43,7 @@ export class EmailEndpointController {
       },
     },
   })
-  async sendMailRegisteredLab(
-    @Param('lab_id') lab_id: string,
-  ) {
+  async sendMailRegisteredLab(@Param('lab_id') lab_id: string) {
     try {
       const contextLab = await queryLabById(
         this.substrateService.api as any,
@@ -64,17 +62,23 @@ export class EmailEndpointController {
       };
     } catch (err) {
       if (err instanceof TypeError) {
-        throw new HttpException({
-          status: 404,
-          error: true,
-          message: 'lab id is not found',
-        }, 404);
+        throw new HttpException(
+          {
+            status: 404,
+            error: true,
+            message: 'lab id is not found',
+          },
+          404,
+        );
       } else {
-        throw new HttpException({
-          status: 500,
-          error: true,
-          message: 'Something went wrong',
-        }, 500);
+        throw new HttpException(
+          {
+            status: 500,
+            error: true,
+            message: 'Something went wrong',
+          },
+          500,
+        );
       }
     }
   }
@@ -103,17 +107,23 @@ export class EmailEndpointController {
       };
     } catch (err) {
       if (err instanceof TypeError) {
-        throw new HttpException({
-          status: 404,
-          error: true,
-          message: 'genetic analyst id is not found',
-        }, 404);
+        throw new HttpException(
+          {
+            status: 404,
+            error: true,
+            message: 'genetic analyst id is not found',
+          },
+          404,
+        );
       } else {
-        throw new HttpException({
-          status: 500,
-          error: true,
-          message: 'Something went wrong',
-        }, 500);
+        throw new HttpException(
+          {
+            status: 500,
+            error: true,
+            message: 'Something went wrong',
+          },
+          500,
+        );
       }
     }
   }

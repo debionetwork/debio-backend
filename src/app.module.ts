@@ -11,7 +11,14 @@ import { ConversionModule } from '@endpoints/conversion/conversion.module';
 import { PinataModule } from '@endpoints/pinata/pinata.module';
 import { MyriadModule } from '@endpoints/myriad/myriad.module';
 import { SecondOpinionModule } from '@endpoints/second-opinion/second-opinion.module';
-import { CachesModule, DateTimeModule, DebioConversionModule, ProcessEnvModule, ProcessEnvProxy, TransactionLoggingModule } from '@common/modules';
+import {
+  CachesModule,
+  DateTimeModule,
+  DebioConversionModule,
+  ProcessEnvModule,
+  ProcessEnvProxy,
+  TransactionLoggingModule,
+} from '@common/modules';
 import { LabRating } from '@endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '@common/modules/transaction-logging/models/transaction-request.entity';
 import { LocationEntities } from '@endpoints/location/models';

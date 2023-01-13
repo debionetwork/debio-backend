@@ -1,25 +1,29 @@
-import { EmailNotification, EmailNotificationService, GeneticAnalystRegister, LabRegister, MailerManager } from "@common/modules";
-import { keyList } from "@common/secrets";
-import { GCloudSecretManagerService } from "@debionetwork/nestjs-gcloud-secret-manager";
-import { Process, Processor } from "@nestjs/bull";
-import { Job } from "bull";
+import {
+  EmailNotification,
+  EmailNotificationService,
+  GeneticAnalystRegister,
+  LabRegister,
+  MailerManager,
+} from '@common/modules';
+import { keyList } from '@common/secrets';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { Process, Processor } from '@nestjs/bull';
+import { Job } from 'bull';
 
 @Processor('email-sender-queue')
 export class EmailSenderProcessor {
   constructor(
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly mailerManager: MailerManager,
-    private readonly emailNotificationService: EmailNotificationService,){}
+    private readonly emailNotificationService: EmailNotificationService,
+  ) {}
 
   @Process('register-lab')
   async handleRegisterLab(job: Job<LabRegister>) {
     let isEmailSent = false;
     const labRegister = job.data;
     const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-      this.gCloudSecretManagerService
-        .getSecret('EMAILS')
-        .toString()
-        .split(','),
+      this.gCloudSecretManagerService.getSecret('EMAILS').toString().split(','),
       labRegister,
     );
 
