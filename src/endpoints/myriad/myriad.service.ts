@@ -432,34 +432,6 @@ export class MyriadService {
     jwt: string;
   }) {
     try {
-      let adminToken = await this.cacheManager.get<string>('admin_token');
-      if (!adminToken) {
-        const user = await this.myriadAccountRepository.findOne({
-          select: ['username', 'jwt_token'],
-          where: {
-            username: this.gCloudSecretManagerService
-              .getSecret('MYRIAD_ADMIN_USERNAME')
-              .toString(),
-          },
-        });
-
-        adminToken = user.jwt_token;
-      }
-
-      const experienceIdsAdmin = await this.cacheManager.get<string[]>(
-        'experience_ids_admin',
-      );
-      // if (!experienceIdsAdmin) {
-      //   const experienceIds = await axios.get(
-      //     `${this.myriadEndPoints}/user/experiences`,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${adminToken}`,
-      //       },
-      //     },
-      //   );
-      // }
-
       const res = await axios.post<any, AxiosResponse<Post>>(
         `${this.myriadEndPoints}/user/posts`,
         {
@@ -480,7 +452,7 @@ export class MyriadService {
         },
       );
 
-      this.addPostToTimeline(experienceIdsAdmin, res.data.id);
+      this.addPostToTimeline(jwt, res.data.id);
 
       return res.data;
     } catch (err) {
@@ -495,11 +467,37 @@ export class MyriadService {
     }
   }
 
-  private async addPostToTimeline(timelineIds: string[], postId: string) {
+  private async addPostToTimeline(jwt: string, postId: string) {
     try {
+      let adminToken = await this.cacheManager.get<string>('admin_token');
+      if (!adminToken) {
+        const user = await this.myriadAccountRepository.findOne({
+          select: ['username', 'jwt_token'],
+          where: {
+            username: this.gCloudSecretManagerService
+              .getSecret('MYRIAD_ADMIN_USERNAME')
+              .toString(),
+          },
+        });
+
+        adminToken = user.jwt_token;
+      }
+
+      let user = await this.myriadAccountRepository.findOne({
+        select: ['jwt_token', 'role'],
+        where: {
+          jwt_token: jwt,
+        }
+      });
+
       await axios.post(`${this.myriadEndPoints}/experiences/post`, {
-        experienceIds: timelineIds,
+        experienceIds: [this.getExperienceIdAdmin(user.role)],
         postId: postId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        }
       });
     } catch (err) {
       this.logger.error(err);
@@ -510,6 +508,19 @@ export class MyriadService {
         },
         err?.response?.status ?? 500,
       );
+    }
+  }
+
+  private getExperienceIdAdmin(role: string): string {
+    if (role === "health-professional/physical-health") {
+      return this.gCloudSecretManagerService.getSecret('PHYSICAL_HEALTH_EXPERIENCE_ID').toString();
+    } else if (role === "health-professional/mental-health") {
+      return this.gCloudSecretManagerService.getSecret('MENTAL_HEALTH_EXPERIENCE_ID').toString();
+    } else {
+      throw new HttpException({
+        status: 422,
+        message: 'Unprocessable Entity',
+      }, 422);
     }
   }
 

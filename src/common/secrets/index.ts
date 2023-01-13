@@ -43,6 +43,8 @@ export const SecretKeyList = {
   PINATA_JWT: process.env.PINATA_JWT || null,
   MYRIAD_HOST_ENDPOINT: process.env.MYRIAD_HOST_ENDPOINT || null,
   MYRIAD_ADMIN_USERNAME: process.env.MYRIAD_ADMIN_USERNAME || null,
+  PHYSICAL_HEALTH_EXPERIENCE_ID: process.env.PHYSICAL_HEALTH_EXPERIENCE_ID || null,
+  MENTAL_HEALTH_EXPERIENCE_ID: process.env.MENTAL_HEALTH_EXPERIENCE_ID || null,
 } as const;
 
 export type keyList = keyof typeof SecretKeyList;
