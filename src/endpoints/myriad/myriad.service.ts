@@ -483,22 +483,25 @@ export class MyriadService {
         adminToken = user.jwt_token;
       }
 
-      let user = await this.myriadAccountRepository.findOne({
+      const user = await this.myriadAccountRepository.findOne({
         select: ['jwt_token', 'role'],
         where: {
           jwt_token: jwt,
-        }
+        },
       });
 
-      await axios.post(`${this.myriadEndPoints}/experiences/post`, {
-        experienceIds: [this.getExperienceIdAdmin(user.role)],
-        postId: postId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        }
-      });
+      await axios.post(
+        `${this.myriadEndPoints}/experiences/post`,
+        {
+          experienceIds: [this.getExperienceIdAdmin(user.role)],
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        },
+      );
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
@@ -512,15 +515,22 @@ export class MyriadService {
   }
 
   private getExperienceIdAdmin(role: string): string {
-    if (role === "health-professional/physical-health") {
-      return this.gCloudSecretManagerService.getSecret('PHYSICAL_HEALTH_EXPERIENCE_ID').toString();
-    } else if (role === "health-professional/mental-health") {
-      return this.gCloudSecretManagerService.getSecret('MENTAL_HEALTH_EXPERIENCE_ID').toString();
+    if (role === 'health-professional/physical-health') {
+      return this.gCloudSecretManagerService
+        .getSecret('PHYSICAL_HEALTH_EXPERIENCE_ID')
+        .toString();
+    } else if (role === 'health-professional/mental-health') {
+      return this.gCloudSecretManagerService
+        .getSecret('MENTAL_HEALTH_EXPERIENCE_ID')
+        .toString();
     } else {
-      throw new HttpException({
-        status: 422,
-        message: 'Unprocessable Entity',
-      }, 422);
+      throw new HttpException(
+        {
+          status: 422,
+          message: 'Unprocessable Entity',
+        },
+        422,
+      );
     }
   }
 
