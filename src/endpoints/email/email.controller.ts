@@ -1,31 +1,24 @@
-import { Controller, HttpException, Param, Post, Res } from '@nestjs/common';
+import { Controller, HttpException, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
   geneticAnalystToGARegister,
   LabRegister,
   labToLabRegister,
-  MailerManager,
 } from '../../common/modules/mailer';
-import { Response } from 'express';
 import {
-  EmailNotification,
-  EmailNotificationService,
   SubstrateService,
 } from '../../common';
 import {
   queryGeneticAnalystByAccountId,
   queryLabById,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
+import { EmailSenderService } from '../../common/modules/email-sender/email-sender.service';
 
 @Controller('email')
 export class EmailEndpointController {
   constructor(
     private readonly substrateService: SubstrateService,
-    @InjectQueue('email-sender-queue') private emailSenderQueue: Queue,
+    private readonly emailSenderService: EmailSenderService,
   ) {}
 
   /* A function that takes two arguments and returns a list with the first argument as the head and the
@@ -55,7 +48,7 @@ export class EmailEndpointController {
         contextLab,
       );
 
-      this.emailSenderQueue.add('register-lab', labRegister);
+      this.emailSenderService.sendToLab(labRegister);
 
       return {
         message: 'Sending Email.',
@@ -87,7 +80,6 @@ export class EmailEndpointController {
   @ApiParam({ name: 'genetic_analyst_id' })
   async sendMailRegisterGeneticAnalyst(
     @Param('genetic_analyst_id') genetic_analyst_id: string,
-    @Res() response: Response,
   ) {
     try {
       const contextGA = await queryGeneticAnalystByAccountId(
@@ -100,7 +92,7 @@ export class EmailEndpointController {
         contextGA,
       );
 
-      this.emailSenderQueue.add('register-ga', geneticAnalystRegister);
+      this.emailSenderService.sendToGA(geneticAnalystRegister);
 
       return {
         message: 'Sending Email.',

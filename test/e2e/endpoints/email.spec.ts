@@ -18,6 +18,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { SecretKeyList } from '../../../src/common/secrets';
+import { EmailSenderModule } from '@common/modules/email-sender/email-sender.module';
 
 require('dotenv').config(); // eslint-disable-line
 
@@ -71,10 +72,9 @@ describe('Email Controller (e2e)', () => {
           entities: [EmailNotification],
           autoLoadEntities: true,
         }),
-        MailModule,
         SubstrateModule,
-        EmailNotificationModule,
         EmailEndpointModule,
+        EmailSenderModule,
       ],
     })
       .overrideProvider(GCloudSecretManagerService)

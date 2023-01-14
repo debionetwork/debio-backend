@@ -1,12 +1,12 @@
 import {
   EmailNotificationModule,
   MailModule,
-  SubstrateModule,
 } from '@common/modules';
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { EmailSenderService } from './email-sender.service';
 
 @Module({
   imports: [
@@ -30,5 +30,7 @@ import { Module } from '@nestjs/common';
     MailModule,
     EmailNotificationModule,
   ],
+  providers: [EmailSenderService],
+  exports: [EmailSenderService],
 })
 export class EmailSenderModule {}

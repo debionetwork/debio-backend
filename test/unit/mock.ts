@@ -25,6 +25,8 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../src/common/secrets';
+import { Queue } from 'bull';
+import { EmailSenderService } from '@common/modules/email-sender/email-sender.service';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -380,3 +382,8 @@ export const googleSecretManagerServiceMockFactory: () => MockType<
   loadSecrets: jest.fn((entity) => entity),
   getSecret: jest.fn((entity) => entity),
 }));
+
+export const emailSenderServiceMockFactory: () => MockType<EmailSenderService> = jest.fn(() => ({
+  sendToGA: jest.fn((entity) => entity),
+  sendToLab: jest.fn((entity) => entity),
+}))

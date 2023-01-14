@@ -17,7 +17,7 @@
     "paths": {
       "@common/*": ["src/common/*"],
       "@endpoints/*": ["src/endpoints/*"],
-      "@email-sender/*": ["src/email-sender/*"]
+      "@email-sender/*": ["src/common/modules/email-sender/*"]
     }
   }
 }

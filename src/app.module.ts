@@ -5,7 +5,7 @@ import {
   GCloudSecretManagerModule,
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { EmailSenderModule } from '@email-sender/email-sender.module';
+import { EmailSenderModule } from '@common/modules/email-sender/email-sender.module';
 import { keyList, SecretKeyList } from '@common/secrets';
 import { ConversionModule } from '@endpoints/conversion/conversion.module';
 import { PinataModule } from '@endpoints/pinata/pinata.module';
