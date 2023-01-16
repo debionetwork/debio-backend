@@ -517,11 +517,11 @@ export class MyriadService {
   private getExperienceIdAdmin(role: string): string {
     if (role === 'health-professional/physical-health') {
       return this.gCloudSecretManagerService
-        .getSecret('PHYSICAL_HEALTH_EXPERIENCE_ID')
+        .getSecret('MYRIAD_PHYSICAL_HEALTH_TIMELINE_ID')
         .toString();
     } else if (role === 'health-professional/mental-health') {
       return this.gCloudSecretManagerService
-        .getSecret('MENTAL_HEALTH_EXPERIENCE_ID')
+        .getSecret('MYRIAD_MENTAL_HEALTH_TIMELINE_ID')
         .toString();
     } else {
       throw new HttpException(
