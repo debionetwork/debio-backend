@@ -1,3 +1,12 @@
+export interface Experience {
+  id: string;
+  subscribed: boolean;
+}
+
+export interface DataExperience {
+  data: Experience[];
+}
+
 export interface MatricInterface {
   totalComments: number;
   totalPosts: number;

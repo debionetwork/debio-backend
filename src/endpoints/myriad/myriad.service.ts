@@ -1,6 +1,12 @@
 import { keyList } from '@common/secrets';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import {
+  CACHE_MANAGER,
+  Inject,
+  HttpException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { Repository } from 'typeorm';
@@ -16,6 +22,7 @@ import { Post, Visibility } from './interface/post';
 import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class MyriadService {
@@ -26,6 +33,7 @@ export class MyriadService {
     @InjectRepository(MyriadAccount)
     private readonly myriadAccountRepository: Repository<MyriadAccount>,
     private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {
     this.myriadEndPoints = this.gCloudSecretManagerService
       .getSecret('MYRIAD_HOST_ENDPOINT')
@@ -444,6 +452,8 @@ export class MyriadService {
         },
       );
 
+      this.addPostToTimeline(jwt, res.data.id);
+
       return res.data;
     } catch (err) {
       this.logger.error(err);
@@ -453,6 +463,73 @@ export class MyriadService {
           message: 'Something went wrong in server',
         },
         err?.response?.status ?? 500,
+      );
+    }
+  }
+
+  private async addPostToTimeline(jwt: string, postId: string) {
+    try {
+      let adminToken = await this.cacheManager.get<string>('admin_token');
+      if (!adminToken) {
+        const user = await this.myriadAccountRepository.findOne({
+          select: ['username', 'jwt_token'],
+          where: {
+            username: this.gCloudSecretManagerService
+              .getSecret('MYRIAD_ADMIN_USERNAME')
+              .toString(),
+          },
+        });
+
+        adminToken = user.jwt_token;
+      }
+
+      const user = await this.myriadAccountRepository.findOne({
+        select: ['jwt_token', 'role'],
+        where: {
+          jwt_token: jwt,
+        },
+      });
+
+      await axios.post(
+        `${this.myriadEndPoints}/experiences/post`,
+        {
+          experienceIds: [this.getExperienceIdAdmin(user.role)],
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        },
+      );
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+  }
+
+  private getExperienceIdAdmin(role: string): string {
+    if (role === 'health-professional/physical-health') {
+      return this.gCloudSecretManagerService
+        .getSecret('PHYSICAL_HEALTH_EXPERIENCE_ID')
+        .toString();
+    } else if (role === 'health-professional/mental-health') {
+      return this.gCloudSecretManagerService
+        .getSecret('MENTAL_HEALTH_EXPERIENCE_ID')
+        .toString();
+    } else {
+      throw new HttpException(
+        {
+          status: 422,
+          message: 'Unprocessable Entity',
+        },
+        422,
       );
     }
   }
