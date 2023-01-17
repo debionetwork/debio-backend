@@ -18,7 +18,7 @@ import {
   StatusEnum,
   SymbolEnum,
 } from './interface/content';
-import { Post, Visibility } from './interface/post';
+import { E_PostType, E_Visibility, Post } from './interface/post';
 import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
@@ -422,14 +422,16 @@ export class MyriadService {
     rawText,
     selectedUserIds,
     jwt,
+    postType,
   }: {
     createdBy: string;
     isNSFW: boolean;
     rawText: string;
     text: string;
     selectedUserIds?: string[];
-    visibility: Visibility;
+    visibility: E_Visibility;
     jwt: string;
+    postType: E_PostType;
   }) {
     try {
       const res = await axios.post<any, AxiosResponse<Post>>(
@@ -452,7 +454,7 @@ export class MyriadService {
         },
       );
 
-      this.addPostToTimeline(jwt, res.data.id);
+      this.addPostToTimeline(jwt, res.data.id, postType);
 
       return res.data;
     } catch (err) {
@@ -467,7 +469,11 @@ export class MyriadService {
     }
   }
 
-  private async addPostToTimeline(jwt: string, postId: string) {
+  private async addPostToTimeline(
+    jwt: string,
+    postId: string,
+    postType: E_PostType,
+  ) {
     try {
       let adminToken = await this.cacheManager.get<string>('admin_token');
       if (!adminToken) {
@@ -483,17 +489,10 @@ export class MyriadService {
         adminToken = user.jwt_token;
       }
 
-      const user = await this.myriadAccountRepository.findOne({
-        select: ['jwt_token', 'role'],
-        where: {
-          jwt_token: jwt,
-        },
-      });
-
       await axios.post(
         `${this.myriadEndPoints}/experiences/post`,
         {
-          experienceIds: [this.getExperienceIdAdmin(user.role)],
+          experienceIds: [this.getExperienceIdAdmin(postType)],
           postId: postId,
         },
         {
@@ -514,12 +513,12 @@ export class MyriadService {
     }
   }
 
-  private getExperienceIdAdmin(role: string): string {
-    if (role === 'health-professional/physical-health') {
+  private getExperienceIdAdmin(type: string): string {
+    if (type === E_PostType.PHYSICAL_HEALTH) {
       return this.gCloudSecretManagerService
         .getSecret('MYRIAD_PHYSICAL_HEALTH_TIMELINE_ID')
         .toString();
-    } else if (role === 'health-professional/mental-health') {
+    } else if (type === E_PostType.MENTAL_HEALTH) {
       return this.gCloudSecretManagerService
         .getSecret('MYRIAD_MENTAL_HEALTH_TIMELINE_ID')
         .toString();

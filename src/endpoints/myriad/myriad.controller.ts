@@ -198,14 +198,24 @@ export class MyriadController {
     @Body() data: PostDTO,
     @Headers('JWT') jwt: string,
   ) {
+    const {
+      createdBy,
+      isNSFW,
+      visibility,
+      selectedUserIds,
+      rawText,
+      text,
+      postType,
+    } = data;
     const res = await this.myriadService.postToMyriad({
-      createdBy: data.createdBy,
-      isNSFW: data.isNSFW,
-      visibility: data.visibility,
-      selectedUserIds: data.selectedUserIds,
-      rawText: data.rawText,
-      text: data.text,
+      createdBy: createdBy,
+      isNSFW: isNSFW,
+      visibility: visibility,
+      selectedUserIds: selectedUserIds,
+      rawText: rawText,
+      text: text,
       jwt: jwt,
+      postType: postType,
     });
 
     return {

@@ -1,8 +1,13 @@
-export enum Visibility {
+export enum E_Visibility {
   Public = 'public',
   FriendOnly = 'friend',
   OnlyMe = 'private',
   Custom = 'selected_user',
+}
+
+export enum E_PostType {
+  PHYSICAL_HEALTH = 'PHYSICAL_HEALTH',
+  MENTAL_HEALTH = 'MENTAL_HEALTH',
 }
 
 export interface Metric {
@@ -28,5 +33,5 @@ export interface Post {
   tags: string[];
   text: string;
   updatedAt: Date;
-  visibility: Visibility;
+  visibility: E_Visibility;
 }
