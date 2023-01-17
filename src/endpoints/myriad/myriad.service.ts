@@ -36,7 +36,7 @@ export class MyriadService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {
     this.myriadEndPoints = this.gCloudSecretManagerService
-      .getSecret('MYRIAD_HOST_ENDPOINT')
+      .getSecret('MYRIAD_API_URL')
       .toString();
   }
 

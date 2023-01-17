@@ -41,7 +41,7 @@ export const SecretKeyList = {
   SODAKI_HOST: process.env.SODAKI_HOST || null,
   COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST || null,
   PINATA_JWT: process.env.PINATA_JWT || null,
-  MYRIAD_HOST_ENDPOINT: process.env.MYRIAD_HOST_ENDPOINT || null,
+  MYRIAD_API_URL: process.env.MYRIAD_API_URL || null,
   MYRIAD_ADMIN_USERNAME: process.env.MYRIAD_ADMIN_USERNAME || null,
   MYRIAD_MENTAL_HEALTH_TIMELINE_ID:
     process.env.MYRIAD_MENTAL_HEALTH_TIMELINE_ID || null,
