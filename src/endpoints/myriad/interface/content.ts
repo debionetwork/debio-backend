@@ -234,7 +234,7 @@ export enum ReferenceTypeEnum {
 }
 
 export enum NetworkTypeEnum {
-  DBIO = 'dbio',
+  DBIO = 'debio',
   MYRIAD = 'myriad',
   NEAR = 'near',
   POLKADOT = 'polkadot',
