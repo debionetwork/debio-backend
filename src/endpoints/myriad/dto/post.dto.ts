@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Visibility } from '../interface/post';
+import { E_PostType, E_Visibility } from '../interface/post';
 
 export class PostDTO {
   @ApiProperty({
@@ -63,7 +63,16 @@ export class PostDTO {
     type: String,
     description: 'visibility post',
     required: true,
-    enum: Visibility,
+    enum: E_Visibility,
   })
-  visibility: Visibility;
+  visibility: E_Visibility;
+
+  @ApiProperty({
+    type: String,
+    description: 'post type',
+    required: true,
+    default: 'physical-health',
+    enum: E_PostType,
+  })
+  postType: E_PostType;
 }
