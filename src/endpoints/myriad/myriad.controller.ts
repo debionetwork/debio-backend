@@ -260,9 +260,7 @@ export class MyriadController {
   @ApiOperation({
     description: 'Post to myriad',
   })
-  public async addUserToTimeline(
-    @Body() data: TimelineDTO,
-  ) {
+  public async addUserToTimeline(@Body() data: TimelineDTO) {
     const { selectedUser, timelineId } = data;
     const res = await this.myriadService.customVisibilityTimeline(
       selectedUser,
