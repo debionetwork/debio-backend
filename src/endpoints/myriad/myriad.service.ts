@@ -60,10 +60,23 @@ export class MyriadService {
 
   public async customVisibilityTimeline(
     selectedUser: string[],
-    jwt: string,
     timelineid: string,
   ) {
     try {
+      let adminToken = await this.cacheManager.get<string>('admin_token');
+      if (!adminToken) {
+        const user = await this.myriadAccountRepository.findOne({
+          select: ['username', 'jwt_token'],
+          where: {
+            username: this.gCloudSecretManagerService
+              .getSecret('MYRIAD_ADMIN_USERNAME')
+              .toString(),
+          },
+        });
+
+        adminToken = user.jwt_token;
+      }
+
       const patchTimeline = await axios.patch(
         `${this.myriadEndPoints}/user/experiences/${timelineid}`,
         {
@@ -72,7 +85,7 @@ export class MyriadService {
         },
         {
           headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${adminToken}`,
           },
         },
       );

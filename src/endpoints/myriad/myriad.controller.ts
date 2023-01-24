@@ -255,22 +255,15 @@ export class MyriadController {
     };
   }
 
-  @ApiHeader({
-    name: 'JWT',
-  })
   @Post('timeline/add-user')
   @ApiBody({ type: TimelineDTO })
   @ApiOperation({
     description: 'Post to myriad',
   })
-  public async addUserToTimeline(
-    @Body() data: TimelineDTO,
-    @Headers('JWT') jwt: string,
-  ) {
+  public async addUserToTimeline(@Body() data: TimelineDTO) {
     const { selectedUser, timelineId } = data;
     const res = await this.myriadService.customVisibilityTimeline(
       selectedUser,
-      jwt,
       timelineId,
     );
 
