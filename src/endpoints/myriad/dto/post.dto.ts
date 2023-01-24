@@ -61,7 +61,7 @@ export class PostDTO {
 
   @ApiProperty({
     type: String,
-    description: 'visibility post',
+    description: 'visibility post: public | friend | private | selected_user',
     required: true,
     enum: E_Visibility,
   })
@@ -69,10 +69,9 @@ export class PostDTO {
 
   @ApiProperty({
     type: String,
-    description: 'post type',
+    description: 'post type: PHYSICAL_HEALTH | MENTAL_HEALTH',
     required: true,
-    default: 'physical-health',
-    enum: E_PostType,
+    enum: ['PHYSICAL_HEALTH', 'MENTAL_HEALTH'],
   })
   postType: E_PostType;
 }
