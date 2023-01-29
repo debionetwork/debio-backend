@@ -9,6 +9,7 @@ import {
   convertToDbioUnitString,
   sendRewards,
   updateLabVerificationStatus,
+  updateVerificationStatusHealthProfessional,
 } from '@debionetwork/polkadot-provider';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives/verification-status';
 import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
@@ -70,5 +71,17 @@ export class VerificationService {
     );
 
     return { message: `${accountId} is ${verificationStatus}` };
+  }
+
+  async verificationHealthProfessional(
+    accountId: string,
+    verificationStatus: string,
+  ) {
+    await updateVerificationStatusHealthProfessional(
+      this.subtrateService.api as any,
+      this.subtrateService.pair,
+      accountId,
+      <VerificationStatus>verificationStatus,
+    );
   }
 }

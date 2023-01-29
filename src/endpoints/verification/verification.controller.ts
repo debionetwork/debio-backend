@@ -89,4 +89,37 @@ export class VerificationController {
       return response.status(500).send(error);
     }
   }
+
+  @Post('/health-professional')
+  @ApiQuery({ name: 'account_id' })
+  @ApiOperation({ description: 'verification health professional.' })
+  @ApiQuery({
+    name: 'verification_status',
+    enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
+  })
+  async updateStatusHealthProfessional(
+    @Headers('debio-api-key') debioApiKey: string,
+    @Res() response: Response,
+    @Query('account_id') account_id: string,
+    @Query('verification_status') verification_status: string,
+  ) {
+    try {
+      if (
+        debioApiKey !=
+        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+      ) {
+        return response.status(401).send('debio-api-key header is required');
+      }
+      await this.verificationService.verificationHealthProfessional(
+        account_id,
+        verification_status,
+      );
+
+      return response
+        .status(200)
+        .send(`Health Professional ${account_id} is ${verification_status}`);
+    } catch (error) {
+      return response.status(500).send(error);
+    }
+  }
 }
