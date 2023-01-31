@@ -17,6 +17,7 @@ import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.s
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 import { MenstrualCalendarService } from './services/menstrual-calendar.service';
+import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
 
 @Module({
   imports: [
@@ -56,7 +57,7 @@ import { MenstrualCalendarService } from './services/menstrual-calendar.service'
     GeneticAnalysisService,
     GeneticAnalysisOrderService,
     MenstrualCalendarService,
-    MenstrualCalendarService,
+    MenstrualSubscriptionService,
   ],
 })
 export class SubstrateEndpointModule {}
