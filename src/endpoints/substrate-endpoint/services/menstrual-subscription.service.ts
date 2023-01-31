@@ -44,7 +44,7 @@ export class MenstrualSubscriptionService {
   ) {
     const filter_array = [];
 
-    let match = { address_id: hash_id };
+    const match = { address_id: hash_id };
 
     filter_array.push({
       bool: {
