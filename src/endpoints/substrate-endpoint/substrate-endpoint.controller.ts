@@ -41,6 +41,7 @@ import {
 } from './models/response';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
+import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)
@@ -55,6 +56,7 @@ export class SubstrateController {
     private readonly geneticAnalysisService: GeneticAnalysisService,
     private readonly geneticAnalysisOrderService: GeneticAnalysisOrderService,
     private readonly menstrualCalendarService: MenstrualCalendarService,
+    private readonly menstrualSubscriptionService: MenstrualSubscriptionService,
   ) {}
 
   @Get('/labs')
@@ -122,6 +124,37 @@ export class SubstrateController {
     const order = await this.orderService.getOrderByHashId(hashId);
 
     return order;
+  }
+
+  @Get('/menstrual-subscription/list/:address_id')
+  @ApiParam({ name: 'address_id' })
+  @ApiQuery({ name: 'keyword', required: false })
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'size', required: false })
+  @ApiOperation({
+    description: 'Get list menstrual subscription by address id',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      example: [],
+    },
+  })
+  async getMenstrualSubscriptionByAddressId(
+    @Param() params,
+    @Query('keyword') keyword: string,
+    @Query('page') page,
+    @Query('size') size,
+  ) {
+    const menstrualSubscription =
+      await this.menstrualSubscriptionService.getMenstrualSubscriptionList(
+        params.customer_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
+
+    return menstrualSubscription;
   }
 
   @Get('/orders/list/:customer_id')
