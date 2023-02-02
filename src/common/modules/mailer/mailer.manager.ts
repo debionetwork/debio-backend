@@ -7,6 +7,7 @@ import {
   LabRegister,
 } from './models';
 import { keyList } from '../../secrets';
+import { HealthProfessionalRegister } from './models/health-professional.model';
 
 @Injectable()
 export class MailerManager {
@@ -113,6 +114,42 @@ export class MailerManager {
           address: context.address,
           certifications: context.certifications,
           services: context.services,
+        },
+        attachments: files,
+      });
+      return true;
+    } catch (error) {
+      this._logger.log(`Send Email Failed: ${error}`);
+    }
+  }
+
+  async sendHealthProfessionalEmail(to: string | string[], context: HealthProfessionalRegister) {
+    let subject = `New Health Professinal Register – ${context.health_professional_name}`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
+      subject = `Testing New Lab Register Email`;
+    }
+    const files: any[] = [];
+    context.certifications.forEach((val, idx) => {
+      files.push({
+        filename: `Certifications Supporting Document ${idx + 1}`,
+        path: val.supporting_document,
+      });
+    });
+
+    try {
+      this.mailerService.sendMail({
+        to: to,
+        subject: subject,
+        template: 'health-professional-register',
+        context: {
+          profile_image: context.profile_image,
+          email: context.email,
+          health_professional_name: context.health_professional_name,
+          phone_number: context.phone_number,
+          certifications: context.certifications,
+          experiences: context.experiences,
         },
         attachments: files,
       });
