@@ -1,5 +1,5 @@
-import { HealthProfessional } from "@debionetwork/polkadot-provider/lib/models/health-professional/";
-import { ApiPromise } from "@polkadot/api";
+import { HealthProfessional } from '@debionetwork/polkadot-provider/lib/models/health-professional/';
+import { ApiPromise } from '@polkadot/api';
 
 export class ExperienceHP {
   constructor(data: any) {
@@ -45,12 +45,24 @@ export class QualificationHP {
   info: InfoHP;
 }
 
-export const queryHealthProfessionalById = async (api: ApiPromise, id: string): Promise<HealthProfessional> => {
-  const res = (await api.query.healthProfessional.healthProfessionals(id)).toHuman();
+export const queryHealthProfessionalById = async (
+  api: ApiPromise,
+  id: string,
+): Promise<HealthProfessional> => {
+  const res = (
+    await api.query.healthProfessional.healthProfessionals(id)
+  ).toHuman();
   return new HealthProfessional(res);
-}
+};
 
-export const queryHealthProfessionalQualificationById = async (api: ApiPromise, id: string): Promise<QualificationHP> => {
-  const res = (await api.query.healthProfessionalQualification.healthProfessionalQualifications(id)).toHuman();
+export const queryHealthProfessionalQualificationById = async (
+  api: ApiPromise,
+  id: string,
+): Promise<QualificationHP> => {
+  const res = (
+    await api.query.healthProfessionalQualification.healthProfessionalQualifications(
+      id,
+    )
+  ).toHuman();
   return new QualificationHP(res);
-}
+};

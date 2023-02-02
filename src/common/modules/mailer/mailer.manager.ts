@@ -123,7 +123,10 @@ export class MailerManager {
     }
   }
 
-  async sendHealthProfessionalEmail(to: string | string[], context: HealthProfessionalRegister) {
+  async sendHealthProfessionalEmail(
+    to: string | string[],
+    context: HealthProfessionalRegister,
+  ) {
     let subject = `New Health Professinal Register – ${context.health_professional_name}`;
     if (
       this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'

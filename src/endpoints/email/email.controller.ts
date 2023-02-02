@@ -174,14 +174,13 @@ export class EmailEndpointController {
         contextHP,
       );
 
-      const sentEMail =
-        await this.mailerManager.sendHealthProfessionalEmail(
-          this.gCloudSecretManagerService
-            .getSecret('EMAILS')
-            .toString()
-            .split(','),
-          healthProfessionalRegister,
-        );
+      const sentEMail = await this.mailerManager.sendHealthProfessionalEmail(
+        this.gCloudSecretManagerService
+          .getSecret('EMAILS')
+          .toString()
+          .split(','),
+        healthProfessionalRegister,
+      );
 
       const dataInput = new EmailNotification();
       if (sentEMail) {

@@ -95,14 +95,17 @@ export class VerificationService {
         select: ['address', 'role'],
         where: {
           address: hashAccountId,
-        }
+        },
       });
 
-      await this.myriadAccountRepository.update({
-        address: myriad.address,
-      }, {
-        role: myriad.role.replace("unverified/", ""),
-      });
+      await this.myriadAccountRepository.update(
+        {
+          address: myriad.address,
+        },
+        {
+          role: myriad.role.replace('unverified/', ''),
+        },
+      );
     }
   }
 }

@@ -9,9 +9,9 @@ import { MyriadAccount } from '@endpoints/myriad/models/myriad-account.entity';
 
 @Module({
   imports: [
-    SubstrateModule, 
-    TransactionLoggingModule, 
-    DateTimeModule, 
+    SubstrateModule,
+    TransactionLoggingModule,
+    DateTimeModule,
     TypeOrmModule.forFeature([MyriadAccount]),
   ],
   controllers: [VerificationController],
