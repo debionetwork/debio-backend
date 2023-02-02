@@ -148,7 +148,7 @@ export class SubstrateController {
   ) {
     const menstrualSubscription =
       await this.menstrualSubscriptionService.getMenstrualSubscriptionList(
-        params.customer_id,
+        params.address_id,
         keyword ? keyword.toLowerCase() : '',
         Number(page),
         Number(size),
