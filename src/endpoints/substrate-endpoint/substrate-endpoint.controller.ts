@@ -126,20 +126,6 @@ export class SubstrateController {
     return order;
   }
 
-  @Get('/menstrual-subscription/list/:address_id')
-  @ApiParam({ name: 'address_id' })
-  @ApiQuery({ name: 'keyword', required: false })
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'size', required: false })
-  @ApiOperation({
-    description: 'Get list menstrual subscription by address id',
-  })
-  @ApiResponse({
-    status: 200,
-    schema: {
-      example: [],
-    },
-  })
   @Get('/orders/list/:customer_id')
   @ApiParam({ name: 'customer_id' })
   @ApiQuery({ name: 'keyword', required: false })
