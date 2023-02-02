@@ -2,6 +2,7 @@ import { Controller, Param, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
   geneticAnalystToGARegister,
+  healthProfessionalToHPRegister,
   LabRegister,
   labToLabRegister,
   MailerManager,
@@ -18,6 +19,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
+import { queryHealthProfessionalById } from '@common/modules/polkadot-provider/query/health-professional';
 
 @Controller('email')
 export class EmailEndpointController {
@@ -144,6 +146,62 @@ export class EmailEndpointController {
         response.status(404).send({
           error: true,
           message: 'genetic analyst id is not found',
+        });
+      } else {
+        response.status(500).send({
+          error: true,
+          message: 'Something went wrong',
+        });
+      }
+    }
+  }
+
+  @Post('registered-health-professional/:health_professional_id')
+  @ApiParam({ name: 'health_professional_id' })
+  async sendMailRegisterHealthProfessional(
+    @Param('health_professional_id') health_professional_id: string,
+    @Res() response: Response,
+  ) {
+    try {
+      let isEmailSent = false;
+      const contextHP = await queryHealthProfessionalById(
+        this.substrateService.api as any,
+        health_professional_id,
+      );
+
+      const healthProfessionalRegister = await healthProfessionalToHPRegister(
+        this.substrateService.api as any,
+        contextHP,
+      );
+
+      const sentEMail = await this.mailerManager.sendHealthProfessionalEmail(
+        this.gCloudSecretManagerService
+          .getSecret('EMAILS')
+          .toString()
+          .split(','),
+        healthProfessionalRegister,
+      );
+
+      const dataInput = new EmailNotification();
+      if (sentEMail) {
+        isEmailSent = true;
+        dataInput.sent_at = new Date();
+      }
+      dataInput.notification_type = 'HealthProfessionalRegister';
+      dataInput.ref_number = health_professional_id;
+      dataInput.is_email_sent = isEmailSent;
+      dataInput.created_at = new Date();
+
+      await this.emailNotificationService.insertEmailNotification(dataInput);
+
+      response.status(200).send({
+        message: 'Sending Email.',
+      });
+    } catch (err) {
+      if (err instanceof TypeError) {
+        response.status(404).send({
+          error: true,
+          message: 'health professional id is not found',
         });
       } else {
         response.status(500).send({

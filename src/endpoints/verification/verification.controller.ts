@@ -12,6 +12,7 @@ import { Response } from 'express';
 import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
+import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
@@ -91,7 +92,8 @@ export class VerificationController {
   }
 
   @Post('/health-professional')
-  @ApiQuery({ name: 'account_id' })
+  @ApiQuery({ name: 'account_id', required: true })
+  @ApiQuery({ name: 'hash_account_id', required: true })
   @ApiOperation({ description: 'verification health professional.' })
   @ApiQuery({
     name: 'verification_status',
@@ -101,6 +103,7 @@ export class VerificationController {
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
     @Query('account_id') account_id: string,
+    @Query('hash_account_id') hash_account_id: string,
     @Query('verification_status') verification_status: string,
   ) {
     try {
@@ -112,7 +115,8 @@ export class VerificationController {
       }
       await this.verificationService.verificationHealthProfessional(
         account_id,
-        verification_status,
+        hash_account_id,
+        verification_status as VerificationStatus,
       );
 
       return response

@@ -15,10 +15,15 @@ import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitiv
 import { TransactionLoggingDto } from '../../common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionTypeList } from '../../common/modules/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '../../common/modules/transaction-status/models/transaction-status.list';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MyriadAccount } from '../myriad/models/myriad-account.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class VerificationService {
   constructor(
+    @InjectRepository(MyriadAccount)
+    private readonly myriadAccountRepository: Repository<MyriadAccount>,
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly transactionLoggingService: TransactionLoggingService,
@@ -75,13 +80,32 @@ export class VerificationService {
 
   async verificationHealthProfessional(
     accountId: string,
-    verificationStatus: string,
+    hashAccountId: string,
+    verificationStatus: VerificationStatus,
   ) {
     await updateVerificationStatusHealthProfessional(
       this.subtrateService.api as any,
       this.subtrateService.pair,
       accountId,
-      <VerificationStatus>verificationStatus,
+      verificationStatus,
     );
+
+    if (verificationStatus === VerificationStatus.Verified) {
+      const myriad = await this.myriadAccountRepository.findOne({
+        select: ['address', 'role'],
+        where: {
+          address: hashAccountId,
+        },
+      });
+
+      await this.myriadAccountRepository.update(
+        {
+          address: myriad.address,
+        },
+        {
+          role: myriad.role.replace('unverified/', ''),
+        },
+      );
+    }
   }
 }

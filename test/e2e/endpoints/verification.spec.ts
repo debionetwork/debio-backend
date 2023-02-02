@@ -17,6 +17,7 @@ import {
   GCloudSecretManagerService,
 } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList, SecretKeyList } from '../../../src/common/secrets';
+import { MyriadAccount } from '../../../src/endpoints/myriad/models/myriad-account.entity';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
@@ -63,7 +64,7 @@ describe('Verification Controller (e2e)', () => {
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
-          entities: [TransactionRequest],
+          entities: [TransactionRequest, MyriadAccount],
           autoLoadEntities: true,
         }),
         VerificationModule,

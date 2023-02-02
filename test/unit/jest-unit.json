@@ -12,7 +12,9 @@
     "coverageDirectory": "../coverage",
     "moduleNameMapper": {
       "@polkadot/api(.*)$": "<rootDir>@polkadot-api.mock.ts",
-      "@polkadot/types/interfaces$": "<rootDir>@polkadot-types-interfaces.mock.ts"
+      "@polkadot/types/interfaces$": "<rootDir>@polkadot-types-interfaces.mock.ts",
+      "@common/*": "<rootDir>/../../src/common",
+      "@endpoints/*": "<rootDir>/../../src/endpoints"
     },
     "setupFiles": ["dotenv/config"]
   }

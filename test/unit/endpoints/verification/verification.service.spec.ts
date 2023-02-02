@@ -3,6 +3,7 @@ import {
   dateTimeProxyMockFactory,
   MockType,
   notificationServiceMockFactory,
+  repositoryMockFactory,
 } from '../../mock';
 import { when } from 'jest-when';
 import { TransactionLoggingService } from '../../../../src/common/modules/transaction-logging/transaction-logging.service';
@@ -18,6 +19,8 @@ import { NotificationService } from '../../../../src/common/modules/notification
 import { TransactionLoggingDto } from '../../../../src/common/modules/transaction-logging/dto/transaction-logging.dto';
 import { TransactionTypeList } from '../../../../src/common/modules/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '../../../../src/common/modules/transaction-status/models/transaction-status.list';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { MyriadAccount } from '../../../../src/endpoints/myriad/models/myriad-account.entity';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   sendRewards: jest.fn(
@@ -68,6 +71,10 @@ describe('Verification Service Unit Tests', () => {
         {
           provide: NotificationService,
           useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: getRepositoryToken(MyriadAccount),
+          useFactory: repositoryMockFactory,
         },
       ],
     }).compile();

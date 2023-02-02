@@ -1,0 +1,102 @@
+<div>
+  <div>
+    <h4>You have been assigned to provide verification for the following new Health Professional. Here are the details:</h4>
+    <p> </p>
+  </div>
+  <div>
+    <table>
+      <tr>
+        <td>Logo</td>
+        <td>:</td>
+        <td>{{profile_image}}</td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>:</td>
+        <td>{{email}}</td>
+      </tr>
+      <tr>
+        <td>Phone Number</td>
+        <td>:</td>
+        <td>{{phone_number}}</td>
+      </tr>
+      <tr>
+        <td>Health Professional Name</td>
+        <td>:</td>
+        <td>{{health_professional_name}}</td>
+      </tr>
+    </table>
+  </div>
+  <div>
+    <h4>Qualification :</h4>
+  </div>
+  <div>
+    <h4>Certifications :</h4>
+  </div>
+  {{#each certifications}}
+  <div>
+      <table>
+        <tr>
+          <td>{{colNum @index}}.</td>
+          <td>Title</td>
+          <td>:</td>
+          <td>{{title}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Issuer</td>
+          <td>:</td>
+          <td>{{issuer}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Month</td>
+          <td>:</td>
+          <td>{{month}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Year</td>
+          <td>:</td>
+          <td>{{year}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Description</td>
+          <td>:</td>
+          <td>{{description}}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Supporting Document</td>
+          <td>:</td>
+          <td>{{supportingDocument}}</td>
+        </tr>
+      </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Certificate</p>
+  </div>
+  {{/each}}
+  <div>
+    <p></p>
+    <h4>Experience :</h4>
+  </div>
+  {{#each experiences}}
+  <div>    
+    <table>
+      <tr>
+        <td></td>
+        <td>Title</td>
+        <td>:</td>
+        <td>{{title}}</td>
+      </tr>
+    </table>
+  </div>
+  {{else}}
+  <div>
+    <p>No Experience</p>
+  </div>
+  {{/each}}
+</div>
