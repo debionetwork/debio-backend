@@ -16,7 +16,7 @@ import { TransactionLoggingDto } from '../../common/modules/transaction-logging/
 import { TransactionTypeList } from '../../common/modules/transaction-type/models/transaction-type.list';
 import { TransactionStatusList } from '../../common/modules/transaction-status/models/transaction-status.list';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MyriadAccount } from '@endpoints/myriad/models/myriad-account.entity';
+import { MyriadAccount } from '../myriad/models/myriad-account.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
