@@ -140,23 +140,6 @@ export class SubstrateController {
       example: [],
     },
   })
-  async getMenstrualSubscriptionByAddressId(
-    @Param() params,
-    @Query('keyword') keyword: string,
-    @Query('page') page,
-    @Query('size') size,
-  ) {
-    const menstrualSubscription =
-      await this.menstrualSubscriptionService.getMenstrualSubscriptionList(
-        params.address_id,
-        keyword ? keyword.toLowerCase() : '',
-        Number(page),
-        Number(size),
-      );
-
-    return menstrualSubscription;
-  }
-
   @Get('/orders/list/:customer_id')
   @ApiParam({ name: 'customer_id' })
   @ApiQuery({ name: 'keyword', required: false })
@@ -194,7 +177,15 @@ export class SubstrateController {
         Number(size),
       );
 
-    return { orders, ordersGA };
+    const menstrualSubscription =
+      await this.menstrualSubscriptionService.getMenstrualSubscriptionList(
+        params.customer_id,
+        keyword ? keyword.toLowerCase() : '',
+        Number(page),
+        Number(size),
+      );
+
+    return { orders, ordersGA, menstrualSubscription };
   }
 
   @Get('/orders/bounty_list/:customer_id')
