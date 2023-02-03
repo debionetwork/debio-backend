@@ -155,7 +155,8 @@ export class MailerManager {
           experiences: context.experiences,
           category: context.category,
           role: context.role,
-          profile_link: context.profile_link !== "" ? context.profile_link : "N/A",
+          profile_link:
+            context.profile_link !== '' ? context.profile_link : 'N/A',
         },
         attachments: files,
       });
