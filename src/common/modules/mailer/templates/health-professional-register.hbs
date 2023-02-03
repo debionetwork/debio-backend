@@ -25,78 +25,99 @@
         <td>:</td>
         <td>{{health_professional_name}}</td>
       </tr>
+      <tr>
+        <td>LinkedIn URL</td>
+        <td>:</td>
+        <td>{{profile_link}}</td>
+      </tr>
+      <tr>
+        <td>Category</td>
+        <td>:</td>
+        <td>{{category}}</td>
+      </tr>
+      <tr>
+        <td>Register as</td>
+        <td>:</td>
+        <td>{{role}}</td>
+      </tr>
     </table>
   </div>
   <div>
     <h4>Qualification :</h4>
   </div>
-  <div>
-    <h4>Certifications :</h4>
-  </div>
-  {{#each certifications}}
-  <div>
-      <table>
-        <tr>
-          <td>{{colNum @index}}.</td>
-          <td>Title</td>
-          <td>:</td>
-          <td>{{title}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Issuer</td>
-          <td>:</td>
-          <td>{{issuer}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Month</td>
-          <td>:</td>
-          <td>{{month}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Year</td>
-          <td>:</td>
-          <td>{{year}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Description</td>
-          <td>:</td>
-          <td>{{description}}</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>Supporting Document</td>
-          <td>:</td>
-          <td>{{supportingDocument}}</td>
-        </tr>
-      </table>
-  </div>
-  {{else}}
-  <div>
-    <p>No Certificate</p>
-  </div>
-  {{/each}}
-  <div>
-    <p></p>
-    <h4>Experience :</h4>
-  </div>
-  {{#each experiences}}
-  <div>    
-    <table>
-      <tr>
-        <td></td>
-        <td>Title</td>
-        <td>:</td>
-        <td>{{title}}</td>
-      </tr>
-    </table>
-  </div>
-  {{else}}
-  <div>
-    <p>No Experience</p>
-  </div>
-  {{/each}}
+  <ul>
+    <li>
+      <div>
+        <h3>Certifications :</h3>
+      </div>
+      {{#each certifications}}
+      <div>
+          <table>
+            <tr>
+              <td>{{colNum @index}}.</td>
+              <td>Title</td>
+              <td>:</td>
+              <td>{{title}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Issuer</td>
+              <td>:</td>
+              <td>{{issuer}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Month</td>
+              <td>:</td>
+              <td>{{month}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Year</td>
+              <td>:</td>
+              <td>{{year}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Description</td>
+              <td>:</td>
+              <td>{{description}}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Supporting Document</td>
+              <td>:</td>
+              <td>{{supportingDocument}}</td>
+            </tr>
+          </table>
+      </div>
+      {{else}}
+      <div>
+        <p>No Certificate</p>
+      </div>
+      {{/each}}
+    </li>
+    <li>
+      <div>
+        <p></p>
+        <h3>Experience :</h3>
+      </div>
+      {{#each experiences}}
+      <div>    
+        <table>
+          <tr>
+            <td></td>
+            <td>Title</td>
+            <td>:</td>
+            <td>{{title}}</td>
+          </tr>
+        </table>
+      </div>
+      {{else}}
+      <div>
+        <p>No Experience</p>
+      </div>
+      {{/each}}
+    </li>
+  </ul>
 </div>

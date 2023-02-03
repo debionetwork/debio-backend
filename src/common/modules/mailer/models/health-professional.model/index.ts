@@ -17,6 +17,7 @@ export class HealthProfessionalRegister {
   category: string;
   experiences: Array<ExperienceHP>;
   certifications: Array<CertificationHP>;
+  role: string;
 }
 
 export async function healthProfessionalToHPRegister(
@@ -36,6 +37,8 @@ export async function healthProfessionalToHPRegister(
   healthProfessionalRegister.gender = health_professional.info.gender;
   healthProfessionalRegister.profile_image =
     health_professional.info.profileImage;
+  healthProfessionalRegister.category = health_professional.info.category;
+  healthProfessionalRegister.role = health_professional.info.role;
 
   for (let i = 0; i < health_professional.qualifications.length; i++) {
     const hashId = health_professional.qualifications[i];

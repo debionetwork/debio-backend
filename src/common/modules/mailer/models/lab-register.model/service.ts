@@ -1,5 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import { queryServicesByMultipleIds } from '@debionetwork/polkadot-provider';
+import currencyUnit from '../currency';
 
 export class LabRegisterExpectedDuration {
   duration: string;
@@ -36,10 +37,12 @@ export async function getLabRegisterService(
     lrs.name = val.info.name;
     lrs.category = val.info.category;
     lrs.currency = val.currency;
-    lrs.price = (Number(val.price.split(',').join('')) / 10 ** 18).toString();
+    const currType = currencyUnit[val.currency];
+    lrs.price = (
+      BigInt(val.price.split(',').join('')) / BigInt(currType)
+    ).toString();
     lrs.qc_price = (
-      Number(val.qcPrice.split(',').join('')) /
-      10 ** 18
+      BigInt(val.qcPrice.split(',').join('')) / BigInt(currType)
     ).toString();
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;

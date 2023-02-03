@@ -3,6 +3,7 @@ import {
   queryGeneticAnalystServicesByHashId,
   GeneticAnalystService,
 } from '@debionetwork/polkadot-provider';
+import currencyUnit from '../currency';
 
 export class GeneticAnalystRegisterExpectedDuration {
   duration: string;
@@ -38,7 +39,10 @@ export async function getGeneticAnalystRegisterServices(
     tempRS.description = gaService.info.description;
     tempRS.expected_duration = `${gaService.info.expectedDuration.duration} ${gaService.info.expectedDuration.durationType}`;
     tempRS.name = gaService.info.name;
-    tempRS.price = gaService.info.pricesByCurrency[0].totalPrice.toString();
+    const currType = currencyUnit[tempRS.currency];
+    tempRS.price = (
+      gaService.info.pricesByCurrency[0].totalPrice / BigInt(currType)
+    ).toString();
     tempRS.test_result_sample = gaService.info.testResultSample;
 
     geneticAnalystRegisterServices.push(tempRS);

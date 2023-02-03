@@ -153,6 +153,10 @@ export class MailerManager {
           phone_number: context.phone_number,
           certifications: context.certifications,
           experiences: context.experiences,
+          category: context.category,
+          role: context.role,
+          profile_link:
+            context.profile_link !== '' ? context.profile_link : 'N/A',
         },
         attachments: files,
       });
