@@ -42,7 +42,7 @@ export async function getGeneticAnalystRegisterServices(
     const currType = currencyUnit[tempRS.currency];
     tempRS.price = (
       Number(gaService.info.pricesByCurrency[0].totalPrice) / currType
-    ).toFixed(4);
+    ).toFixed(4).replace(".", ",");
     tempRS.test_result_sample = gaService.info.testResultSample;
 
     geneticAnalystRegisterServices.push(tempRS);
