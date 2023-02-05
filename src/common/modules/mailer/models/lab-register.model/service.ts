@@ -41,7 +41,6 @@ export async function getLabRegisterService(
     lrs.price = (
       Number(val.price.split(',').join('')) / currType
     ).toFixed(4).replace(".", ",");
-    console.log(val.qcPrice.split(',').join(''));
     lrs.qc_price = (
       Number(val.qcPrice.split(',').join('')) / currType
     ).toFixed(4).replace(".", ",");
