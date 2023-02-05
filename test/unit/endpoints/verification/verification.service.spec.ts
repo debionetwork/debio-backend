@@ -21,6 +21,7 @@ import { TransactionTypeList } from '../../../../src/common/modules/transaction-
 import { TransactionStatusList } from '../../../../src/common/modules/transaction-status/models/transaction-status.list';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { MyriadAccount } from '../../../../src/endpoints/myriad/models/myriad-account.entity';
+import { MyriadService } from '../../../../src/endpoints/myriad/myriad.service';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   sendRewards: jest.fn(
@@ -43,6 +44,19 @@ describe('Verification Service Unit Tests', () => {
 
   const API = 'API';
   const PAIR = 'PAIR';
+
+  const myriadServiceMockFactory: () => MockType<MyriadService> = jest.fn(
+    () => ({
+      authMyriadUser: jest.fn(),
+      registerMyriadUser: jest.fn(),
+      checkUserMyriadTable: jest.fn(),
+      postToMyriad: jest.fn(),
+      editProfile: jest.fn(),
+      checkUsernameMyriad: jest.fn(),
+      getCustomTimeline: jest.fn(),
+      customVisibilityTimeline: jest.fn(),
+    }),
+  );
 
   const substrateServiceMockFactory: () => MockType<SubstrateService> = jest.fn(
     () => ({
@@ -71,6 +85,10 @@ describe('Verification Service Unit Tests', () => {
         {
           provide: NotificationService,
           useFactory: notificationServiceMockFactory,
+        },
+        {
+          provide: MyriadService,
+          useFactory: myriadServiceMockFactory,
         },
         {
           provide: getRepositoryToken(MyriadAccount),

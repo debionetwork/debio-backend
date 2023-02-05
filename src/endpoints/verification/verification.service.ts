@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import {
   DateTimeProxy,
   SubstrateService,
@@ -18,6 +18,7 @@ import { TransactionStatusList } from '../../common/modules/transaction-status/m
 import { InjectRepository } from '@nestjs/typeorm';
 import { MyriadAccount } from '../myriad/models/myriad-account.entity';
 import { Repository } from 'typeorm';
+import { MyriadService } from '../myriad/myriad.service';
 
 @Injectable()
 export class VerificationService {
@@ -27,6 +28,7 @@ export class VerificationService {
     private readonly dateTimeProxy: DateTimeProxy,
     private readonly subtrateService: SubstrateService,
     private readonly transactionLoggingService: TransactionLoggingService,
+    private readonly myriadService: MyriadService,
   ) {}
 
   async verificationLab(substrateAddress: string, verificationStatus: string) {
@@ -80,9 +82,23 @@ export class VerificationService {
 
   async verificationHealthProfessional(
     accountId: string,
-    hashAccountId: string,
+    hexAccountId: string,
     verificationStatus: VerificationStatus,
+    myriadUserId: string[],
+    timelineId: string,
   ) {
+    const hexRe = /^0x[A-F0-9]+$/i;
+
+    if (!hexRe.test(hexAccountId)) {
+      throw new HttpException(
+        {
+          status: 422,
+          message: 'hex account id must hexdecimal',
+        },
+        422,
+      );
+    }
+
     await updateVerificationStatusHealthProfessional(
       this.subtrateService.api as any,
       this.subtrateService.pair,
@@ -94,7 +110,7 @@ export class VerificationService {
       const myriad = await this.myriadAccountRepository.findOne({
         select: ['address', 'role'],
         where: {
-          address: hashAccountId,
+          address: hexAccountId,
         },
       });
 
@@ -105,6 +121,11 @@ export class VerificationService {
         {
           role: myriad.role.replace('unverified/', ''),
         },
+      );
+
+      await this.myriadService.customVisibilityTimeline(
+        myriadUserId,
+        timelineId,
       );
     }
   }

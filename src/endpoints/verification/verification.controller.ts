@@ -1,18 +1,21 @@
 import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import {
+  Body,
   Controller,
   Headers,
+  HttpException,
   Post,
   Query,
   Res,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
 import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
+import { HealthProfessionalRegisterDTO } from './dto/health-professional.dto';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
@@ -92,38 +95,38 @@ export class VerificationController {
   }
 
   @Post('/health-professional')
-  @ApiQuery({ name: 'account_id', required: true })
-  @ApiQuery({ name: 'hash_account_id', required: true })
+  @ApiBody({ type: HealthProfessionalRegisterDTO })
   @ApiOperation({ description: 'verification health professional.' })
-  @ApiQuery({
-    name: 'verification_status',
-    enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
-  })
   async updateStatusHealthProfessional(
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
-    @Query('account_id') account_id: string,
-    @Query('hash_account_id') hash_account_id: string,
-    @Query('verification_status') verification_status: string,
+    @Body() data: HealthProfessionalRegisterDTO,
   ) {
-    try {
-      if (
-        debioApiKey !=
-        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
-      ) {
-        return response.status(401).send('debio-api-key header is required');
-      }
-      await this.verificationService.verificationHealthProfessional(
-        account_id,
-        hash_account_id,
-        verification_status as VerificationStatus,
+    if (
+      debioApiKey !=
+      this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+    ) {
+      throw new HttpException(
+        {
+          status: 401,
+          message: 'debio-api-key header is required',
+        },
+        401,
       );
-
-      return response
-        .status(200)
-        .send(`Health Professional ${account_id} is ${verification_status}`);
-    } catch (error) {
-      return response.status(500).send(error);
     }
+
+    await this.verificationService.verificationHealthProfessional(
+      data.account_id,
+      data.hex_account_id,
+      data.verification_status as VerificationStatus,
+      data.selected_user_id,
+      data.timeline_id,
+    );
+
+    return response
+      .status(200)
+      .send(
+        `Health Professional ${data.account_id} is ${data.verification_status}`,
+      );
   }
 }
