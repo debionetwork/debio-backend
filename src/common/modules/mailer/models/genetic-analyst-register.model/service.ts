@@ -41,8 +41,8 @@ export async function getGeneticAnalystRegisterServices(
     tempRS.name = gaService.info.name;
     const currType = currencyUnit[tempRS.currency];
     tempRS.price = (
-      gaService.info.pricesByCurrency[0].totalPrice / BigInt(currType)
-    ).toString();
+      Number(gaService.info.pricesByCurrency[0].totalPrice) / currType
+    ).toFixed(4);
     tempRS.test_result_sample = gaService.info.testResultSample;
 
     geneticAnalystRegisterServices.push(tempRS);

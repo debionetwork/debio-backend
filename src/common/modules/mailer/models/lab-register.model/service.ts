@@ -39,11 +39,11 @@ export async function getLabRegisterService(
     lrs.currency = val.currency;
     const currType = currencyUnit[val.currency];
     lrs.price = (
-      BigInt(val.price.split(',').join('')) / BigInt(currType)
-    ).toString();
+      Number(val.price.split(',').join('')) / currType
+    ).toFixed(4);
     lrs.qc_price = (
-      BigInt(val.qcPrice.split(',').join('')) / BigInt(currType)
-    ).toString();
+      Number(val.qcPrice.split(',').join('')) / currType
+    ).toString(4);
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;

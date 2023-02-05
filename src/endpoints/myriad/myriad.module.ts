@@ -27,6 +27,6 @@ import * as redisStore from 'cache-manager-redis-store';
   ],
   controllers: [MyriadController],
   providers: [MyriadService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, MyriadService],
 })
 export class MyriadModule {}
