@@ -87,13 +87,6 @@ export class VerificationService {
     myriadUserId: string[],
     timelineId: string,
   ) {
-    console.log(
-      accountId,
-      hexAccountId,
-      verificationStatus,
-      myriadUserId,
-      timelineId,
-    );
     const hexRe = /^0x[A-F0-9]+$/i;
 
     if (!hexRe.test(hexAccountId)) {
