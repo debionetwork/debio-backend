@@ -19,7 +19,7 @@ export class HealthProfessionalRegisterDTO {
     type: String,
     description: 'verification status',
     required: true,
-    enum: ['Unverified', 'Verified', 'Rejected', 'Revoked']
+    enum: ['Unverified', 'Verified', 'Rejected', 'Revoked'],
   })
   verification_status: string;
 

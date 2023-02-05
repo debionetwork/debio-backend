@@ -38,12 +38,12 @@ export async function getLabRegisterService(
     lrs.category = val.info.category;
     lrs.currency = val.currency;
     const currType = currencyUnit[val.currency];
-    lrs.price = (
-      Number(val.price.split(',').join('')) / currType
-    ).toFixed(4).replace(".", ",");
-    lrs.qc_price = (
-      Number(val.qcPrice.split(',').join('')) / currType
-    ).toFixed(4).replace(".", ",");
+    lrs.price = (Number(val.price.split(',').join('')) / currType)
+      .toFixed(4)
+      .replace('.', ',');
+    lrs.qc_price = (Number(val.qcPrice.split(',').join('')) / currType)
+      .toFixed(4)
+      .replace('.', ',');
     lrs.description = val.info.description;
     lrs.long_description = val.info.longDescription;
     lrs.test_result_sample = val.info.testResultSample;

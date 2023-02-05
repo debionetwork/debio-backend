@@ -18,7 +18,7 @@ import { TransactionStatusList } from '../../common/modules/transaction-status/m
 import { InjectRepository } from '@nestjs/typeorm';
 import { MyriadAccount } from '../myriad/models/myriad-account.entity';
 import { Repository } from 'typeorm';
-import { MyriadService } from '@endpoints/myriad/myriad.service';
+import { MyriadService } from '../myriad/myriad.service';
 
 @Injectable()
 export class VerificationService {
@@ -87,14 +87,23 @@ export class VerificationService {
     myriadUserId: string[],
     timelineId: string,
   ) {
-    console.log(accountId, hexAccountId, verificationStatus, myriadUserId, timelineId);
+    console.log(
+      accountId,
+      hexAccountId,
+      verificationStatus,
+      myriadUserId,
+      timelineId,
+    );
     const hexRe = /^0x[A-F0-9]+$/i;
 
     if (!hexRe.test(hexAccountId)) {
-      throw new HttpException({
-        status: 422,
-        message: "hex account id must hexdecimal"
-      }, 422);
+      throw new HttpException(
+        {
+          status: 422,
+          message: 'hex account id must hexdecimal',
+        },
+        422,
+      );
     }
 
     await updateVerificationStatusHealthProfessional(
@@ -121,7 +130,10 @@ export class VerificationService {
         },
       );
 
-      await this.myriadService.customVisibilityTimeline(myriadUserId, timelineId);
+      await this.myriadService.customVisibilityTimeline(
+        myriadUserId,
+        timelineId,
+      );
     }
   }
 }

@@ -100,18 +100,21 @@ export class VerificationController {
   async updateStatusHealthProfessional(
     @Headers('debio-api-key') debioApiKey: string,
     @Res() response: Response,
-    @Body() data: HealthProfessionalRegisterDTO
+    @Body() data: HealthProfessionalRegisterDTO,
   ) {
     if (
       debioApiKey !=
       this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
     ) {
-      throw new HttpException({
-        status: 401,
-        message: "debio-api-key header is required",
-      }, 401);
+      throw new HttpException(
+        {
+          status: 401,
+          message: 'debio-api-key header is required',
+        },
+        401,
+      );
     }
-    
+
     await this.verificationService.verificationHealthProfessional(
       data.account_id,
       data.hex_account_id,
@@ -122,6 +125,8 @@ export class VerificationController {
 
     return response
       .status(200)
-      .send(`Health Professional ${data.account_id} is ${data.verification_status}`);
+      .send(
+        `Health Professional ${data.account_id} is ${data.verification_status}`,
+      );
   }
 }
