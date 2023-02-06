@@ -4,6 +4,7 @@ import axios from 'axios';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { Exchange, SodakiExchange } from './models/exchange';
+import { fetchAllPools, ftGetTokenMetadata, estimateSwap, getExpectedOutputFromSwapTodos } from '@ref-finance/ref-sdk';
 
 @Injectable()
 export class DebioConversionService {
@@ -96,45 +97,32 @@ export class DebioConversionService {
   }
 
   async getSodakiExchange(): Promise<SodakiExchange> {
-    const response = await axios.get(
-      this.gCloudSecretManagerService.getSecret('SODAKI_HOST').toString(),
-    );
-
     const sodakiExchange: SodakiExchange = new SodakiExchange(null, null, null);
-    for (let i = 0; i < response.data.length; i++) {
-      if (
-        sodakiExchange.dbioToWNear !== null &&
-        sodakiExchange.wNearToDai !== null
-      ) {
-        break;
-      }
 
-      const item = response.data[i];
+    const { simplePools } = await fetchAllPools();
+    
+    const tokenNear = await ftGetTokenMetadata('wrap.near');
+    const tokenDAI = await ftGetTokenMetadata('6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near');
+    
+    const wNearToDai = await estimateSwap({
+      tokenIn: tokenNear,
+      tokenOut: tokenDAI,
+      amountIn: '1',
+      simplePools,
+    });
 
-      // check if dbioToWNear is null
-      // current data fiatInfo symbol is wNEAR
-      // current data assetInfo symbol is DBIO
-      if (
-        sodakiExchange.dbioToWNear === null &&
-        item.fiatInfo.symbol === 'wNEAR' &&
-        item.assetInfo.symbol === 'DBIO'
-      ) {
-        // pass value from current data price to dbioToWNear
-        sodakiExchange.dbioToWNear = parseFloat(item.price);
-      }
+    sodakiExchange.wNearToDai = getExpectedOutputFromSwapTodos(wNearToDai, tokenDAI.id).toNumber();
 
-      // check if wNearToDai is null
-      // current data fiatInfo symbol is DAI
-      // current data assetInfo symbol is wNEAR
-      if (
-        sodakiExchange.wNearToDai === null &&
-        item.fiatInfo.symbol === 'DAI' &&
-        item.assetInfo.symbol === 'wNEAR'
-      ) {
-        // pass value from current data price to wNearToDai
-        sodakiExchange.wNearToDai = parseFloat(item.price);
-      }
-    }
+    const tokenDbio = await ftGetTokenMetadata('dbio.near');
+    
+    const dbioToWNear = await estimateSwap({
+      tokenIn: tokenDbio,
+      tokenOut: tokenNear,
+      amountIn: '1',
+      simplePools,
+    });
+
+    sodakiExchange.dbioToWNear = getExpectedOutputFromSwapTodos(dbioToWNear, tokenNear.id).toNumber();
 
     // get dbio to Dai
     // 1 DBIO = x WNear
