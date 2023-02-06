@@ -4,7 +4,12 @@ import axios from 'axios';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { Exchange, SodakiExchange } from './models/exchange';
-import { fetchAllPools, ftGetTokenMetadata, estimateSwap, getExpectedOutputFromSwapTodos } from '@ref-finance/ref-sdk';
+import {
+  fetchAllPools,
+  ftGetTokenMetadata,
+  estimateSwap,
+  getExpectedOutputFromSwapTodos,
+} from '@ref-finance/ref-sdk';
 
 @Injectable()
 export class DebioConversionService {
@@ -100,10 +105,12 @@ export class DebioConversionService {
     const sodakiExchange: SodakiExchange = new SodakiExchange(null, null, null);
 
     const { simplePools } = await fetchAllPools();
-    
+
     const tokenNear = await ftGetTokenMetadata('wrap.near');
-    const tokenDAI = await ftGetTokenMetadata('6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near');
-    
+    const tokenDAI = await ftGetTokenMetadata(
+      '6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near',
+    );
+
     const wNearToDai = await estimateSwap({
       tokenIn: tokenNear,
       tokenOut: tokenDAI,
@@ -111,10 +118,13 @@ export class DebioConversionService {
       simplePools,
     });
 
-    sodakiExchange.wNearToDai = getExpectedOutputFromSwapTodos(wNearToDai, tokenDAI.id).toNumber();
+    sodakiExchange.wNearToDai = getExpectedOutputFromSwapTodos(
+      wNearToDai,
+      tokenDAI.id,
+    ).toNumber();
 
     const tokenDbio = await ftGetTokenMetadata('dbio.near');
-    
+
     const dbioToWNear = await estimateSwap({
       tokenIn: tokenDbio,
       tokenOut: tokenNear,
@@ -122,7 +132,10 @@ export class DebioConversionService {
       simplePools,
     });
 
-    sodakiExchange.dbioToWNear = getExpectedOutputFromSwapTodos(dbioToWNear, tokenNear.id).toNumber();
+    sodakiExchange.dbioToWNear = getExpectedOutputFromSwapTodos(
+      dbioToWNear,
+      tokenNear.id,
+    ).toNumber();
 
     // get dbio to Dai
     // 1 DBIO = x WNear
