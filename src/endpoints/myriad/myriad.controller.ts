@@ -59,6 +59,8 @@ export class MyriadController {
     name: 'JWT',
   })
   @Get('content/unlockable')
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   @ApiOperation({
     description: 'Get Unlockable Content from myriad',
   })
@@ -70,9 +72,17 @@ export class MyriadController {
       },
     },
   })
-  public async getContentUnlockable(@Headers('JWT') jwt: string) {
+  public async getContentUnlockable(
+    @Headers('JWT') jwt: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     const content: ContentInterface[] =
-      await this.myriadService.unlockableContent(jwt);
+      await this.myriadService.unlockableContent(
+        jwt,
+        page,
+        limit,
+      );
 
     return {
       data: content,
