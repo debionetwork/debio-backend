@@ -311,7 +311,7 @@ export class MyriadService {
     }
   }
 
-  public async unlockableContent(jwt: string) {
+  public async unlockableContent(jwt: string, page?: number, limit?: number) {
     try {
       const res = await axios.get<any, AxiosResponse<ContentInterface[]>>(
         `${this.myriadEndPoints}/user/comments`,
@@ -338,6 +338,8 @@ export class MyriadService {
               ],
             },
             exclusiveInfo: true,
+            pageNumber: page,
+            pageLimit: limit,
           },
           headers: {
             Authorization: `Bearer ${jwt}`,
