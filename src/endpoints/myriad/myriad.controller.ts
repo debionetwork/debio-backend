@@ -78,11 +78,7 @@ export class MyriadController {
     @Query('limit') limit: number,
   ) {
     const content: ContentInterface[] =
-      await this.myriadService.unlockableContent(
-        jwt,
-        page,
-        limit,
-      );
+      await this.myriadService.unlockableContent(jwt, page, limit);
 
     return {
       data: content,
