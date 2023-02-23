@@ -254,7 +254,9 @@ export class MyriadService {
     role: string;
   }) {
     try {
-      const res = await axios.post<any, AxiosResponse<AuthUserInterface>>(
+      const {
+        data: { token },
+      } = await axios.post<any, AxiosResponse<AuthUserInterface>>(
         `${this.myriadEndPoints}/authentication/login/wallet`,
         {
           nonce,
@@ -277,13 +279,13 @@ export class MyriadService {
         await this.myriadAccountRepository.update(
           { id: account.id },
           {
-            jwt_token: res.data.accessToken,
+            jwt_token: token.accessToken,
           },
         );
 
         return {
           status: 200,
-          jwt: res.data.accessToken,
+          jwt: token.accessToken,
         };
       } else {
         throw new Error('account_not_found');
