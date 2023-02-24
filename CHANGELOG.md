@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1](https://github.com/debionetwork/debio-backend/compare/2.4.0...2.4.1) (2023-02-23)
+
+
+### Bug Fixes
+
+* update auth login myriad ([#592](https://github.com/debionetwork/debio-backend/issues/592)) ([f8212e2](https://github.com/debionetwork/debio-backend/commit/f8212e2dac5193d52b4e74ca2ea410f40eeb409a))
+
 ## [2.4.0](https://github.com/debionetwork/debio-backend/compare/2.3.0...2.4.0) (2023-02-17)
 
 
