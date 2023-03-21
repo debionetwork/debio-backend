@@ -463,6 +463,7 @@ export class MyriadService {
           text: text,
           selectedUserIds: selectedUserIds,
           visibility: visibility,
+          selectedTimelineIds: [],
         },
         {
           headers: {
