@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/debionetwork/debio-backend/compare/2.4.1...2.4.2) (2023-03-30)
+
+
+### Bug Fixes
+
+* add new field for myriad create post ([#604](https://github.com/debionetwork/debio-backend/issues/604)) ([243583c](https://github.com/debionetwork/debio-backend/commit/243583c3e6687b3a7b811a4e2ebec99384b5729a))
+
 ## [2.4.1](https://github.com/debionetwork/debio-backend/compare/2.4.0...2.4.1) (2023-02-23)
 
 
