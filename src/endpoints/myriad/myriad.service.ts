@@ -431,6 +431,85 @@ export class MyriadService {
     }
   }
 
+  public async createMyriadExperience(user : MyriadAccount, jwt? : string) {
+    let token : string
+    if (jwt) {
+      token = jwt
+    }
+    else {
+      token = await this.checkJWT(user).jwt
+    }
+    const username = user.username ;
+    const timelinename = `${username}Debio`
+    const data = {
+      name : timelinename
+    }
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }
+    const res = await axios.post(`${this.myriadEndPoints}/user/experiences`,data,config);
+    return res.data
+
+  }
+
+  public async findMyriadExperience(address) {
+    const user = await this.myriadAccountRepository.findOneBy({
+      address: address,
+    });
+    const { user_id, jwt } = await this.checkJWT(user);
+    const username = user.username ;
+    const timelinename = `${username}Debio`
+    const filter = {
+      where : {
+        userId: user_id,
+        deletedAt: {
+          $exists: false,
+        },
+        subscribed: false
+      },
+      include : [
+        {
+          relation: 'experience',
+          scope: {
+            where : {
+              name : timelinename
+            }
+          },
+        },
+      ],
+    }
+
+    try {
+      const res = await axios.get(`${this.myriadEndPoints}/user/experiences`,
+      {
+        params: {
+          filter: filter
+        },
+      });
+      const data : any[] = res.data
+      if (data.length === 0) {
+        const experience = await this.createMyriadExperience(user, jwt)
+        return experience.id
+      }
+      else {
+        return data[0].experience.id
+      }
+
+    } catch (err) {
+      this.logger.error(err);
+      throw new HttpException(
+        err?.response?.data ?? {
+          status: 500,
+          message: 'Something went wrong in server',
+        },
+        err?.response?.status ?? 500,
+      );
+    }
+
+  }
+
   public async postToMyriad({
     createdBy,
     isNSFW,
@@ -440,6 +519,7 @@ export class MyriadService {
     selectedUserIds,
     jwt,
     postType,
+    timelineId
   }: {
     createdBy: string;
     isNSFW: boolean;
@@ -449,6 +529,7 @@ export class MyriadService {
     visibility: E_Visibility;
     jwt: string;
     postType: E_PostType;
+    timelineId: string
   }) {
     try {
       const res = await axios.post<any, AxiosResponse<Post>>(
@@ -463,7 +544,7 @@ export class MyriadService {
           text: text,
           selectedUserIds: selectedUserIds,
           visibility: visibility,
-          selectedTimelineIds: [],
+          selectedTimelineIds: [timelineId],
         },
         {
           headers: {
@@ -472,7 +553,7 @@ export class MyriadService {
         },
       );
 
-      this.addPostToTimeline(jwt, res.data.id, postType);
+      await this.addPostToTimeline(jwt, res.data.id, postType);
 
       return res.data;
     } catch (err) {
