@@ -201,9 +201,9 @@ export class MyriadController {
       rawText,
       text,
       postType,
-      timelineId
+      timelineId,
     } = data;
-    
+
     const res = await this.myriadService.postToMyriad({
       createdBy: createdBy,
       isNSFW: isNSFW,
@@ -213,7 +213,7 @@ export class MyriadController {
       text: text,
       jwt: jwt,
       postType: postType,
-      timelineId: timelineId
+      timelineId: timelineId,
     });
 
     return {
@@ -244,9 +244,7 @@ export class MyriadController {
   @ApiOperation({
     description: 'Get debio default timeline',
   })
-  public async getExperience(
-    @Param('address') address: string,
-  ) {
+  public async getExperience(@Param('address') address: string) {
     const res = await this.myriadService.findMyriadExperience(address);
 
     return {
