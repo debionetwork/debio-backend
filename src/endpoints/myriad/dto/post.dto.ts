@@ -74,4 +74,11 @@ export class PostDTO {
     enum: ['PHYSICAL_HEALTH', 'MENTAL_HEALTH'],
   })
   postType: E_PostType;
+
+  @ApiProperty({
+    type: String,
+    description: 'string of timeline Id',
+    required: true,
+  })
+  timelineId: string;
 }
