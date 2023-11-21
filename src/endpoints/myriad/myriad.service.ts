@@ -545,7 +545,7 @@ export class MyriadService {
         selectedUserIds: selectedUserIds,
         visibility: visibility,
         selectedTimelineIds: [timelineId],
-      }
+      };
       const res = await axios.post<any, AxiosResponse<Post>>(
         `${this.myriadEndPoints}/user/posts`,
         body,
@@ -575,7 +575,7 @@ export class MyriadService {
     jwt: string,
     postId: string,
     postType: E_PostType,
-    timelineId: string
+    timelineId: string,
   ) {
     try {
       let adminToken = await this.cacheManager.get<string>('admin_token');
@@ -595,17 +595,13 @@ export class MyriadService {
       const body = {
         experienceIds: [this.getExperienceIdAdmin(postType), timelineId],
         postId: postId,
-      }
+      };
 
-      await axios.post(
-        `${this.myriadEndPoints}/experiences/post`,
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
+      await axios.post(`${this.myriadEndPoints}/experiences/post`, body, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
         },
-      );
+      });
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
