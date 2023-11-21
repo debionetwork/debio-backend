@@ -453,6 +453,7 @@ export class MyriadService {
       data,
       config,
     );
+    console.log(res.data);
     return res.data;
   }
 
@@ -489,12 +490,16 @@ export class MyriadService {
           filter: filter,
         },
       });
-      const data: any[] = res.data;
+      const data: any[] = res.data?.data ?? [];
       if (data.length === 0) {
         const experience = await this.createMyriadExperience(user, jwt);
-        return experience.id;
+        return {
+          id: experience.id,
+        };
       } else {
-        return data[0].experience.id;
+        return {
+          id: data[0].experienceId,
+        };
       }
     } catch (err) {
       this.logger.error(err);
