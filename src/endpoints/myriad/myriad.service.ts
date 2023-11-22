@@ -453,7 +453,6 @@ export class MyriadService {
       data,
       config,
     );
-    console.log(res.data);
     return res.data;
   }
 
@@ -535,20 +534,21 @@ export class MyriadService {
     timelineId: string;
   }) {
     try {
+      const body = {
+        createdBy: createdBy,
+        isNSFW: isNSFW,
+        mentions: [],
+        rawText: rawText,
+        status: 'published',
+        tags: [],
+        text: text,
+        selectedUserIds: selectedUserIds,
+        visibility: visibility,
+        selectedTimelineIds: [timelineId],
+      };
       const res = await axios.post<any, AxiosResponse<Post>>(
         `${this.myriadEndPoints}/user/posts`,
-        {
-          createdBy: createdBy,
-          isNSFW: isNSFW,
-          mentions: [],
-          rawText: rawText,
-          status: 'published',
-          tags: [],
-          text: text,
-          selectedUserIds: selectedUserIds,
-          visibility: visibility,
-          selectedTimelineIds: [timelineId],
-        },
+        body,
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -556,7 +556,7 @@ export class MyriadService {
         },
       );
 
-      await this.addPostToTimeline(jwt, res.data.id, postType);
+      // await this.addPostToTimeline(jwt, res.data.id, postType, timelineId);
 
       return res.data;
     } catch (err) {
@@ -575,6 +575,7 @@ export class MyriadService {
     jwt: string,
     postId: string,
     postType: E_PostType,
+    timelineId: string,
   ) {
     try {
       let adminToken = await this.cacheManager.get<string>('admin_token');
@@ -591,18 +592,16 @@ export class MyriadService {
         adminToken = user.jwt_token;
       }
 
-      await axios.post(
-        `${this.myriadEndPoints}/experiences/post`,
-        {
-          experienceIds: [this.getExperienceIdAdmin(postType)],
-          postId: postId,
+      const body = {
+        experienceIds: [this.getExperienceIdAdmin(postType), timelineId],
+        postId: postId,
+      };
+
+      await axios.post(`${this.myriadEndPoints}/experiences/post`, body, {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        },
-      );
+      });
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(
