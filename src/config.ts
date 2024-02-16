@@ -10,4 +10,13 @@ export const config = {
     DEBIO_ESCROW_PRIVATE_KEY : process.env.DEBIO_ESCROW_PRIVATE_KEY ?? '',
     WEB3_RPC_HTTPS : process.env.WEB3_RPC_HTTPS ?? '',
     ESCROW_CONTRACT_ADDRESS : process.env.ESCROW_CONTRACT_ADDRESS ?? '' ,
+    ELASTICSEARCH_NODE : process.env.ELASTICSEARCH_NODE ?? '',
+    ELASTICSEARCH_USERNAME : process.env.ELASTICSEARCH_USERNAME ?? '',
+    ELASTICSEARCH_PASSWORD : process.env.ELASTICSEARCH_PASSWORD ?? '',
+    POSTGRES_HOST : process.env.HOST_POSTGRES ?? 'localhost',
+    POSTGRES_USERNAME : process.env.USERNAME_POSTGRES ?? '',
+    POSTGRES_PASSWORD : process.env.POSTGRES_PASSWORD ?? '',
+    EMAIL : process.env.EMAIL ?? '',
+    PASS_EMAIL : process.env.PASS_EMAIL ?? '',
+
 };

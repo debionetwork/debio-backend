@@ -1,4 +1,3 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -8,13 +7,13 @@ import {
 } from './models';
 import { keyList } from '../../secrets';
 import { HealthProfessionalRegister } from './models/health-professional.model';
+import { config } from 'src/config';
 
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
   constructor(
     private readonly mailerService: MailerService,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
   ) {}
 
   async sendCustomerStakingRequestServiceEmail(
@@ -23,7 +22,7 @@ export class MailerManager {
   ) {
     let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
     if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+      config.POSTGRES_HOST == 'localhost'
     ) {
       subject = `Testing New Service Request Email`;
     }
@@ -41,7 +40,7 @@ export class MailerManager {
   ) {
     let subject = `New Genetic Analyst Register – ${context.genetic_analyst_name}`;
     if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+      config.POSTGRES_HOST == 'localhost'
     ) {
       subject = `Testing New Genetic Analyst Register Email`;
     }
@@ -80,7 +79,7 @@ export class MailerManager {
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
     let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
     if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+      config.POSTGRES_HOST == 'localhost'
     ) {
       subject = `Testing New Lab Register Email`;
     }
@@ -129,7 +128,7 @@ export class MailerManager {
   ) {
     let subject = `New Health Professinal Register – ${context.health_professional_name}`;
     if (
-      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+      config.POSTGRES_HOST == 'localhost'
     ) {
       subject = `Testing New Lab Register Email`;
     }
