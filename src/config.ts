@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
+    DEBIO_API_KEY: process.env.DEBIO_API_KEY ?? '',
+    RECAPTCHA_SECRET_KEY : process.env.RECAPTCHA_SECRET_KEY ?? '',
     REDIS_HOST : process.env.HOST_REDIS ?? 'localhost',
     REDIS_PORT : process.env.PORT_REDIS ?? '6379',
     REDIS_PASSWORD : process.env.REDIS_PASSWORD ?? 'root',
@@ -23,5 +25,10 @@ export const config = {
     ADMIN_SUBSTRATE_MNEMONIC : process.env.ADMIN_SUBSTRATE_MNEMONIC ?? '',
     BUCKET_NAME : process.env.BUCKET_NAME ?? '',
     STORAGE_BASE_URI : process.env.STORAGE_BASE_URI ?? '',
+    MYRIAD_API_URL : process.env.MYRIAD_API_URL ?? '',
+    MYRIAD_ADMIN_USERNAME : process.env.MYRIAD_ADMIN_USERNAME ?? '',
+    MYRIAD_PHYSICAL_HEALTH_TIMELINE_ID : process.env.PHYSICAL_HEALTH_EXPERIENCE_ID ?? '',
+    MYRIAD_MENTAL_HEALTH_TIMELINE_ID : process.env.MENTAL_HEALTH_EXPERIENCE_ID ?? '',
+    PINATA_JWT : process.env.PINATA_SECRET_KEY ?? ''
 
 };

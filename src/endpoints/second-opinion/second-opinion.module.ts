@@ -1,5 +1,3 @@
-import { keyList } from '@common/secrets';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { CacheModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthProfessionalRole } from './models/health-professional-role.entity';
@@ -7,19 +5,19 @@ import { HealthProfessionalSpecialization } from './models/health-professional-s
 import { SecondOpinionController } from './second-opinion.controller';
 import { SecondOpinionService } from './second-opinion.service';
 import * as redisStore from 'cache-manager-redis-store';
+import { config } from 'src/config';
 
 @Module({
   imports: [
     CacheModule.registerAsync({
-      inject: [GCloudSecretManagerService],
+      inject: [],
       useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
       ) => {
         return {
           store: redisStore,
-          host: gCloudSecretManagerService.getSecret('REDIS_HOST'),
-          port: gCloudSecretManagerService.getSecret('REDIS_PORT'),
-          auth_pass: gCloudSecretManagerService.getSecret('REDIS_PASSWORD'),
+          host: config.REDIS_HOST,
+          port: config.REDIS_PORT,
+          auth_pass: config.REDIS_PASSWORD,
           ttl: 2 * 60 * 60,
         };
       },

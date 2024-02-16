@@ -1,4 +1,3 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import {
   Body,
   Controller,
@@ -16,12 +15,12 @@ import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
 import { HealthProfessionalRegisterDTO } from './dto/health-professional.dto';
+import { config } from 'src/config';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
 export class VerificationController {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly verificationService: VerificationService,
   ) {}
 
@@ -41,7 +40,7 @@ export class VerificationController {
     try {
       if (
         debioApiKey !=
-        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+        config.DEBIO_API_KEY.toString()
       ) {
         return response.status(401).send('debio-api-key header is required');
       }
@@ -77,7 +76,7 @@ export class VerificationController {
     try {
       if (
         debioApiKey !=
-        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+        config.DEBIO_API_KEY.toString()
       ) {
         return response.status(401).send('debio-api-key header is required');
       }
@@ -104,7 +103,7 @@ export class VerificationController {
   ) {
     if (
       debioApiKey !=
-      this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
+      config.DEBIO_API_KEY.toString()
     ) {
       throw new HttpException(
         {
