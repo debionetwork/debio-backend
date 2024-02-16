@@ -18,5 +18,10 @@ export const config = {
     POSTGRES_PASSWORD : process.env.POSTGRES_PASSWORD ?? '',
     EMAIL : process.env.EMAIL ?? '',
     PASS_EMAIL : process.env.PASS_EMAIL ?? '',
+    EMAILS : process.env.EMAILS ?? '',
+    SUBSTRATE_URL : process.env.SUBSTRATE_URL ?? '',
+    ADMIN_SUBSTRATE_MNEMONIC : process.env.ADMIN_SUBSTRATE_MNEMONIC ?? '',
+    BUCKET_NAME : process.env.BUCKET_NAME ?? '',
+    STORAGE_BASE_URI : process.env.STORAGE_BASE_URI ?? '',
 
 };

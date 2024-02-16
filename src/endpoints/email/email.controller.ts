@@ -17,14 +17,13 @@ import {
   queryGeneticAnalystByAccountId,
   queryLabById,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { keyList } from '../../common/secrets';
 import { queryHealthProfessionalById } from '@common/modules/polkadot-provider/query/health-professional';
+import { config } from 'src/config';
 
 @Controller('email')
 export class EmailEndpointController {
   constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     private readonly mailerManager: MailerManager,
     private readonly substrateService: SubstrateService,
     private readonly emailNotificationService: EmailNotificationService,
@@ -62,10 +61,7 @@ export class EmailEndpointController {
       );
 
       const sentEMail = await this.mailerManager.sendLabRegistrationEmail(
-        this.gCloudSecretManagerService
-          .getSecret('EMAILS')
-          .toString()
-          .split(','),
+        config.EMAILS.toString().split(','),
         labRegister,
       );
 
@@ -119,10 +115,7 @@ export class EmailEndpointController {
 
       const sentEMail =
         await this.mailerManager.sendGeneticAnalystRegistrationEmail(
-          this.gCloudSecretManagerService
-            .getSecret('EMAILS')
-            .toString()
-            .split(','),
+          config.EMAILS.toString().split(','),
           geneticAnalystRegister,
         );
 
@@ -175,10 +168,7 @@ export class EmailEndpointController {
       );
 
       const sentEMail = await this.mailerManager.sendHealthProfessionalEmail(
-        this.gCloudSecretManagerService
-          .getSecret('EMAILS')
-          .toString()
-          .split(','),
+        config.EMAILS.toString().split(','),
         healthProfessionalRegister,
       );
 
