@@ -3,12 +3,13 @@ import { Response } from 'express';
 import MockAdapter from 'axios-mock-adapter';
 import { TestingModule, Test } from '@nestjs/testing';
 import { RecaptchaController } from '../../../../src/endpoints/recaptcha/recaptcha.controller';
+import { config } from '../../../../src/config';
 
 describe('Recaptcha Controller Unit Tests', () => {
   let recaptchaController: RecaptchaController;
   const axiosMock = new MockAdapter(axios);
 
-  const RECAPTCHA_SECRET_KEY = 'KEY';
+  const RECAPTCHA_SECRET_KEY = config.RECAPTCHA_SECRET_KEY;
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
       ['RECAPTCHA_SECRET_KEY', RECAPTCHA_SECRET_KEY],

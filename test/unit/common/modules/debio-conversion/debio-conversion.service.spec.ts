@@ -98,7 +98,7 @@ describe('Debio Conversion Service Unit Tests', () => {
     // Arrange
     const httpGetSpy = jest.spyOn(axios, 'get');
     const RESULT = 1;
-    const API_KEY = 'KEY';
+    const API_KEY = config.COINMARKETCAP_API_KEY;
     const BALANCE_AMOUNT = 1;
     const FROM = 'USN';
     const TO = 'USDT';
