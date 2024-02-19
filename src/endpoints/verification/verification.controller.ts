@@ -14,7 +14,7 @@ import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
 import { HealthProfessionalRegisterDTO } from './dto/health-professional.dto';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')

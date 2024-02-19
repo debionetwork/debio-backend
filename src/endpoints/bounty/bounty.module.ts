@@ -5,7 +5,7 @@ import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Module({
   imports: [

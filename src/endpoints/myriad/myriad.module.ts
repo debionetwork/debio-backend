@@ -4,7 +4,7 @@ import { MyriadAccount } from './models/myriad-account.entity';
 import { MyriadController } from './myriad.controller';
 import { MyriadService } from './myriad.service';
 import * as redisStore from 'cache-manager-redis-store';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Module({
   imports: [

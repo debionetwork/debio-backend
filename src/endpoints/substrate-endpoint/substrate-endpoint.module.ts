@@ -16,7 +16,7 @@ import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
 import { MenstrualCalendarService } from './services/menstrual-calendar.service';
 import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Module({
   imports: [

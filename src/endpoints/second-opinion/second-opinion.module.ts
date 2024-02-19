@@ -5,7 +5,7 @@ import { HealthProfessionalSpecialization } from './models/health-professional-s
 import { SecondOpinionController } from './second-opinion.controller';
 import { SecondOpinionService } from './second-opinion.service';
 import * as redisStore from 'cache-manager-redis-store';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Module({
   imports: [

@@ -3,7 +3,7 @@ import { CacheModule, Module } from '@nestjs/common';
 import * as redisStore from 'cache-manager-redis-store';
 import { DebioConversionModule } from 'src/common';
 import { CacheController } from './conversion.controller';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Module({
   imports: [

@@ -21,7 +21,7 @@ import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
 import { Cache } from 'cache-manager';
-import { config } from '../../../config';
+import { config } from '../../config';
 
 @Injectable()
 export class MyriadService {
