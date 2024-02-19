@@ -32,8 +32,7 @@ describe('Recaptcha Controller (e2e)', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RecaptchaController],
-      providers: [
-      ],
+      providers: [],
     }).compile();
 
     axiosMock.reset();

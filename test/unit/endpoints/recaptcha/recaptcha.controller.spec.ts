@@ -25,8 +25,7 @@ describe('Recaptcha Controller Unit Tests', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RecaptchaController],
-      providers: [
-      ],
+      providers: [],
     }).compile();
 
     recaptchaController = module.get<RecaptchaController>(RecaptchaController);
