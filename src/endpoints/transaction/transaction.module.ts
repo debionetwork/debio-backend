@@ -3,7 +3,7 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TransactionLoggingModule } from '../../common';
 import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Module({
   imports: [

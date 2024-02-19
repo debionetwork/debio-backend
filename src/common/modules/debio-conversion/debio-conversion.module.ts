@@ -1,7 +1,7 @@
 import { DebioConversionService } from './debio-conversion.service';
 import { CacheModule, Module } from '@nestjs/common';
 import * as redisStore from 'cache-manager-redis-store';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Module({
   imports: [

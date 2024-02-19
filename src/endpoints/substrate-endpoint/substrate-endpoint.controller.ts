@@ -40,7 +40,7 @@ import {
   geneticAnalysisOrderByGA,
 } from './models/response';
 import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
-import { config } from 'src/config';
+import { config } from '../../config';
 
 @Controller('substrate')
 @UseInterceptors(SentryInterceptor)

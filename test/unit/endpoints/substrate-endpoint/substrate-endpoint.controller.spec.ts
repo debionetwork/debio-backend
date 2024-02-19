@@ -29,7 +29,6 @@ import {
   setGeneticAnalysisOrderPaid,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -162,10 +161,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: geneticAnalysisOrderMockfactory,
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

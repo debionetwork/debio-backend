@@ -8,7 +8,6 @@ import {
 import { EscrowService } from '../../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   setOrderPaid: jest.fn(),
@@ -59,10 +58,6 @@ describe('Escrow Service Unit Tests', () => {
         EscrowService,
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: EthereumService, useFactory: ethereumServiceMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

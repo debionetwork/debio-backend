@@ -18,7 +18,7 @@ import {
   queryLabById,
 } from '@debionetwork/polkadot-provider';
 import { queryHealthProfessionalById } from '@common/modules/polkadot-provider/query/health-professional';
-import { config } from 'src/config';
+import { config } from '../../config';
 
 @Controller('email')
 export class EmailEndpointController {

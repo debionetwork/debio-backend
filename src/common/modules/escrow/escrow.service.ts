@@ -4,7 +4,7 @@ import { EthereumService, SubstrateService } from '../..';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 const lock = new AsyncLock();
 const ESCROW_WALLET_LOCK_KEY = 'escrow-wallet-lock';

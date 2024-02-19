@@ -6,7 +6,6 @@ import { Response } from 'express';
 import { INestApplication } from '@nestjs/common';
 import { TestingModule, Test } from '@nestjs/testing';
 import { RecaptchaController } from '../../../src/endpoints/recaptcha/recaptcha.controller';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Recaptcha Controller (e2e)', () => {
   const axiosMock = new MockAdapter(axios);
@@ -34,10 +33,6 @@ describe('Recaptcha Controller (e2e)', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RecaptchaController],
       providers: [
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

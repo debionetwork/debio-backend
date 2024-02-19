@@ -6,7 +6,7 @@ import {
   LabRegister,
 } from './models';
 import { HealthProfessionalRegister } from './models/health-professional.model';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Injectable()
 export class MailerManager {

@@ -9,7 +9,7 @@ import ABI from './utils/ABI.json';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Injectable()
 export class EthereumService {

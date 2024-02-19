@@ -8,7 +8,7 @@ import {
   estimateSwap,
   getExpectedOutputFromSwapTodos,
 } from '@ref-finance/ref-sdk';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Injectable()
 export class DebioConversionService {

@@ -5,7 +5,6 @@ import { EthersContract, EthersSigner } from 'nestjs-ethers';
 import ABI from '../../../../../src/common/modules/ethereum/utils/ABI.json';
 import escrowContract from '../../../../../src/common/modules/ethereum/utils/Escrow.json';
 import { ethers } from 'ethers';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 const PROVIDER_RESULT = 1;
 jest.mock('ethers', () => ({
@@ -66,10 +65,6 @@ describe.only('EthereumService', () => {
         { provide: CachesService, useFactory: cachesServiceMockFactory },
         { provide: EthersContract, useFactory: ethersContractMockFactory },
         { provide: EthersSigner, useFactory: ethersSignerMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

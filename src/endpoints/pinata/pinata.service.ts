@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import FormData from 'form-data';
-import { config } from 'src/config';
+import { config } from '../../config';
 
 @Injectable()
 export class PinataService {

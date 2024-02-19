@@ -3,7 +3,6 @@ import { MockType } from '../../mock';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { VerificationController } from '../../../../src/endpoints/verification/verification.controller';
 import httpMocks = require('node-mocks-http');
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Verification Controller Unit Tests', () => {
   let verificationController: VerificationController;
@@ -36,10 +35,6 @@ describe('Verification Controller Unit Tests', () => {
         {
           provide: VerificationService,
           useFactory: verificationServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
       ],
     }).compile();

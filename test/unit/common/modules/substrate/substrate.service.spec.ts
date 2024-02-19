@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockFunction } from '../../../mock';
 import { ProcessEnvProxy, SubstrateService } from '../../../../../src/common';
 import { ApiPromise, Keyring } from '@polkadot/api';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('../../../mock', () => ({
   mockFunction: jest.fn(),
@@ -41,10 +40,6 @@ describe.only('Substrate Service Unit Test', () => {
       providers: [
         SubstrateService,
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

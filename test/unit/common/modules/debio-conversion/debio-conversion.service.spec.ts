@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DebioConversionService } from '../../../../../src/common';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { when } from 'jest-when';
@@ -42,10 +41,6 @@ describe('Debio Conversion Service Unit Tests', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DebioConversionService,
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
         {
           provide: CACHE_MANAGER,
           useValue: {

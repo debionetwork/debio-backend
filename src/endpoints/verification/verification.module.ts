@@ -8,7 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MyriadAccount } from '@endpoints/myriad/models/myriad-account.entity';
 import * as redisStore from 'cache-manager-redis-store';
 import { MyriadModule } from '@endpoints/myriad/myriad.module';
-import { config } from 'src/config';
+import { config } from '../../../config';
 
 @Module({
   imports: [

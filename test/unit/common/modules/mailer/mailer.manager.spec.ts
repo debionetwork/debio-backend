@@ -3,7 +3,6 @@ import { mailerServiceMockFactory, MockType } from '../../../mock';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailerManager } from '../../../../../src/common';
 import { customerStakingRequestService, labRegister } from './mailer.mock.data';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 describe('Mailer Manager Unit Tests', () => {
   let mailerManager: MailerManager;
@@ -26,10 +25,6 @@ describe('Mailer Manager Unit Tests', () => {
       providers: [
         MailerManager,
         { provide: MailerService, useFactory: mailerServiceMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 
