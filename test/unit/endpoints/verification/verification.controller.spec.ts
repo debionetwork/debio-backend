@@ -76,7 +76,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 500;
     const EXPECTED_RESULT = "I just don't feel like it";
-    const API_KEY = config.DEBIO_API_KEY ;
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'VERIFICATION_STATUS';
     verificationServiceMock.verificationLab.mockImplementation(() =>
@@ -102,7 +102,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 500;
     const EXPECTED_RESULT = "I just don't feel like it";
-    const API_KEY = config.DEBIO_API_KEY ;
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'VERIFICATION_STATUS';
     verificationServiceMock.verificationGeneticAnalyst.mockImplementation(() =>
@@ -128,7 +128,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 200;
     const EXPECTED_RESULT = 'Verified, and Got Reward 2 DBIO';
-    const API_KEY = config.DEBIO_API_KEY ;
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'Verified';
 

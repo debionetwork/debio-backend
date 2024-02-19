@@ -39,7 +39,7 @@ describe('Escrow Service Unit Tests', () => {
   let substrateServiceMock: MockType<SubstrateService>;
   let ethereumServiceMock: MockType<EthereumService>;
 
-  const DEBIO_ESCROW_PRIVATE_KEY = config.DEBIO_ESCROW_PRIVATE_KEY ;
+  const DEBIO_ESCROW_PRIVATE_KEY = config.DEBIO_ESCROW_PRIVATE_KEY;
   class GoogleSecretManagerServiceMock {
     _secretsList = new Map<string, string>([
       ['DEBIO_ESCROW_PRIVATE_KEY', DEBIO_ESCROW_PRIVATE_KEY],
