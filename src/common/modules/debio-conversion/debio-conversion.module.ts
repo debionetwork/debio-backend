@@ -8,8 +8,7 @@ import { config } from 'src/config';
   imports: [
     CacheModule.registerAsync({
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           store: redisStore,
           host: config.REDIS_HOST.toString(),

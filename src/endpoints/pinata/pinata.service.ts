@@ -7,8 +7,7 @@ import { config } from 'src/config';
 
 @Injectable()
 export class PinataService {
-  constructor(
-  ) {}
+  constructor() {}
   async uploadToPinata(file: Express.Multer.File) {
     const options = {
       pinataMetadata: {

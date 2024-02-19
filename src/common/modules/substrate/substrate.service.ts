@@ -12,8 +12,7 @@ export class SubstrateService implements OnModuleInit {
   private _listenStatus: boolean;
   private readonly _logger: Logger = new Logger(SubstrateService.name);
 
-  constructor(
-  ) {}
+  constructor() {}
 
   get api(): ApiPromise {
     return this._api;
@@ -24,9 +23,7 @@ export class SubstrateService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    this._wsProvider = new WsProvider(
-      config.SUBSTRATE_URL.toString(),
-    );
+    this._wsProvider = new WsProvider(config.SUBSTRATE_URL.toString());
 
     const keyring = new Keyring({ type: 'sr25519' });
     await waitReady();

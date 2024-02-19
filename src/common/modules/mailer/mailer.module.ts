@@ -10,8 +10,7 @@ import { config } from 'src/config';
   imports: [
     MailerModule.forRootAsync({
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           transport: {
             host: 'smtp.gmail.com',

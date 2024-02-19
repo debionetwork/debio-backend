@@ -404,10 +404,7 @@ export class SubstrateController {
     @Body() payload: WalletBindingDTO,
     @Res() response: Response,
   ) {
-    if (
-      debioApiKey !==
-      config.DEBIO_API_KEY.toString()
-    ) {
+    if (debioApiKey !== config.DEBIO_API_KEY.toString()) {
       return response.status(401).send('debio-api-key header is required');
     }
     const { accountId, ethAddress } = payload;
@@ -441,10 +438,7 @@ export class SubstrateController {
   ) {
     const { genetic_analysis_order_id } = geneticOrderId;
 
-    if (
-      debioApiKey !=
-      config.DEBIO_API_KEY.toString()
-    ) {
+    if (debioApiKey != config.DEBIO_API_KEY.toString()) {
       return response.status(401).send('debio-api-key header is required');
     }
 

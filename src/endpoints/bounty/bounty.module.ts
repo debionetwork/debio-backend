@@ -11,8 +11,7 @@ import { config } from 'src/config';
   imports: [
     GCloudStorageModule.withConfigAsync({
       inject: [],
-      useFactory: async (
-      ) => ({
+      useFactory: async () => ({
         defaultBucketname: config.BUCKET_NAME.toString(),
         storageBaseUri: config.STORAGE_BASE_URI.toString(),
         predefinedAcl: 'private',

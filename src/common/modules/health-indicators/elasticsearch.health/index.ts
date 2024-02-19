@@ -10,8 +10,7 @@ import { config } from 'src/config';
     TerminusModule,
     ElasticsearchModule.registerAsync({
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           node: config.ELASTICSEARCH_NODE.toString(),
           auth: {

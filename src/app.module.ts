@@ -49,9 +49,7 @@ require('dotenv').config(); // eslint-disable-line
         }),
       ],
       inject: [ProcessEnvProxy],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-      ) => {
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,
@@ -75,9 +73,7 @@ require('dotenv').config(); // eslint-disable-line
         }),
       ],
       inject: [ProcessEnvProxy],
-      useFactory: async (
-        processEnvProxy: ProcessEnvProxy,
-      ) => {
+      useFactory: async (processEnvProxy: ProcessEnvProxy) => {
         return {
           type: 'postgres',
           host: processEnvProxy.env.HOST_POSTGRES,

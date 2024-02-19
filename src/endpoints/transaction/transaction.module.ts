@@ -11,8 +11,7 @@ import { config } from 'src/config';
     TransactionLoggingModule,
     ElasticsearchModule.registerAsync({
       inject: [],
-      useFactory: async (
-      ) => {
+      useFactory: async () => {
         return {
           node: config.ELASTICSEARCH_NODE.toString(),
           auth: {

@@ -20,9 +20,7 @@ import { config } from 'src/config';
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
 export class VerificationController {
-  constructor(
-    private readonly verificationService: VerificationService,
-  ) {}
+  constructor(private readonly verificationService: VerificationService) {}
 
   @Post('/lab')
   @ApiQuery({ name: 'account_id' })
@@ -38,10 +36,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (
-        debioApiKey !=
-        config.DEBIO_API_KEY.toString()
-      ) {
+      if (debioApiKey != config.DEBIO_API_KEY.toString()) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationLab(
@@ -74,10 +69,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (
-        debioApiKey !=
-        config.DEBIO_API_KEY.toString()
-      ) {
+      if (debioApiKey != config.DEBIO_API_KEY.toString()) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationGeneticAnalyst(
@@ -101,10 +93,7 @@ export class VerificationController {
     @Res() response: Response,
     @Body() data: HealthProfessionalRegisterDTO,
   ) {
-    if (
-      debioApiKey !=
-      config.DEBIO_API_KEY.toString()
-    ) {
+    if (debioApiKey != config.DEBIO_API_KEY.toString()) {
       throw new HttpException(
         {
           status: 401,
