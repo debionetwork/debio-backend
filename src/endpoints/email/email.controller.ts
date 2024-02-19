@@ -17,7 +17,6 @@ import {
   queryGeneticAnalystByAccountId,
   queryLabById,
 } from '@debionetwork/polkadot-provider';
-import { keyList } from '../../common/secrets';
 import { queryHealthProfessionalById } from '@common/modules/polkadot-provider/query/health-professional';
 import { config } from 'src/config';
 

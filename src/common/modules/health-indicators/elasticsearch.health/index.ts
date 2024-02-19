@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { TerminusModule } from '@nestjs/terminus';
 import { ElasticsearchHealthIndicator } from './elasticsearch.health.indicator';
-import { keyList } from '../../../secrets';
 import { config } from 'src/config';
 
 @Module({

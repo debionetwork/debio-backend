@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { keyList } from '../../common/secrets';
 import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import FormData from 'form-data';
@@ -7,7 +6,6 @@ import { config } from 'src/config';
 
 @Injectable()
 export class PinataService {
-  constructor() {}
   async uploadToPinata(file: Express.Multer.File) {
     const options = {
       pinataMetadata: {

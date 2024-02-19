@@ -1,7 +1,6 @@
 import { ApiPromise, Keyring, WsProvider } from '@polkadot/api';
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
 import { waitReady } from '@polkadot/wasm-crypto';
-import { keyList } from '../../secrets';
 import { config } from 'src/config';
 
 @Injectable()
@@ -11,8 +10,6 @@ export class SubstrateService implements OnModuleInit {
   private _wsProvider: WsProvider;
   private _listenStatus: boolean;
   private readonly _logger: Logger = new Logger(SubstrateService.name);
-
-  constructor() {}
 
   get api(): ApiPromise {
     return this._api;

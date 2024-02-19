@@ -9,7 +9,6 @@ import ABI from './utils/ABI.json';
 import escrowContract from './utils/Escrow.json';
 import { ethers } from 'ethers';
 import { CachesService } from '../caches';
-import { keyList } from '../../secrets';
 import { config } from 'src/config';
 
 @Injectable()

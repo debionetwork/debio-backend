@@ -39,7 +39,6 @@ import {
   geneticAnalysisByTrakingIdResponse,
   geneticAnalysisOrderByGA,
 } from './models/response';
-import { keyList } from '../../common/secrets';
 import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
 import { config } from 'src/config';
 

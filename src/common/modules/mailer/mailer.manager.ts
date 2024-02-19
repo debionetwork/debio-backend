@@ -5,7 +5,6 @@ import {
   GeneticAnalystRegister,
   LabRegister,
 } from './models';
-import { keyList } from '../../secrets';
 import { HealthProfessionalRegister } from './models/health-professional.model';
 import { config } from 'src/config';
 

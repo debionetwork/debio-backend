@@ -14,7 +14,6 @@ import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
-import { keyList } from '../../common/secrets';
 import { MenstrualCalendarService } from './services/menstrual-calendar.service';
 import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
 import { config } from 'src/config';

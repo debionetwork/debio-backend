@@ -7,7 +7,6 @@ import { config } from 'src/config';
 @UseInterceptors(SentryInterceptor)
 @Controller('recaptcha')
 export class RecaptchaController {
-  constructor() {}
 
   @Post()
   async recaptcha(@Body() payload: any, @Res() response: Response) {

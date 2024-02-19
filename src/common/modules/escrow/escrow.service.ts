@@ -4,7 +4,6 @@ import { EthereumService, SubstrateService } from '../..';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
 import { ethers } from 'ethers';
 import AsyncLock from 'async-lock';
-import { keyList } from '../../secrets';
 import { config } from 'src/config';
 
 const lock = new AsyncLock();

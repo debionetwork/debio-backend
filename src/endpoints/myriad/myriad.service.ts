@@ -1,4 +1,3 @@
-import { keyList } from '@common/secrets';
 import {
   CACHE_MANAGER,
   Inject,
@@ -515,7 +514,6 @@ export class MyriadService {
     rawText,
     selectedUserIds,
     jwt,
-    postType,
     timelineId,
   }: {
     createdBy: string;

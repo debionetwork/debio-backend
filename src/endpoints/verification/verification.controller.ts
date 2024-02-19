@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
