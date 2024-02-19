@@ -17,7 +17,7 @@ export const config = {
     ELASTICSEARCH_PASSWORD : process.env.ELASTICSEARCH_PASSWORD ?? '',
     POSTGRES_HOST : process.env.HOST_POSTGRES ?? 'localhost',
     POSTGRES_USERNAME : process.env.USERNAME_POSTGRES ?? '',
-    POSTGRES_PASSWORD : process.env.POSTGRES_PASSWORD ?? '',
+    POSTGRES_PASSWORD : process.env.PASSWORD_POSTGRES ?? '',
     EMAIL : process.env.EMAIL ?? '',
     PASS_EMAIL : process.env.PASS_EMAIL ?? '',
     EMAILS : process.env.EMAILS ?? '',
