@@ -23,7 +23,6 @@ import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
-import { keyList } from '../../src/common/secrets';
 
 export function mockFunction(args) {} // eslint-disable-line
 
