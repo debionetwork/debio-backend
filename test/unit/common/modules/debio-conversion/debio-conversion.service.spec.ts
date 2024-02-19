@@ -5,6 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { when } from 'jest-when';
+import { config } from '../../../../../src/config';
 jest.mock('axios');
 
 describe('Debio Conversion Service Unit Tests', () => {
@@ -12,7 +13,7 @@ describe('Debio Conversion Service Unit Tests', () => {
   let cacheManager: Cache;
   const axiosMock = new MockAdapter(axios);
 
-  const API_KEY_COINMARKETCAP = 'API_KEY_COINMARKETCAP';
+  const API_KEY_COINMARKETCAP = config.COINMARKETCAP_API_KEY;
   const SODAKI_HOST = 'SODAKI_HOST';
   const COINMARKETCAP_HOST = 'COINMARKETCAP_HOST';
   const REDIS_HOST = 'REDIS_HOST';
