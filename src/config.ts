@@ -8,7 +8,7 @@ export const config = {
   REDIS_PORT: process.env.PORT_REDIS ?? '6379',
   REDIS_PASSWORD: process.env.REDIS_PASSWORD ?? 'root',
   COINMARKETCAP_API_KEY: process.env.API_KEY_COINMARKETCAP ?? '',
-  COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST ?? '',
+  COINMARKETCAP_HOST: process.env.COINMARKETCAP_HOST ?? 'https://pro-api.coinmarketcap.com/v2',
   DEBIO_ESCROW_PRIVATE_KEY: process.env.DEBIO_ESCROW_PRIVATE_KEY ?? 'PRIVKEY',
   WEB3_RPC_HTTPS: process.env.WEB3_RPC_HTTPS ?? '',
   ESCROW_CONTRACT_ADDRESS: process.env.ESCROW_CONTRACT_ADDRESS ?? 'ADDR',

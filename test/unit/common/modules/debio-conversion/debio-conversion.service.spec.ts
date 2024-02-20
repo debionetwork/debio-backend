@@ -15,7 +15,7 @@ describe('Debio Conversion Service Unit Tests', () => {
 
   const API_KEY_COINMARKETCAP = config.COINMARKETCAP_API_KEY;
   const SODAKI_HOST = 'SODAKI_HOST';
-  const COINMARKETCAP_HOST = 'COINMARKETCAP_HOST';
+  const COINMARKETCAP_HOST = config.COINMARKETCAP_HOST;
   const REDIS_HOST = 'REDIS_HOST';
   const REDIS_PORT = 'REDIS_PORT';
   const REDIS_PASSWORD = 'REDIS_PASSWORD';
