@@ -15,19 +15,6 @@ describe('Verification Controller Unit Tests', () => {
     }));
   let verificationServiceMock: MockType<VerificationService>;
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['DEBIO_API_KEY', 'DEBIO_API_KEY'],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

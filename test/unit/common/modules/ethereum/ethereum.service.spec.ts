@@ -45,20 +45,6 @@ describe.only('EthereumService', () => {
   const WEB3_RPC_HTTPS = config.WEB3_RPC_HTTPS;
   const ESCROW_CONTRACT_ADDRESS = config.ESCROW_CONTRACT_ADDRESS;
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['WEB3_RPC_HTTPS', WEB3_RPC_HTTPS],
-      ['ESCROW_CONTRACT_ADDRESS', ESCROW_CONTRACT_ADDRESS],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [

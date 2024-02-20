@@ -40,18 +40,6 @@ describe('Escrow Service Unit Tests', () => {
   let ethereumServiceMock: MockType<EthereumService>;
 
   const DEBIO_ESCROW_PRIVATE_KEY = config.DEBIO_ESCROW_PRIVATE_KEY;
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['DEBIO_ESCROW_PRIVATE_KEY', DEBIO_ESCROW_PRIVATE_KEY],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

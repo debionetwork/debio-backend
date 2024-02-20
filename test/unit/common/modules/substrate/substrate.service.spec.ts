@@ -16,19 +16,6 @@ describe.only('Substrate Service Unit Test', () => {
 
   const SUBSTRATE_URL = config.SUBSTRATE_URL;
   const ADMIN_SUBSTRATE_MNEMONIC = config.ADMIN_SUBSTRATE_MNEMONIC;
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ADMIN_SUBSTRATE_MNEMONIC', ADMIN_SUBSTRATE_MNEMONIC],
-      ['SUBSTRATE_URL', SUBSTRATE_URL],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   class ProcessEnvProxyMock {
     env = {

@@ -13,21 +13,6 @@ describe('Recaptcha Controller (e2e)', () => {
   let app: INestApplication;
 
   const RECAPTCHA_SECRET_KEY = 'KEY';
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['RECAPTCHA_SECRET_KEY', RECAPTCHA_SECRET_KEY],
-      ['REDIS_HOST', process.env.HOST_REDIS],
-      ['REDIS_PORT', process.env.PORT_REDIS],
-      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

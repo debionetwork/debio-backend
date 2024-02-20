@@ -10,18 +10,6 @@ describe('Recaptcha Controller Unit Tests', () => {
   const axiosMock = new MockAdapter(axios);
 
   const RECAPTCHA_SECRET_KEY = config.RECAPTCHA_SECRET_KEY;
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['RECAPTCHA_SECRET_KEY', RECAPTCHA_SECRET_KEY],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

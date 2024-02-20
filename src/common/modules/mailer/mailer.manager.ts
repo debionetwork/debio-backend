@@ -17,10 +17,7 @@ export class MailerManager {
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
-    let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (config.POSTGRES_HOST == 'localhost') {
-      subject = `Testing New Service Request Email`;
-    }
+    const subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
     this.mailerService.sendMail({
       to: to,
       subject: subject,

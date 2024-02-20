@@ -8,17 +8,6 @@ describe('Mailer Manager Unit Tests', () => {
   let mailerManager: MailerManager;
   let mailerServiceMock: MockType<MailerService>;
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([['POSTGRES_HOST', '']]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

@@ -13,12 +13,7 @@ describe('Debio Conversion Service Unit Tests', () => {
   let cacheManager: Cache;
   const axiosMock = new MockAdapter(axios);
 
-  const API_KEY_COINMARKETCAP = config.COINMARKETCAP_API_KEY;
-  const SODAKI_HOST = 'SODAKI_HOST';
   const COINMARKETCAP_HOST = config.COINMARKETCAP_HOST;
-  const REDIS_HOST = 'REDIS_HOST';
-  const REDIS_PORT = 'REDIS_PORT';
-  const REDIS_PASSWORD = 'REDIS_PASSWORD';
 
   // Arrange before each iteration
   beforeEach(async () => {
