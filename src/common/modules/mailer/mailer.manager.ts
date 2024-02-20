@@ -67,10 +67,7 @@ export class MailerManager {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
-    if (config.POSTGRES_HOST == 'localhost') {
-      subject = `Testing New Lab Register Email`;
-    }
+    const subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
     const files: any[] = [];
     context.certifications.forEach((val, idx) => {
       files.push({
