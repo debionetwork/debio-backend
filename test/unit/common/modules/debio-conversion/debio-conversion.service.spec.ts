@@ -19,23 +19,6 @@ describe('Debio Conversion Service Unit Tests', () => {
   const REDIS_HOST = 'REDIS_HOST';
   const REDIS_PORT = 'REDIS_PORT';
   const REDIS_PASSWORD = 'REDIS_PASSWORD';
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['API_KEY_COINMARKETCAP', API_KEY_COINMARKETCAP],
-      ['SODAKI_HOST', SODAKI_HOST],
-      ['COINMARKETCAP_HOST', COINMARKETCAP_HOST],
-      ['REDIS_HOST', REDIS_HOST],
-      ['REDIS_PORT', REDIS_PORT],
-      ['REDIS_PASSWORD', REDIS_PASSWORD],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   // Arrange before each iteration
   beforeEach(async () => {
