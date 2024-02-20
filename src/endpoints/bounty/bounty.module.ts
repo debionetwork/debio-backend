@@ -5,22 +5,15 @@ import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
+import { config } from '../../config';
 
 @Module({
   imports: [
     GCloudStorageModule.withConfigAsync({
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => ({
-        defaultBucketname: gCloudSecretManagerService
-          .getSecret('BUCKET_NAME')
-          .toString(),
-        storageBaseUri: gCloudSecretManagerService
-          .getSecret('STORAGE_BASE_URI')
-          .toString(),
+      inject: [],
+      useFactory: async () => ({
+        defaultBucketname: config.BUCKET_NAME.toString(),
+        storageBaseUri: config.STORAGE_BASE_URI.toString(),
         predefinedAcl: 'private',
       }),
     }),

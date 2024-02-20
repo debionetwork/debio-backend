@@ -5,7 +5,7 @@ import { EthersContract, EthersSigner } from 'nestjs-ethers';
 import ABI from '../../../../../src/common/modules/ethereum/utils/ABI.json';
 import escrowContract from '../../../../../src/common/modules/ethereum/utils/Escrow.json';
 import { ethers } from 'ethers';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { config } from '../../../../../src/config';
 
 const PROVIDER_RESULT = 1;
 jest.mock('ethers', () => ({
@@ -42,22 +42,8 @@ describe.only('EthereumService', () => {
     createWallet: jest.fn(),
   }));
 
-  const WEB3_RPC_HTTPS = 'RPC';
-  const ESCROW_CONTRACT_ADDRESS = 'ADDR';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['WEB3_RPC_HTTPS', WEB3_RPC_HTTPS],
-      ['ESCROW_CONTRACT_ADDRESS', ESCROW_CONTRACT_ADDRESS],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
+  const WEB3_RPC_HTTPS = config.WEB3_RPC_HTTPS;
+  const ESCROW_CONTRACT_ADDRESS = config.ESCROW_CONTRACT_ADDRESS;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -66,10 +52,6 @@ describe.only('EthereumService', () => {
         { provide: CachesService, useFactory: cachesServiceMockFactory },
         { provide: EthersContract, useFactory: ethersContractMockFactory },
         { provide: EthersSigner, useFactory: ethersSignerMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

@@ -1,5 +1,3 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../secrets';
 import axios from 'axios';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
@@ -10,13 +8,11 @@ import {
   estimateSwap,
   getExpectedOutputFromSwapTodos,
 } from '@ref-finance/ref-sdk';
+import { config } from '../../../config';
 
 @Injectable()
 export class DebioConversionService {
-  constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
-  ) {}
+  constructor(@Inject(CACHE_MANAGER) private readonly cacheManager: Cache) {}
 
   async getCacheExchange() {
     return this.cacheManager.get<Exchange>('exchange');
@@ -27,10 +23,8 @@ export class DebioConversionService {
   }
 
   async setCacheExchangeFromTo(from: string, to: string) {
-    const listApiKey: string[] = this.gCloudSecretManagerService
-      .getSecret('COINMARKETCAP_API_KEY')
-      .toString()
-      .split(',');
+    const listApiKey: string[] =
+      config.COINMARKETCAP_API_KEY.toString().split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(
       'index_api_key',
     );
@@ -68,10 +62,8 @@ export class DebioConversionService {
   async setCacheExchange() {
     const sodaki = await this.getSodakiExchange();
 
-    const listApiKey: string[] = this.gCloudSecretManagerService
-      .getSecret('COINMARKETCAP_API_KEY')
-      .toString()
-      .split(',');
+    const listApiKey: string[] =
+      config.COINMARKETCAP_API_KEY.toString().split(',');
     const indexCurrentApiKey: number = await this.cacheManager.get<number>(
       'index_api_key',
     );
@@ -149,9 +141,7 @@ export class DebioConversionService {
 
   async convertDaiToUsd(apiKey: string, daiAmount: number): Promise<number> {
     const response = await axios.get(
-      `${this.gCloudSecretManagerService
-        .getSecret('COINMARKETCAP_HOST')
-        .toString()}/tools/price-conversion`,
+      `${config.COINMARKETCAP_HOST.toString()}/tools/price-conversion`,
       {
         headers: {
           'X-CMC_PRO_API_KEY': apiKey,
@@ -174,9 +164,7 @@ export class DebioConversionService {
     to: string,
   ): Promise<number> {
     const response = await axios.get(
-      `${this.gCloudSecretManagerService
-        .getSecret('COINMARKETCAP_HOST')
-        .toString()}/tools/price-conversion`,
+      `${config.COINMARKETCAP_HOST.toString()}/tools/price-conversion`,
       {
         headers: {
           'X-CMC_PRO_API_KEY': apiKey,

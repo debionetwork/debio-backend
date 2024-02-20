@@ -2,23 +2,16 @@ import { Module } from '@nestjs/common';
 import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
 import { DateTimeModule } from '../../common';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
+import { config } from '../../config';
 
 @Module({
   imports: [
     GCloudStorageModule.withConfigAsync({
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      inject: [],
+      useFactory: async () => {
         return {
-          defaultBucketname: gCloudSecretManagerService
-            .getSecret('BUCKET_NAME')
-            .toString(),
-          storageBaseUri: gCloudSecretManagerService
-            .getSecret('STORAGE_BASE_URI')
-            .toString(),
+          defaultBucketname: config.BUCKET_NAME.toString(),
+          storageBaseUri: config.STORAGE_BASE_URI.toString(),
           predefinedAcl: 'private',
         };
       },
