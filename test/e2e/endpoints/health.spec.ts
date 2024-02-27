@@ -14,38 +14,11 @@ import { LocationEntities } from '../../../src/endpoints/location/models';
 import { LabRating } from '../../../src/endpoints/rating/models/rating.entity';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { SubstrateService } from '../../../src/common/modules/substrate/substrate.service';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { SecretKeyList } from '../../../src/common/secrets';
 
 describe('Health Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['EMAIL', process.env.EMAIL],
-      ['PASS_EMAIL', process.env.PASS_EMAIL],
-      ['REDIS_HOST', process.env.HOST_REDIS],
-      ['REDIS_PORT', process.env.PORT_REDIS],
-      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   global.console = {
     ...console,
@@ -59,7 +32,6 @@ describe('Health Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         TypeOrmModule.forRoot({
           name: 'default',
           ...dummyCredentials,
@@ -84,10 +56,7 @@ describe('Health Controller (e2e)', () => {
         SubstrateHealthModule,
         HealthModule,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     api = module.get(SubstrateService);
     app = module.createNestApplication();

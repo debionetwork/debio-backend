@@ -15,7 +15,6 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
-import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
@@ -48,17 +47,6 @@ export const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(
     nowAndAdd: jest.fn((entity) => entity),
   }),
 );
-
-export const fileMockFactory: () => MockType<File> = jest.fn(() => ({
-  getSignedUrl: jest.fn((entity) => entity),
-}));
-
-export const bucketMockFactory: () => MockType<Bucket> = jest.fn(() => ({
-  file: jest.fn((entity) => entity),
-}));
-export class GCloudStorageServiceMock {
-  bucket = bucketMockFactory();
-}
 
 export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchService> =
   jest.fn(() => ({

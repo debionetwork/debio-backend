@@ -12,41 +12,15 @@ import { VerificationModule } from '../../../src/endpoints/verification/verifica
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TransactionRequest } from '../../../src/common/modules/transaction-logging/models/transaction-request.entity';
 import { dummyCredentials } from '../config';
-import {
-  GCloudSecretManagerModule,
-  GCloudSecretManagerService,
-} from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList, SecretKeyList } from '../../../src/common/secrets';
 import { MyriadAccount } from '../../../src/endpoints/myriad/models/myriad-account.entity';
+import { config } from '../../../src/config';
 
 describe('Verification Controller (e2e)', () => {
   let server: Server;
   let app: INestApplication;
   let api: SubstrateService;
-  let gcloudSecretManagerService: GCloudSecretManagerService<keyList>;
 
   const apiKey = 'DEBIO_API_KEY';
-
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['ELASTICSEARCH_NODE', process.env.ELASTICSEARCH_NODE],
-      ['ELASTICSEARCH_USERNAME', process.env.ELASTICSEARCH_USERNAME],
-      ['ELASTICSEARCH_PASSWORD', process.env.ELASTICSEARCH_PASSWORD],
-      ['ADMIN_SUBSTRATE_MNEMONIC', process.env.ADMIN_SUBSTRATE_MNEMONIC],
-      ['DEBIO_API_KEY', apiKey],
-      ['SUBSTRATE_URL', process.env.SUBSTRATE_URL],
-      ['REDIS_HOST', process.env.HOST_REDIS],
-      ['REDIS_PORT', process.env.PORT_REDIS],
-      ['REDIS_PASSWORD', process.env.REDIS_PASSWORD],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
 
   global.console = {
     ...console,
@@ -60,7 +34,6 @@ describe('Verification Controller (e2e)', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        GCloudSecretManagerModule.withConfig(process.env.PARENT, SecretKeyList),
         TypeOrmModule.forRoot({
           ...dummyCredentials,
           database: 'db_postgres',
@@ -72,13 +45,9 @@ describe('Verification Controller (e2e)', () => {
         TransactionLoggingModule,
         DateTimeModule,
       ],
-    })
-      .overrideProvider(GCloudSecretManagerService)
-      .useClass(GoogleSecretManagerServiceMock)
-      .compile();
+    }).compile();
 
     api = module.get(SubstrateService);
-    gcloudSecretManagerService = module.get(GCloudSecretManagerService);
 
     app = module.createNestApplication();
     server = app.getHttpServer();
@@ -101,10 +70,7 @@ describe('Verification Controller (e2e)', () => {
       .post(
         `/verification/lab?account_id=${ACCOUNT_ID}&verification_status=${VERIFICATION_STATUS}`,
       )
-      .set(
-        'debio-api-key',
-        gcloudSecretManagerService.getSecret('DEBIO_API_KEY').toString(),
-      )
+      .set('debio-api-key', config.DEBIO_API_KEY.toString())
       .send();
 
     // Assert
@@ -124,10 +90,7 @@ describe('Verification Controller (e2e)', () => {
       .post(
         `/verification/genetic-analysts?account_id=${ACCOUNT_ID}&verification_status=${VERIFICATION_STATUS}`,
       )
-      .set(
-        'debio-api-key',
-        gcloudSecretManagerService.getSecret('DEBIO_API_KEY').toString(),
-      )
+      .set('debio-api-key', config.DEBIO_API_KEY.toString())
       .send();
 
     // Assert

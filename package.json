@@ -30,8 +30,6 @@
     "test:e2e:watch": "jest --config ./test/e2e/jest-e2e-endpoint.json --watch"
   },
   "dependencies": {
-    "@debionetwork/nestjs-gcloud-secret-manager": "0.0.3",
-    "@debionetwork/nestjs-gcloud-storage": "0.0.2",
     "@debionetwork/polkadot-provider": "0.0.18",
     "@elastic/elasticsearch": "^7.14.0",
     "@nestjs-modules/mailer": "^1.8.1",
