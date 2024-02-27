@@ -1,14 +1,22 @@
-import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
-import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
+import {
+  Controller,
+  Get,
+  Query,
+  UseInterceptors,
+  Inject,
+} from '@nestjs/common';
 import { DateTimeProxy, SentryInterceptor } from '../../common';
 import { ApiResponse } from '@nestjs/swagger';
+import { Client } from 'minio';
+import { MINIO_CONNECTION } from 'nestjs-minio';
+import { config } from '../../config';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('gcs')
 export class CloudStorageController {
   constructor(
     private readonly dateTime: DateTimeProxy,
-    private readonly cloudStorageService: GCloudStorageService,
+    @Inject(MINIO_CONNECTION) private readonly cloudStorageService: Client,
   ) {}
 
   @Get('/signed-url')
@@ -26,28 +34,32 @@ export class CloudStorageController {
     @Query('action') action: 'read' | 'write',
   ) {
     const URL_VALID_DURATION = 100000;
+    let url: string;
     if (action === 'read') {
-      const [url] = await this.cloudStorageService.bucket
-        .file(filename)
-        .getSignedUrl({
-          version: 'v4',
-          action: action,
-          expires: this.dateTime.nowAndAdd(URL_VALID_DURATION),
-        });
+      await this.cloudStorageService.presignedUrl(
+        'GET',
+        filename,
+        filename,
+        URL_VALID_DURATION,
+        (err, res) => {
+          url = res;
+        },
+      );
 
       return {
         signedUrl: url,
       };
     }
 
-    const [url] = await this.cloudStorageService.bucket
-      .file(filename)
-      .getSignedUrl({
-        version: 'v4',
-        action: action,
-        expires: this.dateTime.nowAndAdd(URL_VALID_DURATION),
-        contentType: 'application/x-www-form-urlencoded',
-      });
+    await this.cloudStorageService.presignedUrl(
+      'GET',
+      config.BUCKET_NAME,
+      filename,
+      URL_VALID_DURATION,
+      (err, res) => {
+        url = res;
+      },
+    );
 
     return {
       signedUrl: url,
