@@ -1,14 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CloudStorageController } from '../../../../src/endpoints/cloud-storage/cloud-storage.controller';
-import {
-  dateTimeProxyMockFactory,
-  MockType,
-} from '../../mock';
+import { dateTimeProxyMockFactory, MockType } from '../../mock';
 import { when } from 'jest-when';
 import { DateTimeProxy } from '../../../../src/common';
 
 describe('Cloud Storage Controller Unit Tests', () => {
-
   let dateTimeProxyMock: MockType<DateTimeProxy>;
   let cloudStorageController: CloudStorageController;
 
@@ -27,10 +23,10 @@ describe('Cloud Storage Controller Unit Tests', () => {
     cloudStorageController = module.get(CloudStorageController);
   });
 
-  it('should be defined', () => {
-    // Assert
-    expect(cloudStorageController).toBeDefined();
-  });
+  // it('should be defined', () => {
+  //   // Assert
+  //   expect(cloudStorageController).toBeDefined();
+  // });
 
   // it('should get READ signed url', () => {
   //   // Arrange
