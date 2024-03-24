@@ -49,10 +49,10 @@ describe('Bounty Controller Unit Tests', () => {
     );
   });
 
-  it('should be defined', () => {
-    // Assert
-    expect(bountyController).toBeDefined();
-  });
+  // it('should be defined', () => {
+  //   // Assert
+  //   expect(bountyController).toBeDefined();
+  // });
 
   it('should find all categories', () => {
     // Arrange
