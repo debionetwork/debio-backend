@@ -7,11 +7,11 @@ import { NestMinioModule } from 'nestjs-minio';
 @Module({
   imports: [
     NestMinioModule.register({
-      endPoint: 'play.min.io',
-      port: 9000,
+      endPoint: config.MINIO_ENDPOINT,
+      port: config.MINIO_PORT as number,
       useSSL: true,
-      accessKey: 'Q3AM3UQ867SPQQA43P2F',
-      secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
+      accessKey: config.MINIO_ACCESS_KEY,
+      secretKey: config.MINIO_SECRET_KEY,
     }),
     DateTimeModule,
   ],

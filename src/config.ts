@@ -24,7 +24,6 @@ export const config = {
   EMAILS: process.env.EMAILS ?? '',
   SUBSTRATE_URL: process.env.SUBSTRATE_URL ?? 'URL',
   ADMIN_SUBSTRATE_MNEMONIC: process.env.ADMIN_SUBSTRATE_MNEMONIC ?? '',
-  BUCKET_NAME: process.env.BUCKET_NAME ?? '',
   STORAGE_BASE_URI: process.env.STORAGE_BASE_URI ?? '',
   MYRIAD_API_URL: process.env.MYRIAD_API_URL ?? '',
   MYRIAD_ADMIN_USERNAME: process.env.MYRIAD_ADMIN_USERNAME ?? '',
@@ -33,4 +32,9 @@ export const config = {
   MYRIAD_MENTAL_HEALTH_TIMELINE_ID:
     process.env.MENTAL_HEALTH_EXPERIENCE_ID ?? '',
   PINATA_JWT: process.env.PINATA_SECRET_KEY ?? '',
+  BUCKET_NAME: process.env.BUCKET_NAME ?? '',
+  MINIO_ENDPOINT: process.env.MINIO_ENDPOINT ?? 'play.min.io',
+  MINIO_PORT : process.env.MINIO_PORT ?? 9000,
+  MINIO_ACCESS_KEY : process.env.MINIO_ACCESS_KEY ?? '',
+  MINIO_SECRET_KEY : process.env.MINIO_SECRET_KEY ?? '',
 };
