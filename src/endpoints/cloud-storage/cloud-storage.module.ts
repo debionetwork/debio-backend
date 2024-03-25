@@ -1,27 +1,17 @@
 import { Module } from '@nestjs/common';
-import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
 import { CloudStorageController } from './cloud-storage.controller';
 import { DateTimeModule } from '../../common';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
+import { config } from '../../config';
+import { NestMinioModule } from 'nestjs-minio';
 
 @Module({
   imports: [
-    GCloudStorageModule.withConfigAsync({
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
-        return {
-          defaultBucketname: gCloudSecretManagerService
-            .getSecret('BUCKET_NAME')
-            .toString(),
-          storageBaseUri: gCloudSecretManagerService
-            .getSecret('STORAGE_BASE_URI')
-            .toString(),
-          predefinedAcl: 'private',
-        };
-      },
+    NestMinioModule.register({
+      endPoint: config.MINIO_ENDPOINT,
+      port: config.MINIO_PORT as number,
+      useSSL: true,
+      accessKey: config.MINIO_ACCESS_KEY,
+      secretKey: config.MINIO_SECRET_KEY,
     }),
     DateTimeModule,
   ],

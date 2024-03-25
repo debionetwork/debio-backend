@@ -1,4 +1,3 @@
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import {
   Body,
   Controller,
@@ -11,19 +10,16 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { keyList } from '../../common/secrets';
 import { SentryInterceptor } from '../../common';
 import { VerificationService } from './verification.service';
 import { VerificationStatus } from '@debionetwork/polkadot-provider/lib/primitives';
 import { HealthProfessionalRegisterDTO } from './dto/health-professional.dto';
+import { config } from '../../config';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('verification')
 export class VerificationController {
-  constructor(
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-    private readonly verificationService: VerificationService,
-  ) {}
+  constructor(private readonly verificationService: VerificationService) {}
 
   @Post('/lab')
   @ApiQuery({ name: 'account_id' })
@@ -39,10 +35,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (
-        debioApiKey !=
-        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
-      ) {
+      if (debioApiKey != config.DEBIO_API_KEY.toString()) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationLab(
@@ -75,10 +68,7 @@ export class VerificationController {
     @Query('verification_status') verification_status: string,
   ) {
     try {
-      if (
-        debioApiKey !=
-        this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
-      ) {
+      if (debioApiKey != config.DEBIO_API_KEY.toString()) {
         return response.status(401).send('debio-api-key header is required');
       }
       await this.verificationService.verificationGeneticAnalyst(
@@ -102,10 +92,7 @@ export class VerificationController {
     @Res() response: Response,
     @Body() data: HealthProfessionalRegisterDTO,
   ) {
-    if (
-      debioApiKey !=
-      this.gCloudSecretManagerService.getSecret('DEBIO_API_KEY').toString()
-    ) {
+    if (debioApiKey != config.DEBIO_API_KEY.toString()) {
       throw new HttpException(
         {
           status: 401,

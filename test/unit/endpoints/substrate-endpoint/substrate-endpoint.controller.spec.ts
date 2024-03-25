@@ -29,7 +29,7 @@ import {
   setGeneticAnalysisOrderPaid,
   adminSetEthAddress,
 } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { config } from '../../../../src/config';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   queryAccountIdByEthAddress: jest.fn(),
@@ -54,7 +54,7 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
   let geneticAnalysisMock: MockType<GeneticAnalysisService>;
   let geneticAnalysisOrderMock: MockType<GeneticAnalysisOrderService>;
 
-  const DEBIO_API_KEY = 'KEY';
+  const DEBIO_API_KEY = config.DEBIO_API_KEY.toString();
 
   const labServiceMockFactory: () => MockType<LabService> = jest.fn(() => ({
     getByCountryCityCategory: jest.fn(),
@@ -108,17 +108,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
       getGeneticAnalysisOrderById: jest.fn(),
     }));
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([['DEBIO_API_KEY', DEBIO_API_KEY]]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   class SubstrateServiceMock {
     api = 'API';
     pair = 'PAIR';
@@ -162,10 +151,6 @@ describe('Substrate Endpoint Controller Unit Tests', () => {
           useFactory: geneticAnalysisOrderMockfactory,
         },
         { provide: DateTimeProxy, useFactory: dateTimeProxyMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 

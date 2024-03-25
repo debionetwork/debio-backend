@@ -3,7 +3,7 @@ import { MockType } from '../../mock';
 import { VerificationService } from '../../../../src/endpoints/verification/verification.service';
 import { VerificationController } from '../../../../src/endpoints/verification/verification.controller';
 import httpMocks = require('node-mocks-http');
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { config } from '../../../../src/config';
 
 describe('Verification Controller Unit Tests', () => {
   let verificationController: VerificationController;
@@ -15,19 +15,6 @@ describe('Verification Controller Unit Tests', () => {
     }));
   let verificationServiceMock: MockType<VerificationService>;
 
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['DEBIO_API_KEY', 'DEBIO_API_KEY'],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
-
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,10 +23,6 @@ describe('Verification Controller Unit Tests', () => {
         {
           provide: VerificationService,
           useFactory: verificationServiceMockFactory,
-        },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
         },
       ],
     }).compile();
@@ -80,7 +63,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 500;
     const EXPECTED_RESULT = "I just don't feel like it";
-    const API_KEY = 'DEBIO_API_KEY';
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'VERIFICATION_STATUS';
     verificationServiceMock.verificationLab.mockImplementation(() =>
@@ -106,7 +89,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 500;
     const EXPECTED_RESULT = "I just don't feel like it";
-    const API_KEY = 'DEBIO_API_KEY';
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'VERIFICATION_STATUS';
     verificationServiceMock.verificationGeneticAnalyst.mockImplementation(() =>
@@ -132,7 +115,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 200;
     const EXPECTED_RESULT = 'Verified, and Got Reward 2 DBIO';
-    const API_KEY = 'DEBIO_API_KEY';
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'Verified';
 
@@ -155,7 +138,7 @@ describe('Verification Controller Unit Tests', () => {
     // Arrange
     const EXPECTED_STATUS = 200;
     const EXPECTED_RESULT = 'Verified';
-    const API_KEY = 'DEBIO_API_KEY';
+    const API_KEY = config.DEBIO_API_KEY;
     const ACCOUNT_ID = 'ACCOUT_ID';
     const VERIFICATION_STATUS = 'Verified';
 

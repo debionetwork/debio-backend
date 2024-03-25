@@ -5,6 +5,7 @@ import {
   Post,
   Query,
   UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { Repository } from 'typeorm';
@@ -13,9 +14,11 @@ import { DataStakingDto } from './dto/data-staking.dto';
 import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeProxy } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
-import { GCloudStorageService } from '@debionetwork/nestjs-gcloud-storage';
 import { DataTokenToDatasetMappingDto } from './dto/data-token-to-dataset-mapping.dto';
 import { SentryInterceptor } from '../../common';
+import { Client } from 'minio';
+import { MINIO_CONNECTION } from 'nestjs-minio';
+import { config } from '../../config';
 
 @UseInterceptors(SentryInterceptor)
 @Controller('bounty')
@@ -25,7 +28,7 @@ export class BountyController {
     private readonly dataStakingEventsRepository: Repository<DataStakingEvents>,
     @InjectRepository(DataTokenToDatasetMapping)
     private readonly dataTokenToDatasetMapping: Repository<DataTokenToDatasetMapping>,
-    private readonly cloudStorageService: GCloudStorageService,
+    @Inject(MINIO_CONNECTION) private readonly cloudStorageService: Client,
     private readonly dateTimeProxy: DateTimeProxy,
   ) {}
 
@@ -50,13 +53,16 @@ export class BountyController {
     const res: DataTokenToDatasetMappingDto[] = [];
     for (const x of mappings) {
       const URL_VALID_DURATION = 100000;
-      const [url] = await this.cloudStorageService.bucket
-        .file(x.filename)
-        .getSignedUrl({
-          version: 'v4',
-          action: 'read',
-          expires: this.dateTimeProxy.nowAndAdd(URL_VALID_DURATION),
-        });
+      let url: string;
+      await this.cloudStorageService.presignedUrl(
+        'GET',
+        config.BUCKET_NAME,
+        x.filename,
+        URL_VALID_DURATION,
+        (err, res) => {
+          url = res;
+        },
+      );
 
       const dataTokenToDatasetMappingDto = new DataTokenToDatasetMappingDto(x);
       dataTokenToDatasetMappingDto.file_url = url;

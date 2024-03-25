@@ -14,31 +14,22 @@ import { ServiceRequestService } from './services/service-request.service';
 import { LocationModule } from '../location/location.module';
 import { GeneticAnalysisService } from './services/genetic-analysis.service';
 import { GeneticAnalysisOrderService } from './services/genetic-analysis-order.service';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
-import { keyList } from '../../common/secrets';
 import { MenstrualCalendarService } from './services/menstrual-calendar.service';
 import { MenstrualSubscriptionService } from './services/menstrual-subscription.service';
+import { config } from '../../config';
 
 @Module({
   imports: [
     LocationModule,
     DebioConversionModule,
     ElasticsearchModule.registerAsync({
-      inject: [GCloudSecretManagerService],
-      useFactory: async (
-        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
-      ) => {
+      inject: [],
+      useFactory: async () => {
         return {
-          node: gCloudSecretManagerService
-            .getSecret('ELASTICSEARCH_NODE')
-            .toString(),
+          node: config.ELASTICSEARCH_NODE.toString(),
           auth: {
-            username: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_USERNAME')
-              .toString(),
-            password: gCloudSecretManagerService
-              .getSecret('ELASTICSEARCH_PASSWORD')
-              .toString(),
+            username: config.ELASTICSEARCH_USERNAME.toString(),
+            password: config.ELASTICSEARCH_PASSWORD.toString(),
           },
         };
       },

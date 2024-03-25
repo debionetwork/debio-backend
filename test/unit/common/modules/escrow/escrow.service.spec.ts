@@ -8,13 +8,13 @@ import {
 import { EscrowService } from '../../../../../src/common/modules/escrow/escrow.service';
 import { ethers } from 'ethers';
 import { setOrderPaid } from '@debionetwork/polkadot-provider';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { config } from '../../../../../src/config';
 
 jest.mock('@debionetwork/polkadot-provider', () => ({
   setOrderPaid: jest.fn(),
 }));
 
-const WALLET_ADDRESS = 'ADDR';
+const WALLET_ADDRESS = config.ESCROW_CONTRACT_ADDRESS;
 const ETHERS_PARSE_UNITS_MOCK = {
   tokenAmount: 'AMOUNT',
 };
@@ -39,19 +39,7 @@ describe('Escrow Service Unit Tests', () => {
   let substrateServiceMock: MockType<SubstrateService>;
   let ethereumServiceMock: MockType<EthereumService>;
 
-  const DEBIO_ESCROW_PRIVATE_KEY = 'PRIVKEY';
-  class GoogleSecretManagerServiceMock {
-    _secretsList = new Map<string, string>([
-      ['DEBIO_ESCROW_PRIVATE_KEY', DEBIO_ESCROW_PRIVATE_KEY],
-    ]);
-    loadSecrets() {
-      return null;
-    }
-
-    getSecret(key) {
-      return this._secretsList.get(key);
-    }
-  }
+  const DEBIO_ESCROW_PRIVATE_KEY = config.DEBIO_ESCROW_PRIVATE_KEY;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -59,10 +47,6 @@ describe('Escrow Service Unit Tests', () => {
         EscrowService,
         { provide: SubstrateService, useFactory: substrateServiceMockFactory },
         { provide: EthereumService, useFactory: ethereumServiceMockFactory },
-        {
-          provide: GCloudSecretManagerService,
-          useClass: GoogleSecretManagerServiceMock,
-        },
       ],
     }).compile();
 
