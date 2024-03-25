@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockFunction } from '../../../mock';
 import { ProcessEnvProxy, SubstrateService } from '../../../../../src/common';
 import { ApiPromise, Keyring } from '@polkadot/api';
-import { config } from '../../../../../src/config';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 
 jest.mock('../../../mock', () => ({
   mockFunction: jest.fn(),
@@ -14,8 +14,21 @@ const keyringSpy = jest.spyOn(Keyring.prototype, 'addFromUri');
 describe.only('Substrate Service Unit Test', () => {
   let substrateService: SubstrateService;
 
-  const SUBSTRATE_URL = config.SUBSTRATE_URL;
-  const ADMIN_SUBSTRATE_MNEMONIC = config.ADMIN_SUBSTRATE_MNEMONIC;
+  const SUBSTRATE_URL = 'URL';
+  const ADMIN_SUBSTRATE_MNEMONIC = 'ADDR';
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['ADMIN_SUBSTRATE_MNEMONIC', ADMIN_SUBSTRATE_MNEMONIC],
+      ['SUBSTRATE_URL', SUBSTRATE_URL],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   class ProcessEnvProxyMock {
     env = {
@@ -28,6 +41,10 @@ describe.only('Substrate Service Unit Test', () => {
       providers: [
         SubstrateService,
         { provide: ProcessEnvProxy, useClass: ProcessEnvProxyMock },
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
       ],
     }).compile();
 

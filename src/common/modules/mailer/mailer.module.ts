@@ -1,22 +1,27 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { join } from 'path';
 import { MailerManager } from './mailer.manager';
-import { config } from '../../../config';
+import { keyList } from '../../secrets';
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      inject: [],
-      useFactory: async () => {
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+      ) => {
         return {
           transport: {
             host: 'smtp.gmail.com',
             secure: false,
             auth: {
-              user: config.EMAIL.toString(),
-              pass: config.PASS_EMAIL.toString(),
+              user: gCloudSecretManagerService.getSecret('EMAIL').toString(),
+              pass: gCloudSecretManagerService
+                .getSecret('PASS_EMAIL')
+                .toString(),
             },
           },
           template: {

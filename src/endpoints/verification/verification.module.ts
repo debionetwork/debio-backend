@@ -7,19 +7,22 @@ import { VerificationService } from './verification.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MyriadAccount } from '@endpoints/myriad/models/myriad-account.entity';
 import * as redisStore from 'cache-manager-redis-store';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '@common/secrets';
 import { MyriadModule } from '@endpoints/myriad/myriad.module';
-import { config } from '../../config';
 
 @Module({
   imports: [
     CacheModule.registerAsync({
-      inject: [],
-      useFactory: async () => {
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+      ) => {
         return {
           store: redisStore,
-          host: config.REDIS_HOST,
-          port: config.REDIS_PORT,
-          auth_pass: config.REDIS_PASSWORD,
+          host: gCloudSecretManagerService.getSecret('REDIS_HOST'),
+          port: gCloudSecretManagerService.getSecret('REDIS_PORT'),
+          auth_pass: gCloudSecretManagerService.getSecret('REDIS_PASSWORD'),
           ttl: 2 * 60 * 60,
         };
       },

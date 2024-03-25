@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DebioConversionService } from '../../../../../src/common';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { when } from 'jest-when';
-import { config } from '../../../../../src/config';
 jest.mock('axios');
 
 describe('Debio Conversion Service Unit Tests', () => {
@@ -13,13 +13,39 @@ describe('Debio Conversion Service Unit Tests', () => {
   let cacheManager: Cache;
   const axiosMock = new MockAdapter(axios);
 
-  const COINMARKETCAP_HOST = config.COINMARKETCAP_HOST;
+  const API_KEY_COINMARKETCAP = 'API_KEY_COINMARKETCAP';
+  const SODAKI_HOST = 'SODAKI_HOST';
+  const COINMARKETCAP_HOST = 'COINMARKETCAP_HOST';
+  const REDIS_HOST = 'REDIS_HOST';
+  const REDIS_PORT = 'REDIS_PORT';
+  const REDIS_PASSWORD = 'REDIS_PASSWORD';
+  class GoogleSecretManagerServiceMock {
+    _secretsList = new Map<string, string>([
+      ['API_KEY_COINMARKETCAP', API_KEY_COINMARKETCAP],
+      ['SODAKI_HOST', SODAKI_HOST],
+      ['COINMARKETCAP_HOST', COINMARKETCAP_HOST],
+      ['REDIS_HOST', REDIS_HOST],
+      ['REDIS_PORT', REDIS_PORT],
+      ['REDIS_PASSWORD', REDIS_PASSWORD],
+    ]);
+    loadSecrets() {
+      return null;
+    }
+
+    getSecret(key) {
+      return this._secretsList.get(key);
+    }
+  }
 
   // Arrange before each iteration
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DebioConversionService,
+        {
+          provide: GCloudSecretManagerService,
+          useClass: GoogleSecretManagerServiceMock,
+        },
         {
           provide: CACHE_MANAGER,
           useValue: {
@@ -76,7 +102,7 @@ describe('Debio Conversion Service Unit Tests', () => {
     // Arrange
     const httpGetSpy = jest.spyOn(axios, 'get');
     const RESULT = 1;
-    const API_KEY = config.COINMARKETCAP_API_KEY;
+    const API_KEY = 'KEY';
     const BALANCE_AMOUNT = 1;
     const FROM = 'USN';
     const TO = 'USDT';
