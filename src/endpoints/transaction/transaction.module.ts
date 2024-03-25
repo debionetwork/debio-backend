@@ -1,21 +1,30 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { keyList } from '../../common/secrets';
 import { TransactionLoggingModule } from '../../common';
 import { TransactionController } from './transaction.controller';
 import { TransactionService } from './transaction.service';
-import { config } from '../../config';
 
 @Module({
   imports: [
     TransactionLoggingModule,
     ElasticsearchModule.registerAsync({
-      inject: [],
-      useFactory: async () => {
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+      ) => {
         return {
-          node: config.ELASTICSEARCH_NODE.toString(),
+          node: gCloudSecretManagerService
+            .getSecret('ELASTICSEARCH_NODE')
+            .toString(),
           auth: {
-            username: config.ELASTICSEARCH_USERNAME.toString(),
-            password: config.ELASTICSEARCH_PASSWORD.toString(),
+            username: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_USERNAME')
+              .toString(),
+            password: gCloudSecretManagerService
+              .getSecret('ELASTICSEARCH_PASSWORD')
+              .toString(),
           },
         };
       },

@@ -4,17 +4,25 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataStakingEvents } from './models/data-staking-events.entity';
 import { DateTimeModule } from '../../common';
 import { DataTokenToDatasetMapping } from './models/data-token-to-dataset-mapping.entity';
-import { config } from '../../config';
-import { NestMinioModule } from 'nestjs-minio';
+import { GCloudStorageModule } from '@debionetwork/nestjs-gcloud-storage';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../common/secrets';
 
 @Module({
   imports: [
-    NestMinioModule.register({
-      endPoint: 'play.min.io',
-      port: 9000,
-      useSSL: true,
-      accessKey: 'Q3AM3UQ867SPQQA43P2F',
-      secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
+    GCloudStorageModule.withConfigAsync({
+      inject: [GCloudSecretManagerService],
+      useFactory: async (
+        gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+      ) => ({
+        defaultBucketname: gCloudSecretManagerService
+          .getSecret('BUCKET_NAME')
+          .toString(),
+        storageBaseUri: gCloudSecretManagerService
+          .getSecret('STORAGE_BASE_URI')
+          .toString(),
+        predefinedAcl: 'private',
+      }),
     }),
     TypeOrmModule.forFeature([DataStakingEvents, DataTokenToDatasetMapping]),
     DateTimeModule,

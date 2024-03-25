@@ -1,3 +1,4 @@
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -5,19 +6,27 @@ import {
   GeneticAnalystRegister,
   LabRegister,
 } from './models';
+import { keyList } from '../../secrets';
 import { HealthProfessionalRegister } from './models/health-professional.model';
-import { config } from '../../../config';
 
 @Injectable()
 export class MailerManager {
   private readonly _logger: Logger = new Logger(MailerManager.name);
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
+  ) {}
 
   async sendCustomerStakingRequestServiceEmail(
     to: string | string[],
     context: CustomerStakingRequestService,
   ) {
-    const subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
+    let subject = `New Service Request - ${context.service_name} - ${context.city}, ${context.state}, ${context.country}`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
+      subject = `Testing New Service Request Email`;
+    }
     this.mailerService.sendMail({
       to: to,
       subject: subject,
@@ -31,7 +40,9 @@ export class MailerManager {
     context: GeneticAnalystRegister,
   ) {
     let subject = `New Genetic Analyst Register – ${context.genetic_analyst_name}`;
-    if (config.POSTGRES_HOST == 'localhost') {
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
       subject = `Testing New Genetic Analyst Register Email`;
     }
     const files: any[] = [];
@@ -67,7 +78,12 @@ export class MailerManager {
   }
 
   async sendLabRegistrationEmail(to: string | string[], context: LabRegister) {
-    const subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
+    let subject = `New Lab Register – ${context.lab_name} - ${context.city}, ${context.state}, ${context.country}`;
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
+      subject = `Testing New Lab Register Email`;
+    }
     const files: any[] = [];
     context.certifications.forEach((val, idx) => {
       files.push({
@@ -112,7 +128,9 @@ export class MailerManager {
     context: HealthProfessionalRegister,
   ) {
     let subject = `New Health Professinal Register – ${context.health_professional_name}`;
-    if (config.POSTGRES_HOST == 'localhost') {
+    if (
+      this.gCloudSecretManagerService.getSecret('POSTGRES_HOST') == 'localhost'
+    ) {
       subject = `Testing New Lab Register Email`;
     }
     const files: any[] = [];

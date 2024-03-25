@@ -15,6 +15,7 @@ import {
 } from '@debionetwork/polkadot-provider';
 import { Repository } from 'typeorm';
 import { Cache as CacheManager } from 'cache-manager';
+import { File, Bucket } from '@google-cloud/storage';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { MailerService } from '@nestjs-modules/mailer';
 import { EscrowService } from '../../src/common/modules/escrow/escrow.service';
@@ -22,6 +23,8 @@ import { CountryService } from '../../src/endpoints/location/country.service';
 import { StateService } from '../../src/endpoints/location/state.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { NotificationService } from '../../src/common/modules/notification/notification.service';
+import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
+import { keyList } from '../../src/common/secrets';
 
 export function mockFunction(args) {} // eslint-disable-line
 
@@ -47,6 +50,17 @@ export const dateTimeProxyMockFactory: () => MockType<DateTimeProxy> = jest.fn(
     nowAndAdd: jest.fn((entity) => entity),
   }),
 );
+
+export const fileMockFactory: () => MockType<File> = jest.fn(() => ({
+  getSignedUrl: jest.fn((entity) => entity),
+}));
+
+export const bucketMockFactory: () => MockType<Bucket> = jest.fn(() => ({
+  file: jest.fn((entity) => entity),
+}));
+export class GCloudStorageServiceMock {
+  bucket = bucketMockFactory();
+}
 
 export const elasticsearchServiceMockFactory: () => MockType<ElasticsearchService> =
   jest.fn(() => ({
@@ -359,3 +373,10 @@ export const schedulerRegistryMockFactory: () => MockType<SchedulerRegistry> =
   jest.fn(() => ({
     addInterval: jest.fn(),
   }));
+
+export const googleSecretManagerServiceMockFactory: () => MockType<
+  GCloudSecretManagerService<keyList>
+> = jest.fn(() => ({
+  loadSecrets: jest.fn((entity) => entity),
+  getSecret: jest.fn((entity) => entity),
+}));
