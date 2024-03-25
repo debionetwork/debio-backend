@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.4.3](https://github.com/debionetwork/debio-backend/compare/2.4.2...2.4.3) (2024-03-25)
+
+
+### Bug Fixes
+
+* fix response not in json form ([#680](https://github.com/debionetwork/debio-backend/issues/680)) ([b2a2ede](https://github.com/debionetwork/debio-backend/commit/b2a2edecf8517594467ffd36354dbaa23291dce6))
+* google cloud storage ([#705](https://github.com/debionetwork/debio-backend/issues/705)) ([8afc4cd](https://github.com/debionetwork/debio-backend/commit/8afc4cd23d63cdf4d05de90549ba791b1d81d888))
+* google cloud storage ([#706](https://github.com/debionetwork/debio-backend/issues/706)) ([e0e74e8](https://github.com/debionetwork/debio-backend/commit/e0e74e8dededcce7bf8e77704f87cf111fa39abb))
+* issues with adding post to timeline ([#682](https://github.com/debionetwork/debio-backend/issues/682)) ([e850573](https://github.com/debionetwork/debio-backend/commit/e85057306d664286cbc37da2e6bb0fcd706e7885))
+* timeline not included in create post ([#676](https://github.com/debionetwork/debio-backend/issues/676)) ([d869401](https://github.com/debionetwork/debio-backend/commit/d8694015bcb55ce705710b9134ded5d733187c64))
+
 ## [2.4.2](https://github.com/debionetwork/debio-backend/compare/2.4.1...2.4.2) (2023-03-30)
 
 
