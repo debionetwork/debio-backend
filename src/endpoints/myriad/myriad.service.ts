@@ -1,5 +1,3 @@
-import { keyList } from '@common/secrets';
-import { GCloudSecretManagerService } from '@debionetwork/nestjs-gcloud-secret-manager';
 import {
   CACHE_MANAGER,
   Inject,
@@ -23,6 +21,7 @@ import { UserMyriadInterface } from './interface/user';
 import { UsernameCheckInterface } from './interface/username-check';
 import { MyriadAccount } from './models/myriad-account.entity';
 import { Cache } from 'cache-manager';
+import { config } from '../../config';
 
 @Injectable()
 export class MyriadService {
@@ -32,12 +31,9 @@ export class MyriadService {
   constructor(
     @InjectRepository(MyriadAccount)
     private readonly myriadAccountRepository: Repository<MyriadAccount>,
-    private readonly gCloudSecretManagerService: GCloudSecretManagerService<keyList>,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {
-    this.myriadEndPoints = this.gCloudSecretManagerService
-      .getSecret('MYRIAD_API_URL')
-      .toString();
+    this.myriadEndPoints = config.MYRIAD_API_URL.toString();
   }
 
   public async checkUsernameMyriad(username: string): Promise<boolean> {
@@ -68,9 +64,7 @@ export class MyriadService {
         const user = await this.myriadAccountRepository.findOne({
           select: ['username', 'jwt_token'],
           where: {
-            username: this.gCloudSecretManagerService
-              .getSecret('MYRIAD_ADMIN_USERNAME')
-              .toString(),
+            username: config.MYRIAD_ADMIN_USERNAME.toString(),
           },
         });
 
@@ -520,7 +514,6 @@ export class MyriadService {
     rawText,
     selectedUserIds,
     jwt,
-    postType,
     timelineId,
   }: {
     createdBy: string;
@@ -583,9 +576,7 @@ export class MyriadService {
         const user = await this.myriadAccountRepository.findOne({
           select: ['username', 'jwt_token'],
           where: {
-            username: this.gCloudSecretManagerService
-              .getSecret('MYRIAD_ADMIN_USERNAME')
-              .toString(),
+            username: config.MYRIAD_ADMIN_USERNAME.toString(),
           },
         });
 
@@ -616,13 +607,9 @@ export class MyriadService {
 
   private getExperienceIdAdmin(type: string): string {
     if (type === E_PostType.PHYSICAL_HEALTH) {
-      return this.gCloudSecretManagerService
-        .getSecret('MYRIAD_PHYSICAL_HEALTH_TIMELINE_ID')
-        .toString();
+      return config.MYRIAD_PHYSICAL_HEALTH_TIMELINE_ID.toString();
     } else if (type === E_PostType.MENTAL_HEALTH) {
-      return this.gCloudSecretManagerService
-        .getSecret('MYRIAD_MENTAL_HEALTH_TIMELINE_ID')
-        .toString();
+      return config.MYRIAD_MENTAL_HEALTH_TIMELINE_ID.toString();
     } else {
       throw new HttpException(
         {
